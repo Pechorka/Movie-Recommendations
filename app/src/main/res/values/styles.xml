@@ -1,11 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MovieInfoPoster">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/poster_height_min</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorHeader</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/header_font_size</item>
+        <item name="android:padding">5dp</item>
     </style>
 
 </resources>
