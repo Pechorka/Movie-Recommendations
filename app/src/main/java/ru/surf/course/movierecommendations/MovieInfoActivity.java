@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -23,37 +24,17 @@ public class MovieInfoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.movie_info_toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+
         ImageView poster = (ImageView)findViewById(R.id.movie_info_poster);
         TextView name = (TextView)findViewById(R.id.movie_info_name);
 
-        //временно
-        String[] mNames = {
-                "Dr. Strange","Fantastic Beasts"
-                ,"Mad Max","Dr. Strange","Fantastic Beasts"
-                ,"Mad Max","Dr. Strange","Fantastic Beasts"
-                ,"Mad Max","Dr. Strange","Fantastic Beasts"
-                ,"Mad Max"
-        };
-        int[] mThumbIds = {
-                R.drawable.dr_strange,
-                R.drawable.fantastic_beasts,
-                R.drawable.mad_max,
-                R.drawable.dr_strange,
-                R.drawable.fantastic_beasts,
-                R.drawable.mad_max,
-                R.drawable.dr_strange,
-                R.drawable.fantastic_beasts,
-                R.drawable.mad_max,
-                R.drawable.dr_strange,
-                R.drawable.fantastic_beasts,
-                R.drawable.mad_max
-        };
 
-        Random random = new Random();
-        int number = random.nextInt(mThumbIds.length);
+        int imageID = intent.getIntExtra(MainActivity.IMAGE_ID,0);
+        String movieName = intent.getStringExtra(MainActivity.MOVIE_NAME);
 
-        poster.setImageResource(mThumbIds[number]);
-        name.setText(mNames[number]);
+        poster.setImageResource(imageID);
+        name.setText(movieName);
 
     }
 }
