@@ -29,9 +29,25 @@ import ru.surf.course.movierecommendations.MovieInfo;
  * Created by andrew on 12/3/16.
  */
 
+interface CompletedListener{
+    void taskComleted();
+}
+
+
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     private final String LOG_TAG = getClass().getSimpleName();
+
+    private List<CompletedListener> listeners = new ArrayList<CompletedListener>();
+
+    public void addListener(CompletedListener toAdd){
+        listeners.add(toAdd);
+    }
+
+    private void invokeEvent(){
+        for (CompletedListener listener : listeners)
+            listener.taskComleted();
+    }
 
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
@@ -104,7 +120,9 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         }
 
         try {
-            return parseJson(movieJsonStr);
+            List<MovieInfo> result = parseJson(movieJsonStr);
+            invokeEvent();
+            return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
