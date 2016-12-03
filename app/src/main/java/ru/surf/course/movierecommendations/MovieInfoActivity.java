@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import java.util.Random;
  */
 
 public class MovieInfoActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
