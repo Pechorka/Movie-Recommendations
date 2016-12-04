@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements PopularMoviesFrag
 
     @Override
     public void itemClicked(int position, long id) {
-        Toast.makeText(this, "shit", Toast.LENGTH_LONG).show();
         MovieInfoFragment movieInfoFragment = MovieInfoFragment.newInstance(346672);
         getFragmentManager().beginTransaction().replace(R.id.activity_main_container, movieInfoFragment).addToBackStack("movieInfo").commit();
     }

@@ -17,6 +17,7 @@ public class ImageLoader {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
                 .centerCrop()
+                .resize(target.getWidth(), target.getHeight())
                 .into(target);
     }
 
