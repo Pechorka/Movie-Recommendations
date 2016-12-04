@@ -1,14 +1,11 @@
 package ru.surf.course.movierecommendations;
 
+import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by andrew on 12/3/16.
- */
+public class MovieInfo implements Serializable{
 
-public class MovieInfo {
-
-    public String name;
+    public String title;
     public String posterPath;
     public String overview;
     public Date date;
@@ -21,8 +18,8 @@ public class MovieInfo {
 
     }
 
-    public MovieInfo(String name, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id) {
-        this.name = name;
+    public MovieInfo(String title, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id) {
+        this.title = title;
         this.posterPath = posterPath;
         this.overview = overview;
         this.date = date;
