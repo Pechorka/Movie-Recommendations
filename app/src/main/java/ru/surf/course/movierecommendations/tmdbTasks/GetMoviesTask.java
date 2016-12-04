@@ -1,9 +1,7 @@
 package ru.surf.course.movierecommendations.tmdbTasks;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -29,24 +27,26 @@ import ru.surf.course.movierecommendations.MovieInfo;
  * Created by andrew on 12/3/16.
  */
 
-interface CompletedListener{
-    void taskComleted();
-}
+
 
 
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
+    public interface TaskCompletedListener {
+        void taskCompleted(List<MovieInfo> result);
+    }
+
     private final String LOG_TAG = getClass().getSimpleName();
 
-    private List<CompletedListener> listeners = new ArrayList<CompletedListener>();
+    private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
 
-    public void addListener(CompletedListener toAdd){
+    public void addListener(TaskCompletedListener toAdd){
         listeners.add(toAdd);
     }
 
-    private void invokeEvent(){
-        for (CompletedListener listener : listeners)
-            listener.taskComleted();
+    private void invokeEvent(List<MovieInfo> result){
+        for (TaskCompletedListener listener : listeners)
+            listener.taskCompleted(result);
     }
 
     @Override
@@ -121,7 +121,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
         try {
             List<MovieInfo> result = parseJson(movieJsonStr);
-            invokeEvent();
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -135,7 +134,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     @Override
     protected void onPostExecute(List<MovieInfo> movieInfos) {
-        super.onPostExecute(movieInfos);
+        invokeEvent(movieInfos);
     }
 
     private List<MovieInfo> parseJson(String jsonStr) throws JSONException, ParseException {
@@ -150,7 +149,13 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_ID = "id";
 
         JSONObject movieJson = new JSONObject(jsonStr);
-        JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
+        JSONArray movieArray;
+        if (movieJson.has(TMDB_RESULTS))
+            movieArray = movieJson.getJSONArray(TMDB_RESULTS);
+        else {
+            movieArray = new JSONArray();
+            movieArray.put(movieJson);
+        }
 
         List<MovieInfo> result = new ArrayList<>();
         MovieInfo item;
