@@ -6,6 +6,7 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
         android:id="@+id/activity_main_toolbar"/>
 
     <FrameLayout
