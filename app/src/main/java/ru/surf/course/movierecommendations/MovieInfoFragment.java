@@ -48,7 +48,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_movie_info, container, true);
+        View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         title = (TextView)root.findViewById(R.id.movie_info_name);
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
 
