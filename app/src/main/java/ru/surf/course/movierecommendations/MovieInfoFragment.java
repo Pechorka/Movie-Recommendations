@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
  * Created by andrew on 11/26/16.
@@ -67,12 +68,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     public void fillInformation() {
-        Picasso.with(getActivity())
-                .load(currentMovie.posterPath)
-                .centerCrop()
-                .into(poster);
-
-
+        ImageLoader.putPoster(getActivity(), currentMovie.posterPath, poster);
+        title.setText(currentMovie.title);
     }
 
 
