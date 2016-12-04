@@ -71,6 +71,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
                 .load(currentMovie.posterPath)
                 .centerCrop()
                 .into(poster);
+
+
     }
 
 
