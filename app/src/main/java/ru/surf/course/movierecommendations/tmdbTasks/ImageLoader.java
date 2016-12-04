@@ -16,8 +16,9 @@ public class ImageLoader {
     public static void putPoster(Context context, String path, ImageView target) {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
+                .noFade()
+                .resize(target.getMeasuredWidth(), target.getMeasuredHeight())
                 .centerCrop()
-                .resize(target.getWidth(), target.getHeight())
                 .into(target);
     }
 
