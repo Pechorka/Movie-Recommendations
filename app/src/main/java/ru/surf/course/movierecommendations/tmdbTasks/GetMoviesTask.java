@@ -32,6 +32,8 @@ import ru.surf.course.movierecommendations.MovieInfo;
 
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
+    final String POPULAR = "popular";
+
     public interface TaskCompletedListener {
         void taskCompleted(List<MovieInfo> result);
     }
@@ -47,6 +49,14 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private void invokeEvent(List<MovieInfo> result){
         for (TaskCompletedListener listener : listeners)
             listener.taskCompleted(result);
+    }
+
+    public void getMovieInfo(int movieId, String language) {
+        execute(Integer.toString(movieId), language);
+    }
+
+    public void getPopularMovies(String language) {
+        execute(POPULAR, language);
     }
 
     @Override

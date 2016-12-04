@@ -46,7 +46,7 @@ public class MovieInfoActivity extends AppCompatActivity implements GetMoviesTas
 
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
-        getMoviesTask.execute(Integer.toString(movieId), "en");
+        getMoviesTask.getMovieInfo(movieId, "en");
 
 
     }
