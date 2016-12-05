@@ -55,12 +55,17 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() == null)
+            onDestroy();
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         title = (TextView)root.findViewById(R.id.movie_info_name);
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
 
-        if (getArguments() == null)
-            onDestroy();
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         if (getArguments().containsKey(KEY_MOVIE)) {
             currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
             dataLoaded = 1;
@@ -70,8 +75,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             dataLoaded = 0;
             loadInformation(getArguments().getInt(KEY_MOVIE_ID), "en");
         }
-
-        return root;
     }
 
     public void loadInformation(int movieId, String language) {
