@@ -9,19 +9,16 @@
     </style>
 
     <style name="MovieInfoPoster">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/poster_height_min</item>
+        <item name="android:layout_width">@dimen/poster_width</item>
+        <item name="android:layout_height">@dimen/poster_height</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="Header">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="Header" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/colorHeader</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">@dimen/header_font_size</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:textSize">@dimen/title_font_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

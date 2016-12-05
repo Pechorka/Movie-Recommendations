@@ -10,21 +10,27 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="@dimen/content_top_padding"
+        android:paddingStart="@dimen/content_left_padding"
+        android:paddingEnd="@dimen/content_left_padding"
+        android:paddingLeft="@dimen/content_left_padding"
+        android:paddingRight="@dimen/content_left_padding"
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
 
             <android.support.v7.widget.CardView
                 android:id="@+id/movie_info_poster_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/poster_height_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 card_view:cardCornerRadius="0dp"
+                card_view:cardElevation="5dp"
+                android:layout_margin="20dp"
                 >
 
             <ImageView
@@ -37,9 +43,16 @@
             <TextView
                 style="@style/Header"
                 android:id="@+id/movie_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/movie_info_poster_placeholder"
+                android:layout_toRightOf="@id/movie_info_poster_placeholder"
+                android:layout_alignTop="@id/movie_info_poster_placeholder"
+                android:paddingTop="0dp"
+                android:gravity="center_horizontal"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
