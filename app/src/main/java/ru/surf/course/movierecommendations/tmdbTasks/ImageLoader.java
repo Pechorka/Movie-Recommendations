@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 public class ImageLoader {
 
-    private static final String TMDB_BASE_POSTER_URL = "https://image.tmdb.org/t/p/w154/";
+    private static final String TMDB_BASE_POSTER_URL = "https://image.tmdb.org/t/p/w500/";
 
     public static void putPoster(Context context, String path, ImageView target) {
         Picasso.with(context)

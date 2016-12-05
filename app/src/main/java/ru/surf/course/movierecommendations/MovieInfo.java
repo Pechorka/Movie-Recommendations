@@ -1,7 +1,9 @@
 package ru.surf.course.movierecommendations;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MovieInfo implements Serializable{
 
@@ -27,5 +29,20 @@ public class MovieInfo implements Serializable{
         this.rating = rating;
         this.voteCount = voteCount;
         this.id = id;
+    }
+
+    public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
+        if (imageIDs.length != names.length) {
+            throw new IllegalArgumentException("Length of arrays should be same");
+        }
+        List<MovieInfo> movieInfoList = new ArrayList<>();
+        MovieInfo moviewInfo;
+        for (int i = 0; i < imageIDs.length; i++) {
+            moviewInfo = new MovieInfo();
+            moviewInfo.id = imageIDs[i];
+            moviewInfo.title = names[i];
+            movieInfoList.add(moviewInfo);
+        }
+        return movieInfoList;
     }
 }

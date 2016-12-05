@@ -10,13 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ru.surf.course.movierecommendations.MainActivity">
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_popular_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:id="@+id/grid_movies_list"/>
+        android:layout_height="match_parent" />
 
 </FrameLayout>

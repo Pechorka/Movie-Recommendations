@@ -3,16 +3,15 @@ package ru.surf.course.movierecommendations;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ru.surf.course.movierecommendations.Adapters.GridCustomAdapter;
+import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
 
 
 public class PopularMoviesFragment extends Fragment {
@@ -22,17 +21,7 @@ public class PopularMoviesFragment extends Fragment {
         return popularMoviesFragment;
     }
 
-    public interface onItemClickListener{
-        public void itemClicked(int position, long id);
-    }
-
-    public void addOnItemClickListener(onItemClickListener listener) {
-        listeners.add(listener);
-    }
-
-    List<onItemClickListener> listeners = new ArrayList<>();
-
-    GridView gridView;
+    RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -63,17 +52,12 @@ public class PopularMoviesFragment extends Fragment {
                 R.drawable.mad_max
         };
 
-        gridView = (GridView)root.findViewById(R.id.grid_movies_list);
-        GridCustomAdapter adapter = new GridCustomAdapter(mThumbIds, mNames, getActivity());
-        gridView.setAdapter(adapter);
+        recyclerView = (RecyclerView) root.findViewById(R.id.fragment_popular_rv);
+        List<MovieInfo> movieInfoList = MovieInfo.createMovieInfoList(mThumbIds, mNames);
+        GridMoviesAdapter adapter = new GridMoviesAdapter(getActivity(), movieInfoList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                for (onItemClickListener listener : listeners)
-                    listener.itemClicked(position, id);
-            }
-        });
 
         return root;
     }

@@ -64,13 +64,15 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         if (params.length == 0)
             return null;
 
-        String language = "en";
+        String language;
         if (params.length > 1)
             language = params[1];
+        else language = "en";
 
-        String page = "1";
+        String page;
         if (params.length > 2)
             page = params[2];
+        else page = "1";
 
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
