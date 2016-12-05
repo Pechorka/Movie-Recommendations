@@ -1,9 +1,12 @@
 package ru.surf.course.movierecommendations.tmdbTasks;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * Created by andrew on 12/4/16.
@@ -18,6 +21,15 @@ public class ImageLoader {
                 .load(TMDB_BASE_POSTER_URL + path)
                 .noFade()
                 .resize(target.getMeasuredWidth(), target.getMeasuredHeight())
+                .centerCrop()
+                .into(target);
+    }
+
+    public static void getPoster(Context context, String path, int width, int height, Target target) {
+        Picasso.with(context)
+                .load(TMDB_BASE_POSTER_URL + path)
+                .noFade()
+                .resize(width, height)
                 .centerCrop()
                 .into(target);
     }

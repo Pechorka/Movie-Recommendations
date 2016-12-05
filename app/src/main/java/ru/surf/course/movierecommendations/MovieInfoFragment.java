@@ -1,6 +1,8 @@
 package ru.surf.course.movierecommendations;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -24,10 +27,14 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "moveId";
+    final static int DATA_TO_LOAD = 2;
 
     private TextView title;
     private ImageView poster;
     private MovieInfo currentMovie;
+
+    private Bitmap posterBitmap;
+    private int dataLoaded = 0;
 
     public static MovieInfoFragment newInstance(MovieInfo movieInfo) {
         MovieInfoFragment movieInfoFragment = new MovieInfoFragment();
@@ -56,26 +63,66 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             onDestroy();
         if (getArguments().containsKey(KEY_MOVIE)) {
             currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
-            fillInformation();
+            dataLoaded = 1;
+            loadPoster();
         }
         else if (getArguments().containsKey(KEY_MOVIE_ID)){
-            GetMoviesTask getMoviesTask = new GetMoviesTask();
-            getMoviesTask.addListener(this);
-            getMoviesTask.getMovieInfo(getArguments().getInt(KEY_MOVIE_ID), "en");
+            dataLoaded = 0;
+            loadInformation(getArguments().getInt(KEY_MOVIE_ID), "en");
         }
 
         return root;
     }
 
-    public void fillInformation() {
-        ImageLoader.putPoster(getActivity(), currentMovie.posterPath, poster);
-        title.setText(currentMovie.title);
+    public void loadInformation(int movieId, String language) {
+        GetMoviesTask getMoviesTask = new GetMoviesTask();
+        getMoviesTask.addListener(this);
+        getMoviesTask.getMovieInfo(movieId, language);
+
+
     }
 
+    public void loadPoster(){
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                posterBitmap = bitmap;
+                dataLoadComplete();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                //TODO handle error
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        ImageLoader.getPoster(getActivity(), currentMovie.posterPath, poster.getMeasuredWidth(), poster.getMeasuredHeight(), target);
+    }
+
+    public void fillInformation() {
+        poster.setImageBitmap(posterBitmap);
+        title.setText(currentMovie.title);
+    }
 
     @Override
     public void taskCompleted(List<MovieInfo> result) {
         currentMovie = result.get(0);
-        fillInformation();
+        dataLoadComplete();
+        loadPoster();
+    }
+
+    public void dataLoadComplete(){
+        if (++dataLoaded == DATA_TO_LOAD) {
+            fillInformation();
+            View progressBarPlaceholder = null;
+            if (getView() != null)
+                progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);
+            if (progressBarPlaceholder != null)
+                progressBarPlaceholder.setVisibility(View.GONE);
+        }
     }
 }
