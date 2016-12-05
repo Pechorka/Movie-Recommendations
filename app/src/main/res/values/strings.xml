@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movie Recommendations</string>
     <string name="movie_poster">movie poster</string>
+    <string name="layout_switch">layout_switch</string>
 </resources>
