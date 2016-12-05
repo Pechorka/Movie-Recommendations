@@ -15,8 +15,7 @@
 
         <ImageView
             android:id="@+id/list_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/MovieInfoPoster"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="16dp"

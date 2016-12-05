@@ -103,12 +103,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
             }
         };
-        ImageLoader.getPoster(getActivity(), currentMovie.posterPath, poster.getMeasuredWidth(), poster.getMeasuredHeight(), target);
+        ImageLoader.getPoster(getActivity(), currentMovie.posterPath, poster.getLayoutParams().width, poster.getLayoutParams().height, target);
     }
 
     public void fillInformation() {
         poster.setImageBitmap(posterBitmap);
-//        ImageLoader.putPoster(getActivity(),currentMovie.posterPath,poster);
         title.setText(currentMovie.title);
     }
 

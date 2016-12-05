@@ -18,8 +18,7 @@ public class ImageLoader {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
                 .noFade()
-                .resize(250, 375)
-                //.resize(target.getMeasuredWidth(), target.getMeasuredHeight())
+                .resize(target.getLayoutParams().width, target.getLayoutParams().height)
                 .centerCrop()
                 .into(target);
     }
@@ -28,8 +27,7 @@ public class ImageLoader {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
                 .noFade()
-                .resize(250, 375)
-                //.resize(width, height)
+                .resize(width, height)
                 .centerCrop()
                 .into(target);
     }
