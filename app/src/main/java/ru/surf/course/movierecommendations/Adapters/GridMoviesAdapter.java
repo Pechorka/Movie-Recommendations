@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.MovieInfoFragment;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
  * Created by sergey on 05.12.16.
@@ -32,20 +31,6 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
         this.movieInfoList = movieInfoList;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView name;
-        public ImageView image;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-
-            name = (TextView) itemView.findViewById(R.id.grid_text);
-            image = (ImageView) itemView.findViewById(R.id.grid_image);
-        }
-
-    }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,17 +40,13 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MovieInfo movieInfo = movieInfoList.get(position);
+        final MovieInfo movieInfo = movieInfoList.get(position);
         holder.name.setText(movieInfo.title);
-        Picasso.with(context).
-                load(movieInfo.id)
-                .noFade().resize(250, 375)
-                .centerCrop()
-                .into(holder.image);
+        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image);
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentToSwitch(346672);
+                fragmentToSwitch(movieInfo);
             }
         });
 
@@ -76,17 +57,35 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
         return movieInfoList.size();
     }
 
-    private void fragmentToSwitch(int id) {
-        MovieInfoFragment movieInfoFragment = MovieInfoFragment.newInstance(id);
+    private void fragmentToSwitch(MovieInfo info) {
+        MovieInfoFragment movieInfoFragment = MovieInfoFragment.newInstance(info);
         switchContent(R.id.activity_main_container, movieInfoFragment);
     }
 
-    public void switchContent(int id, Fragment fragment) {
+    public void setMovieInfoList(List<MovieInfo> list) {
+        movieInfoList = list;
+    }
+
+    private void switchContent(int id, Fragment fragment) {
         if (context == null)
             return;
         if (context instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) context;
             mainActivity.switchContent(id, fragment);
+        }
+
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView name;
+        public ImageView image;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+
+            name = (TextView) itemView.findViewById(R.id.grid_text);
+            image = (ImageView) itemView.findViewById(R.id.grid_image);
         }
 
     }

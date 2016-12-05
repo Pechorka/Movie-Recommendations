@@ -105,6 +105,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     public void fillInformation() {
         poster.setImageBitmap(posterBitmap);
+//        ImageLoader.putPoster(getActivity(),currentMovie.posterPath,poster);
         title.setText(currentMovie.title);
     }
 

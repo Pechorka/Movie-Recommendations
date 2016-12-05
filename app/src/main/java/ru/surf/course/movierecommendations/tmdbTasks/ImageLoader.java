@@ -1,8 +1,6 @@
 package ru.surf.course.movierecommendations.tmdbTasks;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -20,7 +18,8 @@ public class ImageLoader {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
                 .noFade()
-                .resize(target.getMeasuredWidth(), target.getMeasuredHeight())
+                .resize(250, 375)
+                //.resize(target.getMeasuredWidth(), target.getMeasuredHeight())
                 .centerCrop()
                 .into(target);
     }
@@ -29,7 +28,8 @@ public class ImageLoader {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + path)
                 .noFade()
-                .resize(width, height)
+                .resize(250, 375)
+                //.resize(width, height)
                 .centerCrop()
                 .into(target);
     }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         PopularMoviesFragment popularMoviesFragment = PopularMoviesFragment.newInstance();
+        Log.d("MainActivity", "on create");
 
         final FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().add(R.id.activity_main_container, popularMoviesFragment).commit();
