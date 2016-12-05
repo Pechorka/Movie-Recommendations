@@ -3,8 +3,8 @@ package ru.surf.course.movierecommendations;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +56,7 @@ public class PopularMoviesFragment extends Fragment {
         List<MovieInfo> movieInfoList = MovieInfo.createMovieInfoList(mThumbIds, mNames);
         GridMoviesAdapter adapter = new GridMoviesAdapter(getActivity(), movieInfoList);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
 
 
         return root;
