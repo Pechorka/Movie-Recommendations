@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(toolbar);
 
         PopularMoviesFragment popularMoviesFragment = PopularMoviesFragment.newInstance();
 

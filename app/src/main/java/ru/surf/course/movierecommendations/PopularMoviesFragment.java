@@ -74,6 +74,7 @@ public class PopularMoviesFragment extends Fragment {
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         grid = true;
 
+        setHasOptionsMenu(true);
         return root;
     }
 
@@ -85,10 +86,12 @@ public class PopularMoviesFragment extends Fragment {
                 recyclerView.setAdapter(listMoviesAdapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
+                grid = false;
             } else {
                 recyclerView.setAdapter(gridMoviesAdapter);
                 recyclerView.setLayoutManager(staggeredGridLayoutManager);
                 item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
+                grid = true;
             }
             return true;
         }
@@ -97,3 +100,4 @@ public class PopularMoviesFragment extends Fragment {
     }
 
 }
+
