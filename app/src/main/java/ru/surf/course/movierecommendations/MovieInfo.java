@@ -8,6 +8,8 @@ import java.util.List;
 public class MovieInfo implements Serializable{
 
     public String title;
+    public String originalTitle;
+    public List<Integer> genreIds;
     public String posterPath;
     public String overview;
     public Date date;
@@ -20,8 +22,10 @@ public class MovieInfo implements Serializable{
 
     }
 
-    public MovieInfo(String title, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id) {
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id) {
         this.title = title;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
         this.posterPath = posterPath;
         this.overview = overview;
         this.date = date;
@@ -30,6 +34,7 @@ public class MovieInfo implements Serializable{
         this.voteCount = voteCount;
         this.id = id;
     }
+
 
     public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
         if (imageIDs.length != names.length) {

@@ -159,6 +159,8 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_VOTE_COUNT = "vote_count";
         final String TMDB_RATING = "vote_average";
         final String TMDB_ID = "id";
+        final String TMDB_ORIGINAL_TITLE = "original_title";
+        final String TMDB_GENRE_IDS = "genre_ids";
 
         JSONObject movieJson = new JSONObject(jsonStr);
         JSONArray movieArray;
@@ -172,9 +174,22 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         List<MovieInfo> result = new ArrayList<>();
         MovieInfo item;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
+        JSONArray genres;
+        List<Integer> genresList;
         for (int i = 0; i < movieArray.length(); i++) {
+
+
+            //get genres
+            genres = movieArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
+            genresList = new ArrayList<>();
+            for (int k = 0; k < genres.length(); k++)
+               genresList.add(genres.getInt(k));
+
+
             item = new MovieInfo(
                     movieArray.getJSONObject(i).getString(TMDB_TITLE),
+                    movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE),
+                    genresList,
                     movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH),
                     movieArray.getJSONObject(i).getString(TMDB_OVERVIEW),
                     formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE)),
