@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="poster_height">180dp</dimen>
     <dimen name="poster_width">135dp</dimen>
-    <dimen name="title_font_size">23sp</dimen>
+    <dimen name="title_font_size">21sp</dimen>
     <dimen name="overview_font_size">17sp</dimen>
     <dimen name="content_top_padding">10dp</dimen>
     <dimen name="content_left_padding">10dp</dimen>

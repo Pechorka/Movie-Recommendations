@@ -6,6 +6,7 @@
     <color name="colorStatusBar">#000000</color>
     <color name="colorAppBar">#212121</color>
     <color name="colorDialog">#424242</color>
-    <color name="colorHeader">#ffffff</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextSecondary">#70ffffff</color>
     <color name="colorBackground">#303030</color>
 </resources>

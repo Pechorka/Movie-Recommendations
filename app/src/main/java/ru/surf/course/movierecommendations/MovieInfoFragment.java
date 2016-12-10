@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Calendar;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -31,6 +32,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private TextView title;
     private TextView overview;
+    private TextView releaseYear;
     private ImageView poster;
     private MovieInfo currentMovie;
 
@@ -62,6 +64,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         title = (TextView)root.findViewById(R.id.movie_info_name);
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
+        releaseYear = (TextView)root.findViewById(R.id.movie_info_release_year);
 
         return root;
     }
@@ -112,6 +115,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster.setImageBitmap(posterBitmap);
         title.setText(currentMovie.title);
         overview.setText(currentMovie.overview);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentMovie.date);
+        releaseYear.setText("(" + calendar.get(Calendar.YEAR) + ")");
     }
 
     @Override
