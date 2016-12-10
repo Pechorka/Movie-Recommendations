@@ -30,6 +30,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     final static int DATA_TO_LOAD = 2;
 
     private TextView title;
+    private TextView overview;
     private ImageView poster;
     private MovieInfo currentMovie;
 
@@ -60,6 +61,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         title = (TextView)root.findViewById(R.id.movie_info_name);
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
+        overview = (TextView)root.findViewById(R.id.movie_info_overview);
 
         return root;
     }
@@ -109,6 +111,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public void fillInformation() {
         poster.setImageBitmap(posterBitmap);
         title.setText(currentMovie.title);
+        overview.setText(currentMovie.overview);
     }
 
     @Override

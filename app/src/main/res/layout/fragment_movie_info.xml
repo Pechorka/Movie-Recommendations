@@ -53,6 +53,14 @@
                 android:gravity="center_horizontal"
                 />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_overview"
+                android:layout_below="@id/movie_info_poster_placeholder"
+                android:textSize="@dimen/overview_font_size"
+                android:textAlignment="center"/>
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
