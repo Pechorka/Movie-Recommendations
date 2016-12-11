@@ -41,8 +41,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView releaseYear;
     private ImageView poster;
     private MovieInfo currentMovie;
-    private ImageView bigPoster;
-    private RelativeLayout bigPosterPlaceholder;
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
@@ -88,7 +86,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if (getArguments().containsKey(KEY_MOVIE)) {
             currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
-            dataLoaded = 1;
+            dataLoaded = 0;
+            loadInformation(currentMovie.id, "en");
             loadPoster();
         }
         else if (getArguments().containsKey(KEY_MOVIE_ID)){

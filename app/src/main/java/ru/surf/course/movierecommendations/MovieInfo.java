@@ -17,6 +17,11 @@ public class MovieInfo implements Serializable{
     public Double rating;
     public int voteCount;
     public int id;
+    public String budget;
+    public List<String> genreNames;
+    public List<String> productionCompaniesNames;
+    public List<String> productionCountriesNames;
+    public String revenue;
 
     public MovieInfo(){
 
@@ -35,18 +40,36 @@ public class MovieInfo implements Serializable{
         this.id = id;
     }
 
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.date = date;
+        this.backdropPath = backdropPath;
+        this.rating = rating;
+        this.voteCount = voteCount;
+        this.id = id;
+        this.budget = budget;
+        this.genreNames = genreNames;
+        this.productionCompaniesNames = productionCompaniesNames;
+        this.productionCountriesNames = productionCountriesNames;
+        this.revenue = revenue;
+    }
+
 
     public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
         if (imageIDs.length != names.length) {
             throw new IllegalArgumentException("Length of arrays should be same");
         }
         List<MovieInfo> movieInfoList = new ArrayList<>();
-        MovieInfo moviewInfo;
+        MovieInfo movieInfo;
         for (int i = 0; i < imageIDs.length; i++) {
-            moviewInfo = new MovieInfo();
-            moviewInfo.id = imageIDs[i];
-            moviewInfo.title = names[i];
-            movieInfoList.add(moviewInfo);
+            movieInfo = new MovieInfo();
+            movieInfo.id = imageIDs[i];
+            movieInfo.title = names[i];
+            movieInfoList.add(movieInfo);
         }
         return movieInfoList;
     }

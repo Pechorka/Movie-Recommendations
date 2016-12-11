@@ -33,6 +33,7 @@ import ru.surf.course.movierecommendations.MovieInfo;
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     final String POPULAR = "popular";
+    private boolean isLoadingList;
 
     public interface TaskCompletedListener {
         void taskCompleted(List<MovieInfo> result);
@@ -52,10 +53,12 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     }
 
     public void getMovieInfo(int movieId, String language) {
+        isLoadingList = false;
         execute(Integer.toString(movieId), language);
     }
 
     public void getPopularMovies(String language) {
+        isLoadingList = true;
         execute(POPULAR, language);
     }
 
@@ -161,42 +164,94 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_ID = "id";
         final String TMDB_ORIGINAL_TITLE = "original_title";
         final String TMDB_GENRE_IDS = "genre_ids";
+        final String TMDB_GENRES ="genres";
+        final String TMDB_NAME = "name";
+        final String TMDB_PRODUCTION_COMPANIES = "production_companies";
+        final String TMDB_PRODUCTION_COUNTRIES = "production_countries";
+        final String TMDB_BUDGET = "budget";
+        final String TMDB_REVENUE = "revenue";
+
 
         JSONObject movieJson = new JSONObject(jsonStr);
-        JSONArray movieArray;
-        if (movieJson.has(TMDB_RESULTS))
-            movieArray = movieJson.getJSONArray(TMDB_RESULTS);
-        else {
-            movieArray = new JSONArray();
-            movieArray.put(movieJson);
-        }
+
 
         List<MovieInfo> result = new ArrayList<>();
         MovieInfo item;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
-        JSONArray genres;
-        List<Integer> genresList;
-        for (int i = 0; i < movieArray.length(); i++) {
 
 
+        if (isLoadingList){
+
+            JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
+            JSONArray genres;
+
+            List<Integer> genresList;
+            for (int i = 0; i < movieArray.length(); i++) {
+                //get genres
+                genres = movieArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
+                genresList = new ArrayList<>();
+                for (int k = 0; k < genres.length(); k++)
+                    genresList.add(genres.getInt(k));
+
+
+                item = new MovieInfo(
+                        movieArray.getJSONObject(i).getString(TMDB_TITLE),
+                        movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE),
+                        genresList,
+                        movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH),
+                        movieArray.getJSONObject(i).getString(TMDB_OVERVIEW),
+                        formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE)),
+                        movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH),
+                        movieArray.getJSONObject(i).getDouble(TMDB_RATING),
+                        movieArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT),
+                        movieArray.getJSONObject(i).getInt(TMDB_ID));
+                result.add(item);
+            }
+        } else {
             //get genres
-            genres = movieArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
-            genresList = new ArrayList<>();
-            for (int k = 0; k < genres.length(); k++)
-               genresList.add(genres.getInt(k));
+            JSONArray genres;
+            List<Integer> genresListIds;
+            List<String> genresListNames;
+            genres = movieJson.getJSONArray(TMDB_GENRES);
+            genresListIds = new ArrayList<>();
+            genresListNames = new ArrayList<>();
+            for (int k = 0; k < genres.length(); k++) {
+                genresListIds.add(genres.getJSONObject(k).getInt(TMDB_ID));
+                genresListNames.add(genres.getJSONObject(k).getString(TMDB_NAME));
+            }
 
+            //get production companies names
+            JSONArray productionCompanies;
+            List<String> productionCompaniesNames;
+            productionCompanies = movieJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
+            productionCompaniesNames = new ArrayList<>();
+            for (int k = 0; k < productionCompanies.length(); k++)
+                productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
+
+            //get production countries
+            JSONArray productionCountries;
+            List<String> productionCountriesNames;
+            productionCountries = movieJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
+            productionCountriesNames = new ArrayList<>();
+            for (int k = 0; k < productionCountries.length(); k++)
+                productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
 
             item = new MovieInfo(
-                    movieArray.getJSONObject(i).getString(TMDB_TITLE),
-                    movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE),
-                    genresList,
-                    movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH),
-                    movieArray.getJSONObject(i).getString(TMDB_OVERVIEW),
-                    formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE)),
-                    movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH),
-                    movieArray.getJSONObject(i).getDouble(TMDB_RATING),
-                    movieArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT),
-                    movieArray.getJSONObject(i).getInt(TMDB_ID));
+                    movieJson.getString(TMDB_TITLE),
+                    movieJson.getString(TMDB_ORIGINAL_TITLE),
+                    genresListIds,
+                    movieJson.getString(TMDB_POSTER_PATH),
+                    movieJson.getString(TMDB_OVERVIEW),
+                    formatter.parse(movieJson.getString(TMDB_DATE)),
+                    movieJson.getString(TMDB_BACKDROP_PATH),
+                    movieJson.getDouble(TMDB_RATING),
+                    movieJson.getInt(TMDB_VOTE_COUNT),
+                    movieJson.getInt(TMDB_ID),
+                    movieJson.getString(TMDB_BUDGET),
+                    genresListNames,
+                    productionCompaniesNames,
+                    productionCountriesNames,
+                    movieJson.getString(TMDB_REVENUE));
             result.add(item);
         }
 
