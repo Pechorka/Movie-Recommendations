@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.Adapters;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
         final MovieInfo movieInfo = movieInfoList.get(position);
         holder.name.setText(movieInfo.title);
         ImageLoader.putPoster(context, movieInfo.posterPath, holder.image);
-        holder.image.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragmentToSwitch(movieInfo);
@@ -80,12 +81,14 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
 
         public TextView name;
         public ImageView image;
+        public CardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             name = (TextView) itemView.findViewById(R.id.grid_text);
             image = (ImageView) itemView.findViewById(R.id.grid_image);
+            cardView = (CardView) itemView.findViewById(R.id.grid_cv);
         }
 
     }

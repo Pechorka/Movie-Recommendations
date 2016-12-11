@@ -7,7 +7,8 @@
     card_view:contentPadding="8dp"
     card_view:cardUseCompatPadding="true"
     card_view:cardCornerRadius="8dp"
-    android:layout_marginBottom="16dp">
+    android:layout_marginBottom="16dp"
+    android:id="@+id/grid_cv">
 
     <RelativeLayout
         android:layout_width="match_parent"

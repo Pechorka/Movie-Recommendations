@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     card_view:cardCornerRadius="8dp"
-    android:layout_marginBottom="16dp">
+    android:layout_marginBottom="16dp"
+    android:id="@+id/list_cv">
 
     <RelativeLayout
         android:layout_width="match_parent"
