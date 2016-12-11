@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
-        PopularMoviesFragment popularMoviesFragment = PopularMoviesFragment.newInstance();
+        MoviesListFragment moviesListFragment = MoviesListFragment.newInstance();
         Log.d("MainActivity", "on create");
 
         final FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.activity_main_container, popularMoviesFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment).commit();
 
 
     }

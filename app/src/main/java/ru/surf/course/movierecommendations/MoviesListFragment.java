@@ -21,7 +21,7 @@ import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 
 
-public class PopularMoviesFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
+public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
     private final String KEY_GRID = "grid";
 
@@ -33,9 +33,9 @@ public class PopularMoviesFragment extends Fragment implements GetMoviesTask.Tas
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
-    public static PopularMoviesFragment newInstance() {
-        PopularMoviesFragment popularMoviesFragment = new PopularMoviesFragment();
-        return popularMoviesFragment;
+    public static MoviesListFragment newInstance() {
+        MoviesListFragment moviesListFragment = new MoviesListFragment();
+        return moviesListFragment;
     }
 
     private boolean grid;
@@ -44,9 +44,8 @@ public class PopularMoviesFragment extends Fragment implements GetMoviesTask.Tas
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_popular_movies, container, false);
+        View root = inflater.inflate(R.layout.fragment_movies_list, container, false);
 
-        //TODO fix rotation problems
         recyclerView = (RecyclerView) root.findViewById(R.id.fragment_popular_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
