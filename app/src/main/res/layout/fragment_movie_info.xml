@@ -50,7 +50,7 @@
                 android:layout_toRightOf="@id/movie_info_poster_placeholder"
                 android:layout_alignTop="@id/movie_info_poster_placeholder"
                 android:paddingTop="0dp"
-                android:gravity="center_horizontal"
+                android:gravity="left"
                 />
 
             <TextView
@@ -73,6 +73,7 @@
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
 
     <RelativeLayout
         android:id="@+id/movie_info_progress_bar_placeholder"

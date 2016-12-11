@@ -5,17 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -35,6 +41,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView releaseYear;
     private ImageView poster;
     private MovieInfo currentMovie;
+    private ImageView bigPoster;
+    private RelativeLayout bigPosterPlaceholder;
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
@@ -66,6 +74,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
         releaseYear = (TextView)root.findViewById(R.id.movie_info_release_year);
 
+        poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBigPoster();
+            }
+        });
+
         return root;
     }
 
@@ -81,6 +96,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             loadInformation(getArguments().getInt(KEY_MOVIE_ID), "en");
         }
     }
+
+    public void showBigPoster() {
+        //TODO make image popup somehow
+    }
+
 
     public void loadInformation(int movieId, String language) {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
