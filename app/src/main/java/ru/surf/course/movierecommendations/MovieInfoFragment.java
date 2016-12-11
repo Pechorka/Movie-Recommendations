@@ -6,11 +6,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Layout;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,6 +44,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView releaseYear;
     private ImageView poster;
     private MovieInfo currentMovie;
+    private LinearLayout genresPlaceholder;
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
@@ -71,6 +75,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
         releaseYear = (TextView)root.findViewById(R.id.movie_info_release_year);
+        genresPlaceholder = (LinearLayout)root.findViewById(R.id.movie_info_genres_placeholder);
 
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +142,14 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentMovie.date);
         releaseYear.setText("(" + calendar.get(Calendar.YEAR) + ")");
+
+        for (String genreName : currentMovie.genreNames) {
+            Button genreButton = (Button)getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
+            genreButton.setText(genreName);
+            genresPlaceholder.addView(genreButton);
+            genresPlaceholder.addView(new View(getActivity()), 10, 10);
+        }
+
     }
 
     @Override

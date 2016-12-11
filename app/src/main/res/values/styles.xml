@@ -21,4 +21,17 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="GenreButton" parent="Base.Widget.AppCompat.Button">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:background">@drawable/genre_button</item>
+        <item name="android:paddingTop">@dimen/genre_button_padding_top_bottom</item>
+        <item name="android:paddingBottom">@dimen/genre_button_padding_top_bottom</item>
+        <item name="android:paddingLeft">@dimen/genre_button_padding_left_right</item>
+        <item name="android:paddingRight">@dimen/genre_button_padding_left_right</item>
+        <item name="android:textSize">@dimen/genre_button_text_size</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:lines">1</item>
+    </style>
+
 </resources>

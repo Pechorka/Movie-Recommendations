@@ -10,4 +10,8 @@
     <dimen name="overview_font_size">17sp</dimen>
     <dimen name="content_top_padding">10dp</dimen>
     <dimen name="content_left_padding">10dp</dimen>
+    <dimen name="genre_button_corners_radius">30dip</dimen>
+    <dimen name="genre_button_padding_top_bottom">5dp</dimen>
+    <dimen name="genre_button_padding_left_right">10dp</dimen>
+    <dimen name="genre_button_text_size">10sp</dimen>
 </resources>
