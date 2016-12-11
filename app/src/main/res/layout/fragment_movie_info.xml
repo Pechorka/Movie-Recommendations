@@ -70,7 +70,7 @@
                 android:textSize="@dimen/overview_font_size"
                 android:textAlignment="center"/>
 
-            <LinearLayout
+            <org.apmem.tools.layouts.FlowLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -78,8 +78,8 @@
                 android:layout_below="@id/movie_info_release_year"
                 android:layout_alignLeft="@id/movie_info_release_year"
                 android:paddingTop="@dimen/content_top_padding"
-                android:paddingBottom="@dimen/content_top_padding">
-            </LinearLayout>
+                >
+            </org.apmem.tools.layouts.FlowLayout>
 
         </RelativeLayout>
 

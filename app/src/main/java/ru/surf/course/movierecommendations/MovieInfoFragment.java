@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.apmem.tools.layouts.FlowLayout;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.zip.Inflater;
@@ -44,7 +46,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView releaseYear;
     private ImageView poster;
     private MovieInfo currentMovie;
-    private LinearLayout genresPlaceholder;
+    private FlowLayout genresPlaceholder;
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
@@ -75,7 +77,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
         releaseYear = (TextView)root.findViewById(R.id.movie_info_release_year);
-        genresPlaceholder = (LinearLayout)root.findViewById(R.id.movie_info_genres_placeholder);
+        genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
 
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +149,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             Button genreButton = (Button)getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
             genreButton.setText(genreName);
             genresPlaceholder.addView(genreButton);
-            genresPlaceholder.addView(new View(getActivity()), 10, 10);
+            FlowLayout.LayoutParams layoutParams = (FlowLayout.LayoutParams)genreButton.getLayoutParams();
+            layoutParams.setMargins(0,0,(int)getResources().getDimension(R.dimen.genre_button_margin_right),(int)getResources().getDimension(R.dimen.genre_button_margin_bottom));
+            genreButton.setLayoutParams(layoutParams);
         }
 
     }
