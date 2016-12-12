@@ -5,28 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Layout;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -43,7 +36,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private TextView title;
     private TextView overview;
-    private TextView releaseYear;
+    private TextView releaseDate;
     private ImageView poster;
     private MovieInfo currentMovie;
     private FlowLayout genresPlaceholder;
@@ -76,7 +69,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         title = (TextView)root.findViewById(R.id.movie_info_name);
         poster = (ImageView)root.findViewById(R.id.movie_info_poster);
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
-        releaseYear = (TextView)root.findViewById(R.id.movie_info_release_year);
+        releaseDate = (TextView)root.findViewById(R.id.movie_info_release_date);
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
 
         poster.setOnClickListener(new View.OnClickListener() {
@@ -141,9 +134,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster.setImageBitmap(posterBitmap);
         title.setText(currentMovie.title);
         overview.setText(currentMovie.overview);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentMovie.date);
-        releaseYear.setText("(" + calendar.get(Calendar.YEAR) + ")");
+
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
+        releaseDate.setText("(" + dateFormat.format(currentMovie.date) + ")");
 
         for (String genreName : currentMovie.genreNames) {
             Button genreButton = (Button)getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);

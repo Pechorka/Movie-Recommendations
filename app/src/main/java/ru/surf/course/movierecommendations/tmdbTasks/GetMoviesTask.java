@@ -176,7 +176,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
         List<MovieInfo> result = new ArrayList<>();
         MovieInfo item;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 
         if (isLoadingList){
