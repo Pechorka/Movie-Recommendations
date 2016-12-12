@@ -22,6 +22,7 @@ import org.apmem.tools.layouts.FlowLayout;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -46,6 +47,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
+
+    private String language;
 
     public static MovieInfoFragment newInstance(MovieInfo movieInfo) {
         MovieInfoFragment movieInfoFragment = new MovieInfoFragment();
@@ -83,6 +86,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             }
         });
 
+        language = Locale.getDefault().getLanguage();
+
         return root;
     }
 
@@ -91,12 +96,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         if (getArguments().containsKey(KEY_MOVIE)) {
             currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
             dataLoaded = 0;
-            loadInformation(currentMovie.id, "en");
+            loadInformation(currentMovie.id, language);
             loadPoster();
         }
         else if (getArguments().containsKey(KEY_MOVIE_ID)){
             dataLoaded = 0;
-            loadInformation(getArguments().getInt(KEY_MOVIE_ID), "en");
+            loadInformation(getArguments().getInt(KEY_MOVIE_ID), language);
         }
     }
 
