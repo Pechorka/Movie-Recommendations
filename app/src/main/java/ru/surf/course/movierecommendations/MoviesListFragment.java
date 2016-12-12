@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,8 +26,14 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
     private final String KEY_GRID = "grid";
+    private final static String KEY_FILTER = "filter";
+    private final static String KEY_LANGUAGE = "language";
 
+    private String filter;
+    private String language;
     private RecyclerView recyclerView;
+    private boolean grid;
+    List<MovieInfo> movieInfoList;
 
     private GridMoviesAdapter gridMoviesAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
@@ -33,13 +41,22 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
-    public static MoviesListFragment newInstance() {
+    public static MoviesListFragment newInstance(String language, String filter) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_LANGUAGE, language);
+        bundle.putString(KEY_FILTER, filter);
+        moviesListFragment.setArguments(bundle);
         return moviesListFragment;
     }
 
-    private boolean grid;
-    List<MovieInfo> movieInfoList;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        filter = getArguments().getString(KEY_FILTER);
+        language = getArguments().getString(KEY_LANGUAGE);
+    }
 
     @Nullable
     @Override
@@ -52,7 +69,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
 
-        loadInformation("en");
+        loadInformation(language, filter);
         setHasOptionsMenu(true);
         return root;
     }
@@ -70,17 +87,23 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_switch_layout) {
-            if (grid) {
-                switchToLinear();
-                item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
-                grid = false;
-            } else {
-                switchToGrid();
-                item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
-                grid = true;
-            }
-            return true;
+        switch (id) {
+            case R.id.action_switch_layout:
+                if (grid) {
+                    switchToLinear();
+                    item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
+                    grid = false;
+                } else {
+                    switchToGrid();
+                    item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
+                    grid = true;
+                }
+                return true;
+            case R.id.action_search:
+                SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+                // Expand the search view and request focus
+                item.expandActionView();
+                searchView.requestFocus();
         }
 
         return super.onOptionsItemSelected(item);
@@ -95,10 +118,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         dataLoadComplete();
     }
 
-    private void loadInformation(String language) {
+    private void loadInformation(String language, String filter) {
         GetMoviesTask task = new GetMoviesTask();
         task.addListener(this);
-        task.getPopularMovies(language);
+        task.getMovies(language, filter);
     }
 
 

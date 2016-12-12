@@ -3,4 +3,5 @@
     <string name="movie_poster">movie poster</string>
     <string name="layout_switch">layout_switch</string>
     <string name="genre">Genre</string>
+    <string name="search">Search</string>
 </resources>

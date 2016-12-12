@@ -32,7 +32,6 @@ import ru.surf.course.movierecommendations.MovieInfo;
 
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
-    final String POPULAR = "popular";
     private boolean isLoadingList;
 
     public interface TaskCompletedListener {
@@ -57,9 +56,9 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(Integer.toString(movieId), language);
     }
 
-    public void getPopularMovies(String language) {
+    public void getMovies(String language, String filter) {
         isLoadingList = true;
-        execute(POPULAR, language);
+        execute(filter, language);
     }
 
     @Override
