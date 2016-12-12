@@ -14,7 +14,7 @@ public class MovieInfo implements Serializable{
     public String overview;
     public Date date;
     public String backdropPath;
-    public Double rating;
+    public Double voteAverage;
     public int voteCount;
     public int id;
     public String budget;
@@ -27,7 +27,7 @@ public class MovieInfo implements Serializable{
 
     }
 
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id) {
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double voteAverage, int voteCount, int id) {
         this.title = title;
         this.originalTitle = originalTitle;
         this.genreIds = genreIds;
@@ -35,12 +35,12 @@ public class MovieInfo implements Serializable{
         this.overview = overview;
         this.date = date;
         this.backdropPath = backdropPath;
-        this.rating = rating;
+        this.voteAverage = voteAverage;
         this.voteCount = voteCount;
         this.id = id;
     }
 
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double rating, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
         this.title = title;
         this.originalTitle = originalTitle;
         this.genreIds = genreIds;
@@ -48,7 +48,7 @@ public class MovieInfo implements Serializable{
         this.overview = overview;
         this.date = date;
         this.backdropPath = backdropPath;
-        this.rating = rating;
+        this.voteAverage = voteAverage;
         this.voteCount = voteCount;
         this.id = id;
         this.budget = budget;

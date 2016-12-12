@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private ImageView poster;
     private MovieInfo currentMovie;
     private FlowLayout genresPlaceholder;
+    private TextView voteAverage;
 
     private Bitmap posterBitmap;
     private int dataLoaded = 0;
@@ -71,6 +74,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         overview = (TextView)root.findViewById(R.id.movie_info_overview);
         releaseDate = (TextView)root.findViewById(R.id.movie_info_release_date);
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
+        voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
 
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +150,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             layoutParams.setMargins(0,0,(int)getResources().getDimension(R.dimen.genre_button_margin_right),(int)getResources().getDimension(R.dimen.genre_button_margin_bottom));
             genreButton.setLayoutParams(layoutParams);
         }
+
+        voteAverage.setText(String.valueOf(currentMovie.voteAverage));
+        if (currentMovie.voteAverage >= 5)
+            voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingPositive));
+        else voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
 
     }
 

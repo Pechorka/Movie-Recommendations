@@ -16,4 +16,5 @@
     <dimen name="genre_button_text_size">10sp</dimen>
     <dimen name="genre_button_margin_bottom">7dp</dimen>
     <dimen name="genre_button_margin_right">7dp</dimen>
+    <dimen name="vote_average_text_size">23sp</dimen>
 </resources>
