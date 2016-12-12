@@ -97,7 +97,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
             dataLoaded = 0;
             loadInformation(currentMovie.id, language);
-            loadPoster();
         }
         else if (getArguments().containsKey(KEY_MOVIE_ID)){
             dataLoaded = 0;
