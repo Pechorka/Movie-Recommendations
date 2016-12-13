@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
@@ -28,12 +29,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final String KEY_GRID = "grid";
     private final static String KEY_FILTER = "filter";
     private final static String KEY_LANGUAGE = "language";
+    private final static String KEY_SEARCH = "search";
 
     private String filter;
     private String language;
     private RecyclerView recyclerView;
     private boolean grid;
-    List<MovieInfo> movieInfoList;
+    private List<MovieInfo> movieInfoList;
+    private boolean search;
 
     private GridMoviesAdapter gridMoviesAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
@@ -41,21 +44,22 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
-    public static MoviesListFragment newInstance(String language, String filter) {
+    public static MoviesListFragment newInstance(String language, String filter, boolean search) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putString(KEY_FILTER, filter);
+        bundle.putBoolean(KEY_SEARCH, search);
         moviesListFragment.setArguments(bundle);
         return moviesListFragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         filter = getArguments().getString(KEY_FILTER);
         language = getArguments().getString(KEY_LANGUAGE);
+        search = getArguments().getBoolean(KEY_SEARCH);
     }
 
     @Nullable
@@ -68,7 +72,13 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
-
+        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        if (grid) {
+            switchToGrid();
+        } else {
+            switchToLinear();
+        }
         loadInformation(language, filter);
         setHasOptionsMenu(true);
         return root;
@@ -90,13 +100,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         switch (id) {
             case R.id.action_switch_layout:
                 if (grid) {
-                    switchToLinear();
-                    item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
-                    grid = false;
+                    switchToLinear(item);
                 } else {
-                    switchToGrid();
-                    item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
-                    grid = true;
+                    switchToGrid(item);
                 }
                 return true;
             case R.id.action_search:
@@ -114,25 +120,49 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     public void taskCompleted(List<MovieInfo> result) {
         if (result != null) {
             movieInfoList = result;
+            dataLoadComplete();
         }
-        dataLoadComplete();
     }
 
     private void loadInformation(String language, String filter) {
         GetMoviesTask task = new GetMoviesTask();
         task.addListener(this);
-        task.getMovies(language, filter);
+        if (search) {
+            task.getMoviesByName(filter);
+        } else {
+            task.getMovies(language, filter);
+        }
     }
 
-
-    public void switchToLinear() {
+    private void switchToLinear() {
         recyclerView.setAdapter(listMoviesAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(listMoviesAdapter);
+        grid = false;
     }
 
-    public void switchToGrid() {
+    private void switchToGrid() {
         recyclerView.setAdapter(gridMoviesAdapter);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(gridMoviesAdapter);
+        grid = true;
+    }
+
+
+    private void switchToLinear(MenuItem item) {
+        recyclerView.setAdapter(listMoviesAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(listMoviesAdapter);
+        item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
+        grid = false;
+    }
+
+    private void switchToGrid(MenuItem item) {
+        recyclerView.setAdapter(gridMoviesAdapter);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(gridMoviesAdapter);
+        item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
+        grid = true;
     }
 
     public void dataLoadComplete() {
@@ -145,20 +175,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     }
 
     public void fillInformation() {
-        if (gridMoviesAdapter == null) {
-            gridMoviesAdapter = new GridMoviesAdapter(getActivity(), movieInfoList);
-            listMoviesAdapter = new ListMoviesAdapter(getActivity(), movieInfoList);
-        } else {
-            gridMoviesAdapter.setMovieInfoList(movieInfoList);
-            listMoviesAdapter.setMovieInfoList(movieInfoList);
-            gridMoviesAdapter.notifyDataSetChanged();
-            listMoviesAdapter.notifyDataSetChanged();
-        }
-        if (grid) {
-            switchToGrid();
-        } else {
-            switchToLinear();
-        }
+        gridMoviesAdapter.setMovieInfoList(movieInfoList);
+        listMoviesAdapter.setMovieInfoList(movieInfoList);
+
+        gridMoviesAdapter.notifyDataSetChanged();
+        listMoviesAdapter.notifyDataSetChanged();
 
     }
 
