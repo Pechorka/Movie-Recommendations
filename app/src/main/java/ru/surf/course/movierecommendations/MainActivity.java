@@ -17,16 +17,17 @@ import android.view.MenuItem;
 
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
+
 public class MainActivity extends AppCompatActivity {
 
+
+    public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
         context.startActivity(intent);
     }
-
-    public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             final FragmentManager fragmentManager = getFragmentManager();
-             moviesListFragment = MoviesListFragment.newInstance("en", "popular", true);
+            moviesListFragment = MoviesListFragment.newInstance("en", "popular", Tasks.FILTER);
             fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
         } else {
             moviesListFragment = (MoviesListFragment)getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
@@ -59,10 +60,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (isInternetOn()) {
-                    loadInformation(query.replace(' ', '+'));
+                    searchByName(query.replace(' ', '+'));
                 }
-                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
-                // see https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus();
 
                 return true;
@@ -87,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork.isConnectedOrConnecting();
     }
 
-    private void loadInformation(String name) {
-        MoviesListFragment fragment = MoviesListFragment.newInstance(Locale.getDefault().getLanguage(), name, true);
+    private void searchByName(String name) {
+        MoviesListFragment fragment = MoviesListFragment.newInstance(Locale.getDefault().getLanguage(), name, Tasks.SEARCH_BY_NAME);
         switchContent(R.id.activity_main_container, fragment);
     }
 

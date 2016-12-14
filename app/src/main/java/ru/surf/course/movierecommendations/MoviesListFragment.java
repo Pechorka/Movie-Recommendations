@@ -22,21 +22,25 @@ import java.util.List;
 import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 
 public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
-    private final String KEY_GRID = "grid";
-    private final static String KEY_FILTER = "filter";
+    private final static String KEY_GRID = "grid";
+    private final static String KEY_QUERY = "query";
     private final static String KEY_LANGUAGE = "language";
-    private final static String KEY_SEARCH = "search";
+    private final static String KEY_TASK = "task";
+    private final static String KEY_MOVIE_ID = "movie_id";
 
-    private String filter;
+    private String query;
     private String language;
+    private int movie_id;
+
     private RecyclerView recyclerView;
     private boolean grid;
     private List<MovieInfo> movieInfoList;
-    private boolean search;
+    private Tasks task;
 
     private GridMoviesAdapter gridMoviesAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
@@ -44,12 +48,22 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
-    public static MoviesListFragment newInstance(String language, String filter, boolean search) {
+    public static MoviesListFragment newInstance(String language, String query, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
-        bundle.putString(KEY_FILTER, filter);
-        bundle.putBoolean(KEY_SEARCH, search);
+        bundle.putString(KEY_QUERY, query);
+        bundle.putSerializable(KEY_TASK, task);
+        moviesListFragment.setArguments(bundle);
+        return moviesListFragment;
+    }
+
+    public static MoviesListFragment newInstance(String language, int movie_id, Tasks task) {
+        MoviesListFragment moviesListFragment = new MoviesListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_LANGUAGE, language);
+        bundle.putInt(KEY_MOVIE_ID, movie_id);
+        bundle.putSerializable(KEY_TASK, task);
         moviesListFragment.setArguments(bundle);
         return moviesListFragment;
     }
@@ -57,9 +71,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        filter = getArguments().getString(KEY_FILTER);
+        query = getArguments().getString(KEY_QUERY);
         language = getArguments().getString(KEY_LANGUAGE);
-        search = getArguments().getBoolean(KEY_SEARCH);
+        task = (Tasks) getArguments().getSerializable(KEY_TASK);
+        movie_id = getArguments().getInt(KEY_MOVIE_ID);
     }
 
     @Nullable
@@ -79,7 +94,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         } else {
             switchToLinear();
         }
-        loadInformation(language, filter);
+        loadInformation();
         setHasOptionsMenu(true);
         return root;
     }
@@ -107,7 +122,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 return true;
             case R.id.action_search:
                 SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-                // Expand the search view and request focus
                 item.expandActionView();
                 searchView.requestFocus();
         }
@@ -124,13 +138,18 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         }
     }
 
-    private void loadInformation(String language, String filter) {
-        GetMoviesTask task = new GetMoviesTask();
-        task.addListener(this);
-        if (search) {
-            task.getMoviesByName(filter);
-        } else {
-            task.getMovies(language, filter);
+    private void loadInformation() {
+        GetMoviesTask getMoviesTask = new GetMoviesTask();
+        getMoviesTask.addListener(this);
+        switch (task) {
+            case FILTER:
+                getMoviesTask.getMoviesByFilter(language, query);
+                break;
+            case SEARCH_BY_NAME:
+                getMoviesTask.getMoviesByName(query);
+                break;
+            case SEARCH_BY_ID:
+                getMoviesTask.getMovieById(movie_id, language);
         }
     }
 

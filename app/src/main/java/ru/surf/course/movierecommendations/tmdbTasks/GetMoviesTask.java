@@ -32,82 +32,17 @@ import ru.surf.course.movierecommendations.MovieInfo;
 
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
-    private boolean isLoadingList;
-
+    public static final String FILTER_POPULAR = "popular";
+    public static final String FILTER_UPCOMING = "upcoming";
+    public static final String FILTER_TOP_RATED = "top_rated";
+    public static final String FILTER_NOW_PLAYING = "now_playing";
     private final String API_KEY_PARAM = "api_key";
     private final String LANGUAGE_PARAM = "language";
     private final String PAGE_PARAM = "page";
     private final String NAME_PARAM = "query";
-
-    public interface TaskCompletedListener {
-        void taskCompleted(List<MovieInfo> result);
-    }
-
     private final String LOG_TAG = getClass().getSimpleName();
-
+    private boolean isLoadingList;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
-
-    public void addListener(TaskCompletedListener toAdd){
-        listeners.add(toAdd);
-    }
-
-    private void invokeEvent(List<MovieInfo> result){
-        for (TaskCompletedListener listener : listeners)
-            listener.taskCompleted(result);
-    }
-
-    public void getMovieInfo(int movieId, String language) {
-        isLoadingList = false;
-        execute(Integer.toString(movieId), language);
-    }
-
-    public void getMovies(String language, String filter) {
-        isLoadingList = true;
-        execute(filter, language);
-    }
-
-    public void getMoviesByName(String name) {
-        isLoadingList = true;
-        execute(name);
-    }
-
-    private Uri uriByName(String name) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
-        return Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-                .appendQueryParameter(NAME_PARAM, name)
-                .build();
-    }
-
-    private Uri uriByFilterOrId(String filter, String language, String page) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/" + filter + "?";
-        return Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-                .appendQueryParameter(LANGUAGE_PARAM, language)
-                .appendQueryParameter(PAGE_PARAM, page)
-                .build();
-    }
-
-    private boolean isFilterOrId(String toCheck) {
-        //TODO заменить на константы или внешнее перечисление
-        return toCheck.equalsIgnoreCase("popular")
-                || toCheck.equalsIgnoreCase("top_rated")
-                || toCheck.equalsIgnoreCase("now_playing")
-                || toCheck.equalsIgnoreCase("upcoming")
-                || isInteger(toCheck, 10);
-    }
-
-    private static boolean isInteger(String s, int radix) {
-        if (s.isEmpty()) return false;
-        for (int i = 0; i < s.length(); i++) {
-            if (i == 0 && s.charAt(i) == '-') {
-                if (s.length() == 1) return false;
-                else continue;
-            }
-            if (Character.digit(s.charAt(i), radix) < 0) return false;
-        }
-        return true;
-    }
 
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
@@ -300,5 +235,70 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         }
 
         return  result;
+    }
+
+    public void addListener(TaskCompletedListener toAdd) {
+        listeners.add(toAdd);
+    }
+
+    private void invokeEvent(List<MovieInfo> result) {
+        for (TaskCompletedListener listener : listeners)
+            listener.taskCompleted(result);
+    }
+
+    public void getMovieById(int movieId, String language) {
+        isLoadingList = false;
+        execute(Integer.toString(movieId), language);
+    }
+
+    public void getMoviesByFilter(String filter, String language) {
+        isLoadingList = true;
+        execute(filter, language);
+    }
+
+    public void getMoviesByName(String name) {
+        isLoadingList = true;
+        execute(name);
+    }
+
+    private Uri uriByName(String name) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(NAME_PARAM, name)
+                .build();
+    }
+
+    private Uri uriByFilterOrId(String filter, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/" + filter + "?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .build();
+    }
+
+    private boolean isFilterOrId(String toCheck) {
+        return toCheck.equalsIgnoreCase(FILTER_POPULAR)
+                || toCheck.equalsIgnoreCase(FILTER_NOW_PLAYING)
+                || toCheck.equalsIgnoreCase(FILTER_TOP_RATED)
+                || toCheck.equalsIgnoreCase(FILTER_UPCOMING)
+                || isInteger(toCheck, 10);
+    }
+
+    private boolean isInteger(String s, int radix) {
+        if (s.isEmpty()) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 && s.charAt(i) == '-') {
+                if (s.length() == 1) return false;
+                else continue;
+            }
+            if (Character.digit(s.charAt(i), radix) < 0) return false;
+        }
+        return true;
+    }
+
+    public interface TaskCompletedListener {
+        void taskCompleted(List<MovieInfo> result);
     }
 }

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.squareup.picasso.Target;
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,7 +110,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public void loadInformation(int movieId, String language) {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
-        getMoviesTask.getMovieInfo(movieId, language);
+        getMoviesTask.getMovieById(movieId, language);
 
 
     }
