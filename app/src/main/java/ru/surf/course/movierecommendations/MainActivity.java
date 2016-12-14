@@ -96,7 +96,13 @@ public class MainActivity extends AppCompatActivity {
     public void switchContent(int id, Fragment fragment) {
         //noinspection ResourceType
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
+                .replace(id, fragment).addToBackStack(null).commit();
+    }
+
+    public void switchContent(int id, Fragment fragment, int[] customAnimations) {
+        //noinspection ResourceType
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(customAnimations[0], customAnimations[1], customAnimations[2], customAnimations[3])
                 .replace(id, fragment).addToBackStack(null).commit();
     }
 }

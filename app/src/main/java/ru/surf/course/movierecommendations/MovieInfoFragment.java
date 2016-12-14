@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -176,5 +177,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }
+        Log.v("dataLoad", "data loaded:"+dataLoaded);
     }
 }
