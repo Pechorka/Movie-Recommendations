@@ -93,15 +93,15 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        int id = -1;
         if (getArguments().containsKey(KEY_MOVIE)) {
-            currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
-            dataLoaded = 0;
-            loadInformation(currentMovie.id, language);
+            id = ((MovieInfo) getArguments().getSerializable(KEY_MOVIE)).id;
         }
         else if (getArguments().containsKey(KEY_MOVIE_ID)){
-            dataLoaded = 0;
-            loadInformation(getArguments().getInt(KEY_MOVIE_ID), language);
+            id = getArguments().getInt(KEY_MOVIE_ID);
         }
+        dataLoaded = 0;
+        loadInformation(id, language);
     }
 
     public void showBigPoster() {
