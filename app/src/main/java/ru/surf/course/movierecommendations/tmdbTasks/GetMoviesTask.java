@@ -43,6 +43,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private final String NAME_PARAM = "query";
     private final String LOG_TAG = getClass().getSimpleName();
     private boolean isLoadingList;
+    private Tasks task;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
 
     @Override
@@ -68,10 +69,21 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         try {
 
             Uri builtUri;
-            if (isFilterOrId(params[0])) {
-                builtUri = uriByFilterOrId(params[0], language, page);
-            } else {
-                builtUri = uriByName(params[0]);
+            switch (task) {
+                case SEARCH_BY_FILTER:
+                    builtUri = uriByFilterOrId(params[0], language, page);
+                    break;
+                case SEARCH_BY_ID:
+                    builtUri = uriByFilterOrId(params[0], language, page);
+                    break;
+                case SEARCH_BY_NAME:
+                    builtUri = uriByName(params[0]);
+                    break;
+                case SEARCH_BY_GENRE:
+                    builtUri = uriByGenre(params[0]);
+                    break;
+                default:
+                    builtUri = Uri.EMPTY;
             }
 
             URL url = new URL(builtUri.toString());
@@ -249,17 +261,26 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     public void getMovieById(int movieId, String language) {
         isLoadingList = false;
+        task = Tasks.SEARCH_BY_ID;
         execute(Integer.toString(movieId), language);
     }
 
     public void getMoviesByFilter(String filter, String language) {
         isLoadingList = true;
+        task = Tasks.SEARCH_BY_FILTER;
         execute(filter, language);
     }
 
     public void getMoviesByName(String name) {
         isLoadingList = true;
+        task = Tasks.SEARCH_BY_NAME;
         execute(name);
+    }
+
+    public void getMoviesByGenre(String genre) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_GENRE;
+        execute(genre);
     }
 
     private Uri uriByName(String name) {
@@ -279,24 +300,12 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .build();
     }
 
-    private boolean isFilterOrId(String toCheck) {
-        return toCheck.equalsIgnoreCase(FILTER_POPULAR)
-                || toCheck.equalsIgnoreCase(FILTER_NOW_PLAYING)
-                || toCheck.equalsIgnoreCase(FILTER_TOP_RATED)
-                || toCheck.equalsIgnoreCase(FILTER_UPCOMING)
-                || isInteger(toCheck, 10);
-    }
-
-    private boolean isInteger(String s, int radix) {
-        if (s.isEmpty()) return false;
-        for (int i = 0; i < s.length(); i++) {
-            if (i == 0 && s.charAt(i) == '-') {
-                if (s.length() == 1) return false;
-                else continue;
-            }
-            if (Character.digit(s.charAt(i), radix) < 0) return false;
-        }
-        return true;
+    private Uri uriByGenre(String genre) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3" + genre + "/movie/list?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, BuildConfig.TMDB_API_KEY)
+                .build();
     }
 
     public interface TaskCompletedListener {

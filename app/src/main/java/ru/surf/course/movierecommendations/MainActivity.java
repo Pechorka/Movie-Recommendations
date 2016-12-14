@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             final FragmentManager fragmentManager = getFragmentManager();
-            moviesListFragment = MoviesListFragment.newInstance(GetMoviesTask.FILTER_POPULAR, Locale.getDefault().getLanguage(), Tasks.FILTER);
+            moviesListFragment = MoviesListFragment.newInstance(GetMoviesTask.FILTER_POPULAR, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
             fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
         } else {
             moviesListFragment = (MoviesListFragment)getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);

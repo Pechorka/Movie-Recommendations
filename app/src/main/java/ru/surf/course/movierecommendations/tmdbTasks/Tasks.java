@@ -5,5 +5,5 @@ package ru.surf.course.movierecommendations.tmdbTasks;
  */
 
 public enum Tasks {
-    FILTER, SEARCH_BY_NAME, SEARCH_BY_ID, SEARCH_BY_TAG, SEARCH_BY_GENRE
+    SEARCH_BY_FILTER, SEARCH_BY_NAME, SEARCH_BY_ID, SEARCH_BY_GENRE
 }

@@ -142,7 +142,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
         switch (task) {
-            case FILTER:
+            case SEARCH_BY_FILTER:
                 getMoviesTask.getMoviesByFilter(language, query);
                 break;
             case SEARCH_BY_NAME:
@@ -150,6 +150,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 break;
             case SEARCH_BY_ID:
                 getMoviesTask.getMovieById(movie_id, language);
+                break;
+            case SEARCH_BY_GENRE:
+                getMoviesTask.getMoviesByGenre(query);
+                break;
         }
     }
 
