@@ -31,11 +31,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_QUERY = "query";
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
-    private final static String KEY_MOVIE_ID = "movie_id";
+    private final static String KEY_MOVIE_ID = "id";
 
     private String query;
     private String language;
-    private int movie_id;
+    private int id;
 
     private RecyclerView recyclerView;
     private boolean grid;
@@ -74,7 +74,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         query = getArguments().getString(KEY_QUERY);
         language = getArguments().getString(KEY_LANGUAGE);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
-        movie_id = getArguments().getInt(KEY_MOVIE_ID);
+        id = getArguments().getInt(KEY_MOVIE_ID);
     }
 
     @Nullable
@@ -149,13 +149,17 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 getMoviesTask.getMoviesByName(query);
                 break;
             case SEARCH_BY_ID:
-                getMoviesTask.getMovieById(movie_id, language);
+                getMoviesTask.getMovieById(id, language);
                 break;
             case SEARCH_BY_GENRE:
                 getMoviesTask.getMoviesByGenre(query);
                 break;
             case SEARCH_SIMILAR:
-                getMoviesTask.getSimilarMovies(movie_id, language);
+                getMoviesTask.getSimilarMovies(id, language);
+                break;
+            case SEARCH_BY_KEYWORD:
+                getMoviesTask.getMoviesByKeyword(id, language);
+                break;
         }
     }
 

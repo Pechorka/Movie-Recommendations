@@ -85,6 +85,9 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 case SEARCH_SIMILAR:
                     builtUri = uriSimilar(params[0], language, page);
                     break;
+                case SEARCH_BY_KEYWORD:
+                    builtUri = uriByKeyword(params[0], language);
+                    break;
                 default:
                     builtUri = Uri.EMPTY;
             }
@@ -292,6 +295,12 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(Integer.toString(movieId), language);
     }
 
+    public void getMoviesByKeyword(int keywordId, String language) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_KEYWORD;
+        execute(Integer.toString(keywordId), language);
+    }
+
     private Uri uriByName(String name) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
@@ -323,6 +332,14 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .appendQueryParameter(PAGE_PARAM, page)
+                .build();
+    }
+
+    private Uri uriByKeyword(String keywordID, String language) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/keyword/" + keywordID + "/movies?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
                 .build();
     }
 
