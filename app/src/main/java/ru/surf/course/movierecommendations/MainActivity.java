@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
-        MoviesListFragment moviesListFragment = MoviesListFragment.newInstance("en", "popular", true);
+        MoviesListFragment moviesListFragment;
 
-        final FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment).commit();
+        if (savedInstanceState == null) {
+            final FragmentManager fragmentManager = getFragmentManager();
+             moviesListFragment = MoviesListFragment.newInstance("en", "popular", true);
+            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
+        } else {
+            moviesListFragment = (MoviesListFragment)getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
+        }
 
 
     }
