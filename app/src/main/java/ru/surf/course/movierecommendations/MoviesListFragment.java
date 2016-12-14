@@ -154,6 +154,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             case SEARCH_BY_GENRE:
                 getMoviesTask.getMoviesByGenre(query);
                 break;
+            case SEARCH_SIMILAR:
+                getMoviesTask.getSimilarMovies(movie_id, language);
         }
     }
 

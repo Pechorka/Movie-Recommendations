@@ -80,7 +80,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     builtUri = uriByName(params[0]);
                     break;
                 case SEARCH_BY_GENRE:
-                    builtUri = uriByGenre(params[0]);
+                    builtUri = uriByGenre(params[0], language);
+                    break;
+                case SEARCH_SIMILAR:
+                    builtUri = uriSimilar(params[0], language, page);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -283,6 +286,12 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(genre);
     }
 
+    public void getSimilarMovies(int movieId, String language) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_SIMILAR;
+        execute(Integer.toString(movieId), language);
+    }
+
     private Uri uriByName(String name) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
@@ -300,11 +309,20 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .build();
     }
 
-    private Uri uriByGenre(String genre) {
+    private Uri uriByGenre(String genre, String language) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3" + genre + "/movie/list?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-                .appendQueryParameter(LANGUAGE_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .build();
+    }
+
+    private Uri uriSimilar(String movieId, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/" + movieId + "/similar?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
                 .build();
     }
 
