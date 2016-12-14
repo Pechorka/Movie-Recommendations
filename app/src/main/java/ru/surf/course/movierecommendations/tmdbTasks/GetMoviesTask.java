@@ -36,6 +36,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     public static final String FILTER_UPCOMING = "upcoming";
     public static final String FILTER_TOP_RATED = "top_rated";
     public static final String FILTER_NOW_PLAYING = "now_playing";
+
     private final String API_KEY_PARAM = "api_key";
     private final String LANGUAGE_PARAM = "language";
     private final String PAGE_PARAM = "page";

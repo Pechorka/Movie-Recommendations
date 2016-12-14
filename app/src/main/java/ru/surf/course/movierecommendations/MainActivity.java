@@ -11,12 +11,14 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             final FragmentManager fragmentManager = getFragmentManager();
-            moviesListFragment = MoviesListFragment.newInstance("en", "popular", Tasks.FILTER);
+            moviesListFragment = MoviesListFragment.newInstance(GetMoviesTask.FILTER_POPULAR, Locale.getDefault().getLanguage(), Tasks.FILTER);
             fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
         } else {
             moviesListFragment = (MoviesListFragment)getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
@@ -52,10 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO to refactor
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -80,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isInternetOn() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork.isConnectedOrConnecting();
     }
