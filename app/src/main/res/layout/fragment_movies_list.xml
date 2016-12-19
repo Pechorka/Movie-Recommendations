@@ -11,12 +11,12 @@
     tools:context="ru.surf.course.movierecommendations.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_popular_rv"
+        android:id="@+id/movie_list_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <RelativeLayout
-        android:id="@+id/popular_movie_progress_bar_placeholder"
+        android:id="@+id/movie_list_progress_bar_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground">

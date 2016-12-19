@@ -14,7 +14,7 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.MovieInfo;
-import ru.surf.course.movierecommendations.MovieInfoFragment;
+import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 

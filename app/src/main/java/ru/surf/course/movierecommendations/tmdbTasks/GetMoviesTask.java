@@ -46,6 +46,14 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private Tasks task;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
 
+
+    public static boolean isFilter(String string){
+        return string.equalsIgnoreCase(FILTER_POPULAR)
+                || string.equalsIgnoreCase(FILTER_NOW_PLAYING)
+                || string.equalsIgnoreCase(FILTER_TOP_RATED)
+                || string.equalsIgnoreCase(FILTER_UPCOMING);
+    }
+
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
         if (params.length == 0)

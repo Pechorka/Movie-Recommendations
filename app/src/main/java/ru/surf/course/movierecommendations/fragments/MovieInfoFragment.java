@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -23,6 +23,8 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.MovieInfo;
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 

@@ -1,17 +1,19 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
+import ru.surf.course.movierecommendations.MovieInfo;
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -48,7 +52,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
-    public static MoviesListFragment newInstance(String language, String query, Tasks task) {
+    public static MoviesListFragment newInstance(String query, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
@@ -58,7 +62,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return moviesListFragment;
     }
 
-    public static MoviesListFragment newInstance(String language, int movie_id, Tasks task) {
+    public static MoviesListFragment newInstance(int movie_id, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
@@ -82,7 +86,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_movies_list, container, false);
 
-        recyclerView = (RecyclerView) root.findViewById(R.id.fragment_popular_rv);
+        recyclerView = (RecyclerView) root.findViewById(R.id.movie_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -100,6 +104,15 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if(GetMoviesTask.isFilter(query)) {
+            inflater.inflate(R.menu.movie_list_menu, menu);
+        }
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -113,17 +126,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_switch_layout:
-                if (grid) {
-                    switchToLinear(item);
-                } else {
-                    switchToGrid(item);
-                }
+            case R.id.action_switch_filter:
+                showPopup();
                 return true;
             case R.id.action_search:
                 SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
                 item.expandActionView();
                 searchView.requestFocus();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -138,12 +148,45 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         }
     }
 
+    private void showPopup(){
+        View menuItemView = getActivity().findViewById(R.id.action_switch_filter);
+        PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.popup_popular:
+                        query = GetMoviesTask.FILTER_POPULAR;
+                        loadInformation();
+                        break;
+                    case R.id.popup_top_rated:
+                        query = GetMoviesTask.FILTER_TOP_RATED;
+                        loadInformation();
+                        break;
+                    case R.id.popup_now_playing:
+                        query = GetMoviesTask.FILTER_NOW_PLAYING;
+                        loadInformation();
+                        break;
+                    case R.id.popup_upcoming:
+                        query = GetMoviesTask.FILTER_UPCOMING;
+                        loadInformation();
+                        break;
+                }
+                return true;
+            }
+        });
+        MenuInflater inflate = popup.getMenuInflater();
+        inflate.inflate(R.menu.popup_menu, popup.getMenu());
+        popup.show();
+
+    }
+
     private void loadInformation() {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
         switch (task) {
             case SEARCH_BY_FILTER:
-                getMoviesTask.getMoviesByFilter(language, query);
+                getMoviesTask.getMoviesByFilter(query, language);
                 break;
             case SEARCH_BY_NAME:
                 getMoviesTask.getMoviesByName(query);
@@ -177,28 +220,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         grid = true;
     }
 
-
-    private void switchToLinear(MenuItem item) {
-        recyclerView.setAdapter(listMoviesAdapter);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(listMoviesAdapter);
-        item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grid_on_black_48dp, null));
-        grid = false;
-    }
-
-    private void switchToGrid(MenuItem item) {
-        recyclerView.setAdapter(gridMoviesAdapter);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        recyclerView.setAdapter(gridMoviesAdapter);
-        item.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_48dp, null));
-        grid = true;
-    }
-
     public void dataLoadComplete() {
         fillInformation();
         View progressBarPlaceholder = null;
         if (getView() != null)
-            progressBarPlaceholder = getView().findViewById(R.id.popular_movie_progress_bar_placeholder);
+            progressBarPlaceholder = getView().findViewById(R.id.movie_list_progress_bar_placeholder);
         if (progressBarPlaceholder != null)
             progressBarPlaceholder.setVisibility(View.GONE);
     }
