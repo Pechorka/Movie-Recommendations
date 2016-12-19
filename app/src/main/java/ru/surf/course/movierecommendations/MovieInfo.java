@@ -39,6 +39,19 @@ public class MovieInfo implements Serializable{
         this.voteCount = voteCount;
         this.id = id;
     }
+    //без даты
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id) {
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.backdropPath = backdropPath;
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.id = id;
+    }
+
 
     public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
         this.title = title;
@@ -47,6 +60,24 @@ public class MovieInfo implements Serializable{
         this.posterPath = posterPath;
         this.overview = overview;
         this.date = date;
+        this.backdropPath = backdropPath;
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.id = id;
+        this.budget = budget;
+        this.genreNames = genreNames;
+        this.productionCompaniesNames = productionCompaniesNames;
+        this.productionCountriesNames = productionCountriesNames;
+        this.revenue = revenue;
+    }
+
+    //без даты
+    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.posterPath = posterPath;
+        this.overview = overview;
         this.backdropPath = backdropPath;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;

@@ -206,11 +206,15 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                         genresList,
                         movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH),
                         movieArray.getJSONObject(i).getString(TMDB_OVERVIEW),
-                        formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE)),
                         movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH),
                         movieArray.getJSONObject(i).getDouble(TMDB_RATING),
                         movieArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT),
                         movieArray.getJSONObject(i).getInt(TMDB_ID));
+                try {
+                    item.date = formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE));
+                }catch (ParseException e){
+                    Log.d(LOG_TAG,"Empty date, most likely");
+                }
                 result.add(item);
             }
         } else {
@@ -248,7 +252,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     genresListIds,
                     movieJson.getString(TMDB_POSTER_PATH),
                     movieJson.getString(TMDB_OVERVIEW),
-                    formatter.parse(movieJson.getString(TMDB_DATE)),
                     movieJson.getString(TMDB_BACKDROP_PATH),
                     movieJson.getDouble(TMDB_RATING),
                     movieJson.getInt(TMDB_VOTE_COUNT),
@@ -258,6 +261,11 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     productionCompaniesNames,
                     productionCountriesNames,
                     movieJson.getString(TMDB_REVENUE));
+            try {
+                item.date = formatter.parse(movieJson.getString(TMDB_DATE));
+            }catch (ParseException e){
+                Log.d(LOG_TAG,"Empty date, most likely");
+            }
             result.add(item);
         }
 

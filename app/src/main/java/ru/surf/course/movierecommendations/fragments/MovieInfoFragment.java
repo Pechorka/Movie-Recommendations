@@ -32,7 +32,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 11/26/16.
  */
 
-public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCompletedListener{
+public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "moveId";
@@ -73,12 +73,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         if (getArguments() == null)
             onDestroy();
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
-        title = (TextView)root.findViewById(R.id.movie_info_name);
-        poster = (ImageView)root.findViewById(R.id.movie_info_poster);
-        overview = (TextView)root.findViewById(R.id.movie_info_overview);
-        releaseDate = (TextView)root.findViewById(R.id.movie_info_release_date);
+        title = (TextView) root.findViewById(R.id.movie_info_name);
+        poster = (ImageView) root.findViewById(R.id.movie_info_poster);
+        overview = (TextView) root.findViewById(R.id.movie_info_overview);
+        releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
-        voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
+        voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
 
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,8 +97,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         int id = -1;
         if (getArguments().containsKey(KEY_MOVIE)) {
             id = ((MovieInfo) getArguments().getSerializable(KEY_MOVIE)).id;
-        }
-        else if (getArguments().containsKey(KEY_MOVIE_ID)){
+        } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
             id = getArguments().getInt(KEY_MOVIE_ID);
         }
         dataLoaded = 0;
@@ -118,7 +117,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     }
 
-    public void loadPoster(){
+    public void loadPoster() {
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -145,21 +144,24 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         overview.setText(currentMovie.overview);
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
-        releaseDate.setText("(" + dateFormat.format(currentMovie.date) + ")");
 
+        if (currentMovie.date != null) {
+            releaseDate.setText("(" + dateFormat.format(currentMovie.date) + ")");
+        }
         for (String genreName : currentMovie.genreNames) {
-            Button genreButton = (Button)getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
+            Button genreButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
             genreButton.setText(genreName);
             genresPlaceholder.addView(genreButton);
-            FlowLayout.LayoutParams layoutParams = (FlowLayout.LayoutParams)genreButton.getLayoutParams();
-            layoutParams.setMargins(0,0,(int)getResources().getDimension(R.dimen.genre_button_margin_right),(int)getResources().getDimension(R.dimen.genre_button_margin_bottom));
+            FlowLayout.LayoutParams layoutParams = (FlowLayout.LayoutParams) genreButton.getLayoutParams();
+            layoutParams.setMargins(0, 0, (int) getResources().getDimension(R.dimen.genre_button_margin_right), (int) getResources().getDimension(R.dimen.genre_button_margin_bottom));
             genreButton.setLayoutParams(layoutParams);
         }
 
         voteAverage.setText(String.valueOf(currentMovie.voteAverage));
         if (currentMovie.voteAverage >= 5)
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingPositive));
-        else voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
+        else
+            voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
 
     }
 
@@ -170,7 +172,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         loadPoster();
     }
 
-    public void dataLoadComplete(){
+    public void dataLoadComplete() {
         if (++dataLoaded == DATA_TO_LOAD) {
             fillInformation();
             View progressBarPlaceholder = null;
@@ -179,6 +181,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }
-        Log.v("dataLoad", "data loaded:"+dataLoaded);
+        Log.v("dataLoad", "data loaded:" + dataLoaded);
     }
 }
