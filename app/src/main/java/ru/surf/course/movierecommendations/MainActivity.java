@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void searchByName(String name) {
-        MoviesListFragment fragment = MoviesListFragment.newInstance(Locale.getDefault().getLanguage(), name, Tasks.SEARCH_BY_NAME);
+        MoviesListFragment fragment = MoviesListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_NAME);
         switchContent(R.id.activity_main_container, fragment);
     }
 
