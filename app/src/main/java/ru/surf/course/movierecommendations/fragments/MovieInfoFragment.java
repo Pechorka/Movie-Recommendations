@@ -37,16 +37,17 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "moveId";
     final static int DATA_TO_LOAD = 2;
+    final String LOG_TAG = getClass().getSimpleName();
 
     private TextView title;
     private TextView overview;
     private TextView releaseDate;
     private ImageView poster;
     private MovieInfo currentMovie;
+    private MovieInfo currentMovieEnglish;
     private FlowLayout genresPlaceholder;
     private TextView voteAverage;
 
-    private Bitmap posterBitmap;
     private int dataLoaded = 0;
 
     private String language;
@@ -113,21 +114,21 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
         getMoviesTask.getMovieById(movieId, language);
-
-
     }
 
-    public void loadPoster() {
+    public void loadPoster(final MovieInfo movieInfo) {
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                posterBitmap = bitmap;
+                Log.v(LOG_TAG, "poster loaded");
+                posterLoaded(bitmap, movieInfo);
                 dataLoadComplete();
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
                 //TODO handle error
+                Log.v(LOG_TAG, "poster load error");
             }
 
             @Override
@@ -135,13 +136,26 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
             }
         };
-        ImageLoader.getPoster(getActivity(), currentMovie.posterPath, poster.getLayoutParams().width, poster.getLayoutParams().height, target);
+        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, poster.getLayoutParams().width, poster.getLayoutParams().height, target);
+    }
+
+    private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
+        movieInfo.posterBitmap = bitmap;
+    }
+
+    private boolean checkInformation(MovieInfo movie) {
+        if (movie.overview.equals("") || movie.overview.equals("null"))
+            return false;
+        return true;
     }
 
     public void fillInformation() {
-        poster.setImageBitmap(posterBitmap);
+        poster.setImageBitmap(currentMovie.posterBitmap);
         title.setText(currentMovie.title);
-        overview.setText(currentMovie.overview);
+
+        if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
+            overview.setText(currentMovieEnglish.overview);
+        else overview.setText(currentMovie.overview);
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
@@ -167,20 +181,34 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     @Override
     public void taskCompleted(List<MovieInfo> result) {
-        currentMovie = result.get(0);
-        dataLoadComplete();
-        loadPoster();
+        if (result.get(0).infoLanguage.getLanguage().equals(language)) {
+            currentMovie = result.get(0);
+            dataLoadComplete();
+            loadPoster(currentMovie);
+        }
+        else if (result.get(0).infoLanguage.getLanguage().equals("en")){
+            currentMovieEnglish = result.get(0);
+            dataLoadComplete();
+            loadPoster(currentMovieEnglish);
+        }
+
     }
 
     public void dataLoadComplete() {
         if (++dataLoaded == DATA_TO_LOAD) {
-            fillInformation();
-            View progressBarPlaceholder = null;
-            if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);
-            if (progressBarPlaceholder != null)
-                progressBarPlaceholder.setVisibility(View.GONE);
+            if (!checkInformation(currentMovie) && currentMovieEnglish == null) {
+                dataLoaded = 0;
+                loadInformation(currentMovie.id, "en");
+            }
+            else {
+                fillInformation();
+                View progressBarPlaceholder = null;
+                if (getView() != null)
+                    progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);
+                if (progressBarPlaceholder != null)
+                    progressBarPlaceholder.setVisibility(View.GONE);
+            }
         }
-        Log.v("dataLoad", "data loaded:" + dataLoaded);
+        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
     }
 }

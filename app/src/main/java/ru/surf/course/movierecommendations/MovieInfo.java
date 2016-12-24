@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +16,7 @@ public class MovieInfo implements Serializable{
     public String originalTitle;
     public List<Integer> genreIds;
     public String posterPath;
+    public Bitmap posterBitmap;
     public String overview;
     public Date date;
     public String backdropPath;
