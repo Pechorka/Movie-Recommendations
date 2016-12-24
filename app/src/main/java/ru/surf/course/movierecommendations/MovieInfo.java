@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MovieInfo implements Serializable{
 
@@ -24,6 +25,7 @@ public class MovieInfo implements Serializable{
     public List<String> productionCompaniesNames;
     public List<String> productionCountriesNames;
     public String revenue;
+    public Locale infoLanguage;
 
     public MovieInfo(){
 
