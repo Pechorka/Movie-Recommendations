@@ -2,6 +2,8 @@ package ru.surf.course.movierecommendations;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +71,8 @@ public class MovieInfo implements Serializable{
         this.productionCompaniesNames = productionCompaniesNames;
         this.productionCountriesNames = productionCountriesNames;
         this.revenue = revenue;
+
+        sortGenresNamesByLength();
     }
 
     //без даты
@@ -87,6 +91,21 @@ public class MovieInfo implements Serializable{
         this.productionCompaniesNames = productionCompaniesNames;
         this.productionCountriesNames = productionCountriesNames;
         this.revenue = revenue;
+
+        sortGenresNamesByLength();
+    }
+
+    private void sortGenresNamesByLength(){
+        Collections.sort(genreNames, new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                if (s.length() > t1.length())
+                    return 1;
+                else if (s.length() < t1.length())
+                    return -1;
+                else return 0;
+            }
+        });
     }
 
 
