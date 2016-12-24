@@ -129,6 +129,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             public void onBitmapFailed(Drawable errorDrawable) {
                 //TODO handle error
                 Log.v(LOG_TAG, "poster load error");
+                //repeat load
+                loadPoster(movieInfo);
             }
 
             @Override
