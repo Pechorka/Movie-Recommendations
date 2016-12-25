@@ -18,4 +18,5 @@
     <dimen name="genre_button_margin_right">7dp</dimen>
     <dimen name="vote_average_text_size">23sp</dimen>
     <dimen name="toolbar_shadow_height">7dp</dimen>
+    <dimen name="expand_button_width">40dp</dimen>
 </resources>

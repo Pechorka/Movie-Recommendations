@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +99,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void onClick(View view) {
                 overview.toggle();
-                expandCollapseOverviewButton.setText(overview.isExpanded() ? "collapse" : "expand");
+                expandCollapseOverviewButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
             }
         });
 
@@ -173,7 +174,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             overview.setText(currentMovieEnglish.overview);
         else overview.setText(currentMovie.overview);
 
-
+        if (overview.getLineCount() >= overview.getMaxLines())
+            expandCollapseOverviewButton.setVisibility(View.VISIBLE);
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
