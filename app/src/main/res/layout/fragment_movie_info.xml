@@ -62,13 +62,24 @@
                 android:layout_alignStart="@id/movie_info_name"
                 android:layout_alignLeft="@id/movie_info_name"/>
 
-            <TextView
+            <at.blogc.android.views.ExpandableTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_overview"
+                android:maxLines="5"
                 android:layout_below="@id/movie_info_poster_placeholder"
                 android:textSize="@dimen/overview_font_size"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                app:animation_duration="1000"
+                android:ellipsize="end"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_button_expand_overview"
+                android:text="@string/expand"
+                android:layout_below="@id/movie_info_overview"
+                android:visibility="gone"/>
 
             <org.apmem.tools.layouts.FlowLayout
                 android:layout_width="wrap_content"

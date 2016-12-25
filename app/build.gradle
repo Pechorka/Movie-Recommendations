@@ -41,5 +41,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile "com.android.support:recyclerview-v7:25.0.1"
     compile 'org.apmem.tools:layouts:1.10@aar'
+    compile 'at.blogc:expandabletextview:1.0.3'
     testCompile 'junit:junit:4.12'
 }

@@ -4,4 +4,6 @@
     <string name="layout_switch">layout_switch</string>
     <string name="genre">Genre</string>
     <string name="search">Search</string>
+    <string name="expand">More</string>
+    <string name="collapse">Less</string>
 </resources>

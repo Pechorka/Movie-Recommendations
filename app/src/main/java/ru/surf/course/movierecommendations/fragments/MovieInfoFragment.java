@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -40,7 +42,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     final String LOG_TAG = getClass().getSimpleName();
 
     private TextView title;
-    private TextView overview;
+    private ExpandableTextView overview;
+    private Button expandCollapseOverviewButton;
     private TextView releaseDate;
     private ImageView poster;
     private MovieInfo currentMovie;
@@ -76,7 +79,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         title = (TextView) root.findViewById(R.id.movie_info_name);
         poster = (ImageView) root.findViewById(R.id.movie_info_poster);
-        overview = (TextView) root.findViewById(R.id.movie_info_overview);
+        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
+        expandCollapseOverviewButton = (Button)root.findViewById(R.id.movie_info_button_expand_overview);
         releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
         voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
@@ -85,6 +89,16 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void onClick(View view) {
                 showBigPoster();
+            }
+        });
+
+        overview.setInterpolator(new OvershootInterpolator());
+
+        expandCollapseOverviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                overview.toggle();
+                expandCollapseOverviewButton.setText(overview.isExpanded() ? "collapse" : "expand");
             }
         });
 
@@ -158,6 +172,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
             overview.setText(currentMovieEnglish.overview);
         else overview.setText(currentMovie.overview);
+
+
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
