@@ -59,11 +59,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         if (params.length == 0)
             return null;
 
-        String languageName;
+        String language;
         if (params.length > 1)
-            languageName = params[1];
-        else languageName = "en";
-
+            language = params[1];
+        else language = "en";
 
         String page;
         if (params.length > 2)
@@ -80,22 +79,22 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
             Uri builtUri;
             switch (task) {
                 case SEARCH_BY_FILTER:
-                    builtUri = uriByFilterOrId(params[0], languageName, page);
+                    builtUri = uriByFilterOrId(params[0], language, page);
                     break;
                 case SEARCH_BY_ID:
-                    builtUri = uriByFilterOrId(params[0], languageName, page);
+                    builtUri = uriByFilterOrId(params[0], language, page);
                     break;
                 case SEARCH_BY_NAME:
                     builtUri = uriByName(params[0]);
                     break;
                 case SEARCH_BY_GENRE:
-                    builtUri = uriByGenre(params[0], languageName);
+                    builtUri = uriByGenre(Integer.parseInt(params[0]), language);
                     break;
                 case SEARCH_SIMILAR:
-                    builtUri = uriSimilar(params[0], languageName, page);
+                    builtUri = uriSimilar(params[0], language, page);
                     break;
                 case SEARCH_BY_KEYWORD:
-                    builtUri = uriByKeyword(params[0], languageName);
+                    builtUri = uriByKeyword(params[0], language);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -143,7 +142,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
         try {
             List<MovieInfo> result = parseJson(movieJsonStr);
-            fillInInfoLanguage(result, new Locale(languageName));
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -153,12 +151,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         return null;
 
 
-    }
-
-    private void fillInInfoLanguage(List<MovieInfo> list, Locale language) {
-        for (MovieInfo movie : list) {
-            movie.infoLanguage = language;
-        }
     }
 
     @Override
@@ -307,10 +299,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(name);
     }
 
-    public void getMoviesByGenre(String genre) {
+    public void getMoviesByGenre(int genreId,String language) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_GENRE;
-        execute(genre);
+        execute(Integer.toString(genreId),language);
     }
 
     public void getSimilarMovies(int movieId, String language) {
@@ -342,8 +334,17 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .build();
     }
 
-    private Uri uriByGenre(String genre, String language) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3" + genre + "/movie/list?";
+//    private Uri uriByGenre(String genre, String language) {
+//        final String TMDB_BASE_URL = "https://api.themoviedb.org/3" + genre + "/movie/list?";
+//        return Uri.parse(TMDB_BASE_URL).buildUpon()
+//                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+//                .appendQueryParameter(LANGUAGE_PARAM, language)
+//                .build();
+//    }
+
+    private Uri uriByGenre(int genreID, String language) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/genre/" + genreID + "?/movies";
+        //TODO add sort
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)

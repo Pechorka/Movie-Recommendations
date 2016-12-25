@@ -23,6 +23,7 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
+import ru.surf.course.movierecommendations.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -31,8 +32,12 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
+    private static final String LOG_TAG = MoviesListFragment.class.getSimpleName();
+
     private final static String KEY_GRID = "grid";
     private final static String KEY_QUERY = "query";
+    private final static String KEY_LINEAR_POS = "lin_pos";
+    private final static String KEY_GRID_POS = "grid_pos";
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
@@ -52,6 +57,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     public static MoviesListFragment newInstance(String query, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
@@ -62,11 +69,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return moviesListFragment;
     }
 
-    public static MoviesListFragment newInstance(int movie_id, String language, Tasks task) {
+    public static MoviesListFragment newInstance(int id, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
-        bundle.putInt(KEY_MOVIE_ID, movie_id);
+        bundle.putInt(KEY_MOVIE_ID, id);
         bundle.putSerializable(KEY_TASK, task);
         moviesListFragment.setArguments(bundle);
         return moviesListFragment;
@@ -98,6 +105,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         } else {
             switchToLinear();
         }
+        recyclerView.addOnScrollListener(scrollListener);
         loadInformation();
         setHasOptionsMenu(true);
         return root;
@@ -118,9 +126,28 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(KEY_GRID, grid);
+        int scrollPositionLinear = -1;
+        int scrollPositionGrid = -1;
+        if(staggeredGridLayoutManager != null && linearLayoutManager!=null){
+            scrollPositionLinear = linearLayoutManager.findFirstVisibleItemPosition();
+            scrollPositionGrid = staggeredGridLayoutManager.findFirstVisibleItemPositions(null)[0];
+        }
+        editor.putInt(KEY_GRID_POS,scrollPositionGrid);
+        editor.putInt(KEY_LINEAR_POS,scrollPositionLinear);
         editor.apply();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(staggeredGridLayoutManager != null && linearLayoutManager!=null){
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            int lin_pos = sharedPref.getInt(KEY_LINEAR_POS,-1);
+            int grid_pos = sharedPref.getInt(KEY_GRID_POS,-1);
+            staggeredGridLayoutManager.scrollToPosition(grid_pos);
+            linearLayoutManager.scrollToPosition(lin_pos);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -195,7 +222,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 getMoviesTask.getMovieById(id, language);
                 break;
             case SEARCH_BY_GENRE:
-                getMoviesTask.getMoviesByGenre(query);
+                getMoviesTask.getMoviesByGenre(id,language);
                 break;
             case SEARCH_SIMILAR:
                 getMoviesTask.getSimilarMovies(id, language);
@@ -210,6 +237,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         recyclerView.setAdapter(listMoviesAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(listMoviesAdapter);
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                //loadNextDataFromApi(page);
+            }
+        };
         grid = false;
     }
 
@@ -217,6 +252,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         recyclerView.setAdapter(gridMoviesAdapter);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(gridMoviesAdapter);
+        scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                //loadNextDataFromApi(page);
+            }
+        };
         grid = true;
     }
 
