@@ -59,10 +59,11 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         if (params.length == 0)
             return null;
 
-        String language;
+        String languageName;
         if (params.length > 1)
-            language = params[1];
-        else language = "en";
+            languageName = params[1];
+        else languageName = "en";
+
 
         String page;
         if (params.length > 2)
@@ -79,22 +80,22 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
             Uri builtUri;
             switch (task) {
                 case SEARCH_BY_FILTER:
-                    builtUri = uriByFilterOrId(params[0], language, page);
+                    builtUri = uriByFilterOrId(params[0], languageName, page);
                     break;
                 case SEARCH_BY_ID:
-                    builtUri = uriByFilterOrId(params[0], language, page);
+                    builtUri = uriByFilterOrId(params[0], languageName, page);
                     break;
                 case SEARCH_BY_NAME:
                     builtUri = uriByName(params[0]);
                     break;
                 case SEARCH_BY_GENRE:
-                    builtUri = uriByGenre(Integer.parseInt(params[0]), language);
+                    builtUri = uriByGenre(Integer.parseInt(params[0]), languageName);
                     break;
                 case SEARCH_SIMILAR:
-                    builtUri = uriSimilar(params[0], language, page);
+                    builtUri = uriSimilar(params[0], languageName, page);
                     break;
                 case SEARCH_BY_KEYWORD:
-                    builtUri = uriByKeyword(params[0], language);
+                    builtUri = uriByKeyword(params[0], languageName);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -142,6 +143,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
         try {
             List<MovieInfo> result = parseJson(movieJsonStr);
+            fillInInfoLanguage(result, new Locale(languageName));
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -151,6 +153,12 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         return null;
 
 
+    }
+
+    private void fillInInfoLanguage(List<MovieInfo> list, Locale language) {
+        for (MovieInfo movie : list) {
+            movie.infoLanguage = language;
+        }
     }
 
     @Override
