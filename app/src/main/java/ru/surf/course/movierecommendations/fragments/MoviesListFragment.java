@@ -41,11 +41,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
+
+
     private static int PAGE;
 
     private String query;
     private String language;
     private int id;
+    private String previousFilter;
 
     private RecyclerView recyclerView;
     private boolean grid;
@@ -88,6 +91,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
         PAGE = 1;
+        previousFilter = query;
     }
 
     @Nullable
@@ -107,6 +111,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         } else {
             switchToLinear();
         }
+
         recyclerView.addOnScrollListener(scrollListener);
         loadInformation();
         setHasOptionsMenu(true);
@@ -172,9 +177,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public void taskCompleted(List<MovieInfo> result) {
         if (result != null) {
-            if (movieInfoList != null) {
+            if (movieInfoList != null && previousFilter.equalsIgnoreCase(query)) {
                 movieInfoList.addAll(result);
             } else {
+                previousFilter = query;
                 movieInfoList = result;
             }
             dataLoadComplete();
@@ -184,24 +190,29 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private void showPopup() {
         View menuItemView = getActivity().findViewById(R.id.action_switch_filter);
         PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+        previousFilter = query;
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.popup_popular:
                         query = GetMoviesTask.FILTER_POPULAR;
+                        getActivity().setTitle("Popular");
                         loadInformation();
                         break;
                     case R.id.popup_top_rated:
                         query = GetMoviesTask.FILTER_TOP_RATED;
+                        getActivity().setTitle("Top Rated");
                         loadInformation();
                         break;
                     case R.id.popup_now_playing:
                         query = GetMoviesTask.FILTER_NOW_PLAYING;
+                        getActivity().setTitle("Now Playing");
                         loadInformation();
                         break;
                     case R.id.popup_upcoming:
                         query = GetMoviesTask.FILTER_UPCOMING;
+                        getActivity().setTitle("Upcoming");
                         loadInformation();
                         break;
                 }
