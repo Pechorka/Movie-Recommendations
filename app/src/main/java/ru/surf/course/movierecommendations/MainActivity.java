@@ -12,9 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private MoviesListFragment moviesListFragment;
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
@@ -33,21 +40,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
-        MoviesListFragment moviesListFragment;
 
-        if (savedInstanceState == null) {
-            final FragmentManager fragmentManager = getFragmentManager();
-            moviesListFragment = MoviesListFragment.newInstance(GetMoviesTask.FILTER_POPULAR, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
-            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
-        } else {
-            moviesListFragment = (MoviesListFragment)getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
+
+        if (isInternetAvailable(this)) {
+            loadMainFragment(savedInstanceState);
+        }else {
+            final TextView error = (TextView)findViewById(R.id.activity_main_text_internet_error);
+            error.setVisibility(View.VISIBLE);
+            final Button button = (Button)findViewById(R.id.activity_main_btn_reload);
+            button.setVisibility(View.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isInternetAvailable(MainActivity.this)){
+                        error.setVisibility(View.GONE);
+                        button.setVisibility(View.GONE);
+                        loadMainFragment(savedInstanceState);
+                    }
+                }
+            });
         }
 
 
@@ -64,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (isInternetOn()) {
+                if (isInternetAvailable(MainActivity.this)) {
                     searchByName(query.replace(' ', '+'));
                 }
                 searchView.clearFocus();
@@ -81,13 +99,50 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-    private boolean isInternetOn() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork.isConnectedOrConnecting();
+    private void loadMainFragment(Bundle savedInstanceState){
+        if (savedInstanceState == null) {
+            final FragmentManager fragmentManager = getFragmentManager();
+            moviesListFragment = MoviesListFragment.newInstance(GetMoviesTask.FILTER_POPULAR, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
+            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
+        } else {
+            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
+        }
     }
+
+    public static boolean isInternetAvailable(Context context)
+    {
+        NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+        if (info == null)
+        {
+            Log.d(LOG_TAG,"no internet connection");
+            return false;
+        }
+        else
+        {
+            if(info.isConnected())
+            {
+                Log.d(LOG_TAG," internet connection available...");
+                return true;
+            }
+            else
+            {
+                Log.d(LOG_TAG," internet connection");
+                return true;
+            }
+
+        }
+    }
+
+
+
+//    private boolean isInternetOn() {
+//        ConnectivityManager cm =
+//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//        return activeNetwork.isConnectedOrConnecting();
+//    }
 
     private void searchByName(String name) {
         MoviesListFragment fragment = MoviesListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_NAME);
