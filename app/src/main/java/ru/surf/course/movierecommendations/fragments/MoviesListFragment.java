@@ -41,6 +41,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
+    private static int PAGE;
 
     private String query;
     private String language;
@@ -86,6 +87,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         language = getArguments().getString(KEY_LANGUAGE);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
+        PAGE = 1;
     }
 
     @Nullable
@@ -114,7 +116,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if(GetMoviesTask.isFilter(query)) {
+        if (GetMoviesTask.isFilter(query)) {
             inflater.inflate(R.menu.movie_list_menu, menu);
         }
 
@@ -128,22 +130,22 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         editor.putBoolean(KEY_GRID, grid);
         int scrollPositionLinear = -1;
         int scrollPositionGrid = -1;
-        if(staggeredGridLayoutManager != null && linearLayoutManager!=null){
+        if (staggeredGridLayoutManager != null && linearLayoutManager != null) {
             scrollPositionLinear = linearLayoutManager.findFirstVisibleItemPosition();
             scrollPositionGrid = staggeredGridLayoutManager.findFirstVisibleItemPositions(null)[0];
         }
-        editor.putInt(KEY_GRID_POS,scrollPositionGrid);
-        editor.putInt(KEY_LINEAR_POS,scrollPositionLinear);
+        editor.putInt(KEY_GRID_POS, scrollPositionGrid);
+        editor.putInt(KEY_LINEAR_POS, scrollPositionLinear);
         editor.apply();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(staggeredGridLayoutManager != null && linearLayoutManager!=null){
+        if (staggeredGridLayoutManager != null && linearLayoutManager != null) {
             SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            int lin_pos = sharedPref.getInt(KEY_LINEAR_POS,-1);
-            int grid_pos = sharedPref.getInt(KEY_GRID_POS,-1);
+            int lin_pos = sharedPref.getInt(KEY_LINEAR_POS, -1);
+            int grid_pos = sharedPref.getInt(KEY_GRID_POS, -1);
             staggeredGridLayoutManager.scrollToPosition(grid_pos);
             linearLayoutManager.scrollToPosition(lin_pos);
         }
@@ -170,18 +172,22 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public void taskCompleted(List<MovieInfo> result) {
         if (result != null) {
-            movieInfoList = result;
+            if (movieInfoList != null) {
+                movieInfoList.addAll(result);
+            } else {
+                movieInfoList = result;
+            }
             dataLoadComplete();
         }
     }
 
-    private void showPopup(){
+    private void showPopup() {
         View menuItemView = getActivity().findViewById(R.id.action_switch_filter);
         PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.popup_popular:
                         query = GetMoviesTask.FILTER_POPULAR;
                         loadInformation();
@@ -213,7 +219,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         getMoviesTask.addListener(this);
         switch (task) {
             case SEARCH_BY_FILTER:
-                getMoviesTask.getMoviesByFilter(query, language);
+                getMoviesTask.getMoviesByFilter(query, language,String.valueOf(PAGE));
                 break;
             case SEARCH_BY_NAME:
                 getMoviesTask.getMoviesByName(query);
@@ -222,7 +228,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 getMoviesTask.getMovieById(id, language);
                 break;
             case SEARCH_BY_GENRE:
-                getMoviesTask.getMoviesByGenre(id,language);
+                getMoviesTask.getMoviesByGenre(id, language);
                 break;
             case SEARCH_SIMILAR:
                 getMoviesTask.getSimilarMovies(id, language);
@@ -240,9 +246,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                //loadNextDataFromApi(page);
+                PAGE++;
+                loadInformation();
             }
         };
         grid = false;
@@ -255,9 +260,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                //loadNextDataFromApi(page);
+                PAGE++;
+                loadInformation();
             }
         };
         grid = true;

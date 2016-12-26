@@ -295,10 +295,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(Integer.toString(movieId), language);
     }
 
-    public void getMoviesByFilter(String filter, String language) {
+    public void getMoviesByFilter(String filter, String language,String page) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_FILTER;
-        execute(filter, language);
+        execute(filter, language,page);
     }
 
     public void getMoviesByName(String name) {
