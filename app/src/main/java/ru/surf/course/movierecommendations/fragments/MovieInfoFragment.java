@@ -95,13 +95,16 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
         overview.setInterpolator(new OvershootInterpolator());
 
-        expandCollapseOverviewButton.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener expandCollapse = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 overview.toggle();
                 expandCollapseOverviewButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
             }
-        });
+        };
+        expandCollapseOverviewButton.setOnClickListener(expandCollapse);
+        overview.setOnClickListener(expandCollapse);
 
         language = Locale.getDefault().getLanguage();
 
