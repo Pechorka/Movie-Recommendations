@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,14 +78,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() == null)
             onDestroy();
+
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
-        title = (TextView) root.findViewById(R.id.movie_info_name);
-        poster = (ImageView) root.findViewById(R.id.movie_info_poster);
-        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
-        expandCollapseOverviewButton = (Button)root.findViewById(R.id.movie_info_button_expand_overview);
-        releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
-        genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
-        voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
+        initViews(root);
 
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +105,16 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         language = Locale.getDefault().getLanguage();
 
         return root;
+    }
+
+    private void initViews(View root){
+        title = (TextView) root.findViewById(R.id.movie_info_name);
+        poster = (ImageView) root.findViewById(R.id.movie_info_poster);
+        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
+        expandCollapseOverviewButton = (Button)root.findViewById(R.id.movie_info_button_expand_overview);
+        releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
+        genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
+        voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
     }
 
     @Override
