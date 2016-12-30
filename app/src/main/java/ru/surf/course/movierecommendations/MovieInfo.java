@@ -16,6 +16,7 @@ public class MovieInfo implements Serializable{
     public String originalTitle;
     public List<Integer> genreIds;
     public String posterPath;
+    public List<TmdbImage> backdrops;
     public Bitmap posterBitmap;
     public String overview;
     public Date date;

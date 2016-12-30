@@ -33,6 +33,8 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.Adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.TmdbImage;
+import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -57,6 +59,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private FlowLayout genresPlaceholder;
     private TextView voteAverage;
     private RecyclerView imagesList;
+
+    private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
     private int dataLoaded = 0;
 
@@ -86,15 +90,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         initViews(root);
-
-        /*
-        poster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBigPoster();
-            }
-        });
-        */
 
         overview.setInterpolator(new OvershootInterpolator());
 
@@ -138,10 +133,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         loadInformation(id, language);
     }
 
-    public void showBigPoster() {
-        //TODO make image popup somehow
-    }
-
 
     public void loadInformation(int movieId, String language) {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
@@ -174,6 +165,18 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         ImageLoader.getPoster(getActivity(), movieInfo.posterPath, (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target);
     }
 
+    private void loadBackdrops(final MovieInfo movie) {
+        GetImagesTask getImagesTask = new GetImagesTask();
+        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
+            @Override
+            public void getImagesTaskCompleted(List<TmdbImage> result) {
+                movie.backdrops = result;
+                initOrAppendImagesAdapter(result);
+            }
+        });
+        getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
+    }
+
     private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
         movieInfo.posterBitmap = bitmap;
     }
@@ -184,11 +187,22 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         return true;
     }
 
+    private void initOrAppendImagesAdapter(List<TmdbImage> images) {
+        if (movieInfoImagesAdapter == null) {
+            movieInfoImagesAdapter = new MovieInfoImagesAdapter(images, getActivity());
+            imagesList.setAdapter(movieInfoImagesAdapter);
+        }
+        else {
+            movieInfoImagesAdapter.getImages().addAll(images);
+            movieInfoImagesAdapter.notifyDataSetChanged();
+        }
+    }
+
     public void fillInformation() {
         //poster.setImageBitmap(currentMovie.posterBitmap);
-        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
-        images.add(currentMovie.posterBitmap);
-        imagesList.setAdapter(new MovieInfoImagesAdapter(images,getActivity()));
+        ArrayList<TmdbImage> images = new ArrayList<>();
+        images.add(new TmdbImage(currentMovie.posterBitmap));
+        initOrAppendImagesAdapter(images);
 
 
         title.setText(currentMovie.title);
@@ -234,7 +248,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             dataLoadComplete();
             loadPoster(currentMovieEnglish);
         }
-
+        loadBackdrops(currentMovie);
     }
 
     public void dataLoadComplete() {
