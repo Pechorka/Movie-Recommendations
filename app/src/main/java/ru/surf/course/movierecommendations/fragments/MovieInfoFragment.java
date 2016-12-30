@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +25,12 @@ import com.squareup.picasso.Target;
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.Adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -47,11 +51,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private ExpandableTextView overview;
     private Button expandCollapseOverviewButton;
     private TextView releaseDate;
-    private ImageView poster;
+    //private ImageView poster;
     private MovieInfo currentMovie;
     private MovieInfo currentMovieEnglish;
     private FlowLayout genresPlaceholder;
     private TextView voteAverage;
+    private RecyclerView imagesList;
 
     private int dataLoaded = 0;
 
@@ -82,12 +87,14 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         initViews(root);
 
+        /*
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showBigPoster();
             }
         });
+        */
 
         overview.setInterpolator(new OvershootInterpolator());
 
@@ -109,7 +116,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private void initViews(View root){
         title = (TextView) root.findViewById(R.id.movie_info_name);
-        poster = (ImageView) root.findViewById(R.id.movie_info_poster);
+        //poster = (ImageView) root.findViewById(R.id.movie_info_poster);
+        imagesList = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
+        imagesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
         expandCollapseOverviewButton = (Button)root.findViewById(R.id.movie_info_button_expand_overview);
         releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
@@ -162,7 +171,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
             }
         };
-        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, poster.getLayoutParams().width, poster.getLayoutParams().height, target);
+        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target);
     }
 
     private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
@@ -176,7 +185,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     public void fillInformation() {
-        poster.setImageBitmap(currentMovie.posterBitmap);
+        //poster.setImageBitmap(currentMovie.posterBitmap);
+        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+        images.add(currentMovie.posterBitmap);
+        imagesList.setAdapter(new MovieInfoImagesAdapter(images,getActivity()));
+
+
         title.setText(currentMovie.title);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))

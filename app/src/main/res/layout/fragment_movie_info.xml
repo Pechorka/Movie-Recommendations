@@ -5,15 +5,16 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="0dp"
     >
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/content_top_padding"
-        android:paddingStart="@dimen/content_left_padding"
-        android:paddingEnd="@dimen/content_left_padding"
-        android:paddingLeft="@dimen/content_left_padding"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:paddingLeft="0dp"
         android:paddingRight="@dimen/content_left_padding"
         android:background="@color/colorBackground"
         >
@@ -22,35 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/movie_info_poster_placeholder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="0dp"
-                card_view:cardCornerRadius="0dp"
-                card_view:cardElevation="5dp"
-                android:layout_margin="20dp"
-                >
-
-            <ImageView
-                style="@style/MovieInfoPoster"
-                android:id="@+id/movie_info_poster"
-                />
-
-            </android.support.v7.widget.CardView>
-
             <TextView
                 style="@style/Header"
                 android:id="@+id/movie_info_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/movie_info_poster_placeholder"
-                android:layout_toRightOf="@id/movie_info_poster_placeholder"
-                android:layout_alignTop="@id/movie_info_poster_placeholder"
+                android:layout_centerHorizontal="true"
                 android:paddingTop="0dp"
-                android:gravity="left"
+                android:gravity="center_horizontal"
                 />
 
             <TextView
@@ -59,19 +39,60 @@
                 android:id="@+id/movie_info_release_date"
                 android:layout_below="@id/movie_info_name"
                 android:textColor="@color/colorTextSecondary"
-                android:layout_alignStart="@id/movie_info_name"
-                android:layout_alignLeft="@id/movie_info_name"/>
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_images_list"
+                android:layout_below="@id/movie_info_release_date">
+
+            </android.support.v7.widget.RecyclerView>
+
+
+
+
+            <org.apmem.tools.layouts.FlowLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/movie_info_genres_placeholder"
+                android:layout_below="@id/movie_info_images_list"
+                android:paddingTop="@dimen/content_top_padding"
+                android:paddingLeft="@dimen/content_left_padding"
+                android:paddingStart="@dimen/content_left_padding"
+                android:paddingRight="@dimen/content_left_padding"
+                android:paddingEnd="@dimen/content_left_padding"
+                >
+            </org.apmem.tools.layouts.FlowLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_vote_average"
+                android:layout_below="@id/movie_info_genres_placeholder"
+                android:textSize="@dimen/vote_average_text_size"
+                android:paddingLeft="@dimen/content_left_padding"
+                android:paddingStart="@dimen/content_left_padding"
+                android:paddingRight="@dimen/content_left_padding"
+                android:paddingEnd="@dimen/content_left_padding"/>
+
 
             <at.blogc.android.views.ExpandableTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_overview"
                 android:maxLines="5"
-                android:layout_below="@id/movie_info_poster_placeholder"
+                android:layout_below="@id/movie_info_vote_average"
                 android:textSize="@dimen/overview_font_size"
                 android:textAlignment="center"
                 app:animation_duration="1000"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:paddingLeft="@dimen/content_left_padding"
+                android:paddingStart="@dimen/content_left_padding"
+                android:paddingRight="@dimen/content_left_padding"
+                android:paddingEnd="@dimen/content_left_padding"/>
 
             <Button
                 android:layout_width="@dimen/expand_button_width"
@@ -81,25 +102,6 @@
                 android:layout_below="@id/movie_info_overview"
                 android:layout_centerHorizontal="true"
                 android:visibility="gone"/>
-
-            <org.apmem.tools.layouts.FlowLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/movie_info_genres_placeholder"
-                android:layout_below="@id/movie_info_release_date"
-                android:layout_alignLeft="@id/movie_info_release_date"
-                android:paddingTop="@dimen/content_top_padding"
-                >
-            </org.apmem.tools.layouts.FlowLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/movie_info_vote_average"
-                android:layout_below="@id/movie_info_genres_placeholder"
-                android:layout_alignLeft="@id/movie_info_genres_placeholder"
-                android:textSize="@dimen/vote_average_text_size"/>
 
         </RelativeLayout>
 
