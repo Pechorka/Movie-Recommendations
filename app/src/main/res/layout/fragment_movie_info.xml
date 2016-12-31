@@ -40,7 +40,8 @@
                 android:layout_below="@id/movie_info_name"
                 android:textColor="@color/colorTextSecondary"
                 android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/movie_info_release_date_text_size"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
