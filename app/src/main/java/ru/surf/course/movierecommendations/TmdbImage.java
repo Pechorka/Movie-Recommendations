@@ -22,4 +22,10 @@ public class TmdbImage {
         height = bitmap.getHeight();
         width = bitmap.getWidth();
     }
+
+    public TmdbImage(String path, int width, int height) {
+        this.path = path;
+        this.width = width;
+        this.height = height;
+    }
 }

@@ -37,11 +37,18 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (images.get(position).bitmap != null) {
-            final Bitmap poster = images.get(position).bitmap;
+        TmdbImage image = images.get(position);
+        if (image.height != 0 && image.width != 0){
+            double aspectRatio = (double) image.width/image.height;
+            ViewGroup.LayoutParams layoutParams = holder.poster.getLayoutParams();
+            layoutParams.width = (int)(layoutParams.height*aspectRatio);
+            holder.poster.setLayoutParams(layoutParams);
+        }
+        if (image.bitmap != null) {
+            final Bitmap poster = image.bitmap;
             holder.poster.setImageBitmap(poster);
         } else {
-            loadImage(images.get(position).path, holder.poster);
+            loadImage(image.path, holder.poster);
         }
     }
 

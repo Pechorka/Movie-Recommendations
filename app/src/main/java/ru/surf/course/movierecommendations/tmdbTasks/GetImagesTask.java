@@ -129,13 +129,17 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
 
     public List<TmdbImage> parseJson(String jsonString) throws JSONException {
         final String TMDB_FILE_PATH = "file_path";
+        final String TMDB_WIDTH = "width";
+        final String TMDB_HEIGHT = "height";
 
         List<TmdbImage> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(jsonString);
 
         JSONArray jsonArray = jsonObject.getJSONArray(imageType);
         for (int i = 0; i < jsonArray.length(); i++) {
-            result.add(new TmdbImage(jsonArray.getJSONObject(i).getString(TMDB_FILE_PATH)));
+            result.add(new TmdbImage(jsonArray.getJSONObject(i).getString(TMDB_FILE_PATH),
+                                     jsonArray.getJSONObject(i).getInt(TMDB_WIDTH),
+                                     jsonArray.getJSONObject(i).getInt(TMDB_HEIGHT)));
         }
         return result;
     }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -171,7 +172,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
                 movie.backdrops = result;
-                initOrAppendImagesAdapter(result);
+                movieInfoImagesAdapter.getImages().addAll(result);
+                movieInfoImagesAdapter.notifyDataSetChanged();
             }
         });
         getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
@@ -187,22 +189,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         return true;
     }
 
-    private void initOrAppendImagesAdapter(List<TmdbImage> images) {
-        if (movieInfoImagesAdapter == null) {
-            movieInfoImagesAdapter = new MovieInfoImagesAdapter(images, getActivity());
-            imagesList.setAdapter(movieInfoImagesAdapter);
-        }
-        else {
-            movieInfoImagesAdapter.getImages().addAll(images);
-            movieInfoImagesAdapter.notifyDataSetChanged();
-        }
-    }
 
     public void fillInformation() {
         //poster.setImageBitmap(currentMovie.posterBitmap);
         ArrayList<TmdbImage> images = new ArrayList<>();
         images.add(new TmdbImage(currentMovie.posterBitmap));
-        initOrAppendImagesAdapter(images);
+        movieInfoImagesAdapter = new MovieInfoImagesAdapter(images, getActivity());
+        imagesList.setAdapter(movieInfoImagesAdapter);
 
 
         title.setText(currentMovie.title);
@@ -248,7 +241,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             dataLoadComplete();
             loadPoster(currentMovieEnglish);
         }
-        loadBackdrops(currentMovie);
     }
 
     public void dataLoadComplete() {
@@ -259,6 +251,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             }
             else {
                 fillInformation();
+                loadBackdrops(currentMovie);
                 View progressBarPlaceholder = null;
                 if (getView() != null)
                     progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);
