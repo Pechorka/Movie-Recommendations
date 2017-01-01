@@ -4,9 +4,11 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="poster_height">240dp</dimen>
     <dimen name="poster_width">160dp</dimen>
+    <dimen name="backdrop_width">427dp</dimen>
     <dimen name="poster_big_height">525dp</dimen>
     <dimen name="poster_big_width">350dp</dimen>
-    <dimen name="title_font_size">21sp</dimen>
+    <dimen name="title_font_size">27sp</dimen>
+    <dimen name="movie_info_release_date_text_size">17sp</dimen>
     <dimen name="overview_font_size">17sp</dimen>
     <dimen name="content_top_padding">10dp</dimen>
     <dimen name="content_left_padding">10dp</dimen>
@@ -19,4 +21,5 @@
     <dimen name="vote_average_text_size">23sp</dimen>
     <dimen name="toolbar_shadow_height">7dp</dimen>
     <dimen name="expand_button_width">40dp</dimen>
+    <dimen name="movie_info_images_list_item_margin">3dp</dimen>
 </resources>
