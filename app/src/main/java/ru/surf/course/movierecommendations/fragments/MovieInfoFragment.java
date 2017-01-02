@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -61,7 +62,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView voteAverage;
     private RecyclerView imagesList;
     private Button photosButton;
-    private FrameLayout mediaPlaceholder;
+    private ExpandableLinearLayout mediaPlaceholder;
 
 
     private int dataLoaded = 0;
@@ -96,7 +97,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         photosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                togglePhotos();
+                mediaPlaceholder.toggle();
             }
         });
 
@@ -128,7 +129,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
         voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
         photosButton = (Button)root.findViewById(R.id.movie_info_photos_btn);
-        mediaPlaceholder = (FrameLayout)root.findViewById(R.id.movie_info_media_placeholder);
+        mediaPlaceholder = (ExpandableLinearLayout) root.findViewById(R.id.movie_info_media_placeholder);
     }
 
     @Override
@@ -141,19 +142,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         }
         dataLoaded = 0;
         loadInformation(id, language);
-    }
-
-    private void togglePhotos() {
-        if (imagesList != null){
-            Scene scene;
-            if (imagesList.getMeasuredHeight() == 0) {
-                scene = Scene.getSceneForLayout(mediaPlaceholder, R.layout.images_list_expanded_scene, getActivity());
-                loadBackdrops(currentMovie);
-            } else {
-                scene = Scene.getSceneForLayout(mediaPlaceholder, R.layout.images_list_collapsed_scene, getActivity());
-            }
-            TransitionManager.go(scene);
-        }
     }
 
 
@@ -194,8 +182,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
                 movie.backdrops = result;
-                ((MovieInfoImagesAdapter)imagesList.getAdapter()).setImages(result);
-                imagesList.getAdapter().notifyDataSetChanged();
+                imagesList.setAdapter(new MovieInfoImagesAdapter(result, getActivity()));
             }
         });
         getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
@@ -268,6 +255,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             }
             else {
                 fillInformation();
+                loadBackdrops(currentMovie);
                 View progressBarPlaceholder = null;
                 if (getView() != null)
                     progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);

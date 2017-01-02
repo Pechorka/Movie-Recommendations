@@ -85,10 +85,11 @@
 
             </LinearLayout>
 
-            <FrameLayout
+            <com.github.aakira.expandablelayout.ExpandableLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_media_placeholder"
+                android:orientation="vertical"
                 android:layout_below="@id/movie_info_media_buttons_placeholder"
                 android:background="@color/colorBackgroundDark"
                 android:paddingTop="@dimen/content_top_padding"
@@ -98,9 +99,14 @@
                 android:paddingLeft="@dimen/content_left_padding"
                 android:paddingStart="@dimen/content_left_padding">
 
-                <include layout="@layout/images_list_collapsed_scene"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/backdrop_height"
+                    android:id="@+id/movie_info_images_list">
 
-            </FrameLayout>
+                </android.support.v7.widget.RecyclerView>
+
+            </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
 
             <org.apmem.tools.layouts.FlowLayout

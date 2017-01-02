@@ -42,5 +42,6 @@ dependencies {
     compile "com.android.support:recyclerview-v7:25.0.1"
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
+    compile 'com.github.aakira:expandable-layout:1.6.0@aar'
     testCompile 'junit:junit:4.12'
 }
