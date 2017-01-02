@@ -9,6 +9,7 @@
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextSecondary">#70ffffff</color>
     <color name="colorBackground">#303030</color>
+    <color name="colorBackgroundDark">#212121</color>
     <color name="colorRatingPositive">#1b710d</color>
     <color name="colorRatingNegative">#710d0d</color>
     <color name="colorTransparent">#0000</color>

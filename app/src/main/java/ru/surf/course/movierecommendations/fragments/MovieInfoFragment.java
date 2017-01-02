@@ -5,10 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.transition.Scene;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,14 +54,15 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private ExpandableTextView overview;
     private Button expandCollapseOverviewButton;
     private TextView releaseDate;
-    //private ImageView poster;
+    private ImageView poster;
     private MovieInfo currentMovie;
     private MovieInfo currentMovieEnglish;
     private FlowLayout genresPlaceholder;
     private TextView voteAverage;
     private RecyclerView imagesList;
+    private Button photosButton;
+    private FrameLayout mediaPlaceholder;
 
-    private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
     private int dataLoaded = 0;
 
@@ -92,8 +93,14 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         initViews(root);
 
-        overview.setInterpolator(new OvershootInterpolator());
+        photosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                togglePhotos();
+            }
+        });
 
+        overview.setInterpolator(new OvershootInterpolator());
 
         View.OnClickListener expandCollapse = new View.OnClickListener() {
             @Override
@@ -112,7 +119,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private void initViews(View root){
         title = (TextView) root.findViewById(R.id.movie_info_name);
-        //poster = (ImageView) root.findViewById(R.id.movie_info_poster);
+        poster = (ImageView) root.findViewById(R.id.movie_info_poster);
         imagesList = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
         imagesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
@@ -120,6 +127,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
         voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
+        photosButton = (Button)root.findViewById(R.id.movie_info_photos_btn);
+        mediaPlaceholder = (FrameLayout)root.findViewById(R.id.movie_info_media_placeholder);
     }
 
     @Override
@@ -132,6 +141,19 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         }
         dataLoaded = 0;
         loadInformation(id, language);
+    }
+
+    private void togglePhotos() {
+        if (imagesList != null){
+            Scene scene;
+            if (imagesList.getMeasuredHeight() == 0) {
+                scene = Scene.getSceneForLayout(mediaPlaceholder, R.layout.images_list_expanded_scene, getActivity());
+                loadBackdrops(currentMovie);
+            } else {
+                scene = Scene.getSceneForLayout(mediaPlaceholder, R.layout.images_list_collapsed_scene, getActivity());
+            }
+            TransitionManager.go(scene);
+        }
     }
 
 
@@ -172,8 +194,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
                 movie.backdrops = result;
-                movieInfoImagesAdapter.getImages().addAll(result);
-                movieInfoImagesAdapter.notifyDataSetChanged();
+                ((MovieInfoImagesAdapter)imagesList.getAdapter()).setImages(result);
+                imagesList.getAdapter().notifyDataSetChanged();
             }
         });
         getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
@@ -191,13 +213,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
 
     public void fillInformation() {
-        //poster.setImageBitmap(currentMovie.posterBitmap);
-        ArrayList<TmdbImage> images = new ArrayList<>();
-        images.add(new TmdbImage(currentMovie.posterBitmap));
-        movieInfoImagesAdapter = new MovieInfoImagesAdapter(images, getActivity());
-        imagesList.setAdapter(movieInfoImagesAdapter);
-
-
+        poster.setImageBitmap(currentMovie.posterBitmap);
+        imagesList.setAdapter(new MovieInfoImagesAdapter(new ArrayList<TmdbImage>(), getActivity()));
         title.setText(currentMovie.title);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
@@ -251,7 +268,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             }
             else {
                 fillInformation();
-                loadBackdrops(currentMovie);
                 View progressBarPlaceholder = null;
                 if (getView() != null)
                     progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);

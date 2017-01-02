@@ -77,8 +77,8 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            placeholder = (CardView)itemView.findViewById(R.id.movie_info_poster_placeholder);
-            poster = (ImageView)itemView.findViewById(R.id.movie_info_poster);
+            placeholder = (CardView)itemView.findViewById(R.id.movie_info_backdrop_placeholder);
+            poster = (ImageView)itemView.findViewById(R.id.movie_info_backdrop);
         }
     }
 }

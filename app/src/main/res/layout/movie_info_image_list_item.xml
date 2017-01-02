@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/movie_info_poster_placeholder"
+    android:id="@+id/movie_info_backdrop_placeholder"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -16,9 +16,9 @@
 
         <ImageView
             android:layout_width="@dimen/backdrop_width"
-            android:layout_height="@dimen/poster_height"
+            android:layout_height="@dimen/backdrop_height"
             android:scaleType = "fitCenter"
             android:gravity = "center_horizontal"
-            android:id="@+id/movie_info_poster"
+            android:id="@+id/movie_info_backdrop"
             />
 </android.support.v7.widget.CardView>

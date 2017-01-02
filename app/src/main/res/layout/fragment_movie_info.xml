@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/content_top_padding"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:paddingLeft="0dp"
+        android:paddingStart="@dimen/content_left_padding"
+        android:paddingEnd="@dimen/content_left_padding"
+        android:paddingLeft="@dimen/content_left_padding"
         android:paddingRight="@dimen/content_left_padding"
         android:background="@color/colorBackground"
         >
@@ -43,16 +43,64 @@
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/movie_info_release_date_text_size"/>
 
-            <android.support.v7.widget.RecyclerView
+            <android.support.v7.widget.CardView
+                android:id="@+id/movie_info_poster_placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/movie_info_release_date"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                card_view:cardCornerRadius="0dp"
+                card_view:cardElevation="@dimen/movie_info_images_list_item_margin"
+
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/poster_width"
+                    android:layout_height="@dimen/poster_height"
+                    android:scaleType = "fitCenter"
+                    android:gravity = "center_horizontal"
+                    android:id="@+id/movie_info_poster"
+                    />
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="@dimen/poster_width"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_media_buttons_placeholder"
+                android:orientation="horizontal"
+                android:layout_below="@id/movie_info_poster_placeholder"
+                android:layout_alignLeft="@id/movie_info_poster_placeholder"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="@dimen/movie_info_photos_btn_size"
+                    android:layout_height="@dimen/movie_info_photos_btn_size"
+                    android:id="@+id/movie_info_photos_btn"
+                    android:background="@drawable/ic_photo_camera"
+                    android:layout_below="@id/movie_info_poster_placeholder"/>
+
+            </LinearLayout>
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/movie_info_images_list"
-                android:layout_below="@id/movie_info_release_date"
-                android:layout_marginTop="10dp">
+                android:id="@+id/movie_info_media_placeholder"
+                android:layout_below="@id/movie_info_media_buttons_placeholder"
+                android:background="@color/colorBackgroundDark"
+                android:paddingTop="@dimen/content_top_padding"
+                android:paddingBottom="@dimen/content_top_padding"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="@dimen/content_left_padding"
+                android:paddingStart="@dimen/content_left_padding">
 
-            </android.support.v7.widget.RecyclerView>
+                <include layout="@layout/images_list_collapsed_scene"/>
 
-
+            </FrameLayout>
 
 
             <org.apmem.tools.layouts.FlowLayout
@@ -60,12 +108,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/movie_info_genres_placeholder"
-                android:layout_below="@id/movie_info_images_list"
+                android:layout_toRightOf="@id/movie_info_poster_placeholder"
+                android:layout_alignTop="@id/movie_info_poster_placeholder"
                 android:paddingTop="@dimen/content_top_padding"
-                android:paddingLeft="@dimen/content_left_padding"
-                android:paddingStart="@dimen/content_left_padding"
-                android:paddingRight="@dimen/content_left_padding"
-                android:paddingEnd="@dimen/content_left_padding"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 >
             </org.apmem.tools.layouts.FlowLayout>
 
@@ -74,11 +121,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_vote_average"
                 android:layout_below="@id/movie_info_genres_placeholder"
-                android:textSize="@dimen/vote_average_text_size"
-                android:paddingLeft="@dimen/content_left_padding"
-                android:paddingStart="@dimen/content_left_padding"
-                android:paddingRight="@dimen/content_left_padding"
-                android:paddingEnd="@dimen/content_left_padding"/>
+                android:layout_alignLeft="@id/movie_info_genres_placeholder"
+                android:textSize="@dimen/vote_average_text_size" />
 
 
             <at.blogc.android.views.ExpandableTextView
@@ -86,15 +130,12 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_overview"
                 android:maxLines="5"
-                android:layout_below="@id/movie_info_vote_average"
+                android:layout_below="@id/movie_info_media_placeholder"
                 android:textSize="@dimen/overview_font_size"
                 android:textAlignment="center"
                 app:animation_duration="1000"
                 android:ellipsize="end"
-                android:paddingLeft="@dimen/content_left_padding"
-                android:paddingStart="@dimen/content_left_padding"
-                android:paddingRight="@dimen/content_left_padding"
-                android:paddingEnd="@dimen/content_left_padding"/>
+                />
 
             <Button
                 android:layout_width="@dimen/expand_button_width"
