@@ -12,10 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/content_top_padding"
-        android:paddingStart="@dimen/content_left_padding"
-        android:paddingEnd="@dimen/content_left_padding"
-        android:paddingLeft="@dimen/content_left_padding"
-        android:paddingRight="@dimen/content_left_padding"
         android:background="@color/colorBackground"
         >
 
@@ -31,6 +27,10 @@
                 android:layout_centerHorizontal="true"
                 android:paddingTop="0dp"
                 android:gravity="center_horizontal"
+                android:paddingStart="@dimen/content_left_padding"
+                android:paddingEnd="@dimen/content_left_padding"
+                android:paddingLeft="@dimen/content_left_padding"
+                android:paddingRight="@dimen/content_left_padding"
                 />
 
             <TextView
@@ -50,12 +50,11 @@
                 android:layout_below="@id/movie_info_release_date"
                 android:layout_gravity="center"
                 android:padding="0dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/movie_info_content_margin"
+                android:layout_marginStart="@dimen/movie_info_content_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 card_view:cardCornerRadius="0dp"
                 card_view:cardElevation="@dimen/movie_info_images_list_item_margin"
-
                 >
 
                 <ImageView
@@ -74,14 +73,16 @@
                 android:orientation="horizontal"
                 android:layout_below="@id/movie_info_poster_placeholder"
                 android:layout_alignLeft="@id/movie_info_poster_placeholder"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                >
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:layout_width="@dimen/movie_info_photos_btn_size"
                     android:layout_height="@dimen/movie_info_photos_btn_size"
                     android:id="@+id/movie_info_photos_btn"
                     android:background="@drawable/ic_photo_camera"
-                    android:layout_below="@id/movie_info_poster_placeholder"/>
+                    android:layout_below="@id/movie_info_poster_placeholder"
+                    android:layout_margin="@dimen/movie_info_photos_btn_margin" />
 
             </LinearLayout>
 
@@ -116,9 +117,10 @@
                 android:id="@+id/movie_info_genres_placeholder"
                 android:layout_toRightOf="@id/movie_info_poster_placeholder"
                 android:layout_alignTop="@id/movie_info_poster_placeholder"
-                android:paddingTop="@dimen/content_top_padding"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/movie_info_content_margin"
+                android:layout_marginEnd="@dimen/movie_info_content_margin"
                 >
             </org.apmem.tools.layouts.FlowLayout>
 
@@ -141,6 +143,10 @@
                 android:textAlignment="center"
                 app:animation_duration="1000"
                 android:ellipsize="end"
+                android:layout_marginLeft="@dimen/movie_info_content_margin"
+                android:layout_marginStart="@dimen/movie_info_content_margin"
+                android:layout_marginRight="@dimen/movie_info_content_margin"
+                android:layout_marginEnd="@dimen/movie_info_content_margin"
                 />
 
             <Button

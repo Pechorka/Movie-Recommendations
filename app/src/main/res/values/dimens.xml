@@ -24,4 +24,6 @@
     <dimen name="expand_button_width">40dp</dimen>
     <dimen name="movie_info_images_list_item_margin">3dp</dimen>
     <dimen name="movie_info_photos_btn_size">28dp</dimen>
+    <dimen name="movie_info_photos_btn_margin">5dp</dimen>
+    <dimen name="movie_info_content_margin">32dp</dimen>
 </resources>
