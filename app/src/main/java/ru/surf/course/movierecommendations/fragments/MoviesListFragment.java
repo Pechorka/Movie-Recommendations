@@ -182,7 +182,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     public void taskCompleted(List<MovieInfo> result) {
         if (result != null) {
             if (movieInfoList != null && previousFilter.equalsIgnoreCase(query)) {
-                movieInfoList.addAll(result);
+                if (PAGE > 1) {
+                    movieInfoList.addAll(result);
+                }
             } else {
                 movieInfoList = result;
             }
@@ -202,7 +204,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
     }
 
-    private void setupViews(View root){
+    private void setupViews(View root) {
         root.findViewById(R.id.movie_list_listCover).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -248,7 +250,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                         break;
                     case R.id.sliding_top:
                         query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle("top Rated");
+                        getActivity().setTitle("Top Rated");
                         break;
                     case R.id.sliding_upcoming:
                         query = GetMoviesTask.FILTER_UPCOMING;
@@ -260,9 +262,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                         break;
 
                 }
-                if (!checkPreviousFilter(query)){
-                    PAGE = 1;
+                if (checkPreviousFilter(query)) {
+                    return;
                 }
+                PAGE = 1;
                 loadInformation();
                 panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
@@ -277,7 +280,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         filterBtn.setOnClickListener(listener);
     }
 
-    private boolean checkPreviousFilter(String newFilter){
+    private boolean checkPreviousFilter(String newFilter) {
         return previousFilter.equalsIgnoreCase(newFilter);
     }
 
