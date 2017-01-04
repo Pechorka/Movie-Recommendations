@@ -2,6 +2,8 @@ package ru.surf.course.movierecommendations.adapters;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -43,7 +48,9 @@ public class ListMoviesAdapter extends RecyclerView.Adapter<ListMoviesAdapter.My
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final MovieInfo movieInfo = movieInfoList.get(position);
         holder.name.setText(movieInfo.title);
-        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image);
+        loadPoster(movieInfo);
+        holder.image.setImageBitmap(movieInfo.posterBitmap);
+//        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +62,31 @@ public class ListMoviesAdapter extends RecyclerView.Adapter<ListMoviesAdapter.My
     @Override
     public int getItemCount() {
         return movieInfoList.size();
+    }
+
+    private void loadPoster(final MovieInfo movieInfo) {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                posterLoaded(bitmap, movieInfo);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                //repeat load
+                loadPoster(movieInfo);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        ImageLoader.getPoster(context, movieInfo.posterPath, (int) context.getResources().getDimension(R.dimen.poster_width), (int) context.getResources().getDimension(R.dimen.poster_height), target);
+    }
+
+    private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
+        movieInfo.posterBitmap = bitmap;
     }
 
     private void fragmentToSwitch(MovieInfo info) {
