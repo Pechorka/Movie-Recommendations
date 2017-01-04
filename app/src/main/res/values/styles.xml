@@ -34,5 +34,14 @@
         <item name="android:lines">1</item>
     </style>
 
+    <style name="SlidingUpButton" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="android:padding">@dimen/sliding_button_padding</item>
+        <item name="android:layout_marginLeft">@dimen/sliding_button_marginLeft</item>
+        <item name="android:layout_marginBottom">@dimen/sliding_button_marginBottom</item>
+        <item name="android:layout_marginTop">@dimen/sliding_button_marginTop</item>
+        <item name="android:background">@drawable/sliding_up_button</item>
+        <item name="android:textSize">@dimen/sliding_button_textSize</item>
+    </style>
+
 
 </resources>

@@ -14,14 +14,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.MovieInfo;
-import ru.surf.course.movierecommendations.TmdbImage;
+import ru.surf.course.movierecommendations.models.TmdbImage;
 
 /**
  * Created by andrew on 12/30/16.

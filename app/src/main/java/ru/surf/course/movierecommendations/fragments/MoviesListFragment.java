@@ -5,32 +5,36 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
-import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.EndlessRecyclerViewScrollListener;
-import ru.surf.course.movierecommendations.MovieInfo;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.adapters.GridMoviesAdapter;
+import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 
-public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
+public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener, View.OnClickListener {
 
     private static final String LOG_TAG = MoviesListFragment.class.getSimpleName();
 
@@ -41,6 +45,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
+    private final static String KEY_GENRES = "genres";
+    private final static String KEY_DATE_GTE = "date_gte";
+    private final static String KEY_DATE_LTE = "date_lte";
 
 
     private static int PAGE;
@@ -49,8 +56,13 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private String language;
     private int id;
     private String previousFilter;
+    private String genres;
+    private Date date_gte;
+    private Date date_lte;
 
     private RecyclerView recyclerView;
+    private SlidingUpPanelLayout panelLayout;
+    FloatingActionButton floatingActionButton;
     private boolean grid;
     private List<MovieInfo> movieInfoList;
     private Tasks task;
@@ -83,6 +95,19 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return moviesListFragment;
     }
 
+    public static MoviesListFragment newInstance(int id, String language, String genres, Date gte, Date lte, Tasks task) {
+        MoviesListFragment moviesListFragment = new MoviesListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_LANGUAGE, language);
+        bundle.putInt(KEY_MOVIE_ID, id);
+        bundle.putSerializable(KEY_TASK, task);
+        bundle.putString(KEY_GENRES, genres);
+        bundle.putSerializable(KEY_DATE_LTE, lte);
+        bundle.putSerializable(KEY_DATE_GTE, gte);
+        moviesListFragment.setArguments(bundle);
+        return moviesListFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +117,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         id = getArguments().getInt(KEY_MOVIE_ID);
         PAGE = 1;
         previousFilter = query;
+        genres = getArguments().getString(KEY_GENRES);
+        date_lte = (Date) getArguments().getSerializable(KEY_DATE_LTE);
+        date_gte = (Date) getArguments().getSerializable(KEY_DATE_GTE);
     }
 
     @Nullable
@@ -111,21 +139,51 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         } else {
             switchToLinear();
         }
+        panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
+        floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
+        View cover = root.findViewById(R.id.movie_list_listCover);
+        cover.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (panelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
+                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    return true;
+                }
+                return false;
+            }
+        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }
+        });
+        panelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
 
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+            }
+        });
+        Button filterBtn = (Button) root.findViewById(R.id.sliding_popular);
+        filterBtn.setOnClickListener(this);
+        filterBtn = (Button) root.findViewById(R.id.sliding_top);
+        filterBtn.setOnClickListener(this);
+        filterBtn = (Button) root.findViewById(R.id.sliding_upcoming);
+        filterBtn.setOnClickListener(this);
+        filterBtn = (Button) root.findViewById(R.id.sliding_custom);
+        filterBtn.setOnClickListener(this);
         recyclerView.addOnScrollListener(scrollListener);
         loadInformation();
-        setHasOptionsMenu(true);
         return root;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (GetMoviesTask.isFilter(query)) {
-            inflater.inflate(R.menu.movie_list_menu, menu);
-        }
-
-    }
 
     @Override
     public void onPause() {
@@ -160,9 +218,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_switch_filter:
-                showPopup();
-                return true;
             case R.id.action_search:
                 SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
                 item.expandActionView();
@@ -187,43 +242,36 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         }
     }
 
-    private void showPopup() {
-        View menuItemView = getActivity().findViewById(R.id.action_switch_filter);
-        PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+    @Override
+    public void onClick(View v) {
         previousFilter = query;
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.popup_popular:
-                        query = GetMoviesTask.FILTER_POPULAR;
-                        getActivity().setTitle("Popular");
-                        loadInformation();
-                        break;
-                    case R.id.popup_top_rated:
-                        query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle("Top Rated");
-                        loadInformation();
-                        break;
-                    case R.id.popup_now_playing:
-                        query = GetMoviesTask.FILTER_NOW_PLAYING;
-                        getActivity().setTitle("Now Playing");
-                        loadInformation();
-                        break;
-                    case R.id.popup_upcoming:
-                        query = GetMoviesTask.FILTER_UPCOMING;
-                        getActivity().setTitle("Upcoming");
-                        loadInformation();
-                        break;
-                }
-                return true;
-            }
-        });
-        MenuInflater inflate = popup.getMenuInflater();
-        inflate.inflate(R.menu.popup_menu, popup.getMenu());
-        popup.show();
+        switch (v.getId()) {
+            case R.id.sliding_popular:
+                query = GetMoviesTask.FILTER_POPULAR;
+                getActivity().setTitle("Popular");
+                loadInformation();
+                break;
+            case R.id.sliding_top:
+                query = GetMoviesTask.FILTER_TOP_RATED;
+                getActivity().setTitle("top Rated");
+                loadInformation();
+                break;
+            case R.id.sliding_upcoming:
+                query = GetMoviesTask.FILTER_UPCOMING;
+                getActivity().setTitle("Upcoming");
+                loadInformation();
+                break;
+            case R.id.sliding_custom:
+                query = GetMoviesTask.FILTER_CUSTOM_FILTER;
+                panelLayout.setVisibility(View.VISIBLE);
+                getActivity().setTitle("Custom Filter");
+                loadInformation();
+                break;
 
+        }
+        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
+
 
     private void loadInformation() {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
@@ -246,6 +294,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 break;
             case SEARCH_BY_KEYWORD:
                 getMoviesTask.getMoviesByKeyword(id, language);
+                break;
+            case SEARCH_BY_CUSTOM_FILTER:
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
+                getMoviesTask.getMoviesByCustomFilter(language, String.valueOf(PAGE), genres, dateFormat.format(date_gte), dateFormat.format(date_lte));
                 break;
         }
     }
@@ -295,6 +347,5 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         listMoviesAdapter.notifyDataSetChanged();
 
     }
-
 }
 

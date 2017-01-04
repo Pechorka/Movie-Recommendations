@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.Adapters;
+package ru.surf.course.movierecommendations.adapters;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -13,9 +13,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.MainActivity;
-import ru.surf.course.movierecommendations.MovieInfo;
-import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**

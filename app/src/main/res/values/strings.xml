@@ -6,4 +6,11 @@
     <string name="search">Search</string>
     <string name="expand">More</string>
     <string name="collapse">Less</string>
+    <string name="popular_movies_btn_hint">Most popular movies atm</string>
+    <string name="popular_btn_text">Popular</string>
+    <string name="top_btn_text">Top</string>
+    <string name="upcoming_btn_text">Upcoming</string>
+    <string name="custom_btn_text">Custom</string>
+    <string name="top_btn_hint">Best movies of all time</string>
+    <string name="upcoming_btn_hint">Upcoming movies</string>
 </resources>

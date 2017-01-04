@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.Adapters;
+package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.TmdbImage;
+import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**

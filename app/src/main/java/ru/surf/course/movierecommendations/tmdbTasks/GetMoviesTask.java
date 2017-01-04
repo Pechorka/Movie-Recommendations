@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.MovieInfo;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 
 /**
  * Created by andrew on 12/3/16.
@@ -36,11 +36,15 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     public static final String FILTER_UPCOMING = "upcoming";
     public static final String FILTER_TOP_RATED = "top_rated";
     public static final String FILTER_NOW_PLAYING = "now_playing";
+    public static final String FILTER_CUSTOM_FILTER = "custom_filter";
 
     private final String API_KEY_PARAM = "api_key";
     private final String LANGUAGE_PARAM = "language";
     private final String PAGE_PARAM = "page";
     private final String NAME_PARAM = "query";
+    private final String RELEASE_DATE_GTE = "release_date.gte";
+    private final String RELEASE_DATE_LTE = "release_date.lte";
+    private final String WITH_GENRES = "with_genres";
     private final String LOG_TAG = getClass().getSimpleName();
     private boolean isLoadingList;
     private Tasks task;
@@ -96,6 +100,9 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     break;
                 case SEARCH_BY_KEYWORD:
                     builtUri = uriByKeyword(params[0], languageName);
+                    break;
+                case SEARCH_BY_CUSTOM_FILTER:
+                    builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4]);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -342,13 +349,26 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .build();
     }
 
-//    private Uri uriByGenre(String genre, String language) {
-//        final String TMDB_BASE_URL = "https://api.themoviedb.org/3" + genre + "/movie/list?";
-//        return Uri.parse(TMDB_BASE_URL).buildUpon()
-//                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-//                .appendQueryParameter(LANGUAGE_PARAM, language)
-//                .build();
-//    }
+    public void getMoviesByCustomFilter(String language, String page, String genres,
+                                        String releaseDateGTE, String releaseDateLTE) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+        execute(genres, language, page, releaseDateGTE, releaseDateLTE);
+
+    }
+
+    private Uri uriForCustomFilter(String language, String page,
+                                   String genres, String releaseDateGTE, String releaseDateLTE) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE)
+                .appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE)
+                .appendQueryParameter(WITH_GENRES, genres)
+                .build();
+    }
 
     private Uri uriByGenre(int genreID, String language) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/genre/" + genreID + "?/movies";
