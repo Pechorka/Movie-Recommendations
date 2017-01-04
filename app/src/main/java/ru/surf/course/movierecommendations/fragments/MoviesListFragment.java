@@ -34,7 +34,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 
-public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener, View.OnClickListener {
+public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
 
     private static final String LOG_TAG = MoviesListFragment.class.getSimpleName();
 
@@ -51,7 +51,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
 
 
     private static int PAGE;
-
     private String query;
     private String language;
     private int id;
@@ -59,20 +58,17 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private String genres;
     private Date date_gte;
     private Date date_lte;
-
-    private RecyclerView recyclerView;
-    private SlidingUpPanelLayout panelLayout;
-    FloatingActionButton floatingActionButton;
     private boolean grid;
     private List<MovieInfo> movieInfoList;
     private Tasks task;
 
+    private RecyclerView recyclerView;
+    private SlidingUpPanelLayout panelLayout;
+    private FloatingActionButton floatingActionButton;
     private GridMoviesAdapter gridMoviesAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
-
     private EndlessRecyclerViewScrollListener scrollListener;
 
     public static MoviesListFragment newInstance(String query, String language, Tasks task) {
@@ -122,64 +118,18 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         date_gte = (Date) getArguments().getSerializable(KEY_DATE_GTE);
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_movies_list, container, false);
-
-        recyclerView = (RecyclerView) root.findViewById(R.id.movie_list_rv);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        grid = sharedPref.getBoolean(KEY_GRID, true);
-        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
-        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        initViews(root);
         if (grid) {
             switchToGrid();
         } else {
             switchToLinear();
         }
-        panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
-        floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
-        View cover = root.findViewById(R.id.movie_list_listCover);
-        cover.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (panelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    return true;
-                }
-                return false;
-            }
-        });
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }
-        });
-        panelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                }
-            }
-        });
-        Button filterBtn = (Button) root.findViewById(R.id.sliding_popular);
-        filterBtn.setOnClickListener(this);
-        filterBtn = (Button) root.findViewById(R.id.sliding_top);
-        filterBtn.setOnClickListener(this);
-        filterBtn = (Button) root.findViewById(R.id.sliding_upcoming);
-        filterBtn.setOnClickListener(this);
-        filterBtn = (Button) root.findViewById(R.id.sliding_custom);
-        filterBtn.setOnClickListener(this);
-        recyclerView.addOnScrollListener(scrollListener);
+        setupViews(root);
         loadInformation();
         return root;
     }
@@ -224,7 +174,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 searchView.requestFocus();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -235,50 +184,109 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             if (movieInfoList != null && previousFilter.equalsIgnoreCase(query)) {
                 movieInfoList.addAll(result);
             } else {
-                previousFilter = query;
                 movieInfoList = result;
             }
             dataLoadComplete();
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        previousFilter = query;
-        switch (v.getId()) {
-            case R.id.sliding_popular:
-                query = GetMoviesTask.FILTER_POPULAR;
-                getActivity().setTitle("Popular");
-                loadInformation();
-                break;
-            case R.id.sliding_top:
-                query = GetMoviesTask.FILTER_TOP_RATED;
-                getActivity().setTitle("top Rated");
-                loadInformation();
-                break;
-            case R.id.sliding_upcoming:
-                query = GetMoviesTask.FILTER_UPCOMING;
-                getActivity().setTitle("Upcoming");
-                loadInformation();
-                break;
-            case R.id.sliding_custom:
-                query = GetMoviesTask.FILTER_CUSTOM_FILTER;
-                panelLayout.setVisibility(View.VISIBLE);
-                getActivity().setTitle("Custom Filter");
-                loadInformation();
-                break;
-
-        }
-        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    private void initViews(View root) {
+        recyclerView = (RecyclerView) root.findViewById(R.id.movie_list_rv);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        grid = sharedPref.getBoolean(KEY_GRID, true);
+        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
+        floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
     }
 
+    private void setupViews(View root){
+        root.findViewById(R.id.movie_list_listCover).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (panelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
+                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    return true;
+                }
+                return false;
+            }
+        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }
+        });
+        panelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                // do nothing
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+            }
+        });
+        recyclerView.addOnScrollListener(scrollListener);
+        setupFiltersBtns(root);
+    }
+
+    private void setupFiltersBtns(View root) {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previousFilter = query;
+                switch (view.getId()) {
+                    case R.id.sliding_popular:
+                        query = GetMoviesTask.FILTER_POPULAR;
+                        getActivity().setTitle("Popular");
+                        break;
+                    case R.id.sliding_top:
+                        query = GetMoviesTask.FILTER_TOP_RATED;
+                        getActivity().setTitle("top Rated");
+                        break;
+                    case R.id.sliding_upcoming:
+                        query = GetMoviesTask.FILTER_UPCOMING;
+                        getActivity().setTitle("Upcoming");
+                        break;
+                    case R.id.sliding_custom:
+                        query = GetMoviesTask.FILTER_CUSTOM_FILTER;
+                        getActivity().setTitle("Custom Filter");
+                        break;
+
+                }
+                if (!checkPreviousFilter(query)){
+                    PAGE = 1;
+                }
+                loadInformation();
+                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        };
+        Button filterBtn = (Button) root.findViewById(R.id.sliding_popular);
+        filterBtn.setOnClickListener(listener);
+        filterBtn = (Button) root.findViewById(R.id.sliding_top);
+        filterBtn.setOnClickListener(listener);
+        filterBtn = (Button) root.findViewById(R.id.sliding_upcoming);
+        filterBtn.setOnClickListener(listener);
+        filterBtn = (Button) root.findViewById(R.id.sliding_custom);
+        filterBtn.setOnClickListener(listener);
+    }
+
+    private boolean checkPreviousFilter(String newFilter){
+        return previousFilter.equalsIgnoreCase(newFilter);
+    }
 
     private void loadInformation() {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
         switch (task) {
             case SEARCH_BY_FILTER:
-                getMoviesTask.getMoviesByFilter(query, language,String.valueOf(PAGE));
+                getMoviesTask.getMoviesByFilter(query, language, String.valueOf(PAGE));
                 break;
             case SEARCH_BY_NAME:
                 getMoviesTask.getMoviesByName(query);

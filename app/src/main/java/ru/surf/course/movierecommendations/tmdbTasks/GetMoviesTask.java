@@ -35,7 +35,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     public static final String FILTER_POPULAR = "popular";
     public static final String FILTER_UPCOMING = "upcoming";
     public static final String FILTER_TOP_RATED = "top_rated";
-    public static final String FILTER_NOW_PLAYING = "now_playing";
     public static final String FILTER_CUSTOM_FILTER = "custom_filter";
 
     private final String API_KEY_PARAM = "api_key";
@@ -53,9 +52,9 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     public static boolean isFilter(String string){
         return string.equalsIgnoreCase(FILTER_POPULAR)
-                || string.equalsIgnoreCase(FILTER_NOW_PLAYING)
                 || string.equalsIgnoreCase(FILTER_TOP_RATED)
-                || string.equalsIgnoreCase(FILTER_UPCOMING);
+                || string.equalsIgnoreCase(FILTER_UPCOMING)
+                || string.equalsIgnoreCase(FILTER_CUSTOM_FILTER);
     }
 
     @Override
