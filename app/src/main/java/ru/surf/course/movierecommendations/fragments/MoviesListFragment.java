@@ -321,6 +321,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 PAGE++;
+                previousFilter = query;
                 loadInformation();
             }
         };
@@ -335,6 +336,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 PAGE++;
+                previousFilter = query;
                 loadInformation();
             }
         };
