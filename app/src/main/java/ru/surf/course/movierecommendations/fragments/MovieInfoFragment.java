@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
+import ru.surf.course.movierecommendations.Adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;

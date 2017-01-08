@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.adapters;
+package ru.surf.course.movierecommendations.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
