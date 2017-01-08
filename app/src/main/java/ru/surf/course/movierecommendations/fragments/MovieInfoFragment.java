@@ -184,7 +184,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
             }
         };
-        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target);
+        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target, ImageLoader.sizes.w300);
     }
 
     private void loadBackdrops(final MovieInfo movie) {

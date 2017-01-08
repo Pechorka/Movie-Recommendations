@@ -53,7 +53,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
     }
 
     private void loadImage(String path, ImageView targetView) {
-        ImageLoader.putPoster(context, path, targetView);
+        ImageLoader.putPoster(context, path, targetView, ImageLoader.sizes.w300);
     }
 
     @Override

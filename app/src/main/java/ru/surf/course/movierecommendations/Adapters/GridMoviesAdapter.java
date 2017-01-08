@@ -43,7 +43,7 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final MovieInfo movieInfo = movieInfoList.get(position);
         holder.name.setText(movieInfo.title);
-        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image);
+        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image, ImageLoader.sizes.w300);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
