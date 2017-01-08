@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".GalleryActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
     </application>
 

@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.adapters;
+package ru.surf.course.movierecommendations.Adapters;
 
 import android.app.Fragment;
 import android.content.Context;

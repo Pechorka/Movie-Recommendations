@@ -2,11 +2,13 @@ package ru.surf.course.movierecommendations.models;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by andrew on 12/30/16.
  */
 
-public class TmdbImage {
+public class TmdbImage implements Serializable{
 
     public String path;
     public Bitmap bitmap;

@@ -13,4 +13,5 @@
     <color name="colorRatingPositive">#1b710d</color>
     <color name="colorRatingNegative">#710d0d</color>
     <color name="colorTransparent">#0000</color>
+    <color name="colorBlack">#000</color>
 </resources>

@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
@@ -91,6 +93,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
         View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
         initViews(root);
+
+        poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GalleryActivity.start(getActivity(), GalleryActivity.drawableToBitmap(poster.getDrawable()));
+            }
+        });
 
         photosButton.setOnClickListener(new View.OnClickListener() {
             @Override
