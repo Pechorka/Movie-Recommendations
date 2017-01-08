@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -94,6 +95,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         photosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int color = ContextCompat.getColor(getActivity(), R.color.colorTextPrimary);
+                int colorDark = ContextCompat.getColor(getActivity(), R.color.colorTextSecondary);
+                photosButton.getBackground().setColorFilter(mediaPlaceholder.isExpanded() ? colorDark : color, PorterDuff.Mode.MULTIPLY);
                 mediaPlaceholder.toggle();
             }
         });
@@ -126,6 +130,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         genresPlaceholder = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
         voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
         photosButton = (Button)root.findViewById(R.id.movie_info_photos_btn);
+        photosButton.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorTextSecondary), PorterDuff.Mode.MULTIPLY);
         mediaPlaceholder = (ExpandableLinearLayout) root.findViewById(R.id.movie_info_media_placeholder);
     }
 
