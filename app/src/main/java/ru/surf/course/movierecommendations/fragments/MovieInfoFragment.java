@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +64,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private RecyclerView imagesList;
     private Button photosButton;
     private ExpandableLinearLayout mediaPlaceholder;
+
+    private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
 
     private int dataLoaded = 0;
@@ -195,7 +198,19 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
                 movie.backdrops = result;
-                imagesList.setAdapter(new MovieInfoImagesAdapter(result, getActivity()));
+                movieInfoImagesAdapter = new MovieInfoImagesAdapter(result, getActivity());
+                imagesList.setAdapter(movieInfoImagesAdapter);
+                movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        ArrayList<String> paths = new ArrayList<String>();
+                        for (TmdbImage image:
+                                movieInfoImagesAdapter.getImages()) {
+                            paths.add(image.path);
+                        }
+                        GalleryActivity.start(getActivity(), paths, position);
+                    }
+                });
             }
         });
         getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
@@ -214,7 +229,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     public void fillInformation() {
         poster.setImageBitmap(currentMovie.posterBitmap);
-        imagesList.setAdapter(new MovieInfoImagesAdapter(new ArrayList<TmdbImage>(), getActivity()));
         title.setText(currentMovie.title);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))

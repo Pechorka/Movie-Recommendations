@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
@@ -23,6 +24,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
 
     private List<TmdbImage> images;
     private Context context;
+    private static OnItemClickListener listener;
 
     public MovieInfoImagesAdapter(List<TmdbImage> images, Context context) {
         this.images = images;
@@ -36,7 +38,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         TmdbImage image = images.get(position);
         if (image.height != 0 && image.width != 0){
             double aspectRatio = (double) image.width/image.height;
@@ -69,7 +71,12 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
         return images;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        MovieInfoImagesAdapter.listener = listener;
+    }
+
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public CardView placeholder;
         public ImageView poster;
@@ -79,8 +86,20 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
 
             placeholder = (CardView)itemView.findViewById(R.id.movie_info_backdrop_placeholder);
             poster = (ImageView)itemView.findViewById(R.id.movie_info_backdrop);
+
+            poster.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            MovieInfoImagesAdapter.listener.onClick(getAdapterPosition());
         }
     }
+
+    public interface OnItemClickListener {
+        void onClick(int position);
+    }
+
 }
 
 

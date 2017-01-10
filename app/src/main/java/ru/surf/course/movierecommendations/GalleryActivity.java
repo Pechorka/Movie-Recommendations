@@ -25,10 +25,18 @@ import ru.surf.course.movierecommendations.models.TmdbImage;
 public class GalleryActivity extends AppCompatActivity {
 
     public static final String IMAGES_TAG = "images";
+    public static final String INIT_POSITION_TAG = "init_position";
 
     public static void start(Context context, ArrayList<String> paths) {
         Intent intent = new Intent(context, GalleryActivity.class);
         intent.putExtra(IMAGES_TAG, paths);
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, ArrayList<String> paths, int initPosition) {
+        Intent intent = new Intent(context, GalleryActivity.class);
+        intent.putExtra(IMAGES_TAG, paths);
+        intent.putExtra(INIT_POSITION_TAG, initPosition);
         context.startActivity(intent);
     }
 
@@ -46,6 +54,8 @@ public class GalleryActivity extends AppCompatActivity {
             GalleryPagerAdapter adapter = new GalleryPagerAdapter(getSupportFragmentManager(),paths);
             viewPager.setAdapter(adapter);
             viewPager.setOffscreenPageLimit(1);
+            if (getIntent().hasExtra(INIT_POSITION_TAG))
+                viewPager.setCurrentItem(getIntent().getIntExtra(INIT_POSITION_TAG, 0));
         }
     }
 }
