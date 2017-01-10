@@ -24,6 +24,13 @@ public class ImageLoader {
                 .into(target);
     }
 
+    public static void putPosterNoResize(Context context, String path, ImageView target, sizes size) {
+        Picasso.with(context)
+                .load(TMDB_BASE_POSTER_URL + size.toString() + "/" + path)
+                .noFade()
+                .into(target);
+    }
+
     public static void getPoster(Context context, String path, int width, int height, Target target, sizes size) {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + size.toString() + "/"  + path)

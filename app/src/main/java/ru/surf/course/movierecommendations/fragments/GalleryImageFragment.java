@@ -35,7 +35,7 @@ public class GalleryImageFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_gallery_image, container, false);
         image = (ImageView)root.findViewById(R.id.gallery_image);
         if (getArguments().containsKey(PATH_TAG)) {
-            ImageLoader.putPoster(getActivity(), getArguments().getString(PATH_TAG), image, ImageLoader.sizes.w780);
+            ImageLoader.putPosterNoResize(getActivity(), getArguments().getString(PATH_TAG), image, ImageLoader.sizes.w780);
         }
         return root;
     }
