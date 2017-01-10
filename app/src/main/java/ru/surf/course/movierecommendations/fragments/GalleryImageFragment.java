@@ -43,25 +43,29 @@ public class GalleryImageFragment extends Fragment {
         image = (ImageView)root.findViewById(R.id.gallery_image);
         progressBar = (ProgressBar)root.findViewById(R.id.gallery_fragment_progress_bar);
         if (getArguments().containsKey(PATH_TAG)) {
-            Target target = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    image.setImageBitmap(bitmap);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            };
-            ImageLoader.getPosterNoResize(getActivity(), getArguments().getString(PATH_TAG), target, ImageLoader.sizes.w780);
+            loadImage(getArguments().getString(PATH_TAG));
         }
         return root;
+    }
+
+    private void loadImage(final String path) {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                image.setImageBitmap(bitmap);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                loadImage(path);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        ImageLoader.getPosterNoResize(getActivity(), path, target, ImageLoader.sizes.w780);
     }
 }
