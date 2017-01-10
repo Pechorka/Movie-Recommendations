@@ -8,12 +8,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import ru.surf.course.movierecommendations.Adapters.GalleryPagerAdapter;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 
 /**
@@ -22,36 +24,28 @@ import ru.surf.course.movierecommendations.models.TmdbImage;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    public static void start(Context context) {
+    public static final String IMAGES_TAG = "images";
+
+    public static void start(Context context, ArrayList<String> paths) {
         Intent intent = new Intent(context, GalleryActivity.class);
+        intent.putExtra(IMAGES_TAG, paths);
         context.startActivity(intent);
     }
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        viewPager = (ViewPager)findViewById(R.id.gallery_activity_view_pager);
+
+        if (getIntent().hasExtra(IMAGES_TAG)) {
+            ArrayList<String> paths = (ArrayList<String>) getIntent().getSerializableExtra(IMAGES_TAG);
+            GalleryPagerAdapter adapter = new GalleryPagerAdapter(getSupportFragmentManager(),paths);
+            viewPager.setAdapter(adapter);
+            viewPager.setOffscreenPageLimit(1);
+        }
     }
 }

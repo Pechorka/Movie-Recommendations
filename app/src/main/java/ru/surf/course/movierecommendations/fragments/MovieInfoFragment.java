@@ -97,7 +97,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GalleryActivity.start(getActivity());
+                ArrayList<String> poster = new ArrayList<String>();
+                poster.add(currentMovie.posterPath);
+                GalleryActivity.start(getActivity(), poster);
             }
         });
 
