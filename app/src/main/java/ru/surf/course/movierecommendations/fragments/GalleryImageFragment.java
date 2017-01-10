@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -28,14 +34,33 @@ public class GalleryImageFragment extends Fragment {
     }
 
     ImageView image;
+    ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_gallery_image, container, false);
         image = (ImageView)root.findViewById(R.id.gallery_image);
+        progressBar = (ProgressBar)root.findViewById(R.id.gallery_fragment_progress_bar);
         if (getArguments().containsKey(PATH_TAG)) {
-            ImageLoader.putPosterNoResize(getActivity(), getArguments().getString(PATH_TAG), image, ImageLoader.sizes.w780);
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    image.setImageBitmap(bitmap);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            };
+            ImageLoader.getPosterNoResize(getActivity(), getArguments().getString(PATH_TAG), target, ImageLoader.sizes.w780);
         }
         return root;
     }
