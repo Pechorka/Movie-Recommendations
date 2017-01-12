@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.Adapters;
+package ru.surf.course.movierecommendations.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
