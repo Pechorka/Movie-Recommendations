@@ -64,6 +64,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private RecyclerView imagesList;
     private Button photosButton;
     private ExpandableLinearLayout mediaPlaceholder;
+    private TextView originalTitle;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
@@ -146,6 +147,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         photosButton = (Button)root.findViewById(R.id.movie_info_photos_btn);
         photosButton.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorTextSecondary), PorterDuff.Mode.MULTIPLY);
         mediaPlaceholder = (ExpandableLinearLayout) root.findViewById(R.id.movie_info_media_placeholder);
+        originalTitle = (TextView)root.findViewById(R.id.movie_info_original_title);
     }
 
     @Override
@@ -230,6 +232,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public void fillInformation() {
         poster.setImageBitmap(currentMovie.posterBitmap);
         title.setText(currentMovie.title);
+        originalTitle.setText(currentMovie.originalTitle);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
             overview.setText(currentMovieEnglish.overview);
