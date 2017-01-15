@@ -27,8 +27,8 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.Adapters.GridMoviesAdapter;
-import ru.surf.course.movierecommendations.Adapters.ListMoviesAdapter;
+import ru.surf.course.movierecommendations.adapters.GridMoviesAdapter;
+import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;

@@ -2,21 +2,14 @@ package ru.surf.course.movierecommendations;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import ru.surf.course.movierecommendations.Adapters.GalleryPagerAdapter;
-import ru.surf.course.movierecommendations.models.TmdbImage;
+import ru.surf.course.movierecommendations.adapters.GalleryPagerAdapter;
 
 /**
  * Created by andrew on 1/8/17.
