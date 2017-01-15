@@ -192,6 +192,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_BUDGET = "budget";
         final String TMDB_REVENUE = "revenue";
         final String TMDB_STATUS = "status";
+        final String TMDB_RUNTIME = "runtime";
 
 
         JSONObject movieJson = new JSONObject(jsonStr);
@@ -278,7 +279,8 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     productionCompaniesNames,
                     productionCountriesNames,
                     movieJson.getString(TMDB_REVENUE),
-                    movieJson.getString(TMDB_STATUS));
+                    movieJson.getString(TMDB_STATUS),
+                    movieJson.getInt(TMDB_RUNTIME));
             try {
                 item.date = formatter.parse(movieJson.getString(TMDB_DATE));
             }catch (ParseException e){

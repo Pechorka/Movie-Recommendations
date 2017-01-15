@@ -32,6 +32,7 @@ public class MovieInfo implements Serializable{
     public String revenue;
     public Locale infoLanguage;
     public String status;
+    public int runtime;
 
     public MovieInfo(){
 
@@ -84,7 +85,7 @@ public class MovieInfo implements Serializable{
     }
 
     //без даты
-    public MovieInfo(String title, String originalTitle, Locale originalLanguage, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue, String status) {
+    public MovieInfo(String title, String originalTitle, Locale originalLanguage, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue, String status, int runtime) {
         this.title = title;
         this.originalTitle = originalTitle;
         this.originalLanguage = originalLanguage;
@@ -101,6 +102,7 @@ public class MovieInfo implements Serializable{
         this.productionCountriesNames = productionCountriesNames;
         this.revenue = revenue;
         this.status = status;
+        this.runtime = runtime;
 
         sortGenresNamesByLength();
     }
