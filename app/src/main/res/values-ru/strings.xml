@@ -19,4 +19,8 @@
     <string name="cast">В ролях</string>
     <string name="keywords">Ключевые слова</string>
     <string name="original_language">Оригинальный язык</string>
+    <string name="runtime">Продолжительность</string>
+    <string name="status">Статус</string>
+    <string name="hours_short">ч</string>
+    <string name="minutes_short">м</string>
 </resources>

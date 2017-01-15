@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -68,6 +69,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView originalLanguage;
     private TextView budget;
     private TextView revenue;
+    private TextView runtime;
+    private TextView status;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
@@ -154,6 +157,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         originalLanguage = (TextView)root.findViewById(R.id.movie_info_original_language);
         budget = (TextView)root.findViewById(R.id.movie_info_budget);
         revenue = (TextView)root.findViewById(R.id.movie_info_revenue);
+        runtime = (TextView)root.findViewById(R.id.movie_info_runtime);
+        status = (TextView)root.findViewById(R.id.movie_info_status);
     }
 
     @Override
@@ -246,6 +251,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         originalLanguage.setText(firstLetterToUpper(currentMovie.originalLanguage.getDisplayLanguage()));
         budget.setText(currentMovie.budget + "$");
         revenue.setText(currentMovie.revenue + "$");
+        runtime.setText(currentMovie.runtime/60 + getResources().getString(R.string.hours_short) + " " + currentMovie.runtime%60 + getResources().getString(R.string.minutes_short));
+        status.setText(currentMovie.status);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
             overview.setText(currentMovieEnglish.overview);

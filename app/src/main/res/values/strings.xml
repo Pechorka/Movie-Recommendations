@@ -19,4 +19,8 @@
     <string name="cast">Cast</string>
     <string name="keywords">Keywords</string>
     <string name="original_language">Original language</string>
+    <string name="runtime">Runtime</string>
+    <string name="status">Status</string>
+    <string name="hours_short">h</string>
+    <string name="minutes_short">m</string>
 </resources>

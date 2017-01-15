@@ -276,6 +276,56 @@
 
                 </TableRow>
 
+                <TableRow
+                    android:layout_marginBottom="@dimen/movie_info_facts_table_row_spacing">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_runtime_hint"
+                            android:text="@string/runtime"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="@dimen/fact_hint_text_size"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_runtime"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/fact_text_size"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_status_hint"
+                            android:text="@string/status"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="@dimen/fact_hint_text_size"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_status"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/fact_text_size"/>
+
+                    </LinearLayout>
+
+                </TableRow>
+
             </TableLayout>
 
         </RelativeLayout>
