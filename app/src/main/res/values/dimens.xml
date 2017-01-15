@@ -10,7 +10,8 @@
     <dimen name="poster_big_width">350dp</dimen>
     <dimen name="title_font_size">27sp</dimen>
     <dimen name="movie_info_release_date_text_size">17sp</dimen>
-    <dimen name="fact_hint_text_size">19sp</dimen>
+    <dimen name="fact_hint_text_size">16sp</dimen>
+    <dimen name="fact_text_size">14sp</dimen>
     <dimen name="overview_font_size">17sp</dimen>
     <dimen name="content_top_padding">10dp</dimen>
     <dimen name="content_left_padding">10dp</dimen>

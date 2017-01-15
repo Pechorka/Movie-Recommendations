@@ -166,22 +166,59 @@
                 android:layout_below="@id/movie_info_button_expand_overview"
                 android:layout_margin="@dimen/activity_horizontal_margin"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/movie_info_original_title_hint"
-                android:text="@string/original_title"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/fact_hint_text_size"
+                android:orientation="horizontal"
                 android:layout_below="@id/movie_info_divider_after_overview"
-                android:layout_centerHorizontal="true"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/movie_info_original_title"
-                android:textColor="@color/colorTextSecondary"
-                android:layout_below="@id/movie_info_original_title_hint"
-                android:layout_centerHorizontal="true"/>
+                android:layout_alignLeft="@id/movie_info_divider_after_overview">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movie_info_original_title_hint"
+                        android:text="@string/original_title"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/fact_hint_text_size"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movie_info_original_title"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/fact_text_size"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movie_info_original_language_hint"
+                        android:text="@string/original_language"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/fact_hint_text_size"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movie_info_original_language"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="@dimen/fact_text_size"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
