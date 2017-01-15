@@ -65,6 +65,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private Button photosButton;
     private ExpandableLinearLayout mediaPlaceholder;
     private TextView originalTitle;
+    private TextView originalLanguage;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
@@ -148,6 +149,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         photosButton.getBackground().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorTextSecondary), PorterDuff.Mode.MULTIPLY);
         mediaPlaceholder = (ExpandableLinearLayout) root.findViewById(R.id.movie_info_media_placeholder);
         originalTitle = (TextView)root.findViewById(R.id.movie_info_original_title);
+        originalLanguage = (TextView)root.findViewById(R.id.movie_info_original_language);
     }
 
     @Override
@@ -228,11 +230,16 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         return true;
     }
 
+    private String firstLetterToUpper(String str) {
+        return str.substring(0,1).toUpperCase() + str.substring(1);
+    }
+
 
     public void fillInformation() {
         poster.setImageBitmap(currentMovie.posterBitmap);
         title.setText(currentMovie.title);
         originalTitle.setText(currentMovie.originalTitle);
+        originalLanguage.setText(firstLetterToUpper(currentMovie.originalLanguage.getDisplayLanguage()));
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
             overview.setText(currentMovieEnglish.overview);

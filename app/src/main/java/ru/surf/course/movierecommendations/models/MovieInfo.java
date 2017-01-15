@@ -14,6 +14,7 @@ public class MovieInfo implements Serializable{
 
     public String title;
     public String originalTitle;
+    public Locale originalLanguage;
     public List<Integer> genreIds;
     public String posterPath;
     public List<TmdbImage> backdrops;
@@ -82,9 +83,10 @@ public class MovieInfo implements Serializable{
     }
 
     //без даты
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
+    public MovieInfo(String title, String originalTitle, Locale originalLanguage, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
         this.title = title;
         this.originalTitle = originalTitle;
+        this.originalLanguage = originalLanguage;
         this.genreIds = genreIds;
         this.posterPath = posterPath;
         this.overview = overview;

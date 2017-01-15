@@ -183,6 +183,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_RATING = "vote_average";
         final String TMDB_ID = "id";
         final String TMDB_ORIGINAL_TITLE = "original_title";
+        final String TMDB_ORIGINAL_LANGUAGE = "original_language";
         final String TMDB_GENRE_IDS = "genre_ids";
         final String TMDB_GENRES ="genres";
         final String TMDB_NAME = "name";
@@ -263,6 +264,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
             item = new MovieInfo(
                     movieJson.getString(TMDB_TITLE),
                     movieJson.getString(TMDB_ORIGINAL_TITLE),
+                    new Locale(movieJson.getString(TMDB_ORIGINAL_LANGUAGE)),
                     genresListIds,
                     movieJson.getString(TMDB_POSTER_PATH),
                     movieJson.getString(TMDB_OVERVIEW),
