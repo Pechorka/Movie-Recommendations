@@ -173,11 +173,11 @@
                 android:id="@+id/movie_info_facts_table"
                 android:layout_below="@id/movie_info_divider_after_overview"
                 android:layout_alignLeft="@id/movie_info_divider_after_overview"
-                android:layout_alignStart="@id/movie_info_divider_after_overview">
+                android:layout_alignStart="@id/movie_info_divider_after_overview"
+                android:stretchColumns="1">
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_marginBottom="@dimen/movie_info_facts_table_row_spacing">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -219,6 +219,56 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/movie_info_original_language"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/fact_text_size"/>
+
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginBottom="@dimen/movie_info_facts_table_row_spacing">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_budget_hint"
+                            android:text="@string/budget"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="@dimen/fact_hint_text_size"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_budget"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/fact_text_size"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_revenue_hint"
+                            android:text="@string/revenue"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="@dimen/fact_hint_text_size"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/movie_info_revenue"
                             android:textColor="@color/colorTextSecondary"
                             android:textSize="@dimen/fact_text_size"/>
 

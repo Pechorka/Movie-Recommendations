@@ -66,6 +66,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private ExpandableLinearLayout mediaPlaceholder;
     private TextView originalTitle;
     private TextView originalLanguage;
+    private TextView budget;
+    private TextView revenue;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
@@ -150,6 +152,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         mediaPlaceholder = (ExpandableLinearLayout) root.findViewById(R.id.movie_info_media_placeholder);
         originalTitle = (TextView)root.findViewById(R.id.movie_info_original_title);
         originalLanguage = (TextView)root.findViewById(R.id.movie_info_original_language);
+        budget = (TextView)root.findViewById(R.id.movie_info_budget);
+        revenue = (TextView)root.findViewById(R.id.movie_info_revenue);
     }
 
     @Override
@@ -240,6 +244,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         title.setText(currentMovie.title);
         originalTitle.setText(currentMovie.originalTitle);
         originalLanguage.setText(firstLetterToUpper(currentMovie.originalLanguage.getDisplayLanguage()));
+        budget.setText(currentMovie.budget + "$");
+        revenue.setText(currentMovie.revenue + "$");
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
             overview.setText(currentMovieEnglish.overview);
