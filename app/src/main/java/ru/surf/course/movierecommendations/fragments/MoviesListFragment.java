@@ -206,7 +206,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
-        customFilterOptions = new CustomFilterOptions(getActivity());
+        customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
 
     }
 

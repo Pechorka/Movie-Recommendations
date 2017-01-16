@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
 import ru.surf.course.movierecommendations.R;
 
 /**
- * Created by Pecho on 13.01.2017.
+ * Created by Sergey on 13.01.2017.
  */
 
 public class YearsRangeBar extends RelativeLayout {
