@@ -11,12 +11,12 @@ public class Actor extends People {
     private String mCredit_id;
     private int mOrder;
 
-    public Actor(String name, int id, String profilePath, int mCast_id, String mCharacter, String mCredit_id, int mOrder, String mName, int mId, String mProfilePath) {
+    public Actor(String name, int id, String profilePath, int cast_id, String character, String credit_id, int order) {
         super(name, id, profilePath);
-        this.mCast_id = mCast_id;
-        this.mCharacter = mCharacter;
-        this.mCredit_id = mCredit_id;
-        this.mOrder = mOrder;
+        mCast_id = cast_id;
+        mCharacter = character;
+        mCredit_id = credit_id;
+        mOrder = order;
     }
 
     public int getCast_id() {

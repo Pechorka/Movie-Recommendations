@@ -10,11 +10,11 @@ public class CrewMember extends People {
     private String mDepartment;
     private String mJob;
 
-    public CrewMember(String name, int id, String profilePath, String mCreditId, String mDepartment, String mJob) {
+    public CrewMember(String name, int id, String profilePath, String creditId, String department, String job) {
         super(name, id, profilePath);
-        this.mCreditId = mCreditId;
-        this.mDepartment = mDepartment;
-        this.mJob = mJob;
+        mCreditId = creditId;
+        mDepartment = department;
+        mJob = job;
     }
 
     public String getCreditId() {
