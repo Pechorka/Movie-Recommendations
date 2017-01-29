@@ -25,65 +25,65 @@ public class Actor extends People {
         this.mProfilePath = mProfilePath;
     }
 
-    public int getmCast_id() {
+    public int getCast_id() {
         return mCast_id;
     }
 
-    public void setmCast_id(int mCast_id) {
+    public void setCast_id(int mCast_id) {
         this.mCast_id = mCast_id;
     }
 
-    public String getmCharacter() {
+    public String getCharacter() {
         return mCharacter;
     }
 
-    public void setmCharacter(String mCharacter) {
+    public void setCharacter(String mCharacter) {
         this.mCharacter = mCharacter;
     }
 
-    public String getmCredit_id() {
+    public String getCredit_id() {
         return mCredit_id;
     }
 
-    public void setmCredit_id(String mCredit_id) {
+    public void setCredit_id(String mCredit_id) {
         this.mCredit_id = mCredit_id;
     }
 
-    public int getmOrder() {
+    public int getOrder() {
         return mOrder;
     }
 
-    public void setmOrder(int mOrder) {
+    public void setOrder(int mOrder) {
         this.mOrder = mOrder;
     }
 
     @Override
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
     @Override
-    public void setmName(String mName) {
+    public void setName(String mName) {
         this.mName = mName;
     }
 
     @Override
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
     @Override
-    public void setmId(int mId) {
+    public void setId(int mId) {
         this.mId = mId;
     }
 
     @Override
-    public String getmProfilePath() {
+    public String getProfilePath() {
         return mProfilePath;
     }
 
     @Override
-    public void setmProfilePath(String mProfilePath) {
+    public void setProfilePath(String mProfilePath) {
         this.mProfilePath = mProfilePath;
     }
 }

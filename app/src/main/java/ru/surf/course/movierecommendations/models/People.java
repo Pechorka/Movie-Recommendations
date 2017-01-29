@@ -19,27 +19,27 @@ public class People {
         mProfilePath = profilePath;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public void setmName(String mName) {
+    public void setName(String mName) {
         this.mName = mName;
     }
 
-    public String getmProfilePath() {
+    public String getProfilePath() {
         return mProfilePath;
     }
 
-    public void setmProfilePath(String mProfilePath) {
+    public void setProfilePath(String mProfilePath) {
         this.mProfilePath = mProfilePath;
     }
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setId(int mId) {
         this.mId = mId;
     }
 }
