@@ -29,6 +29,7 @@ import ru.surf.course.movierecommendations.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
+import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
@@ -70,6 +71,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private ListMoviesAdapter listMoviesAdapter;
     private LinearLayoutManager linearLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private Button callOptions;
+    private CustomFilterOptions customFilterOptions;
 
     public static MoviesListFragment newInstance(String query, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
@@ -202,6 +205,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
         panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
+        callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
+        customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
+
     }
 
     private void setupViews(View root) {
@@ -235,6 +241,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             }
         });
         recyclerView.addOnScrollListener(scrollListener);
+        callOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customFilterOptions.setVisibility(View.VISIBLE);
+//                customFilterOptions.setAlpha(0.0f);
+//                customFilterOptions.animate().translationY(customFilterOptions.getHeight()).alpha(1.0f);
+            }
+        });
         setupFiltersBtns(root);
     }
 
@@ -246,19 +260,19 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 switch (view.getId()) {
                     case R.id.sliding_popular:
                         query = GetMoviesTask.FILTER_POPULAR;
-                        getActivity().setTitle(R.string.popular);
+                        getActivity().setTitle("Popular");
                         break;
                     case R.id.sliding_top:
                         query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle(R.string.top);
+                        getActivity().setTitle("Top Rated");
                         break;
                     case R.id.sliding_upcoming:
                         query = GetMoviesTask.FILTER_UPCOMING;
-                        getActivity().setTitle(R.string.upcoming);
+                        getActivity().setTitle("Upcoming");
                         break;
                     case R.id.sliding_custom:
                         query = GetMoviesTask.FILTER_CUSTOM_FILTER;
-                        getActivity().setTitle(R.string.custom);
+                        getActivity().setTitle("Custom Filter");
                         break;
 
                 }

@@ -24,10 +24,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/movie_list_rv"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movie_list_call_options"
+                    android:text="setup filter"
+                    android:textSize="30sp" />
+
+                <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/custom_filter_options" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/movie_list_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
                 android:src="@drawable/ic_list_black_48dp"
