@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,12 @@ public class GalleryImageFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_gallery_image, container, false);
         image = (ImageView)root.findViewById(R.id.gallery_image);
         progressBar = (ProgressBar)root.findViewById(R.id.gallery_fragment_progress_bar);
+
+        if (progressBar != null) {
+            progressBar.setIndeterminate(true);
+            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+        }
+
         if (getArguments().containsKey(PATH_TAG)) {
             loadImage(getArguments().getString(PATH_TAG));
         }
