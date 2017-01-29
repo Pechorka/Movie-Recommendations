@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
@@ -50,6 +51,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     final static int DATA_TO_LOAD = 2;
     final String LOG_TAG = getClass().getSimpleName();
 
+    private ProgressBar progressBar;
     private TextView title;
     private ExpandableTextView overview;
     private Button expandCollapseOverviewButton;
@@ -138,6 +140,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     private void initViews(View root){
+        progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
+        if (progressBar != null) {
+            progressBar.setIndeterminate(true);
+            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+        }
         title = (TextView) root.findViewById(R.id.movie_info_name);
         poster = (ImageView) root.findViewById(R.id.movie_info_poster);
         imagesList = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
