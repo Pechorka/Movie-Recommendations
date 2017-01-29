@@ -10,9 +10,6 @@ public class Actor extends People {
     private String mCharacter;
     private String mCredit_id;
     private int mOrder;
-    private String mName;
-    private int mId;
-    private String mProfilePath;
 
     public Actor(String name, int id, String profilePath, int mCast_id, String mCharacter, String mCredit_id, int mOrder, String mName, int mId, String mProfilePath) {
         super(name, id, profilePath);
@@ -20,9 +17,6 @@ public class Actor extends People {
         this.mCharacter = mCharacter;
         this.mCredit_id = mCredit_id;
         this.mOrder = mOrder;
-        this.mName = mName;
-        this.mId = mId;
-        this.mProfilePath = mProfilePath;
     }
 
     public int getCast_id() {
@@ -57,33 +51,4 @@ public class Actor extends People {
         this.mOrder = mOrder;
     }
 
-    @Override
-    public String getName() {
-        return mName;
-    }
-
-    @Override
-    public void setName(String mName) {
-        this.mName = mName;
-    }
-
-    @Override
-    public int getId() {
-        return mId;
-    }
-
-    @Override
-    public void setId(int mId) {
-        this.mId = mId;
-    }
-
-    @Override
-    public String getProfilePath() {
-        return mProfilePath;
-    }
-
-    @Override
-    public void setProfilePath(String mProfilePath) {
-        this.mProfilePath = mProfilePath;
-    }
 }
