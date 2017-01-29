@@ -246,19 +246,19 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 switch (view.getId()) {
                     case R.id.sliding_popular:
                         query = GetMoviesTask.FILTER_POPULAR;
-                        getActivity().setTitle("Popular");
+                        getActivity().setTitle(R.string.popular);
                         break;
                     case R.id.sliding_top:
                         query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle("Top Rated");
+                        getActivity().setTitle(R.string.top);
                         break;
                     case R.id.sliding_upcoming:
                         query = GetMoviesTask.FILTER_UPCOMING;
-                        getActivity().setTitle("Upcoming");
+                        getActivity().setTitle(R.string.upcoming);
                         break;
                     case R.id.sliding_custom:
                         query = GetMoviesTask.FILTER_CUSTOM_FILTER;
-                        getActivity().setTitle("Custom Filter");
+                        getActivity().setTitle(R.string.custom);
                         break;
 
                 }

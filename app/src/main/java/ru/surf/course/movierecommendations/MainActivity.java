@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Popular");
+        setTitle(R.string.popular);
 
 
         if (isInternetAvailable(this)) {

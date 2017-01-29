@@ -56,7 +56,7 @@
                 style="@style/SlidingUpButton"
                 android:id="@+id/sliding_popular"
                 android:layout_marginRight="@dimen/sliding_button_marginRight"
-                android:text="@string/popular_btn_text" />
+                android:text="@string/popular" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                 android:layout_marginRight="@dimen/sliding_button_marginRight"
                 style="@style/SlidingUpButton"
                 android:id="@+id/sliding_top"
-                android:text="@string/top_btn_text" />
+                android:text="@string/top" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_below="@+id/sliding_popular"
                 android:layout_marginRight="@dimen/sliding_button_marginRight"
                 android:id="@+id/sliding_upcoming"
-                android:text="@string/upcoming_btn_text" />
+                android:text="@string/upcoming" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                 android:layout_marginRight="@dimen/sliding_button_marginRight"
                 android:layout_below="@+id/sliding_top"
                 android:id="@+id/sliding_custom"
-                android:text="@string/custom_btn_text" />
+                android:text="@string/custom" />
         </RelativeLayout>
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

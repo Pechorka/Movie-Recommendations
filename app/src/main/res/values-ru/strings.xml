@@ -2,17 +2,17 @@
 <resources>
     <string name="app_name">Рекоммендации фильмов</string>
     <string name="collapse">Меньше</string>
-    <string name="custom_btn_text">Свой</string>
+    <string name="custom">Свой</string>
     <string name="expand">Больше</string>
     <string name="genre">Жанр</string>
     <string name="movie_poster">Постер</string>
-    <string name="popular_btn_text">Популярное</string>
+    <string name="popular">Популярное</string>
     <string name="popular_movies_btn_hint">Самые популярные фильмы</string>
     <string name="search">Поиск</string>
     <string name="top_btn_hint">Лучшие фильмы всех времен</string>
-    <string name="top_btn_text">Топ</string>
+    <string name="top">Топ</string>
     <string name="upcoming_btn_hint">Скоро в прокате</string>
-    <string name="upcoming_btn_text">Скоро</string>
+    <string name="upcoming">Скоро</string>
     <string name="original_title">Оригинальное название</string>
     <string name="revenue">Сборы</string>
     <string name="budget">Бюджет</string>

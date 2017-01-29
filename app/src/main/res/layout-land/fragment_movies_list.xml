@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 style="@style/SlidingUpButton"
                 android:id="@+id/sliding_popular"
-                android:text="@string/popular_btn_text" />
+                android:text="@string/popular" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                 android:layout_toEndOf="@+id/sliding_popular"
                 style="@style/SlidingUpButton"
                 android:id="@+id/sliding_top"
-                android:text="@string/top_btn_text" />
+                android:text="@string/top" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:layout_toRightOf="@+id/sliding_top"
                 android:layout_toEndOf="@+id/sliding_top"
                 android:id="@+id/sliding_upcoming"
-                android:text="@string/upcoming_btn_text" />
+                android:text="@string/upcoming" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_toRightOf="@+id/sliding_upcoming"
                 android:layout_toEndOf="@+id/sliding_upcoming"
                 android:id="@+id/sliding_custom"
-                android:text="@string/custom_btn_text" />
+                android:text="@string/custom" />
         </RelativeLayout>
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
