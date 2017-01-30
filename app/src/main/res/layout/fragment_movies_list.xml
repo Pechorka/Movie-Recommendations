@@ -34,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/movie_list_call_options"
                     android:text="setup filter"
+                    android:visibility="gone"
                     android:textSize="30sp" />
 
                 <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions

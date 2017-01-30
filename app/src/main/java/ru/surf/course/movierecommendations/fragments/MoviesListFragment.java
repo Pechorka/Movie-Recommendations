@@ -18,9 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +60,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private Date date_gte;
     private Date date_lte;
     private boolean grid;
+    private boolean filterSetupOpen;
     private List<MovieInfo> movieInfoList;
     private Tasks task;
 
@@ -73,6 +74,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private EndlessRecyclerViewScrollListener scrollListener;
     private Button callOptions;
     private CustomFilterOptions customFilterOptions;
+    private boolean newResult;
 
     public static MoviesListFragment newInstance(String query, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
@@ -184,12 +186,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public void taskCompleted(List<MovieInfo> result) {
         if (result != null) {
-            if (movieInfoList != null && previousFilter.equalsIgnoreCase(query)) {
-                if (PAGE > 1) {
-                    movieInfoList.addAll(result);
-                }
+            if (movieInfoList != null && (checkPreviousFilter(query) || !newResult) && PAGE > 1) {
+                movieInfoList.addAll(result);
             } else {
                 movieInfoList = result;
+                newResult = false;
             }
             dataLoadComplete();
         }
@@ -201,6 +202,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
+        newResult = true;
         gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
         listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
         panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
@@ -244,9 +246,27 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         callOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customFilterOptions.setVisibility(View.VISIBLE);
-//                customFilterOptions.setAlpha(0.0f);
-//                customFilterOptions.animate().translationY(customFilterOptions.getHeight()).alpha(1.0f);
+                if (!filterSetupOpen) {
+                    customFilterOptions.setVisibility(View.VISIBLE);
+                    filterSetupOpen = true;
+                } else {
+                    customFilterOptions.setVisibility(View.GONE);
+                    filterSetupOpen = false;
+                }
+            }
+        });
+//        customFilterOptions.setOnRangeChangeListener(new RangeBar.OnRangeBarChangeListener() {
+//            @Override
+//            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+//                newResult = true;
+//                loadInformation();
+//            }
+//        });
+        customFilterOptions.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
+            @Override
+            public void finalValue(Number minValue, Number maxValue) {
+                newResult = true;
+                loadInformation();
             }
         });
         setupFiltersBtns(root);
@@ -260,21 +280,30 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 switch (view.getId()) {
                     case R.id.sliding_popular:
                         query = GetMoviesTask.FILTER_POPULAR;
-                        getActivity().setTitle("Popular");
+                        getActivity().setTitle(R.string.popular);
                         break;
                     case R.id.sliding_top:
                         query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle("Top Rated");
+                        getActivity().setTitle(R.string.top);
                         break;
                     case R.id.sliding_upcoming:
                         query = GetMoviesTask.FILTER_UPCOMING;
-                        getActivity().setTitle("Upcoming");
+                        getActivity().setTitle(R.string.upcoming);
                         break;
                     case R.id.sliding_custom:
                         query = GetMoviesTask.FILTER_CUSTOM_FILTER;
-                        getActivity().setTitle("Custom Filter");
+                        getActivity().setTitle(R.string.custom);
+                        callOptions.setVisibility(View.VISIBLE);
+                        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+                        if (!checkPreviousFilter(query)) {
+                            newResult = true;
+                        }
                         break;
 
+                }
+                if (!query.equalsIgnoreCase(GetMoviesTask.FILTER_CUSTOM_FILTER)) {
+                    callOptions.setVisibility(View.GONE);
+                    task = Tasks.SEARCH_BY_FILTER;
                 }
                 if (checkPreviousFilter(query)) {
                     return;
@@ -321,8 +350,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 getMoviesTask.getMoviesByKeyword(id, language);
                 break;
             case SEARCH_BY_CUSTOM_FILTER:
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
-                getMoviesTask.getMoviesByCustomFilter(language, String.valueOf(PAGE), genres, dateFormat.format(date_gte), dateFormat.format(date_lte));
+                String minYear = customFilterOptions.getMinYear() + "-01-01";
+                String maxYear = customFilterOptions.getMaxYear() + "-01-01";
+                genres = "28,12";
+                getMoviesTask.getMoviesByCustomFilter(language, String.valueOf(PAGE), genres, maxYear, minYear);
                 break;
         }
     }

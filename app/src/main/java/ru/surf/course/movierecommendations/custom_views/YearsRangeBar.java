@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.appyvet.rangebar.RangeBar;
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,17 +16,19 @@ import java.util.GregorianCalendar;
 import ru.surf.course.movierecommendations.R;
 
 /**
- * Created by Sergey on 13.01.2017.
+ * Created by Sergey on 12.01.2017.
  */
 
 public class YearsRangeBar extends RelativeLayout {
 
     private TextView min;
     private TextView max;
-    private RangeBar rangeBar;
+    private CrystalRangeSeekbar rangeBar;
 
     private int minYear;
     private int maxYear;
+    private int curMinYear;
+    private int curMaxYear;
 
     public YearsRangeBar(Context context) {
         super(context);
@@ -48,12 +52,12 @@ public class YearsRangeBar extends RelativeLayout {
         max.setText(String.valueOf(maxYear));
     }
 
-    public int getMinYear() {
-        return minYear;
+    public int getCurMinYear() {
+        return curMinYear;
     }
 
-    public int getMaxYear() {
-        return maxYear;
+    public int getCurMaxYear() {
+        return curMaxYear;
     }
 
 
@@ -61,15 +65,41 @@ public class YearsRangeBar extends RelativeLayout {
         View rootView = inflate(context, R.layout.years_range_bar, this);
         min = (TextView) rootView.findViewById(R.id.rb_min_year);
         max = (TextView) rootView.findViewById(R.id.rb_max_year);
-        rangeBar = (RangeBar) rootView.findViewById(R.id.rb);
+        rangeBar = (CrystalRangeSeekbar) rootView.findViewById(R.id.rb);
         maxYear = new GregorianCalendar().get(Calendar.YEAR);
         minYear = 1930;
+        curMaxYear = maxYear;
+        curMinYear = minYear;
     }
 
     private void setup() {
         min.setText(String.valueOf(minYear));
         max.setText(String.valueOf(maxYear));
-        rangeBar.setTickEnd(maxYear);
-        rangeBar.setTickStart(minYear);
+        rangeBar.setMaxValue(maxYear);
+        rangeBar.setMinValue(minYear);
+        rangeBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+            @Override
+            public void valueChanged(Number minValue, Number maxValue) {
+                min.setText(String.valueOf(minValue));
+                max.setText(String.valueOf(maxValue));
+                if (curMinYear != minValue.intValue()) {
+                    curMinYear = minValue.intValue();
+                }
+                if (curMaxYear != maxValue.intValue()) {
+                    curMaxYear = maxValue.intValue();
+                }
+            }
+
+        });
+
+
+    }
+
+    public void setOnRangeSeekbarFinalValueListener(OnRangeSeekbarFinalValueListener listener) {
+        rangeBar.setOnRangeSeekbarFinalValueListener(listener);
+    }
+
+    public void setOnRangeChangeListener(OnRangeSeekbarChangeListener listener) {
+        rangeBar.setOnRangeSeekbarChangeListener(listener);
     }
 }

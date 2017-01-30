@@ -358,7 +358,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                                         String releaseDateGTE, String releaseDateLTE) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
-        execute(genres, language, page, releaseDateGTE, releaseDateLTE);
+        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
 
     }
 
