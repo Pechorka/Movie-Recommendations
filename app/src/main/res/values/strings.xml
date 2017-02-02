@@ -25,4 +25,13 @@
         <item>Fantasy</item>
         <item>Action</item>
     </array>
+    <string name="hours_short">h</string>
+    <string name="minutes_short">m</string>
+    <string name="original_language">Original language</string>
+    <string name="custom_btn_text">Custom</string>
+    <string name="popular_btn_text">Popular</string>
+    <string name="runtime">Runtime</string>
+    <string name="status">Status</string>
+    <string name="top_btn_text">Top</string>
+    <string name="upcoming_btn_text">Upcoming</string>
 </resources>
