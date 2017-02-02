@@ -167,11 +167,25 @@
                 android:layout_below="@id/movie_info_button_expand_overview"
                 android:layout_margin="@dimen/activity_horizontal_margin"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_info_credits"
+                android:layout_below="@id/movie_info_divider_after_overview"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/movie_info_divider_height"
+                android:id="@+id/movie_info_divider_after_credits"
+                android:background="@drawable/divider"
+                android:layout_below="@id/movie_info_credits"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movie_info_facts_table"
-                android:layout_below="@id/movie_info_divider_after_overview"
+                android:layout_below="@id/movie_info_divider_after_credits"
                 android:layout_alignLeft="@id/movie_info_divider_after_overview"
                 android:layout_alignStart="@id/movie_info_divider_after_overview"
                 android:stretchColumns="1">

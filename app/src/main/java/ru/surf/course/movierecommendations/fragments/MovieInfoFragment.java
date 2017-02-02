@@ -34,6 +34,7 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
+import ru.surf.course.movierecommendations.adapters.PeopleListAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.People;
 import ru.surf.course.movierecommendations.models.TmdbImage;
@@ -64,6 +65,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private FlowLayout genresPlaceholder;
     private TextView voteAverage;
     private RecyclerView imagesList;
+    private RecyclerView creditsList;
     private Button photosButton;
     private ExpandableLinearLayout mediaPlaceholder;
     private TextView originalTitle;
@@ -75,6 +77,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private List<People> credits;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
+    private PeopleListAdapter creditsListAdapter;
 
 
     private int dataLoaded = 0;
@@ -152,6 +155,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         poster = (ImageView) root.findViewById(R.id.movie_info_poster);
         imagesList = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
         imagesList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        creditsList = (RecyclerView)root.findViewById(R.id.movie_info_credits);
+        creditsList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
         expandCollapseOverviewButton = (Button)root.findViewById(R.id.movie_info_button_expand_overview);
         releaseDate = (TextView) root.findViewById(R.id.movie_info_release_date);
@@ -299,6 +304,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingPositive));
         else
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
+
+        creditsListAdapter = new PeopleListAdapter(credits, getActivity());
+        creditsList.setAdapter(creditsListAdapter);
 
     }
 

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/movie_info_people_list_item_margin"
+    android:layout_marginEnd="@dimen/movie_info_people_list_item_margin"
+    android:layout_marginLeft="@dimen/movie_info_people_list_item_margin"
+    android:layout_marginStart="@dimen/movie_info_people_list_item_margin">
     
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="@dimen/people_profile_picture_size"
