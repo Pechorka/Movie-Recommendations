@@ -45,6 +45,11 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
 
     private Tasks task;
     private boolean isLoadingList;
+    private List<PeopleTaskCompleteListener> listeners;
+
+    public GetPeopleTask() {
+        listeners = new ArrayList<>();
+    }
 
     @Override
     protected List<People> doInBackground(String... strings) {
@@ -120,8 +125,8 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
     }
 
     @Override
-    protected void onPostExecute(List<People> peoples) {
-        super.onPostExecute(peoples);
+    protected void onPostExecute(List<People> people) {
+        invokeCompleteEvent(people);
     }
 
     @Override
@@ -192,6 +197,19 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
         }
 
         return result;
+    }
+
+    public void addListener(PeopleTaskCompleteListener listener) {
+        listeners.add(listener);
+    }
+
+    private void invokeCompleteEvent(List<People> result) {
+        for (int i = 0; i < listeners.size(); i++)
+            listeners.get(i).taskCompleted(result);
+    }
+
+    public interface PeopleTaskCompleteListener {
+        void taskCompleted(List<People> result);
     }
 
 
