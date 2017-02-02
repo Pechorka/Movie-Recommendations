@@ -35,9 +35,11 @@ import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.People;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.GetPeopleTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
@@ -48,7 +50,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "moveId";
-    final static int DATA_TO_LOAD = 2;
+    final static int DATA_TO_LOAD = 3;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -70,6 +72,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView revenue;
     private TextView runtime;
     private TextView status;
+    private List<People> credits;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
@@ -233,6 +236,18 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
     }
 
+    private void loadCredits(int movieId) {
+        GetPeopleTask getPeopleTask = new GetPeopleTask();
+        getPeopleTask.addListener(new GetPeopleTask.PeopleTaskCompleteListener() {
+            @Override
+            public void taskCompleted(List<People> result) {
+                credits = result;
+                dataLoadComplete();
+            }
+        });
+        getPeopleTask.getMovieCredits(movieId);
+    }
+
     private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
         movieInfo.posterBitmap = bitmap;
     }
@@ -299,6 +314,8 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             dataLoadComplete();
             loadPoster(currentMovieEnglish);
         }
+
+        loadCredits(currentMovie.id);
     }
 
     public void dataLoadComplete() {
