@@ -8,7 +8,8 @@
         android:layout_width="@dimen/people_profile_picture_size"
         android:layout_height="@dimen/people_profile_picture_size"
         android:id="@+id/circle_images_list_image"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@drawable/ic_person"/>
 
     <TextView
         android:layout_width="match_parent"

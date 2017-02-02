@@ -40,7 +40,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         People people = mPeopleList.get(position);
-        if (people.getProfilePath() != null || !people.getProfilePath().equals("null"))
+        if (people.getProfilePath() != null && !people.getProfilePath().equals("null"))
             loadImage(people.getProfilePath(), holder.image);
         holder.header.setText(people.getName());
         if (people instanceof Actor)
