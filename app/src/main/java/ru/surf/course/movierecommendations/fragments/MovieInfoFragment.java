@@ -273,9 +273,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         title.setText(currentMovie.title);
         originalTitle.setText(currentMovie.originalTitle);
         originalLanguage.setText(firstLetterToUpper(currentMovie.originalLanguage.getDisplayLanguage()));
-        budget.setText(currentMovie.budget + "$");
-        revenue.setText(currentMovie.revenue + "$");
-        runtime.setText(currentMovie.runtime/60 + getResources().getString(R.string.hours_short) + " " + currentMovie.runtime%60 + getResources().getString(R.string.minutes_short));
+        if (!currentMovie.budget.equals("0"))
+            budget.setText(currentMovie.budget + "$");
+        if (!currentMovie.revenue.equals("0"))
+            revenue.setText(currentMovie.revenue + "$");
+        if (currentMovie.runtime != 0)
+            runtime.setText(currentMovie.runtime/60 + getResources().getString(R.string.hours_short) + " " + currentMovie.runtime%60 + getResources().getString(R.string.minutes_short));
         status.setText(currentMovie.status);
 
         if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
