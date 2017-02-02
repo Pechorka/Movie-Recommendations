@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/movie_info_people_list_item_margin"
-    android:layout_marginEnd="@dimen/movie_info_people_list_item_margin"
-    android:layout_marginLeft="@dimen/movie_info_people_list_item_margin"
-    android:layout_marginStart="@dimen/movie_info_people_list_item_margin">
+    android:orientation="vertical"
+    android:layout_width="@dimen/people_list_item_width"
+    android:layout_height="wrap_content">
     
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="@dimen/people_profile_picture_size"
         android:layout_height="@dimen/people_profile_picture_size"
-        android:id="@+id/circle_images_list_image"/>
+        android:id="@+id/circle_images_list_image"
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/circle_images_list_header"/>
+        android:id="@+id/circle_images_list_header"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/movie_info_people_header_text_size"
+        android:maxLines="2"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/circle_images_list_sub_header"/>
+        android:id="@+id/circle_images_list_sub_header"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextSecondary"
+        android:textSize="@dimen/movie_info_people_sub_header_text_size"
+        android:maxLines="2"/>
 
 </LinearLayout>

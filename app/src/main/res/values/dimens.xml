@@ -38,5 +38,8 @@
     <dimen name="movie_info_divider_height">1dp</dimen>
     <dimen name="movie_info_facts_table_row_spacing">20dp</dimen>
     <dimen name="people_profile_picture_size">70dp</dimen>
+    <dimen name="people_list_item_width">85dp</dimen>
     <dimen name="movie_info_people_list_item_margin">6dp</dimen>
+    <dimen name="movie_info_people_header_text_size">12sp</dimen>
+    <dimen name="movie_info_people_sub_header_text_size">8sp</dimen>
 </resources>
