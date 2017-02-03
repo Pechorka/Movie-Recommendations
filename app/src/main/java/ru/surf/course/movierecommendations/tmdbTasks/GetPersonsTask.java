@@ -197,6 +197,8 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
         result.setPopularity(jsonObject.getDouble(TMDB_POPULARITY));
 
+        result.setInfoLanguage(language);
+
         return result;
     }
 

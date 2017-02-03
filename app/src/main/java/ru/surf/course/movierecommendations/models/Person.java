@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
@@ -7,7 +8,7 @@ import java.util.Locale;
  * Created by andrew on 1/29/17.
  */
 
-public class Person {
+public class Person implements Serializable {
 
     public enum Gender {
         UNKNOWN,

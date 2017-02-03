@@ -32,6 +32,7 @@ import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.GalleryActivity;
+import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.adapters.CreditsListAdapter;
@@ -309,7 +310,15 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
         creditsListAdapter = new CreditsListAdapter(currentMovie.credits, getActivity());
         creditsList.setAdapter(creditsListAdapter);
-
+        creditsListAdapter.setOnItemClickListener(new CreditsListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                PersonInfoFragment personInfoFragment = PersonInfoFragment.newInstance(creditsListAdapter.getCredits().get(position).getPerson());
+                if (getActivity() instanceof MainActivity){
+                    ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, personInfoFragment);
+                }
+            }
+        });
     }
 
     @Override
