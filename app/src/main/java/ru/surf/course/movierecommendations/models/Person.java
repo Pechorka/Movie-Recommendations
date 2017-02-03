@@ -4,16 +4,16 @@ package ru.surf.course.movierecommendations.models;
  * Created by andrew on 1/29/17.
  */
 
-public class People {
+public class Person {
 
     protected String mName;
     protected int mId;
     protected String mProfilePath;
 
-    public People() {
+    public Person() {
     }
 
-    public People(String name, int id, String profilePath) {
+    public Person(String name, int id, String profilePath) {
         mName = name;
         mId = id;
         mProfilePath = profilePath;

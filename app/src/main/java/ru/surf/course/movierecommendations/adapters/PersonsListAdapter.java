@@ -14,52 +14,52 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.CrewMember;
-import ru.surf.course.movierecommendations.models.People;
+import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
  * Created by andrew on 2/2/17.
  */
 
-public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.ViewHolder> {
+public class PersonsListAdapter extends RecyclerView.Adapter<PersonsListAdapter.ViewHolder> {
 
-    private List<People> mPeopleList;
+    private List<Person> mPersonList;
     private Context mContext;
 
-    public PeopleListAdapter(List<People> people, Context context) {
-        mPeopleList = people;
+    public PersonsListAdapter(List<Person> person, Context context) {
+        mPersonList = person;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.people_list_item, parent, false);
-        return new PeopleListAdapter.ViewHolder(itemView);
+        return new PersonsListAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        People people = mPeopleList.get(position);
-        if (people.getProfilePath() != null && !people.getProfilePath().equals("null"))
-            loadImage(people.getProfilePath(), holder.image);
-        holder.header.setText(people.getName());
-        if (people instanceof Actor)
-            holder.subHeader.setText(((Actor)people).getCharacter());
-        else if (people instanceof CrewMember)
-            holder.subHeader.setText(((CrewMember)people).getJob());
+        Person person = mPersonList.get(position);
+        if (person.getProfilePath() != null && !person.getProfilePath().equals("null"))
+            loadImage(person.getProfilePath(), holder.image);
+        holder.header.setText(person.getName());
+        if (person instanceof Actor)
+            holder.subHeader.setText(((Actor) person).getCharacter());
+        else if (person instanceof CrewMember)
+            holder.subHeader.setText(((CrewMember) person).getJob());
     }
 
     @Override
     public int getItemCount() {
-        return mPeopleList.size();
+        return mPersonList.size();
     }
 
-    public List<People> getPeople() {
-        return mPeopleList;
+    public List<Person> getPersons() {
+        return mPersonList;
     }
 
-    public void setPeople(List<People> mPeople) {
-        this.mPeopleList = mPeople;
+    public void setPersons(List<Person> mPerson) {
+        this.mPersonList = mPerson;
     }
 
     private void loadImage(String path, ImageView targetView) {

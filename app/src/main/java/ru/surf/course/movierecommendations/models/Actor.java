@@ -4,7 +4,7 @@ package ru.surf.course.movierecommendations.models;
  * Created by andrew on 1/11/17.
  */
 
-public class Actor extends People {
+public class Actor extends Person {
 
     private int mCast_id;
     private String mCharacter;

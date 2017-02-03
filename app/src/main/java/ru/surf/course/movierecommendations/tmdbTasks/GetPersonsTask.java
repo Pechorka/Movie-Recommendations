@@ -21,13 +21,13 @@ import java.util.List;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.CrewMember;
-import ru.surf.course.movierecommendations.models.People;
+import ru.surf.course.movierecommendations.models.Person;
 
 /**
  * Created by andrew on 1/29/17.
  */
 
-public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
+public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
     private final String API_KEY_PARAM = "api_key";
     private final String TMDB_CAST = "cast";
@@ -45,14 +45,14 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
 
     private Tasks task;
     private boolean isLoadingList;
-    private List<PeopleTaskCompleteListener> listeners;
+    private List<PersonsTaskCompleteListener> listeners;
 
-    public GetPeopleTask() {
+    public GetPersonsTask() {
         listeners = new ArrayList<>();
     }
 
     @Override
-    protected List<People> doInBackground(String... strings) {
+    protected List<Person> doInBackground(String... strings) {
 
         if (strings.length == 0)
             return null;
@@ -60,7 +60,7 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
 
-        String peopleJsonStr = null;
+        String personsJsonStr = null;
 
         try {
 
@@ -95,9 +95,9 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
             if (buffer.length() == 0) {
                 return null;
             }
-            peopleJsonStr = buffer.toString();
+            personsJsonStr = buffer.toString();
 
-            Log.v(LOG_TAG, "People list: " + peopleJsonStr);
+            Log.v(LOG_TAG, "Person list: " + personsJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
         } finally {
@@ -114,7 +114,7 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
         }
 
         try {
-            List<People> result = parseJson(peopleJsonStr);
+            List<Person> result = parseJson(personsJsonStr);
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -125,8 +125,8 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
     }
 
     @Override
-    protected void onPostExecute(List<People> people) {
-        invokeCompleteEvent(people);
+    protected void onPostExecute(List<Person> person) {
+        invokeCompleteEvent(person);
     }
 
     @Override
@@ -134,11 +134,11 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
         super.onPreExecute();
     }
 
-    private List<People> parseJson(String jsonStr) throws JSONException, ParseException {
+    private List<Person> parseJson(String jsonStr) throws JSONException, ParseException {
 
         JSONObject jsonObject = new JSONObject(jsonStr);
 
-        List<People> result = new ArrayList<>();
+        List<Person> result = new ArrayList<>();
 
         switch (task) {
             case GET_MOVIE_CREDITS:
@@ -166,13 +166,13 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
                 .build();
     }
 
-    private List<People> parseMovieCredits(JSONObject jsonObject) throws JSONException {
+    private List<Person> parseMovieCredits(JSONObject jsonObject) throws JSONException {
         JSONArray cast = jsonObject.getJSONArray(TMDB_CAST);
         JSONArray crew = jsonObject.getJSONArray(TMDB_CREW);
-        List<People> result = new ArrayList<>();
-        People people;
+        List<Person> result = new ArrayList<>();
+        Person person;
         for (int i = 0; i < cast.length(); i++) {
-            people = new Actor(
+            person = new Actor(
                     cast.getJSONObject(i).getString(TMDB_NAME),
                     cast.getJSONObject(i).getInt(TMDB_ID),
                     cast.getJSONObject(i).getString(TMDB_PROFILE_PATH),
@@ -181,11 +181,11 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
                     cast.getJSONObject(i).getString(TMDB_CREDIT_ID),
                     cast.getJSONObject(i).getInt(TMDB_ORDER)
             );
-            result.add(people);
+            result.add(person);
         }
 
         for (int i = 0; i < crew.length(); i++) {
-            people = new CrewMember(
+            person = new CrewMember(
                     crew.getJSONObject(i).getString(TMDB_NAME),
                     crew.getJSONObject(i).getInt(TMDB_ID),
                     crew.getJSONObject(i).getString(TMDB_PROFILE_PATH),
@@ -193,23 +193,23 @@ public class GetPeopleTask extends AsyncTask<String, Void, List<People>> {
                     crew.getJSONObject(i).getString(TMDB_DEPARTMENT),
                     crew.getJSONObject(i).getString(TMDB_JOB)
             );
-            result.add(people);
+            result.add(person);
         }
 
         return result;
     }
 
-    public void addListener(PeopleTaskCompleteListener listener) {
+    public void addListener(PersonsTaskCompleteListener listener) {
         listeners.add(listener);
     }
 
-    private void invokeCompleteEvent(List<People> result) {
+    private void invokeCompleteEvent(List<Person> result) {
         for (int i = 0; i < listeners.size(); i++)
             listeners.get(i).taskCompleted(result);
     }
 
-    public interface PeopleTaskCompleteListener {
-        void taskCompleted(List<People> result);
+    public interface PersonsTaskCompleteListener {
+        void taskCompleted(List<Person> result);
     }
 
 

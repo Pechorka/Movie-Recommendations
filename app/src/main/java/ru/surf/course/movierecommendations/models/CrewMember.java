@@ -4,7 +4,7 @@ package ru.surf.course.movierecommendations.models;
  * Created by andrew on 1/29/17.
  */
 
-public class CrewMember extends People {
+public class CrewMember extends Person {
 
     private String mCreditId;
     private String mDepartment;
