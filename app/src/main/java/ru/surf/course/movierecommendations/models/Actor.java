@@ -4,27 +4,25 @@ package ru.surf.course.movierecommendations.models;
  * Created by andrew on 1/11/17.
  */
 
-public class Actor extends Person {
+public class Actor extends Credit {
 
-    private int mCast_id;
+    private int mCastId;
     private String mCharacter;
-    private String mCredit_id;
     private int mOrder;
 
-    public Actor(String name, int id, String profilePath, int cast_id, String character, String credit_id, int order) {
-        super(name, id, profilePath);
-        mCast_id = cast_id;
-        mCharacter = character;
-        mCredit_id = credit_id;
-        mOrder = order;
+    public Actor(String creditId, Person person, int mCastId, String mCharacter, int mOrder) {
+        super(creditId, person);
+        this.mCastId = mCastId;
+        this.mCharacter = mCharacter;
+        this.mOrder = mOrder;
     }
 
     public int getCast_id() {
-        return mCast_id;
+        return mCastId;
     }
 
     public void setCast_id(int mCast_id) {
-        this.mCast_id = mCast_id;
+        this.mCastId = mCast_id;
     }
 
     public String getCharacter() {
@@ -33,14 +31,6 @@ public class Actor extends Person {
 
     public void setCharacter(String mCharacter) {
         this.mCharacter = mCharacter;
-    }
-
-    public String getCredit_id() {
-        return mCredit_id;
-    }
-
-    public void setCredit_id(String mCredit_id) {
-        this.mCredit_id = mCredit_id;
     }
 
     public int getOrder() {

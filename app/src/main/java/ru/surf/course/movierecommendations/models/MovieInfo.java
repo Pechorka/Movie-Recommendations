@@ -33,6 +33,7 @@ public class MovieInfo implements Serializable{
     public Locale infoLanguage;
     public String status;
     public int runtime;
+    public List<Credit> credits;
 
     public MovieInfo(){
 

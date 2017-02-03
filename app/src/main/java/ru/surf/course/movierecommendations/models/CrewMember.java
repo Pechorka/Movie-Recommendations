@@ -4,25 +4,15 @@ package ru.surf.course.movierecommendations.models;
  * Created by andrew on 1/29/17.
  */
 
-public class CrewMember extends Person {
+public class CrewMember extends Credit {
 
-    private String mCreditId;
     private String mDepartment;
     private String mJob;
 
-    public CrewMember(String name, int id, String profilePath, String creditId, String department, String job) {
-        super(name, id, profilePath);
-        mCreditId = creditId;
-        mDepartment = department;
-        mJob = job;
-    }
-
-    public String getCreditId() {
-        return mCreditId;
-    }
-
-    public void setCreditId(String mCreditId) {
-        this.mCreditId = mCreditId;
+    public CrewMember(String creditId, Person person, String mDepartment, String mJob) {
+        super(creditId, person);
+        this.mDepartment = mDepartment;
+        this.mJob = mJob;
     }
 
     public String getDepartment() {

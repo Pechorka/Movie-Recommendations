@@ -34,13 +34,13 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
-import ru.surf.course.movierecommendations.adapters.PersonsListAdapter;
+import ru.surf.course.movierecommendations.adapters.CreditsListAdapter;
+import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.MovieInfo;
-import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
+import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
@@ -74,10 +74,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView revenue;
     private TextView runtime;
     private TextView status;
-    private List<Person> credits;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
-    private PersonsListAdapter creditsListAdapter;
+    private CreditsListAdapter creditsListAdapter;
 
 
     private int dataLoaded = 0;
@@ -242,15 +241,15 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     private void loadCredits(int movieId) {
-        GetPersonsTask getPersonsTask = new GetPersonsTask();
-        getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
+        GetCreditsTask getCreditsTask = new GetCreditsTask();
+        getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
             @Override
-            public void taskCompleted(List<Person> result) {
-                credits = result;
+            public void taskCompleted(List<Credit> result) {
+                currentMovie.credits = result;
                 dataLoadComplete();
             }
         });
-        getPersonsTask.getMovieCredits(movieId);
+        getCreditsTask.getMovieCredits(movieId);
     }
 
     private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
@@ -308,7 +307,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         else
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
 
-        creditsListAdapter = new PersonsListAdapter(credits, getActivity());
+        creditsListAdapter = new CreditsListAdapter(currentMovie.credits, getActivity());
         creditsList.setAdapter(creditsListAdapter);
 
     }

@@ -13,6 +13,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Actor;
+import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.CrewMember;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -21,45 +22,45 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 2/2/17.
  */
 
-public class PersonsListAdapter extends RecyclerView.Adapter<PersonsListAdapter.ViewHolder> {
+public class CreditsListAdapter extends RecyclerView.Adapter<CreditsListAdapter.ViewHolder> {
 
-    private List<Person> mPersonList;
+    private List<Credit> mCreditList;
     private Context mContext;
 
-    public PersonsListAdapter(List<Person> person, Context context) {
-        mPersonList = person;
+    public CreditsListAdapter(List<Credit> credits, Context context) {
+        mCreditList = credits;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.people_list_item, parent, false);
-        return new PersonsListAdapter.ViewHolder(itemView);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.credits_list_item, parent, false);
+        return new CreditsListAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Person person = mPersonList.get(position);
-        if (person.getProfilePath() != null && !person.getProfilePath().equals("null"))
-            loadImage(person.getProfilePath(), holder.image);
-        holder.header.setText(person.getName());
-        if (person instanceof Actor)
-            holder.subHeader.setText(((Actor) person).getCharacter());
-        else if (person instanceof CrewMember)
-            holder.subHeader.setText(((CrewMember) person).getJob());
+        Credit credit = mCreditList.get(position);
+        if (credit.getPerson().getProfilePath() != null && !credit.getPerson().getProfilePath().equals("null"))
+            loadImage(credit.getPerson().getProfilePath(), holder.image);
+        holder.header.setText(credit.getPerson().getName());
+        if (credit instanceof Actor)
+            holder.subHeader.setText(((Actor)credit).getCharacter());
+        else if (credit instanceof CrewMember)
+            holder.subHeader.setText(((CrewMember) credit).getJob());
     }
 
     @Override
     public int getItemCount() {
-        return mPersonList.size();
+        return mCreditList.size();
     }
 
-    public List<Person> getPersons() {
-        return mPersonList;
+    public List<Credit> getCredits() {
+        return mCreditList;
     }
 
-    public void setPersons(List<Person> mPerson) {
-        this.mPersonList = mPerson;
+    public void setCredits(List<Credit> credits) {
+        mCreditList = credits;
     }
 
     private void loadImage(String path, ImageView targetView) {
