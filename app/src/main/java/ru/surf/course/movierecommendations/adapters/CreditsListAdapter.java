@@ -16,6 +16,7 @@ import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.CrewMember;
 import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
@@ -26,6 +27,7 @@ public class CreditsListAdapter extends RecyclerView.Adapter<CreditsListAdapter.
 
     private List<Credit> mCreditList;
     private Context mContext;
+    private static OnItemClickListener listener;
 
     public CreditsListAdapter(List<Credit> credits, Context context) {
         mCreditList = credits;
@@ -79,6 +81,21 @@ public class CreditsListAdapter extends RecyclerView.Adapter<CreditsListAdapter.
             image = (CircleImageView)itemView.findViewById(R.id.circle_images_list_image);
             header = (TextView)itemView.findViewById(R.id.circle_images_list_header);
             subHeader = (TextView)itemView.findViewById(R.id.circle_images_list_sub_header);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CreditsListAdapter.listener.onClick(getAdapterPosition());
+                }
+            });
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        CreditsListAdapter.listener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(int position);
     }
 }
