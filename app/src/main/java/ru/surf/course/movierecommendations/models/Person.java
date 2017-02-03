@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.models;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by andrew on 1/29/17.
@@ -8,7 +9,11 @@ import java.util.Date;
 
 public class Person {
 
-    protected enum Gender {MALE, FEMALE}
+    public enum Gender {
+        UNKNOWN,
+        FEMALE,
+        MALE
+    }
 
     protected String mName;
     protected int mId;
@@ -21,6 +26,7 @@ public class Person {
     protected String mImdbId;
     protected String mPlaceOfBirth;
     protected Double mPopularity;
+    protected Locale mInfoLanguage;
 
     public Person(String name, int id, String profilePath) {
         mName = name;
@@ -40,6 +46,11 @@ public class Person {
         this.mImdbId = mImdbId;
         this.mPlaceOfBirth = mPlaceOfBirth;
         this.mPopularity = mPopularity;
+    }
+
+    public Person(String mName, int mId) {
+        this.mName = mName;
+        this.mId = mId;
     }
 
     public String getName() {
@@ -128,5 +139,13 @@ public class Person {
 
     public void setPopularity(Double popularity) {
         this.mPopularity = popularity;
+    }
+
+    public Locale getInfoLanguage(){
+        return mInfoLanguage;
+    }
+
+    public void setInfoLanguage(Locale infoLanguage){
+        mInfoLanguage = infoLanguage;
     }
 }

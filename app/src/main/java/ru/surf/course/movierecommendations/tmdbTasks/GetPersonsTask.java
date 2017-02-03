@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,13 +14,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.models.Actor;
-import ru.surf.course.movierecommendations.models.Credit;
-import ru.surf.course.movierecommendations.models.CrewMember;
 import ru.surf.course.movierecommendations.models.Person;
 
 /**
@@ -31,18 +29,29 @@ import ru.surf.course.movierecommendations.models.Person;
 public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
     private final String API_KEY_PARAM = "api_key";
+    private final String LANGUAGE_PARAM = "language";
     private final String TMDB_ID = "id";
     private final String TMDB_NAME = "name";
     private final String TMDB_PROFILE_PATH = "profile_path";
+    private final String TMDB_ADULT = "adult";
+    private final String TMDB_BIOGRAPHY = "biography";
+    private final String TMDB_BIRTHDAY = "birthday";
+    private final String TMDB_DEATHDAY = "deathday";
+    private final String TMDB_GENDER = "gender";
+    private final String TMDB_IMDB_ID = "imdb_id";
+    private final String TMDB_PLACE_OF_BIRTH = "place_of_birth";
+    private final String TMDB_POPULARITY = "popularity";
 
     private final String LOG_TAG = getClass().getSimpleName();
 
     private Tasks task;
     private boolean isLoadingList;
     private List<PersonsTaskCompleteListener> listeners;
+    private Locale language;
 
     public GetPersonsTask() {
         listeners = new ArrayList<>();
+        language = Locale.getDefault();
     }
 
     @Override
@@ -50,6 +59,10 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
         if (strings.length == 0)
             return null;
+
+        if (strings.length > 1) {
+            language = new Locale(strings[1]);
+        }
 
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
@@ -60,6 +73,9 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
             Uri builtUri;
             switch (task) {
+                case GET_PERSON_BY_ID:
+                    builtUri = uriForPersonDetails(Integer.valueOf(strings[0]));
+                    break;
                 default:
                     builtUri = Uri.EMPTY;
             }
@@ -132,11 +148,79 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
         List<Person> result = new ArrayList<>();
 
         switch (task) {
-
+            case GET_PERSON_BY_ID:
+                result.add(parsePersonJson(jsonObject));
+                break;
         }
 
         return result;
 
+    }
+
+    private Person parsePersonJson(JSONObject jsonObject) throws JSONException, ParseException {
+        Person result;
+        String temp;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        result = new Person(
+                jsonObject.getString(TMDB_NAME),
+                jsonObject.getInt(TMDB_ID)
+        );
+
+        result.setAdult(jsonObject.getBoolean(TMDB_ADULT));
+
+        temp = jsonObject.getString(TMDB_BIOGRAPHY);
+        if (checkString(temp))
+            result.setBiography(temp);
+
+        temp = jsonObject.getString(TMDB_BIRTHDAY);
+        if (checkString(temp))
+            result.setBirthday(simpleDateFormat.parse(temp));
+
+        temp = jsonObject.getString(TMDB_DEATHDAY);
+        if (checkString(temp))
+            result.setDeathday(simpleDateFormat.parse(temp));
+
+        temp = jsonObject.getString(TMDB_IMDB_ID);
+        if (checkString(temp))
+            result.setImdbId(temp);
+
+        temp = jsonObject.getString(TMDB_PLACE_OF_BIRTH);
+        if (checkString(temp))
+            result.setPlaceOfBirth(temp);
+
+        temp = jsonObject.getString(TMDB_PROFILE_PATH);
+        if (checkString(temp))
+            result.setProfilePath(temp);
+
+        result.setGender(Person.Gender.values()[jsonObject.getInt(TMDB_GENDER)]);
+
+        result.setPopularity(jsonObject.getDouble(TMDB_POPULARITY));
+
+        return result;
+    }
+
+    public void getPersonById(int personId, Locale language) {
+        task = Tasks.GET_PERSON_BY_ID;
+        isLoadingList = false;
+        execute(String.valueOf(personId), language.getLanguage());
+    }
+
+    public void getPersonById(int personId) {
+        getPersonById(personId, Locale.getDefault());
+    }
+
+    private Uri uriForPersonDetails(int personId) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/person";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(personId))
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language.getLanguage())
+                .build();
+    }
+
+    private boolean checkString(String string) {
+        return  string != null && !string.equals("") && !string.equals("null");
     }
 
     public void addListener(PersonsTaskCompleteListener listener) {
