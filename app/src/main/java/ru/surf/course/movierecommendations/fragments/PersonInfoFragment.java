@@ -24,10 +24,6 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 
-/**
- * Created by andrew on 2/3/17.
- */
-
 public class PersonInfoFragment extends Fragment {
 
     final static String KEY_PERSON = "person";
@@ -43,10 +39,7 @@ public class PersonInfoFragment extends Fragment {
     private Person currentPerson;
     private Person currentPersonEnglish;
 
-
     private int dataLoaded = 0;
-
-    private String language;
 
     public static PersonInfoFragment newInstance(Person person) {
         PersonInfoFragment personInfoFragment = new PersonInfoFragment();
@@ -85,8 +78,6 @@ public class PersonInfoFragment extends Fragment {
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         biography.setOnClickListener(expandCollapse);
 
-        language = Locale.getDefault().getLanguage();
-
         return root;
     }
 
@@ -111,7 +102,7 @@ public class PersonInfoFragment extends Fragment {
             id = getArguments().getInt(KEY_PERSON_ID);
         }
         dataLoaded = 0;
-        loadInformation(id, language);
+        loadInformation(id, getCurrentLocale().getLanguage());
     }
 
 
@@ -120,7 +111,7 @@ public class PersonInfoFragment extends Fragment {
         getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Person> result) {
-                if (result.get(0).getInfoLanguage().getLanguage().equals(Locale.getDefault().getLanguage())) {
+                if (result.get(0).getInfoLanguage().getLanguage().equals(getCurrentLocale().getLanguage())) {
                     currentPerson = result.get(0);
                     dataLoadComplete();
                 }
@@ -177,6 +168,10 @@ public class PersonInfoFragment extends Fragment {
             }
         }
         Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+    }
+
+    public Locale getCurrentLocale() {
+        return Locale.getDefault();
     }
 
 }

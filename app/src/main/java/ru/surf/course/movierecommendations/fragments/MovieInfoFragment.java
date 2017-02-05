@@ -82,8 +82,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     private int dataLoaded = 0;
 
-    private String language;
-
     public static MovieInfoFragment newInstance(MovieInfo movieInfo) {
         MovieInfoFragment movieInfoFragment = new MovieInfoFragment();
         Bundle bundle = new Bundle();
@@ -140,8 +138,6 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         expandCollapseOverviewButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
 
-        language = Locale.getDefault().getLanguage();
-
         return root;
     }
 
@@ -182,7 +178,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             id = getArguments().getInt(KEY_MOVIE_ID);
         }
         dataLoaded = 0;
-        loadInformation(id, language);
+        loadInformation(id, getCurrentLocale().getLanguage());
     }
 
 
@@ -323,7 +319,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     @Override
     public void taskCompleted(List<MovieInfo> result) {
-        if (result.get(0).infoLanguage.getLanguage().equals(language)) {
+        if (result.get(0).infoLanguage.getLanguage().equals(getCurrentLocale().getLanguage())) {
             currentMovie = result.get(0);
             dataLoadComplete();
             loadPoster(currentMovie);
@@ -354,5 +350,9 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             }
         }
         Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+    }
+
+    public Locale getCurrentLocale() {
+        return Locale.getDefault();
     }
 }
