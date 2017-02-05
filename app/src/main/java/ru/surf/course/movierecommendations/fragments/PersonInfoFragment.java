@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 
@@ -97,7 +98,8 @@ public class PersonInfoFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         int id = -1;
         if (getArguments().containsKey(KEY_PERSON)) {
-            id = ((Person) getArguments().getSerializable(KEY_PERSON)).getId();
+            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
+            id = currentPerson.getId();
         } else if (getArguments().containsKey(KEY_PERSON_ID)) {
             id = getArguments().getInt(KEY_PERSON_ID);
         }
@@ -111,12 +113,16 @@ public class PersonInfoFragment extends Fragment {
         getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Person> result) {
-                if (result.get(0).getInfoLanguage().getLanguage().equals(getCurrentLocale().getLanguage())) {
-                    currentPerson = result.get(0);
+                if (result.get(0).getInfoLanguage().equals(getCurrentLocale())) {
+                    if (currentPerson == null)
+                        currentPerson = result.get(0);
+                    else Utilities.copyFields(result.get(0), currentPerson);
                     dataLoadComplete();
                 }
-                else if (result.get(0).getInfoLanguage().getLanguage().equals("en")){
-                    currentPersonEnglish = result.get(0);
+                else if (result.get(0).getInfoLanguage().equals(Locale.ENGLISH)){
+                    if (currentPersonEnglish == null)
+                        currentPersonEnglish = result.get(0);
+                    else Utilities.copyFields(result.get(0), currentPersonEnglish);
                     dataLoadComplete();
                 }
             }
@@ -124,11 +130,14 @@ public class PersonInfoFragment extends Fragment {
         getPersonsTask.getPersonById(personId, new Locale(language));
     }
 
+
+
     private boolean checkInformation(Person person) {
-        if (person.getBiography() == null || person.getBiography().equals("") || person.getBiography().equals("null"))
-            return false;
-        return true;
+        return Utilities.checkString(person.getBiography());
+        //for now checking only biography
     }
+
+
 
     private String firstLetterToUpper(String str) {
         return str.substring(0,1).toUpperCase() + str.substring(1);
@@ -138,9 +147,9 @@ public class PersonInfoFragment extends Fragment {
     public void fillInformation() {
         name.setText(currentPerson.getName());
 
-        if (currentPerson.getBiography() == null || currentPerson.getBiography().equals("") || currentPerson.getBiography().equals("null"))
-            biography.setText(currentPersonEnglish.getBiography());
-        else biography.setText(currentPerson.getBiography());
+        if (Utilities.checkString(currentPerson.getBiography()))
+            biography.setText(currentPerson.getBiography());
+        else biography.setText(currentPersonEnglish.getBiography());
 
         if (biography.getLineCount() >= biography.getMaxLines())
             expandCollapseBiographyButton.setVisibility(View.VISIBLE);
@@ -156,7 +165,7 @@ public class PersonInfoFragment extends Fragment {
         if (++dataLoaded == DATA_TO_LOAD) {
             if (!checkInformation(currentPerson) && currentPersonEnglish == null) {
                 dataLoaded = 0;
-                loadInformation(currentPerson.getId(), "en");
+                loadInformation(currentPerson.getId(), Locale.ENGLISH.getLanguage());
             }
             else {
                 fillInformation();

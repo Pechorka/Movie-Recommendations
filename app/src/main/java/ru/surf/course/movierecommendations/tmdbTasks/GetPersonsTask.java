@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.models.Person;
 
 /**
@@ -80,7 +81,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
                     builtUri = Uri.EMPTY;
             }
 
-            Log.d(LOG_TAG, "Built uri" + builtUri);
+            Log.d(LOG_TAG, "Built uri " + builtUri);
 
             URL url = new URL(builtUri.toString());
 
@@ -106,7 +107,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
             Log.v(LOG_TAG, "Person list: " + personsJsonStr);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error", e);
+            Log.e(LOG_TAG, "Error ", e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -115,7 +116,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
                 try {
                     bufferedReader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                    Log.e(LOG_TAG, "Error closing stream ", e);
                 }
             }
         }
@@ -170,27 +171,27 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
         result.setAdult(jsonObject.getBoolean(TMDB_ADULT));
 
         temp = jsonObject.getString(TMDB_BIOGRAPHY);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setBiography(temp);
 
         temp = jsonObject.getString(TMDB_BIRTHDAY);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setBirthday(simpleDateFormat.parse(temp));
 
         temp = jsonObject.getString(TMDB_DEATHDAY);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setDeathday(simpleDateFormat.parse(temp));
 
         temp = jsonObject.getString(TMDB_IMDB_ID);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setImdbId(temp);
 
         temp = jsonObject.getString(TMDB_PLACE_OF_BIRTH);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setPlaceOfBirth(temp);
 
         temp = jsonObject.getString(TMDB_PROFILE_PATH);
-        if (checkString(temp))
+        if (Utilities.checkString(temp))
             result.setProfilePath(temp);
 
         result.setGender(Person.Gender.values()[jsonObject.getInt(TMDB_GENDER)]);
@@ -219,10 +220,6 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language.getLanguage())
                 .build();
-    }
-
-    private boolean checkString(String string) {
-        return  string != null && !string.equals("") && !string.equals("null");
     }
 
     public void addListener(PersonsTaskCompleteListener listener) {
