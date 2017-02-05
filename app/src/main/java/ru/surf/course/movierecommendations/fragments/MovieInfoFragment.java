@@ -43,6 +43,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 /**
  * Created by andrew on 11/26/16.
@@ -234,7 +235,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
                 });
             }
         });
-        getImagesTask.execute(movie.id, GetImagesTask.BACKDROPS);
+        getImagesTask.getMovieImages(movie.id, Tasks.GET_BACKDROPS);
     }
 
     private void loadCredits(int movieId) {

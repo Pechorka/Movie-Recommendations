@@ -26,8 +26,9 @@ import ru.surf.course.movierecommendations.models.TmdbImage;
 
 public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
 
-    public static final String BACKDROPS = "backdrops";
-    public static final String POSTERS = "posters";
+    private static final String BACKDROPS = "backdrops";
+    private static final String POSTERS = "posters";
+    private static final String PROFILE_PICTURES = "profiles";
 
     private final String IMAGES = "images";
     private final String API_KEY_PARAM = "api_key";
@@ -35,28 +36,14 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
 
     private List<TaskCompletedListener> listeners = new ArrayList<>();
 
-    String imageType;
-    int movieId;
-
-    public void execute(int movieId ,String imageType) {
-        this.imageType = imageType;
-        this.movieId = movieId;
-        execute();
-    }
-
-    public void addListener(TaskCompletedListener listener) {
-        listeners.add(listener);
-    }
-
-    private void invokeEvent(List<TmdbImage> result) {
-        for (TaskCompletedListener listener:
-             listeners) {
-            listener.getImagesTaskCompleted(result);
-        }
-    }
+    private Tasks task;
 
     @Override
     protected List<TmdbImage> doInBackground(String... strings) {
+
+        if (strings.length == 0)
+            return null;
+
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
 
@@ -64,7 +51,19 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
 
         try {
 
-            Uri builtUri = buildUri(movieId);
+            Uri builtUri;
+            switch (task) {
+                case GET_BACKDROPS:
+                case GET_POSTERS:
+                    builtUri = uriForMovieImages(Integer.valueOf(strings[0]));
+                    break;
+                case GET_PROFILE_PICTURES:
+                    builtUri = uriForPersonImages(Integer.valueOf(strings[0]));
+                    break;
+                default:
+                    builtUri = Uri.EMPTY;
+                    break;
+            }
 
             URL url = new URL(builtUri.toString());
 
@@ -107,8 +106,7 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         }
 
         try {
-            List<TmdbImage> result = parseJson(imagesJsonStr);
-            return result;
+            return parseJson(imagesJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -124,15 +122,28 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         invokeEvent(strings);
     }
 
-    public List<TmdbImage> parseJson(String jsonString) throws JSONException {
+    private List<TmdbImage> parseJson(String jsonString) throws JSONException {
         final String TMDB_FILE_PATH = "file_path";
         final String TMDB_WIDTH = "width";
         final String TMDB_HEIGHT = "height";
-
-        List<TmdbImage> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        JSONArray jsonArray = jsonObject.getJSONArray(imageType);
+        JSONArray jsonArray;
+        switch (task) {
+            case GET_BACKDROPS:
+                jsonArray = jsonObject.getJSONArray(BACKDROPS);
+                break;
+            case GET_POSTERS:
+                jsonArray = jsonObject.getJSONArray(POSTERS);
+                break;
+            case GET_PROFILE_PICTURES:
+                jsonArray = jsonObject.getJSONArray(PROFILE_PICTURES);
+                break;
+            default:
+                return null;
+        }
+
+        List<TmdbImage> result = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             result.add(new TmdbImage(jsonArray.getJSONObject(i).getString(TMDB_FILE_PATH),
                                      jsonArray.getJSONObject(i).getInt(TMDB_WIDTH),
@@ -141,7 +152,17 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         return result;
     }
 
-    public Uri buildUri(int movieId) {
+    public void getMovieImages(int movieId, Tasks task) {
+        this.task = task;
+        execute(String.valueOf(movieId));
+    }
+
+    public void getPersonImages(int personId, Tasks task) {
+        this.task = task;
+        execute(String.valueOf(personId));
+    }
+
+    private Uri uriForMovieImages(int movieId) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendPath(String.valueOf(movieId))
@@ -150,7 +171,27 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
                 .build();
     }
 
+    private Uri uriForPersonImages(int personId) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/person";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(personId))
+                .appendPath(IMAGES)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .build();
+    }
+
     public interface TaskCompletedListener {
         public void getImagesTaskCompleted(List<TmdbImage> result);
+    }
+
+    public void addListener(TaskCompletedListener listener) {
+        listeners.add(listener);
+    }
+
+    private void invokeEvent(List<TmdbImage> result) {
+        for (TaskCompletedListener listener:
+                listeners) {
+            listener.getImagesTaskCompleted(result);
+        }
     }
 }
