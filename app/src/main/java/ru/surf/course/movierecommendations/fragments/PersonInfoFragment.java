@@ -23,13 +23,16 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.models.TmdbImage;
+import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
+import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class PersonInfoFragment extends Fragment {
 
     final static String KEY_PERSON = "person";
     final static String KEY_PERSON_ID = "person_id";
-    final static int DATA_TO_LOAD = 1;
+    final static int DATA_TO_LOAD = 2;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -96,41 +99,43 @@ public class PersonInfoFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        int id = -1;
+        dataLoaded = 0;
         if (getArguments().containsKey(KEY_PERSON)) {
             currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
-            id = currentPerson.getId();
         } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-            id = getArguments().getInt(KEY_PERSON_ID);
+            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
         }
-        dataLoaded = 0;
-        loadInformation(id, getCurrentLocale().getLanguage());
+        if (currentPerson != null) {
+            loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
+            loadProfilePicturesInto(currentPerson);
+        }
     }
 
 
-    public void loadInformation(int personId, String language) {
+    private void loadInformationInto(final Person person, String language) {
         GetPersonsTask getPersonsTask = new GetPersonsTask();
         getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Person> result) {
-                if (result.get(0).getInfoLanguage().equals(getCurrentLocale())) {
-                    if (currentPerson == null)
-                        currentPerson = result.get(0);
-                    else Utilities.copyFields(result.get(0), currentPerson);
-                    dataLoadComplete();
-                }
-                else if (result.get(0).getInfoLanguage().equals(Locale.ENGLISH)){
-                    if (currentPersonEnglish == null)
-                        currentPersonEnglish = result.get(0);
-                    else Utilities.copyFields(result.get(0), currentPersonEnglish);
-                    dataLoadComplete();
-                }
+                if (person != null)
+                    Utilities.copyFields(result.get(0), person);
+                dataLoadComplete();
             }
         });
-        getPersonsTask.getPersonById(personId, new Locale(language));
+        getPersonsTask.getPersonById(person.getId(), new Locale(language));
     }
 
-
+    private void loadProfilePicturesInto(final Person person) {
+        GetImagesTask getImagesTask = new GetImagesTask();
+        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
+            @Override
+            public void getImagesTaskCompleted(List<TmdbImage> result) {
+                person.setProfilePictures(result);
+                dataLoadComplete();
+            }
+        });
+        getImagesTask.getPersonImages(person.getId(), Tasks.GET_PROFILE_PICTURES);
+    }
 
     private boolean checkInformation(Person person) {
         return Utilities.checkString(person.getBiography());
@@ -144,7 +149,7 @@ public class PersonInfoFragment extends Fragment {
     }
 
 
-    public void fillInformation() {
+    private void fillInformation() {
         name.setText(currentPerson.getName());
 
         if (Utilities.checkString(currentPerson.getBiography()))
@@ -161,11 +166,12 @@ public class PersonInfoFragment extends Fragment {
         }
     }
 
-    public void dataLoadComplete() {
+    private void dataLoadComplete() {
         if (++dataLoaded == DATA_TO_LOAD) {
             if (!checkInformation(currentPerson) && currentPersonEnglish == null) {
-                dataLoaded = 0;
-                loadInformation(currentPerson.getId(), Locale.ENGLISH.getLanguage());
+                dataLoaded--;
+                currentPersonEnglish = new Person(currentPerson.getId());
+                loadInformationInto(currentPersonEnglish, Locale.ENGLISH.getLanguage());
             }
             else {
                 fillInformation();
@@ -179,7 +185,7 @@ public class PersonInfoFragment extends Fragment {
         Log.v(LOG_TAG, "data loaded:" + dataLoaded);
     }
 
-    public Locale getCurrentLocale() {
+    private Locale getCurrentLocale() {
         return Locale.getDefault();
     }
 

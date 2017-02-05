@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -28,6 +29,11 @@ public class Person implements Serializable {
     protected String mPlaceOfBirth;
     protected Double mPopularity;
     protected Locale mInfoLanguage;
+    protected List<TmdbImage> mProfilePictures;
+
+    public Person(int id) {
+        mId = id;
+    }
 
     public Person(String name, int id, String profilePath) {
         mName = name;
@@ -149,4 +155,13 @@ public class Person implements Serializable {
     public void setInfoLanguage(Locale infoLanguage){
         mInfoLanguage = infoLanguage;
     }
+
+    public List<TmdbImage> getProfilePictures() {
+        return mProfilePictures;
+    }
+
+    public void setProfilePictures(List<TmdbImage> profilePictures) {
+        mProfilePictures = profilePictures;
+    }
+
 }
