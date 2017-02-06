@@ -28,8 +28,6 @@ import ru.surf.course.movierecommendations.models.MovieInfo;
  */
 
 
-
-
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     public static final String FILTER_POPULAR = "popular";
@@ -48,6 +46,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private boolean isLoadingList;
     private Tasks task;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
+
 
 
     public static boolean isFilter(String string){
@@ -362,17 +361,20 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     }
 
+
     private Uri uriForCustomFilter(String language, String page,
                                    String genres, String releaseDateGTE, String releaseDateLTE) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
-        return Uri.parse(TMDB_BASE_URL).buildUpon()
+        Uri.Builder uri = Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .appendQueryParameter(PAGE_PARAM, page)
                 .appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE)
-                .appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE)
-                .appendQueryParameter(WITH_GENRES, genres)
-                .build();
+                .appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE);
+        if (genres.length() != 0) {
+            uri.appendQueryParameter(WITH_GENRES, genres);
+        }
+        return uri.build();
     }
 
     private Uri uriByGenre(int genreID, String language) {
@@ -400,6 +402,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .build();
     }
+
 
     public interface TaskCompletedListener {
         void taskCompleted(List<MovieInfo> result);

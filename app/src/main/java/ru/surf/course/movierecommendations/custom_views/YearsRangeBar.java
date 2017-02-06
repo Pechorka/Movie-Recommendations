@@ -21,8 +21,8 @@ import ru.surf.course.movierecommendations.R;
 
 public class YearsRangeBar extends RelativeLayout {
 
-    private TextView min;
-    private TextView max;
+    private TextView minY;
+    private TextView maxY;
     private CrystalRangeSeekbar rangeBar;
 
     private int minYear;
@@ -44,12 +44,18 @@ public class YearsRangeBar extends RelativeLayout {
 
     public void setMinYear(int minYear) {
         this.minYear = minYear;
-        min.setText(String.valueOf(minYear));
+        minY.setText(String.valueOf(minYear));
+        if (curMinYear < minYear) {
+            curMinYear = minYear;
+        }
     }
 
     public void setMaxYear(int maxYear) {
         this.maxYear = maxYear;
-        max.setText(String.valueOf(maxYear));
+        maxY.setText(String.valueOf(maxYear));
+        if (curMaxYear > maxYear) {
+            curMaxYear = maxYear;
+        }
     }
 
     public int getCurMinYear() {
@@ -63,25 +69,26 @@ public class YearsRangeBar extends RelativeLayout {
 
     private void init(Context context) {
         View rootView = inflate(context, R.layout.years_range_bar, this);
-        min = (TextView) rootView.findViewById(R.id.rb_min_year);
-        max = (TextView) rootView.findViewById(R.id.rb_max_year);
+        minY = (TextView) rootView.findViewById(R.id.rb_min_year);
+        maxY = (TextView) rootView.findViewById(R.id.rb_max_year);
         rangeBar = (CrystalRangeSeekbar) rootView.findViewById(R.id.rb);
         maxYear = new GregorianCalendar().get(Calendar.YEAR);
         minYear = 1930;
         curMaxYear = maxYear;
         curMinYear = minYear;
+
     }
 
     private void setup() {
-        min.setText(String.valueOf(minYear));
-        max.setText(String.valueOf(maxYear));
+        minY.setText(String.valueOf(minYear));
+        maxY.setText(String.valueOf(maxYear));
         rangeBar.setMaxValue(maxYear);
         rangeBar.setMinValue(minYear);
         rangeBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
             @Override
             public void valueChanged(Number minValue, Number maxValue) {
-                min.setText(String.valueOf(minValue));
-                max.setText(String.valueOf(maxValue));
+                minY.setText(String.valueOf(minValue));
+                maxY.setText(String.valueOf(maxValue));
                 if (curMinYear != minValue.intValue()) {
                     curMinYear = minValue.intValue();
                 }
@@ -91,7 +98,6 @@ public class YearsRangeBar extends RelativeLayout {
             }
 
         });
-
 
     }
 

@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ru.surf.course.movierecommendations.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.R;
@@ -31,6 +34,7 @@ import ru.surf.course.movierecommendations.adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -46,7 +50,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
-    private final static String KEY_GENRES = "genres";
+    private final static String KEY_GENRES = "genres_id";
     private final static String KEY_DATE_GTE = "date_gte";
     private final static String KEY_DATE_LTE = "date_lte";
 
@@ -56,13 +60,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private String language;
     private int id;
     private String previousFilter;
-    private String genres;
     private Date date_gte;
     private Date date_lte;
     private boolean grid;
     private boolean filterSetupOpen;
     private List<MovieInfo> movieInfoList;
+    private Map<String, Integer> genres;
     private Tasks task;
+    private ChooseGenresDialogFragment genresDialogFragment;
 
     private RecyclerView recyclerView;
     private SlidingUpPanelLayout panelLayout;
@@ -73,6 +78,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private LinearLayoutManager linearLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
     private Button callOptions;
+    private Button showGenres;
     private CustomFilterOptions customFilterOptions;
     private boolean newResult;
 
@@ -96,13 +102,12 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return moviesListFragment;
     }
 
-    public static MoviesListFragment newInstance(int id, String language, String genres, Date gte, Date lte, Tasks task) {
+    public static MoviesListFragment newInstance(int id, String language, Date gte, Date lte, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putInt(KEY_MOVIE_ID, id);
         bundle.putSerializable(KEY_TASK, task);
-        bundle.putString(KEY_GENRES, genres);
         bundle.putSerializable(KEY_DATE_LTE, lte);
         bundle.putSerializable(KEY_DATE_GTE, gte);
         moviesListFragment.setArguments(bundle);
@@ -118,7 +123,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         id = getArguments().getInt(KEY_MOVIE_ID);
         PAGE = 1;
         previousFilter = query;
-        genres = getArguments().getString(KEY_GENRES);
         date_lte = (Date) getArguments().getSerializable(KEY_DATE_LTE);
         date_gte = (Date) getArguments().getSerializable(KEY_DATE_GTE);
     }
@@ -209,7 +213,8 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
-
+        showGenres = (Button) root.findViewById(R.id.genres_dialog);
+        genresDialogFragment = new ChooseGenresDialogFragment();
     }
 
     private void setupViews(View root) {
@@ -255,13 +260,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 }
             }
         });
-//        customFilterOptions.setOnRangeChangeListener(new RangeBar.OnRangeBarChangeListener() {
-//            @Override
-//            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-//                newResult = true;
-//                loadInformation();
-//            }
-//        });
         customFilterOptions.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
             @Override
             public void finalValue(Number minValue, Number maxValue) {
@@ -270,6 +268,20 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             }
         });
         setupFiltersBtns(root);
+        showGenres.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getActivity().getFragmentManager();
+                genresDialogFragment.show(fm, "fragment_genres");
+            }
+        });
+        ChooseGenresDialogFragment.SavePressedListener listener = new ChooseGenresDialogFragment.SavePressedListener() {
+            @Override
+            public void saved() {
+                loadInformation();
+            }
+        };
+        genresDialogFragment.addListener(listener);
     }
 
     private void setupFiltersBtns(View root) {
@@ -298,6 +310,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                         if (!checkPreviousFilter(query)) {
                             newResult = true;
                         }
+                        if (genres == null) {
+                            loadGenres();
+                        }
                         break;
 
                 }
@@ -322,6 +337,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         filterBtn = (Button) root.findViewById(R.id.sliding_custom);
         filterBtn.setOnClickListener(listener);
     }
+
 
     private boolean checkPreviousFilter(String newFilter) {
         return previousFilter.equalsIgnoreCase(newFilter);
@@ -351,11 +367,36 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 break;
             case SEARCH_BY_CUSTOM_FILTER:
                 String minYear = customFilterOptions.getMinYear() + "-01-01";
-                String maxYear = customFilterOptions.getMaxYear() + "-01-01";
-                genres = "28,12";
-                getMoviesTask.getMoviesByCustomFilter(language, String.valueOf(PAGE), genres, maxYear, minYear);
+                String maxYear = customFilterOptions.getMaxYear() + "-12-31";
+                Set<Integer> selected = genresDialogFragment.getSelected();
+                StringBuilder genres_ids = new StringBuilder();
+                if (selected != null) {
+                    String[] genresNames = getActivity().getResources().getStringArray(R.array.genres);
+
+                    for (Integer s :
+                            selected) {
+                        if (genres.containsKey(genresNames[s])) {
+                            genres_ids.append(genres.get(genresNames[s])).append(",");
+                        }
+                    }
+                }
+                getMoviesTask.getMoviesByCustomFilter(language, String.valueOf(PAGE), genres_ids.toString(), maxYear, minYear);
                 break;
         }
+    }
+
+    private void loadGenres() {
+        GetGenresTask.TaskCompletedListener listener = new GetGenresTask.TaskCompletedListener() {
+            @Override
+            public void taskCompleted(Map<String, Integer> result) {
+                if (result != null) {
+                    genres = result;
+                }
+            }
+        };
+        GetGenresTask getGenresTask = new GetGenresTask();
+        getGenresTask.addListener(listener);
+        getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
     }
 
     private void switchToLinear() {
