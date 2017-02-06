@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_movies"
+            android:title="Movies"
+            android:icon="@drawable/movies_icon" />
+        <item
+            android:id="@+id/nav_tv"
+            android:title="TV Shows"
+            android:icon="@drawable/tv_icon" />
+    </group>
+
+</menu>
