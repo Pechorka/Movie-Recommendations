@@ -47,4 +47,6 @@
     <string name="runtime">Runtime</string>
     <string name="status">Status</string>
     <string name="unknown">Unknown</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>

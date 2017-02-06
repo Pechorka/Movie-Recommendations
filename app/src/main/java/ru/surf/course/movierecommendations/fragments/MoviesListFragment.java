@@ -7,11 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -72,10 +68,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private Map<String, Integer> genres;
     private Tasks task;
     private ChooseGenresDialogFragment genresDialogFragment;
-    private DrawerLayout mDrawer;
-    private NavigationView nvDrawer;
 
-    private ActionBarDrawerToggle drawerToggle;
 
 
 
@@ -188,14 +181,12 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         switch (id) {
             case R.id.action_search:
                 SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
                 item.expandActionView();
                 searchView.requestFocus();
-                return true;
-            case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
                 return true;
 
         }
@@ -231,8 +222,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
-        mDrawer = (DrawerLayout) root.findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) root.findViewById(R.id.nvView);
+
     }
 
     private void setupViews(View root) {
@@ -300,28 +290,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             }
         };
         genresDialogFragment.addListener(listener);
-        nvDrawer.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
 
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_movies:
-                break;
-            case R.id.nav_tv:
-                break;
-        }
-        menuItem.setChecked(true);
 
-        mDrawer.closeDrawers();
-    }
 
 
     private void setupFiltersBtns(View root) {
