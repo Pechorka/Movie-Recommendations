@@ -125,6 +125,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         previousFilter = query;
         date_lte = (Date) getArguments().getSerializable(KEY_DATE_LTE);
         date_gte = (Date) getArguments().getSerializable(KEY_DATE_GTE);
+
     }
 
 
@@ -140,6 +141,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         }
         setupViews(root);
         loadInformation();
+        loadGenres();
         return root;
     }
 
@@ -310,9 +312,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                         if (!checkPreviousFilter(query)) {
                             newResult = true;
                         }
-                        if (genres == null) {
-                            loadGenres();
-                        }
                         break;
 
                 }
@@ -368,9 +367,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             case SEARCH_BY_CUSTOM_FILTER:
                 String minYear = customFilterOptions.getMinYear() + "-01-01";
                 String maxYear = customFilterOptions.getMaxYear() + "-12-31";
-                Set<Integer> selected = genresDialogFragment.getSelected();
+                Set<Integer> selected = genresDialogFragment.getSelected(getActivity());
                 StringBuilder genres_ids = new StringBuilder();
-                if (selected != null) {
+                if (selected.size() != 0) {
                     String[] genresNames = getActivity().getResources().getStringArray(R.array.genres);
 
                     for (Integer s :
