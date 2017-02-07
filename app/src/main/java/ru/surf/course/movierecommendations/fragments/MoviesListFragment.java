@@ -4,14 +4,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -69,7 +75,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private Tasks task;
     private ChooseGenresDialogFragment genresDialogFragment;
 
-
+    private DrawerLayout mDrawer;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
 
 
     private RecyclerView recyclerView;
@@ -144,7 +152,10 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         }
         setupViews(root);
         loadInformation();
-        loadGenres();
+        if (genres == null) {
+            loadGenres();
+        }
+        drawerToggle.syncState();
         return root;
     }
 
@@ -180,6 +191,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         int id = item.getItemId();
 
         switch (id) {
@@ -188,9 +202,18 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 item.expandActionView();
                 searchView.requestFocus();
                 return true;
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -214,15 +237,18 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
         newResult = true;
-        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
-        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
         panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
-
+        mDrawer = (DrawerLayout) root.findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) root.findViewById(R.id.nvView);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_main_toolbar);
+        drawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1), drawerToggle);
+        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
     }
 
     private void setupViews(View root) {
@@ -290,10 +316,28 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             }
         };
         genresDialogFragment.addListener(listener);
-
+        nvDrawer.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+        mDrawer.addDrawerListener(drawerToggle);
     }
 
+    public void selectDrawerItem(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_movies:
+                break;
+            case R.id.nav_tv:
+                break;
+        }
+        menuItem.setChecked(true);
 
+        mDrawer.closeDrawers();
+    }
 
 
     private void setupFiltersBtns(View root) {

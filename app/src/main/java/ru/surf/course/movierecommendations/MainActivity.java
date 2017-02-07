@@ -4,15 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -38,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private MoviesListFragment moviesListFragment;
-
-    private DrawerLayout mDrawer;
-    private NavigationView nvDrawer;
-
-    private ActionBarDrawerToggle drawerToggle;
+//
+//    private DrawerLayout mDrawer;
+//    private NavigationView nvDrawer;
+//
+//    private ActionBarDrawerToggle drawerToggle;
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
@@ -78,32 +73,32 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-
-        nvDrawer.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
-        mDrawer.addDrawerListener(drawerToggle);
+//        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+//        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+//
+//        nvDrawer.setNavigationItemSelectedListener(
+//                new NavigationView.OnNavigationItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+//                        selectDrawerItem(menuItem);
+//                        return true;
+//                    }
+//                });
+//        mDrawer.addDrawerListener(drawerToggle);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
+//        drawerToggle.syncState();
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        drawerToggle.onConfigurationChanged(newConfig);
+//    }
 
 
     @Override
@@ -133,33 +128,33 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (drawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
+//        int id = item.getItemId();
+//
+//        switch (id) {
+//            case android.R.id.home:
+//                mDrawer.openDrawer(GravityCompat.START);
+//                return true;
+//
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        switch (id) {
-            case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void selectDrawerItem(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_movies:
-                break;
-            case R.id.nav_tv:
-                break;
-        }
-        menuItem.setChecked(true);
-
-        mDrawer.closeDrawers();
-    }
+//    public void selectDrawerItem(MenuItem menuItem) {
+//        switch (menuItem.getItemId()) {
+//            case R.id.nav_movies:
+//                break;
+//            case R.id.nav_tv:
+//                break;
+//        }
+//        menuItem.setChecked(true);
+//
+//        mDrawer.closeDrawers();
+//    }
 
     private void loadMainFragment(Bundle savedInstanceState, String filter) {
         if (savedInstanceState == null) {

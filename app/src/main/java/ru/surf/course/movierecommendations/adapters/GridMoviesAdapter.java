@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.adapters;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,10 +27,12 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
 
     private List<MovieInfo> movieInfoList;
     private Context context;
+    private ActionBarDrawerToggle toggle;
 
-    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList) {
+    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList, ActionBarDrawerToggle drawerToggle) {
         this.context = context;
         this.movieInfoList = movieInfoList;
+        toggle = drawerToggle;
     }
 
 
@@ -72,6 +75,7 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
             return;
         if (context instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) context;
+            toggle.setDrawerIndicatorEnabled(false);
             mainActivity.switchContent(id, fragment, new int[]{R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left});
         }
 
