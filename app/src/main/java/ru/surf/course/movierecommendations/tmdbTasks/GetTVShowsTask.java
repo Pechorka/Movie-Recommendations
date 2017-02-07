@@ -171,6 +171,7 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
         final String TMDB_GENRE_IDS = "genre_ids";
         final String TMDB_GENRES = "genres";
         final String TMDB_NAME = "name";
+        final String TMDB_ORIGINAL_NAME = "original_name";
         final String TMDB_PRODUCTION_COMPANIES = "production_companies";
         final String TMDB_PRODUCTION_COUNTRIES = "production_countries";
         final String TMDB_BUDGET = "budget";
@@ -206,33 +207,30 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
                 for (int k = 0; k < genres.length(); k++) {
                     genresList.add(genres.getInt(k));
                 }
-                episodesRuntime = tvShowArray.getJSONObject(i).getJSONArray(TMDB_EPICSODE_RUNTIME);
-                episodesRintimeList = new ArrayList<>();
-                for (int k = 0; k < episodesRintimeList.size(); k++) {
-                    episodesRintimeList.add(episodesRuntime.getDouble(k));
-                }
+//                episodesRuntime = tvShowArray.getJSONObject(i).getJSONArray(TMDB_EPICSODE_RUNTIME);
+//                episodesRintimeList = new ArrayList<>();
+//                for (int k = 0; k < episodesRintimeList.size(); k++) {
+//                    episodesRintimeList.add(episodesRuntime.getDouble(k));
+//                }
 
                 item = new TVShowInfo();
-                item.title = tvShowArray.getJSONObject(i).getString(TMDB_TITLE);
-                item.originalTitle = tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE);
+                item.title = tvShowArray.getJSONObject(i).getString(TMDB_NAME);
+                item.originalTitle = tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME);
                 item.genreIds = genresList;
                 item.posterPath = tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH);
                 item.overview = tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW);
                 item.backdropPath = tvShowArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH);
-                item.voteAverage = tvShowArray.getJSONObject(i).getDouble(TMDB_RATING);
                 item.voteCount = tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT);
                 item.id = tvShowArray.getJSONObject(i).getInt(TMDB_ID);
-                item.status = tvShowArray.getJSONObject(i).getString(TMDB_STATUS);
-                item.budget = tvShowArray.getJSONObject(i).getString(TMDB_BUDGET);
-                item.episode_runtime = episodesRintimeList;
-                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
-                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
-                item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
-                try {
-                    item.date = formatter.parse(tvShowArray.getJSONObject(i).getString(TMDB_DATE));
-                } catch (ParseException e) {
-                    Log.d(LOG_TAG, "Empty date, most likely");
-                }
+//                item.episode_runtime = episodesRintimeList;
+//                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
+//                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
+//                item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
+//                try {
+//                    item.date = formatter.parse(tvShowArray.getJSONObject(i).getString(TMDB_DATE));
+//                } catch (ParseException e) {
+//                    Log.d(LOG_TAG, "Empty date, most likely");
+//                }
                 result.add(item);
             }
         } else {
@@ -321,10 +319,10 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
 
     private void invokeEvent(List<TVShowInfo> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.taskCompleted(result);
+            listener.tvshowsLoaded(result);
     }
 
     public interface TaskCompletedListener {
-        void taskCompleted(List<TVShowInfo> result);
+        void tvshowsLoaded(List<TVShowInfo> result);
     }
 }

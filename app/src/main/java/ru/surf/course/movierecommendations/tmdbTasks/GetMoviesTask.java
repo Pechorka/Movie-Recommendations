@@ -297,7 +297,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     private void invokeEvent(List<MovieInfo> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.taskCompleted(result);
+            listener.moviesLoaded(result);
     }
 
     public void getMovieById(int movieId, String language) {
@@ -405,6 +405,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
 
     public interface TaskCompletedListener {
-        void taskCompleted(List<MovieInfo> result);
+        void moviesLoaded(List<MovieInfo> result);
     }
 }

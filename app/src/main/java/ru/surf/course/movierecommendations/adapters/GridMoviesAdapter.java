@@ -17,6 +17,7 @@ import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
@@ -26,12 +27,23 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.MyViewHolder> {
 
     private List<MovieInfo> movieInfoList;
+    private List<TVShowInfo> tvShowInfoList;
     private Context context;
     private ActionBarDrawerToggle toggle;
+    private boolean movie;
 
-    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList, ActionBarDrawerToggle drawerToggle) {
+    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList, List<TVShowInfo> tvShowInfoList, ActionBarDrawerToggle drawerToggle) {
         this.context = context;
         this.movieInfoList = movieInfoList;
+        this.tvShowInfoList = tvShowInfoList;
+        toggle = drawerToggle;
+    }
+
+    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList, List<TVShowInfo> tvShowInfoList, ActionBarDrawerToggle drawerToggle, boolean movie) {
+        this.context = context;
+        this.movieInfoList = movieInfoList;
+        this.tvShowInfoList = tvShowInfoList;
+        this.movie = movie;
         toggle = drawerToggle;
     }
 
@@ -44,21 +56,39 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        final MovieInfo movieInfo = movieInfoList.get(position);
-        holder.name.setText(movieInfo.title);
-        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image, ImageLoader.sizes.w300);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentToSwitch(movieInfo);
-            }
-        });
+        if (movie) {
+            bind(movieInfoList.get(position), holder);
+        } else {
+            bind(tvShowInfoList.get(position), holder);
+        }
 
+    }
+
+    private void bind(Object showOrMovie, MyViewHolder holder) {
+        if (showOrMovie instanceof MovieInfo) {
+            final MovieInfo movieInfo = (MovieInfo) showOrMovie;
+            holder.name.setText(movieInfo.title);
+            ImageLoader.putPoster(context, movieInfo.posterPath, holder.image, ImageLoader.sizes.w300);
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fragmentToSwitch(movieInfo);
+                }
+            });
+        } else {
+            TVShowInfo tvShowInfo = (TVShowInfo) showOrMovie;
+            holder.name.setText(tvShowInfo.title);
+            ImageLoader.putPoster(context, tvShowInfo.posterPath, holder.image, ImageLoader.sizes.w300);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return movieInfoList.size();
+        if (movie) {
+            return movieInfoList.size();
+        } else {
+            return tvShowInfoList.size();
+        }
     }
 
     private void fragmentToSwitch(MovieInfo info) {
@@ -68,6 +98,14 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
 
     public void setMovieInfoList(List<MovieInfo> list) {
         movieInfoList = list;
+    }
+
+    public void setTvShowInfoList(List<TVShowInfo> list) {
+        tvShowInfoList = list;
+    }
+
+    public void switchContentType(boolean movie) {
+        this.movie = movie;
     }
 
     private void switchContent(int id, Fragment fragment) {

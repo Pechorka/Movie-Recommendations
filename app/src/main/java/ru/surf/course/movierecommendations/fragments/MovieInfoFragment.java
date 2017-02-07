@@ -34,8 +34,8 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.adapters.CreditsListAdapter;
+import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
@@ -319,7 +319,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     @Override
-    public void taskCompleted(List<MovieInfo> result) {
+    public void moviesLoaded(List<MovieInfo> result) {
         if (result.get(0).infoLanguage.getLanguage().equals(getCurrentLocale().getLanguage())) {
             currentMovie = result.get(0);
             dataLoadComplete();
