@@ -115,6 +115,7 @@ public class PersonInfoFragment extends Fragment {
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         biography.setOnClickListener(expandCollapse);
 
+
         int toolbarTopMargin = 0;
         if (Build.VERSION.SDK_INT >= 19) {
             DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
