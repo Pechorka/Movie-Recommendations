@@ -11,9 +11,10 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/person_info_collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <ImageView
                 android:id="@+id/person_info_backdrop"
@@ -22,6 +23,13 @@
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.3" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/person_info_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorTransparent"
+                app:layout_collapseMode="pin"/>
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -109,11 +117,5 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/person_info_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorTransparent"
-        app:layout_collapseMode="pin" />
 
 </android.support.design.widget.CoordinatorLayout>

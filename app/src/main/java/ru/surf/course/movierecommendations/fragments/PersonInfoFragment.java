@@ -100,7 +100,7 @@ public class PersonInfoFragment extends Fragment {
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.person_info_biography_expand_btn);
         birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
         pictureProfile = (ImageView)root.findViewById(R.id.person_info_backdrop);
-        //collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
+        collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
         toolbar = (Toolbar)root.findViewById(R.id.person_info_toolbar);
     }
 
@@ -129,7 +129,7 @@ public class PersonInfoFragment extends Fragment {
             DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
             toolbarTopPadding = (int)(25 * displayMetrics.density);
         }
-        CoordinatorLayout.LayoutParams toolbarLayoutParams = (CoordinatorLayout.LayoutParams) toolbar.getLayoutParams();
+        CollapsingToolbarLayout.LayoutParams toolbarLayoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
         toolbarLayoutParams.height += toolbarTopPadding;
         toolbar.setPadding(0,toolbarTopPadding, 0,0);
         toolbar.requestLayout();
