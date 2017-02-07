@@ -115,7 +115,13 @@ public class PersonInfoFragment extends Fragment {
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         biography.setOnClickListener(expandCollapse);
 
-
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         int toolbarTopMargin = 0;
         if (Build.VERSION.SDK_INT >= 19) {
             DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
