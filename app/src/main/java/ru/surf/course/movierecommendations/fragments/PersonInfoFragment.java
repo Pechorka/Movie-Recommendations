@@ -6,10 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +101,7 @@ public class PersonInfoFragment extends Fragment {
         birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
         pictureProfile = (ImageView)root.findViewById(R.id.person_info_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
-        toolbar = new Toolbar(getActivity());
+        toolbar = (Toolbar)root.findViewById(R.id.person_info_toolbar);
     }
 
     private void setupViews(View root) {
@@ -122,17 +124,15 @@ public class PersonInfoFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
-        int toolbarTopMargin = 0;
+        int toolbarTopPadding = 0;
         if (Build.VERSION.SDK_INT >= 19) {
             DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-            toolbarTopMargin = (int)(25 * displayMetrics.density);
+            toolbarTopPadding = (int)(25 * displayMetrics.density);
         }
-        CollapsingToolbarLayout.LayoutParams toolbarLayoutParams = new CollapsingToolbarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utilities.getActionBarHeight(getActivity()));
-        toolbarLayoutParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
-        toolbarLayoutParams.setMargins(0,toolbarTopMargin,0,0);
-        toolbar.setLayoutParams(toolbarLayoutParams);
+        CoordinatorLayout.LayoutParams toolbarLayoutParams = (CoordinatorLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarLayoutParams.height += toolbarTopPadding;
+        toolbar.setPadding(0,toolbarTopPadding, 0,0);
         toolbar.requestLayout();
-        collapsingToolbarLayout.addView(toolbar);
     }
 
     @Override
