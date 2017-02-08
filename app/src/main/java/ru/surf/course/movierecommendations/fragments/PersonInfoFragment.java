@@ -5,9 +5,12 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,6 +18,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,11 +28,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.jaeger.library.StatusBarUtil;
+
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.AppBarStateChangeListener;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
@@ -55,6 +63,7 @@ public class PersonInfoFragment extends Fragment {
     private ImageView pictureProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
 
     private int dataLoaded = 0;
 
@@ -102,6 +111,7 @@ public class PersonInfoFragment extends Fragment {
         pictureProfile = (ImageView)root.findViewById(R.id.person_info_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
         toolbar = (Toolbar)root.findViewById(R.id.person_info_toolbar);
+        appBarLayout = (AppBarLayout)root.findViewById(R.id.person_info_appbar_layout);
     }
 
     private void setupViews(View root) {
@@ -133,6 +143,19 @@ public class PersonInfoFragment extends Fragment {
         toolbarLayoutParams.height += toolbarTopPadding;
         toolbar.setPadding(0,toolbarTopPadding, 0,0);
         toolbar.requestLayout();
+
+        AppBarStateChangeListener appBarStateChangeListener = new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state.equals(State.COLLAPSED)) {
+                    StatusBarUtil.setColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorAccent));
+                } else {
+                    StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
+                }
+
+            }
+        };
+        appBarLayout.addOnOffsetChangedListener(appBarStateChangeListener);
     }
 
     @Override
@@ -147,11 +170,14 @@ public class PersonInfoFragment extends Fragment {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
+
+        StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
     }
 
     @Override
     public void onDetach() {
         setActivityToolbarVisibility(true);
+        StatusBarUtil.setTranslucent(getActivity(), 0);
         super.onDetach();
     }
 

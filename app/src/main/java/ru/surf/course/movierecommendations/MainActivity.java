@@ -28,6 +28,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.jaeger.library.StatusBarUtil;
+
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.fragments.MoviesListFragment;
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         mDrawer.addDrawerListener(drawerToggle);
+
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
     }
 
     @Override
