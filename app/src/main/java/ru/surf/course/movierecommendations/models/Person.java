@@ -1,6 +1,9 @@
 package ru.surf.course.movierecommendations.models;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +13,8 @@ import java.util.Locale;
  */
 
 public class Person implements Serializable {
+
+    public final String LOG_TAG = getClass().getSimpleName();
 
     public enum Gender {
         UNKNOWN,
@@ -162,6 +167,21 @@ public class Person implements Serializable {
 
     public void setProfilePictures(List<TmdbImage> profilePictures) {
         mProfilePictures = profilePictures;
+    }
+
+    public void fillFields(Object from) {
+        Field[] fields = from.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                Field fieldFrom = from.getClass().getDeclaredField(field.getName());
+                Object value = fieldFrom.get(from);
+                this.getClass().getDeclaredField(field.getName()).set(this, value);
+            } catch (IllegalAccessException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            } catch (NoSuchFieldException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            }
+        }
     }
 
 }

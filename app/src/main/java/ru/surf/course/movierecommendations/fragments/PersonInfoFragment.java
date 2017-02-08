@@ -132,15 +132,6 @@ public class PersonInfoFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
-        int toolbarTopPadding = 0;
-        if (Build.VERSION.SDK_INT >= 19) {
-            DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-            toolbarTopPadding = (int)(25 * displayMetrics.density);
-        }
-        CollapsingToolbarLayout.LayoutParams toolbarLayoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-        toolbarLayoutParams.height += toolbarTopPadding;
-        toolbar.setPadding(0,toolbarTopPadding, 0,0);
-        toolbar.requestLayout();
 
         AppBarStateChangeListener appBarStateChangeListener = new AppBarStateChangeListener() {
             @Override
@@ -182,7 +173,7 @@ public class PersonInfoFragment extends Fragment {
             @Override
             public void taskCompleted(List<Person> result) {
                 if (person != null)
-                    Utilities.copyFields(result.get(0), person);
+                   person.fillFields(result.get(0));
                 dataLoadComplete();
             }
         });
