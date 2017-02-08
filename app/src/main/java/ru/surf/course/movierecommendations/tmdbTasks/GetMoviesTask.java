@@ -30,11 +30,6 @@ import ru.surf.course.movierecommendations.models.MovieInfo;
 
 public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
-    public static final String FILTER_POPULAR = "popular";
-    public static final String FILTER_UPCOMING = "upcoming";
-    public static final String FILTER_TOP_RATED = "top_rated";
-    public static final String FILTER_CUSTOM_FILTER = "custom_filter";
-
     private final String API_KEY_PARAM = "api_key";
     private final String LANGUAGE_PARAM = "language";
     private final String PAGE_PARAM = "page";
@@ -46,14 +41,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private boolean isLoadingList;
     private Tasks task;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
-
-
-    public static boolean isFilter(String string) {
-        return string.equalsIgnoreCase(FILTER_POPULAR)
-                || string.equalsIgnoreCase(FILTER_TOP_RATED)
-                || string.equalsIgnoreCase(FILTER_UPCOMING)
-                || string.equalsIgnoreCase(FILTER_CUSTOM_FILTER);
-    }
 
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
@@ -79,6 +66,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         try {
 
             Uri builtUri;
+            params[0] = prepareForUri(params[0]);
             switch (task) {
                 case SEARCH_BY_FILTER:
                     builtUri = uriByFilterOrId(params[0], languageName, page);
@@ -334,6 +322,18 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(Integer.toString(keywordId), language);
     }
 
+    public void getMoviesByCustomFilter(String language, String page, String genres,
+                                        String releaseDateGTE, String releaseDateLTE) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
+
+    }
+
+    private String prepareForUri(String filter) {
+        return filter.toLowerCase().replace(' ', '_');
+    }
+
     private Uri uriByName(String name) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
@@ -349,14 +349,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .appendQueryParameter(PAGE_PARAM, page)
                 .build();
-    }
-
-    public void getMoviesByCustomFilter(String language, String page, String genres,
-                                        String releaseDateGTE, String releaseDateLTE) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
-        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
-
     }
 
 

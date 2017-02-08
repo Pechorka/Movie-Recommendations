@@ -14,110 +14,32 @@
         android:orientation="vertical"
         tools:context="ru.surf.course.movierecommendations.MainActivity">
 
-
-        <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/sliding_layout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom"
-            sothree:umanoInitialState="hidden"
-            sothree:umanoPanelHeight="40dp"
-            sothree:umanoShadowHeight="4dp">
+            android:orientation="vertical">
 
-            <android.support.design.widget.CoordinatorLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/movie_list_call_options"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="setup filter"
-                        android:textSize="30sp"
-                        android:visibility="gone" />
-
-                    <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions
-                        android:id="@+id/custom_filter_options"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/movie_list_rv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/movie_list_floating_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_list_black_48dp"
-                    app:fabSize="normal" />
-
-                <View
-                    android:id="@+id/movie_list_listCover"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent" />
-            </android.support.design.widget.CoordinatorLayout>
-
-            <RelativeLayout
+            <Button
+                android:id="@+id/movie_list_call_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="0dp">
+                android:text="setup filter"
+                android:textSize="30sp"
+                android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/sliding_popular"
-                    style="@style/SlidingUpButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/sliding_button_marginRight"
-                    android:text="@string/popular" />
+            <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions
+                android:id="@+id/custom_filter_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/sliding_top"
-                    style="@style/SlidingUpButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/sliding_button_marginRight"
-                    android:layout_toEndOf="@+id/sliding_popular"
-                    android:layout_toRightOf="@+id/sliding_popular"
-                    android:text="@string/top" />
 
-                <Button
-                    android:id="@+id/sliding_upcoming"
-                    style="@style/SlidingUpButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/sliding_popular"
-                    android:layout_marginRight="@dimen/sliding_button_marginRight"
-                    android:text="@string/upcoming" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/movie_list_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-                <Button
-                    android:id="@+id/sliding_custom"
-                    style="@style/SlidingUpButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/sliding_top"
-                    android:layout_marginRight="@dimen/sliding_button_marginRight"
-                    android:layout_toEndOf="@+id/sliding_upcoming"
-                    android:layout_toRightOf="@+id/sliding_upcoming"
-                    android:text="@string/custom" />
-            </RelativeLayout>
-
-        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/movie_list_progress_bar_placeholder"

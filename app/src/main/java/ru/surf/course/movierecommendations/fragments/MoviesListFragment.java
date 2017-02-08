@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -20,16 +19,14 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +38,7 @@ import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
+import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
@@ -68,8 +66,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private String language;
     private int id;
     private String previousFilter;
-    private Date date_gte;
-    private Date date_lte;
     private boolean grid;
     private boolean filterSetupOpen;
     private List<MovieInfo> movieInfoList;
@@ -84,8 +80,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
 
 
     private RecyclerView recyclerView;
-    private SlidingUpPanelLayout panelLayout;
-    private FloatingActionButton floatingActionButton;
     private GridMoviesAdapter gridMoviesAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private ListMoviesAdapter listMoviesAdapter;
@@ -117,18 +111,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return moviesListFragment;
     }
 
-    public static MoviesListFragment newInstance(int id, String language, Date gte, Date lte, Tasks task) {
-        MoviesListFragment moviesListFragment = new MoviesListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_LANGUAGE, language);
-        bundle.putInt(KEY_MOVIE_ID, id);
-        bundle.putSerializable(KEY_TASK, task);
-        bundle.putSerializable(KEY_DATE_LTE, lte);
-        bundle.putSerializable(KEY_DATE_GTE, gte);
-        moviesListFragment.setArguments(bundle);
-        return moviesListFragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,9 +120,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         id = getArguments().getInt(KEY_MOVIE_ID);
         PAGE = 1;
         previousFilter = query;
-        date_lte = (Date) getArguments().getSerializable(KEY_DATE_LTE);
-        date_gte = (Date) getArguments().getSerializable(KEY_DATE_GTE);
-
     }
 
 
@@ -213,7 +192,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.nav_movies:
+            case R.id.nav_popular:
                 if (!movies) {
                     PAGE = 1;
                     movies = true;
@@ -266,8 +245,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         grid = sharedPref.getBoolean(KEY_GRID, true);
         newResult = true;
         movies = true;
-        panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
-        floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
@@ -281,35 +258,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     }
 
     private void setupViews(View root) {
-        root.findViewById(R.id.movie_list_listCover).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (panelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    return true;
-                }
-                return false;
-            }
-        });
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }
-        });
-        panelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                // do nothing
-            }
 
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                }
-            }
-        });
         recyclerView.addOnScrollListener(scrollListener);
         callOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,7 +279,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 loadMovieInformation();
             }
         });
-        setupFiltersBtns(root);
         showGenres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -341,7 +289,11 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         ChooseGenresDialogFragment.SavePressedListener listener = new ChooseGenresDialogFragment.SavePressedListener() {
             @Override
             public void saved() {
-                loadMovieInformation();
+                if (movies) {
+                    loadMovieInformation();
+                } else {
+                    loadTVShowInformation();
+                }
             }
         };
         genresDialogFragment.addListener(listener);
@@ -354,82 +306,53 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                     }
                 });
         mDrawer.addDrawerListener(drawerToggle);
+        switch (query) {
+
+        }
+        nvDrawer.getMenu().getItem(0).setChecked(true);
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
+        previousFilter = query;
         switch (menuItem.getItemId()) {
-            case R.id.nav_movies:
-                if (!movies) {
-                    PAGE = 1;
-                    movies = true;
-                    gridMoviesAdapter.switchContentType(true);
-                    loadMovieInformation();
-                }
+            case R.id.nav_popular:
+                query = Filters.popular.toString();
+                getActivity().setTitle(R.string.popular);
                 break;
-            case R.id.nav_tv:
-                if (movies) {
-                    PAGE = 1;
-                    movies = false;
-                    gridMoviesAdapter.switchContentType(false);
-                    loadTVShowInformation();
+            case R.id.nav_top:
+                query = Filters.top_rated.toString();
+                getActivity().setTitle(R.string.top);
+                break;
+            case R.id.nav_upcoming:
+                query = Filters.upcoming.toString();
+                getActivity().setTitle(R.string.upcoming);
+                break;
+            case R.id.nav_custom:
+                query = Filters.custom.toString();
+                getActivity().setTitle(R.string.custom);
+                callOptions.setVisibility(View.VISIBLE);
+                task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+                if (!checkPreviousFilter(query)) {
+                    newResult = true;
                 }
                 break;
         }
+        if (checkPreviousFilter(query)) {
+            Toast.makeText(getActivity(), "Filter already selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
         menuItem.setChecked(true);
-
+        if (!query.equalsIgnoreCase(Filters.custom.toString())) {
+            callOptions.setVisibility(View.GONE);
+            task = Tasks.SEARCH_BY_FILTER;
+        }
+        PAGE = 1;
+        if (movies) {
+            loadMovieInformation();
+        } else {
+            loadTVShowInformation();
+        }
         mDrawer.closeDrawers();
-    }
-
-
-    private void setupFiltersBtns(View root) {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                previousFilter = query;
-                switch (view.getId()) {
-                    case R.id.sliding_popular:
-                        query = GetMoviesTask.FILTER_POPULAR;
-                        getActivity().setTitle(R.string.popular);
-                        break;
-                    case R.id.sliding_top:
-                        query = GetMoviesTask.FILTER_TOP_RATED;
-                        getActivity().setTitle(R.string.top);
-                        break;
-                    case R.id.sliding_upcoming:
-                        query = GetMoviesTask.FILTER_UPCOMING;
-                        getActivity().setTitle(R.string.upcoming);
-                        break;
-                    case R.id.sliding_custom:
-                        query = GetMoviesTask.FILTER_CUSTOM_FILTER;
-                        getActivity().setTitle(R.string.custom);
-                        callOptions.setVisibility(View.VISIBLE);
-                        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
-                        if (!checkPreviousFilter(query)) {
-                            newResult = true;
-                        }
-                        break;
-
-                }
-                if (!query.equalsIgnoreCase(GetMoviesTask.FILTER_CUSTOM_FILTER)) {
-                    callOptions.setVisibility(View.GONE);
-                    task = Tasks.SEARCH_BY_FILTER;
-                }
-                if (checkPreviousFilter(query)) {
-                    return;
-                }
-                PAGE = 1;
-                loadMovieInformation();
-                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            }
-        };
-        Button filterBtn = (Button) root.findViewById(R.id.sliding_popular);
-        filterBtn.setOnClickListener(listener);
-        filterBtn = (Button) root.findViewById(R.id.sliding_top);
-        filterBtn.setOnClickListener(listener);
-        filterBtn = (Button) root.findViewById(R.id.sliding_upcoming);
-        filterBtn.setOnClickListener(listener);
-        filterBtn = (Button) root.findViewById(R.id.sliding_custom);
-        filterBtn.setOnClickListener(listener);
     }
 
 

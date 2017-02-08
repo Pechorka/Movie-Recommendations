@@ -44,7 +44,6 @@ dependencies {
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
     compile 'com.github.aakira:expandable-layout:1.6.0@aar'
-    compile 'com.sothree.slidinguppanel:library:3.3.1'
     compile 'com.crystal:crystalrangeseekbar:1.1.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     testCompile 'junit:junit:4.12'

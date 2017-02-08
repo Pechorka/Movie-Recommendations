@@ -5,17 +5,10 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -25,14 +18,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.fragments.MoviesListFragment;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.popular);
 
         if (isInternetAvailable(this)) {
-            loadMainFragment(savedInstanceState, GetMoviesTask.FILTER_POPULAR);
+            loadMainFragment(savedInstanceState, Filters.popular.toString());
         } else {
             final TextView error = (TextView) findViewById(R.id.activity_main_text_internet_error);
             error.setVisibility(View.VISIBLE);
@@ -70,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     if (isInternetAvailable(MainActivity.this)) {
                         error.setVisibility(View.GONE);
                         button.setVisibility(View.GONE);
-                        loadMainFragment(savedInstanceState, GetMoviesTask.FILTER_POPULAR);
+                        loadMainFragment(savedInstanceState, Filters.popular.toString());
                     }
                 }
             });

@@ -2,13 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_movies"
-            android:title="Movies"
-            android:icon="@drawable/movies_icon" />
+            android:id="@+id/nav_popular"
+            android:title="@string/popular"
+            android:icon="@drawable/popular_icon" />
         <item
-            android:id="@+id/nav_tv"
-            android:title="TV Shows"
-            android:icon="@drawable/tv_icon" />
+            android:id="@+id/nav_top"
+            android:title="@string/top"
+            android:icon="@drawable/top_icon" />
+        <item
+            android:id="@+id/nav_upcoming"
+            android:title="@string/upcoming"
+            android:icon="@drawable/upcoming_icon" />
+        <item
+            android:id="@+id/nav_custom"
+            android:title="@string/custom"
+            android:icon="@drawable/custom_icon" />
     </group>
 
 </menu>
