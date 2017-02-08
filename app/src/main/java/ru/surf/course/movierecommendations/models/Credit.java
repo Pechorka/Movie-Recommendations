@@ -15,6 +15,12 @@ public class Credit {
         mPerson = person;
     }
 
+    public Credit(String creditId, Person person, Media media) {
+        this.mCreditId = creditId;
+        this.mPerson = person;
+        this.mMedia = media;
+    }
+
     public String getCreditId() {
         return mCreditId;
     }
