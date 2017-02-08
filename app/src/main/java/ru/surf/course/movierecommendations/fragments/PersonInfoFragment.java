@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -115,7 +116,7 @@ public class PersonInfoFragment extends Fragment {
     }
 
     private void setupViews(View root) {
-        biography.setInterpolator(new OvershootInterpolator());
+        biography.setInterpolator(new AccelerateDecelerateInterpolator());
 
         View.OnClickListener expandCollapse = new View.OnClickListener() {
             @Override

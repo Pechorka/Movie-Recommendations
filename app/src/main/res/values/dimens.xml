@@ -8,7 +8,7 @@
     <dimen name="backdrop_height">140dp</dimen>
     <dimen name="poster_big_height">525dp</dimen>
     <dimen name="poster_big_width">350dp</dimen>
-    <dimen name="title_font_size">27sp</dimen>
+    <dimen name="title_font_size">33sp</dimen>
     <dimen name="movie_info_release_date_text_size">17sp</dimen>
     <dimen name="fact_hint_text_size">16sp</dimen>
     <dimen name="fact_text_size">14sp</dimen>
@@ -44,4 +44,9 @@
     <dimen name="movie_info_people_header_text_size">12sp</dimen>
     <dimen name="movie_info_people_sub_header_text_size">8sp</dimen>
     <dimen name="person_info_appbar_height">400dp</dimen>
+    <dimen name="header_padding">8dp</dimen>
+    <dimen name="big_text_in_cardview_padding">10dp</dimen>
+    <dimen name="big_text_in_cardview_margin">10dp</dimen>
+    <dimen name="big_text_in_cardview_elevation">4dp</dimen>
+    <dimen name="big_text_in_cardview_corner_radius">3dp</dimen>
 </resources>
