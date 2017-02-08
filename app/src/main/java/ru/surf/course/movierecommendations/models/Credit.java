@@ -8,6 +8,7 @@ public class Credit {
 
     protected String mCreditId;
     protected Person mPerson;
+    protected Media mMedia;
 
     public Credit(String creditId, Person person) {
         mCreditId = creditId;
@@ -28,5 +29,13 @@ public class Credit {
 
     public void setPerson(Person person) {
         mPerson = person;
+    }
+
+    public Media getMedia() {
+        return mMedia;
+    }
+
+    public void setMedia(Media media) {
+        this.mMedia = media;
     }
 }
