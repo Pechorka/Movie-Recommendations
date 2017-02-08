@@ -4,14 +4,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,12 +40,14 @@ import ru.surf.course.movierecommendations.adapters.GridMoviesAdapter;
 import ru.surf.course.movierecommendations.adapters.ListMoviesAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 
-public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener {
+public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCompletedListener, GetTVShowsTask.TaskCompletedListener {
 
     private static final String LOG_TAG = MoviesListFragment.class.getSimpleName();
 
@@ -65,11 +73,14 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private boolean grid;
     private boolean filterSetupOpen;
     private List<MovieInfo> movieInfoList;
+    private List<TVShowInfo> tvshowsInfoList;
     private Map<String, Integer> genres;
     private Tasks task;
     private ChooseGenresDialogFragment genresDialogFragment;
 
-
+    private DrawerLayout mDrawer;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
 
 
     private RecyclerView recyclerView;
@@ -84,6 +95,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private Button showGenres;
     private CustomFilterOptions customFilterOptions;
     private boolean newResult;
+    private boolean movies;
 
     public static MoviesListFragment newInstance(String query, String language, Tasks task) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
@@ -143,8 +155,15 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             switchToLinear();
         }
         setupViews(root);
-        loadInformation();
-        loadGenres();
+        if (movies) {
+            loadMovieInformation();
+        } else {
+            loadTVShowInformation();
+        }
+        if (genres == null) {
+            loadGenres();
+        }
+        drawerToggle.syncState();
         return root;
     }
 
@@ -180,6 +199,9 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         int id = item.getItemId();
 
         switch (id) {
@@ -188,19 +210,48 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                 item.expandActionView();
                 searchView.requestFocus();
                 return true;
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.nav_movies:
+                if (!movies) {
+                    PAGE = 1;
+                    movies = true;
+                    loadMovieInformation();
+                }
+                return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
 
     @Override
-    public void taskCompleted(List<MovieInfo> result) {
+    public void moviesLoaded(List<MovieInfo> result) {
         if (result != null) {
             if (movieInfoList != null && (checkPreviousFilter(query) || !newResult) && PAGE > 1) {
                 movieInfoList.addAll(result);
             } else {
                 movieInfoList = result;
+                newResult = false;
+            }
+            dataLoadComplete();
+        }
+    }
+
+    @Override
+    public void tvshowsLoaded(List<TVShowInfo> result) {
+        if (result != null) {
+            if (tvshowsInfoList != null && (checkPreviousFilter(query) || !newResult) && PAGE > 1) {
+                tvshowsInfoList.addAll(result);
+            } else {
+                tvshowsInfoList = result;
                 newResult = false;
             }
             dataLoadComplete();
@@ -214,15 +265,19 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
         newResult = true;
-        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
-        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
+        movies = true;
         panelLayout = (SlidingUpPanelLayout) root.findViewById(R.id.sliding_layout);
         floatingActionButton = (FloatingActionButton) root.findViewById(R.id.movie_list_floating_button);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
-
+        mDrawer = (DrawerLayout) root.findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) root.findViewById(R.id.nvView);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.activity_main_toolbar);
+        drawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        gridMoviesAdapter = new GridMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1), new ArrayList<TVShowInfo>(1), drawerToggle, true);
+        listMoviesAdapter = new ListMoviesAdapter(getActivity(), new ArrayList<MovieInfo>(1));
     }
 
     private void setupViews(View root) {
@@ -272,7 +327,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             @Override
             public void finalValue(Number minValue, Number maxValue) {
                 newResult = true;
-                loadInformation();
+                loadMovieInformation();
             }
         });
         setupFiltersBtns(root);
@@ -286,14 +341,44 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         ChooseGenresDialogFragment.SavePressedListener listener = new ChooseGenresDialogFragment.SavePressedListener() {
             @Override
             public void saved() {
-                loadInformation();
+                loadMovieInformation();
             }
         };
         genresDialogFragment.addListener(listener);
-
+        nvDrawer.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+        mDrawer.addDrawerListener(drawerToggle);
     }
 
+    public void selectDrawerItem(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_movies:
+                if (!movies) {
+                    PAGE = 1;
+                    movies = true;
+                    gridMoviesAdapter.switchContentType(true);
+                    loadMovieInformation();
+                }
+                break;
+            case R.id.nav_tv:
+                if (movies) {
+                    PAGE = 1;
+                    movies = false;
+                    gridMoviesAdapter.switchContentType(false);
+                    loadTVShowInformation();
+                }
+                break;
+        }
+        menuItem.setChecked(true);
 
+        mDrawer.closeDrawers();
+    }
 
 
     private void setupFiltersBtns(View root) {
@@ -333,7 +418,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
                     return;
                 }
                 PAGE = 1;
-                loadInformation();
+                loadMovieInformation();
                 panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         };
@@ -352,7 +437,16 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         return previousFilter.equalsIgnoreCase(newFilter);
     }
 
-    private void loadInformation() {
+    private void loadTVShowInformation() {
+        GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
+        getTVShowsTask.addListener(this);
+        switch (task) {
+            case SEARCH_BY_FILTER:
+                getTVShowsTask.getTVShowsByFilter(query, language, String.valueOf(PAGE));
+        }
+    }
+
+    private void loadMovieInformation() {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(this);
         switch (task) {
@@ -408,6 +502,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
     }
 
+
     private void switchToLinear() {
         recyclerView.setAdapter(listMoviesAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -417,14 +512,13 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 PAGE++;
                 previousFilter = query;
-                loadInformation();
+                loadMovieInformation();
             }
         };
         grid = false;
     }
 
     private void switchToGrid() {
-        recyclerView.setAdapter(gridMoviesAdapter);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(gridMoviesAdapter);
         scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
@@ -432,7 +526,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 PAGE++;
                 previousFilter = query;
-                loadInformation();
+                loadMovieInformation();
             }
         };
         grid = true;
@@ -448,12 +542,16 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     }
 
     public void fillInformation() {
-        gridMoviesAdapter.setMovieInfoList(movieInfoList);
-        listMoviesAdapter.setMovieInfoList(movieInfoList);
-
+        if (movies) {
+            gridMoviesAdapter.setMovieInfoList(movieInfoList);
+            listMoviesAdapter.setMovieInfoList(movieInfoList);
+        } else {
+            gridMoviesAdapter.setTvShowInfoList(tvshowsInfoList);
+        }
         gridMoviesAdapter.notifyDataSetChanged();
         listMoviesAdapter.notifyDataSetChanged();
 
     }
+
 }
 
