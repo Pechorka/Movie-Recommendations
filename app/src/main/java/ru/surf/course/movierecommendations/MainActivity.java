@@ -4,8 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.Locale;
 
@@ -33,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private MoviesListFragment moviesListFragment;
-//
-//    private DrawerLayout mDrawer;
-//    private NavigationView nvDrawer;
-//
-//    private ActionBarDrawerToggle drawerToggle;
+
+    private DrawerLayout mDrawer;
+    private NavigationView nvDrawer;
+
+    private ActionBarDrawerToggle drawerToggle;
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
@@ -52,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
         setTitle(R.string.popular);
-
 
         if (isInternetAvailable(this)) {
             loadMainFragment(savedInstanceState, GetMoviesTask.FILTER_POPULAR);
@@ -73,32 +78,36 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-//        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        nvDrawer = (NavigationView) findViewById(R.id.nvView);
-//        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-//
-//        nvDrawer.setNavigationItemSelectedListener(
-//                new NavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-//                        selectDrawerItem(menuItem);
-//                        return true;
-//                    }
-//                });
-//        mDrawer.addDrawerListener(drawerToggle);
+
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+
+        nvDrawer.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+        mDrawer.addDrawerListener(drawerToggle);
+
+        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
+
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        drawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        drawerToggle.onConfigurationChanged(newConfig);
-//    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 
 
     @Override
@@ -128,33 +137,33 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (drawerToggle.onOptionsItemSelected(item)) {
-//            return true;
-//        }
-//        int id = item.getItemId();
-//
-//        switch (id) {
-//            case android.R.id.home:
-//                mDrawer.openDrawer(GravityCompat.START);
-//                return true;
-//
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        int id = item.getItemId();
 
-//    public void selectDrawerItem(MenuItem menuItem) {
-//        switch (menuItem.getItemId()) {
-//            case R.id.nav_movies:
-//                break;
-//            case R.id.nav_tv:
-//                break;
-//        }
-//        menuItem.setChecked(true);
-//
-//        mDrawer.closeDrawers();
-//    }
+        switch (id) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_movies:
+                break;
+            case R.id.nav_tv:
+                break;
+        }
+        menuItem.setChecked(true);
+
+        mDrawer.closeDrawers();
+    }
 
     private void loadMainFragment(Bundle savedInstanceState, String filter) {
         if (savedInstanceState == null) {

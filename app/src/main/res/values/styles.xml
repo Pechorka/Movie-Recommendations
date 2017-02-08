@@ -25,7 +25,6 @@
     <style name="Header" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:textSize">@dimen/title_font_size</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="GenreButton" parent="Base.Widget.AppCompat.Button">

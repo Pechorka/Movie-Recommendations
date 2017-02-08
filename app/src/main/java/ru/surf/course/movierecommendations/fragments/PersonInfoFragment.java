@@ -2,30 +2,48 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Fragment;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.WindowCompat;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+import com.jaeger.library.StatusBarUtil;
 
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.AppBarStateChangeListener;
+import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
+import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class PersonInfoFragment extends Fragment {
@@ -42,6 +60,10 @@ public class PersonInfoFragment extends Fragment {
     private TextView birthDate;
     private Person currentPerson;
     private Person currentPersonEnglish;
+    private ImageView pictureProfile;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
 
     private int dataLoaded = 0;
 
@@ -67,20 +89,11 @@ public class PersonInfoFragment extends Fragment {
         if (getArguments() == null)
             onDestroy();
 
+        setActivityToolbarVisibility(false);
+
         View root = inflater.inflate(R.layout.fragment_person_info, container, false);
         initViews(root);
-
-        biography.setInterpolator(new OvershootInterpolator());
-
-        View.OnClickListener expandCollapse = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                biography.toggle();
-                expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
-            }
-        };
-        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
-        biography.setOnClickListener(expandCollapse);
+        setupViews(root);
 
         return root;
     }
@@ -95,6 +108,54 @@ public class PersonInfoFragment extends Fragment {
         biography = (ExpandableTextView) root.findViewById(R.id.person_info_biography);
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.person_info_biography_expand_btn);
         birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
+        pictureProfile = (ImageView)root.findViewById(R.id.person_info_backdrop);
+        collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
+        toolbar = (Toolbar)root.findViewById(R.id.person_info_toolbar);
+        appBarLayout = (AppBarLayout)root.findViewById(R.id.person_info_appbar_layout);
+    }
+
+    private void setupViews(View root) {
+        biography.setInterpolator(new OvershootInterpolator());
+
+        View.OnClickListener expandCollapse = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                biography.toggle();
+                expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
+            }
+        };
+        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
+        biography.setOnClickListener(expandCollapse);
+
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+        int toolbarTopPadding = 0;
+        if (Build.VERSION.SDK_INT >= 19) {
+            DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+            toolbarTopPadding = (int)(25 * displayMetrics.density);
+        }
+        CollapsingToolbarLayout.LayoutParams toolbarLayoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarLayoutParams.height += toolbarTopPadding;
+        toolbar.setPadding(0,toolbarTopPadding, 0,0);
+        toolbar.requestLayout();
+
+        AppBarStateChangeListener appBarStateChangeListener = new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state.equals(State.COLLAPSED)) {
+                    StatusBarUtil.setColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorAccent));
+                } else {
+                    StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
+                }
+
+            }
+        };
+        appBarLayout.addOnOffsetChangedListener(appBarStateChangeListener);
     }
 
     @Override
@@ -109,8 +170,16 @@ public class PersonInfoFragment extends Fragment {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
+
+        StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
     }
 
+    @Override
+    public void onDetach() {
+        setActivityToolbarVisibility(true);
+        StatusBarUtil.setTranslucent(getActivity(), 0);
+        super.onDetach();
+    }
 
     private void loadInformationInto(final Person person, String language) {
         GetPersonsTask getPersonsTask = new GetPersonsTask();
@@ -142,8 +211,6 @@ public class PersonInfoFragment extends Fragment {
         //for now checking only biography
     }
 
-
-
     private String firstLetterToUpper(String str) {
         return str.substring(0,1).toUpperCase() + str.substring(1);
     }
@@ -164,6 +231,8 @@ public class PersonInfoFragment extends Fragment {
         if (currentPerson.getBirthday() != null) {
             birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
         }
+
+        ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
     }
 
     private void dataLoadComplete() {
@@ -187,6 +256,16 @@ public class PersonInfoFragment extends Fragment {
 
     private Locale getCurrentLocale() {
         return Locale.getDefault();
+    }
+
+    private void setActivityToolbarVisibility(boolean flag) {
+        if (getActivity() instanceof MainActivity) {
+            if (flag) {
+                ((MainActivity)getActivity()).getSupportActionBar().show();
+            } else {
+                ((MainActivity)getActivity()).getSupportActionBar().hide();
+            }
+        }
     }
 
 }
