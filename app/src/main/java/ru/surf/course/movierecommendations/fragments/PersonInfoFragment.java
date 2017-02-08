@@ -177,7 +177,7 @@ public class PersonInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         setActivityToolbarVisibility(true);
-        StatusBarUtil.setTranslucent(getActivity(), 0);
+        StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
         super.onDetach();
     }
 
