@@ -10,27 +10,46 @@ import java.util.Locale;
  * Created by Sergey on 07.02.2017.
  */
 
-public class TVShowInfo {
+public class TVShowInfo extends Media {
 
-    public String title;
-    public String originalTitle;
-    public Locale originalLanguage;
-    public List<Integer> genreIds;
-    public String posterPath;
-    public List<TmdbImage> backdrops;
-    public Bitmap posterBitmap;
-    public String overview;
-    public Date date;
-    public String backdropPath;
-    public Double voteAverage;
-    public int voteCount;
-    public int id;
-    public String budget;
-    public List<String> genreNames;
-    public List<String> productionCompaniesNames;
-    public String status;
-    public List<Double> episode_runtime;
-    public int number_of_episodes;
-    public int number_of_seasons;
-    public String type;
+    private List<Double> mEpisodesRuntime;
+    private int mNumberOfEpisodes;
+    private int mNumberOfSeasons;
+    private String mType;
+
+    public TVShowInfo(int id) {
+        super(id);
+    }
+
+    public List<Double> getEpisodesRuntime() {
+        return mEpisodesRuntime;
+    }
+
+    public void setEpisodesRuntime(List<Double> episodesRuntime) {
+        this.mEpisodesRuntime = episodesRuntime;
+    }
+
+    public int getNumberOfEpisodes() {
+        return mNumberOfEpisodes;
+    }
+
+    public void setNumberOfEpisodes(int numberOfEpisodes) {
+        this.mNumberOfEpisodes = numberOfEpisodes;
+    }
+
+    public int getNumberOfSeasons() {
+        return mNumberOfSeasons;
+    }
+
+    public void setNumberOfSeasons(int numberOfSeasons) {
+        this.mNumberOfSeasons = numberOfSeasons;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public void setType(String type) {
+        this.mType = type;
+    }
 }

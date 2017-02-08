@@ -10,106 +10,33 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MovieInfo implements Serializable{
+public class MovieInfo extends Media implements Serializable{
 
-    public String title;
-    public String originalTitle;
-    public Locale originalLanguage;
-    public List<Integer> genreIds;
-    public String posterPath;
-    public List<TmdbImage> backdrops;
-    public Bitmap posterBitmap;
-    public String overview;
-    public Date date;
-    public String backdropPath;
-    public Double voteAverage;
-    public int voteCount;
-    public int id;
-    public String budget;
-    public List<String> genreNames;
-    public List<String> productionCompaniesNames;
-    public List<String> productionCountriesNames;
-    public String revenue;
-    public Locale infoLanguage;
-    public String status;
-    public int runtime;
-    public List<Credit> credits;
+    private String mRevenue;
+    private int mRuntime;
 
-    public MovieInfo(){
-
+    public MovieInfo(int id) {
+        super(id);
     }
 
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double voteAverage, int voteCount, int id) {
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
-        this.posterPath = posterPath;
-        this.overview = overview;
-        this.date = date;
-        this.backdropPath = backdropPath;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.id = id;
-    }
-    //без даты
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id) {
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
-        this.posterPath = posterPath;
-        this.overview = overview;
-        this.backdropPath = backdropPath;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.id = id;
+    public String getRevenue() {
+        return mRevenue;
     }
 
-
-    public MovieInfo(String title, String originalTitle, List<Integer> genreIds, String posterPath, String overview, Date date, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue) {
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
-        this.posterPath = posterPath;
-        this.overview = overview;
-        this.date = date;
-        this.backdropPath = backdropPath;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.id = id;
-        this.budget = budget;
-        this.genreNames = genreNames;
-        this.productionCompaniesNames = productionCompaniesNames;
-        this.productionCountriesNames = productionCountriesNames;
-        this.revenue = revenue;
-
-        sortGenresNamesByLength();
+    public void setRevenue(String revenue) {
+        this.mRevenue = revenue;
     }
 
-    //без даты
-    public MovieInfo(String title, String originalTitle, Locale originalLanguage, List<Integer> genreIds, String posterPath, String overview, String backdropPath, Double voteAverage, int voteCount, int id, String budget, List<String> genreNames, List<String> productionCompaniesNames, List<String> productionCountriesNames, String revenue, String status, int runtime) {
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.originalLanguage = originalLanguage;
-        this.genreIds = genreIds;
-        this.posterPath = posterPath;
-        this.overview = overview;
-        this.backdropPath = backdropPath;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.id = id;
-        this.budget = budget;
-        this.genreNames = genreNames;
-        this.productionCompaniesNames = productionCompaniesNames;
-        this.productionCountriesNames = productionCountriesNames;
-        this.revenue = revenue;
-        this.status = status;
-        this.runtime = runtime;
+    public int getRuntime() {
+        return mRuntime;
+    }
 
-        sortGenresNamesByLength();
+    public void setRuntime(int runtime) {
+        this.mRuntime = runtime;
     }
 
     private void sortGenresNamesByLength(){
-        Collections.sort(genreNames, new Comparator<String>() {
+        Collections.sort(mGenreNames, new Comparator<String>() {
             @Override
             public int compare(String s, String t1) {
                 if (s.length() > t1.length())
@@ -129,9 +56,8 @@ public class MovieInfo implements Serializable{
         List<MovieInfo> movieInfoList = new ArrayList<>();
         MovieInfo movieInfo;
         for (int i = 0; i < imageIDs.length; i++) {
-            movieInfo = new MovieInfo();
-            movieInfo.id = imageIDs[i];
-            movieInfo.title = names[i];
+            movieInfo = new MovieInfo(imageIDs[i]);
+            movieInfo.mTitle = names[i];
             movieInfoList.add(movieInfo);
         }
         return movieInfoList;

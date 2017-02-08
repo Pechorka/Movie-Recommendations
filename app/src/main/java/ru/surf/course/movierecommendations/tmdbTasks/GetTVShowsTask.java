@@ -213,15 +213,14 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
 //                    episodesRintimeList.add(episodesRuntime.getDouble(k));
 //                }
 
-                item = new TVShowInfo();
-                item.title = tvShowArray.getJSONObject(i).getString(TMDB_NAME);
-                item.originalTitle = tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME);
-                item.genreIds = genresList;
-                item.posterPath = tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH);
-                item.overview = tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW);
-                item.backdropPath = tvShowArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH);
-                item.voteCount = tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT);
-                item.id = tvShowArray.getJSONObject(i).getInt(TMDB_ID);
+                item = new TVShowInfo(tvShowArray.getJSONObject(i).getInt(TMDB_ID));
+                item.setTitle(tvShowArray.getJSONObject(i).getString(TMDB_NAME));
+                item.setOriginalTitle(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME));
+                item.setGenreIds(genresList);
+                item.setPosterPath(tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
+                item.setOverview(tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW));
+                item.setBackdropPath(tvShowArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH));
+                item.setVoteCount(tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT));
 //                item.episode_runtime = episodesRintimeList;
 //                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
 //                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);

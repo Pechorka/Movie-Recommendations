@@ -67,8 +67,8 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
     private void bind(Object showOrMovie, MyViewHolder holder) {
         if (showOrMovie instanceof MovieInfo) {
             final MovieInfo movieInfo = (MovieInfo) showOrMovie;
-            holder.name.setText(movieInfo.title);
-            ImageLoader.putPoster(context, movieInfo.posterPath, holder.image, ImageLoader.sizes.w300);
+            holder.name.setText(movieInfo.getTitle());
+            ImageLoader.putPoster(context, movieInfo.getPosterPath(), holder.image, ImageLoader.sizes.w300);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -77,8 +77,8 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
             });
         } else {
             TVShowInfo tvShowInfo = (TVShowInfo) showOrMovie;
-            holder.name.setText(tvShowInfo.title);
-            ImageLoader.putPoster(context, tvShowInfo.posterPath, holder.image, ImageLoader.sizes.w300);
+            holder.name.setText(tvShowInfo.getTitle());
+            ImageLoader.putPoster(context, tvShowInfo.getPosterPath(), holder.image, ImageLoader.sizes.w300);
         }
     }
 

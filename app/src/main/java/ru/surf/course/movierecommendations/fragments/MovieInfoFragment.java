@@ -112,7 +112,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             @Override
             public void onClick(View view) {
                 ArrayList<String> poster = new ArrayList<String>();
-                poster.add(currentMovie.posterPath);
+                poster.add(currentMovie.getPosterPath());
                 GalleryActivity.start(getActivity(), poster);
             }
         });
@@ -174,7 +174,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public void onViewCreated(View view, Bundle savedInstanceState) {
         int id = -1;
         if (getArguments().containsKey(KEY_MOVIE)) {
-            id = ((MovieInfo) getArguments().getSerializable(KEY_MOVIE)).id;
+            id = ((MovieInfo) getArguments().getSerializable(KEY_MOVIE)).getId();
         } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
             id = getArguments().getInt(KEY_MOVIE_ID);
         }
@@ -211,7 +211,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
             }
         };
-        ImageLoader.getPoster(getActivity(), movieInfo.posterPath, (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target, ImageLoader.sizes.w300);
+        ImageLoader.getPoster(getActivity(), movieInfo.getPosterPath(), (int)getResources().getDimension(R.dimen.poster_width), (int)getResources().getDimension(R.dimen.poster_height), target, ImageLoader.sizes.w300);
     }
 
     private void loadBackdrops(final MovieInfo movie) {
@@ -219,7 +219,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
-                movie.backdrops = result;
+                movie.setBackdrops(result);
                 movieInfoImagesAdapter = new MovieInfoImagesAdapter(result, getActivity());
                 imagesList.setAdapter(movieInfoImagesAdapter);
                 movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
@@ -235,7 +235,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
                 });
             }
         });
-        getImagesTask.getMovieImages(movie.id, Tasks.GET_BACKDROPS);
+        getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
     }
 
     private void loadCredits(int movieId) {
@@ -243,7 +243,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Credit> result) {
-                currentMovie.credits = result;
+                currentMovie.setCredits(result);
                 dataLoadComplete();
             }
         });
@@ -251,11 +251,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     private void posterLoaded(Bitmap bitmap, MovieInfo movieInfo) {
-        movieInfo.posterBitmap = bitmap;
+        movieInfo.setPosterBitmap(bitmap);
     }
 
     private boolean checkInformation(MovieInfo movie) {
-        if (movie.overview.equals("") || movie.overview.equals("null"))
+        if (movie.getOverview().equals("") || movie.getOverview().equals("null"))
             return false;
         return true;
     }
@@ -266,31 +266,31 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
 
     public void fillInformation() {
-        poster.setImageBitmap(currentMovie.posterBitmap);
-        title.setText(currentMovie.title);
-        originalTitle.setText(currentMovie.originalTitle);
-        originalLanguage.setText(firstLetterToUpper(currentMovie.originalLanguage.getDisplayLanguage()));
-        if (!currentMovie.budget.equals("0"))
-            budget.setText(currentMovie.budget + "$");
-        if (!currentMovie.revenue.equals("0"))
-            revenue.setText(currentMovie.revenue + "$");
-        if (currentMovie.runtime != 0)
-            runtime.setText(currentMovie.runtime/60 + getResources().getString(R.string.hours_short) + " " + currentMovie.runtime%60 + getResources().getString(R.string.minutes_short));
-        status.setText(currentMovie.status);
+        poster.setImageBitmap(currentMovie.getPosterBitmap());
+        title.setText(currentMovie.getTitle());
+        originalTitle.setText(currentMovie.getOriginalTitle());
+        originalLanguage.setText(firstLetterToUpper(currentMovie.getOriginalLanguage().getDisplayLanguage()));
+        if (!currentMovie.getBudget().equals("0"))
+            budget.setText(currentMovie.getBudget() + "$");
+        if (!currentMovie.getRevenue().equals("0"))
+            revenue.setText(currentMovie.getRevenue() + "$");
+        if (currentMovie.getRuntime() != 0)
+            runtime.setText(currentMovie.getRuntime()/60 + getResources().getString(R.string.hours_short) + " " + currentMovie.getRuntime()%60 + getResources().getString(R.string.minutes_short));
+        status.setText(currentMovie.getStatus());
 
-        if (currentMovie.overview.equals("") || currentMovie.overview.equals("null"))
-            overview.setText(currentMovieEnglish.overview);
-        else overview.setText(currentMovie.overview);
+        if (currentMovie.getOverview().equals("") || currentMovie.getOverview().equals("null"))
+            overview.setText(currentMovieEnglish.getOverview());
+        else overview.setText(currentMovie.getOverview());
 
         if (overview.getLineCount() >= overview.getMaxLines())
             expandCollapseOverviewButton.setVisibility(View.VISIBLE);
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
-        if (currentMovie.date != null) {
-            releaseDate.setText("(" + dateFormat.format(currentMovie.date) + ")");
+        if (currentMovie.getDate() != null) {
+            releaseDate.setText("(" + dateFormat.format(currentMovie.getDate()) + ")");
         }
-        for (String genreName : currentMovie.genreNames) {
+        for (String genreName : currentMovie.getGenreNames()) {
             Button genreButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
             genreButton.setText(genreName);
             genresPlaceholder.addView(genreButton);
@@ -299,13 +299,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             genreButton.setLayoutParams(layoutParams);
         }
 
-        voteAverage.setText(String.valueOf(currentMovie.voteAverage));
-        if (currentMovie.voteAverage >= 5)
+        voteAverage.setText(String.valueOf(currentMovie.getVoteAverage()));
+        if (currentMovie.getVoteAverage() >= 5)
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingPositive));
         else
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
 
-        creditsListAdapter = new CreditsListAdapter(currentMovie.credits, getActivity());
+        creditsListAdapter = new CreditsListAdapter(currentMovie.getCredits(), getActivity());
         creditsList.setAdapter(creditsListAdapter);
         creditsListAdapter.setOnItemClickListener(new CreditsListAdapter.OnItemClickListener() {
             @Override
@@ -320,25 +320,25 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
 
     @Override
     public void moviesLoaded(List<MovieInfo> result) {
-        if (result.get(0).infoLanguage.getLanguage().equals(getCurrentLocale().getLanguage())) {
+        if (result.get(0).getInfoLanguage().getLanguage().equals(getCurrentLocale().getLanguage())) {
             currentMovie = result.get(0);
             dataLoadComplete();
             loadPoster(currentMovie);
         }
-        else if (result.get(0).infoLanguage.getLanguage().equals("en")){
+        else if (result.get(0).getInfoLanguage().getLanguage().equals("en")){
             currentMovieEnglish = result.get(0);
             dataLoadComplete();
             loadPoster(currentMovieEnglish);
         }
 
-        loadCredits(currentMovie.id);
+        loadCredits(currentMovie.getId());
     }
 
     public void dataLoadComplete() {
         if (++dataLoaded == DATA_TO_LOAD) {
             if (!checkInformation(currentMovie) && currentMovieEnglish == null) {
                 dataLoaded = 0;
-                loadInformation(currentMovie.id, "en");
+                loadInformation(currentMovie.getId(), "en");
             }
             else {
                 fillInformation();

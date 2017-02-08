@@ -48,8 +48,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
 
 
-
-    public static boolean isFilter(String string){
+    public static boolean isFilter(String string) {
         return string.equalsIgnoreCase(FILTER_POPULAR)
                 || string.equalsIgnoreCase(FILTER_TOP_RATED)
                 || string.equalsIgnoreCase(FILTER_UPCOMING)
@@ -162,7 +161,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     private void fillInInfoLanguage(List<MovieInfo> list, Locale language) {
         for (MovieInfo movie : list) {
-            movie.infoLanguage = language;
+            movie.setInfoLanguage(language);
         }
     }
 
@@ -184,7 +183,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         final String TMDB_ORIGINAL_TITLE = "original_title";
         final String TMDB_ORIGINAL_LANGUAGE = "original_language";
         final String TMDB_GENRE_IDS = "genre_ids";
-        final String TMDB_GENRES ="genres";
+        final String TMDB_GENRES = "genres";
         final String TMDB_NAME = "name";
         final String TMDB_PRODUCTION_COMPANIES = "production_companies";
         final String TMDB_PRODUCTION_COUNTRIES = "production_countries";
@@ -202,7 +201,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 
-        if (isLoadingList){
+        if (isLoadingList) {
 
             JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
             JSONArray genres;
@@ -216,20 +215,20 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     genresList.add(genres.getInt(k));
 
 
-                item = new MovieInfo(
-                        movieArray.getJSONObject(i).getString(TMDB_TITLE),
-                        movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE),
-                        genresList,
-                        movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH),
-                        movieArray.getJSONObject(i).getString(TMDB_OVERVIEW),
-                        movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH),
-                        movieArray.getJSONObject(i).getDouble(TMDB_RATING),
-                        movieArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT),
-                        movieArray.getJSONObject(i).getInt(TMDB_ID));
+                item = new MovieInfo(movieArray.getJSONObject(i).getInt(TMDB_ID));
+                item.setTitle(movieArray.getJSONObject(i).getString(TMDB_TITLE));
+                item.setOriginalTitle(movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE));
+                item.setGenreIds(genresList);
+                item.setPosterPath(movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
+                item.setOverview(movieArray.getJSONObject(i).getString(TMDB_OVERVIEW));
+                item.setBackdropPath(movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH));
+                item.setVoteAverage(movieArray.getJSONObject(i).getDouble(TMDB_RATING));
+                item.setVoteCount(movieArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT));
+
                 try {
-                    item.date = formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE));
-                }catch (ParseException e){
-                    Log.d(LOG_TAG,"Empty date, most likely");
+                    item.setDate(formatter.parse(movieArray.getJSONObject(i).getString(TMDB_DATE)));
+                } catch (ParseException e) {
+                    Log.d(LOG_TAG, "Empty date, most likely");
                 }
                 result.add(item);
             }
@@ -262,33 +261,32 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
             for (int k = 0; k < productionCountries.length(); k++)
                 productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
 
-            item = new MovieInfo(
-                    movieJson.getString(TMDB_TITLE),
-                    movieJson.getString(TMDB_ORIGINAL_TITLE),
-                    new Locale(movieJson.getString(TMDB_ORIGINAL_LANGUAGE)),
-                    genresListIds,
-                    movieJson.getString(TMDB_POSTER_PATH),
-                    movieJson.getString(TMDB_OVERVIEW),
-                    movieJson.getString(TMDB_BACKDROP_PATH),
-                    movieJson.getDouble(TMDB_RATING),
-                    movieJson.getInt(TMDB_VOTE_COUNT),
-                    movieJson.getInt(TMDB_ID),
-                    movieJson.getString(TMDB_BUDGET),
-                    genresListNames,
-                    productionCompaniesNames,
-                    productionCountriesNames,
-                    movieJson.getString(TMDB_REVENUE),
-                    movieJson.getString(TMDB_STATUS),
-                    movieJson.getInt(TMDB_RUNTIME));
+            item = new MovieInfo(movieJson.getInt(TMDB_ID));
+            item.setTitle(movieJson.getString(TMDB_TITLE));
+            item.setOriginalTitle(movieJson.getString(TMDB_ORIGINAL_TITLE));
+            item.setOriginalLanguage(new Locale(movieJson.getString(TMDB_ORIGINAL_LANGUAGE)));
+            item.setGenreIds(genresListIds);
+            item.setPosterPath(movieJson.getString(TMDB_POSTER_PATH));
+            item.setOverview(movieJson.getString(TMDB_OVERVIEW));
+            item.setBackdropPath(movieJson.getString(TMDB_BACKDROP_PATH));
+            item.setVoteAverage(movieJson.getDouble(TMDB_RATING));
+            item.setVoteCount(movieJson.getInt(TMDB_VOTE_COUNT));
+            item.setBudget(movieJson.getString(TMDB_BUDGET));
+            item.setGenreNames(genresListNames);
+            item.setProductionCompaniesNames(productionCompaniesNames);
+            item.setProductionCountriesNames(productionCountriesNames);
+            item.setRevenue(movieJson.getString(TMDB_REVENUE));
+            item.setStatus(movieJson.getString(TMDB_STATUS));
+            item.setRuntime(movieJson.getInt(TMDB_RUNTIME));
             try {
-                item.date = formatter.parse(movieJson.getString(TMDB_DATE));
-            }catch (ParseException e){
-                Log.d(LOG_TAG,"Empty date, most likely");
+                item.setDate(formatter.parse(movieJson.getString(TMDB_DATE)));
+            } catch (ParseException e) {
+                Log.d(LOG_TAG, "Empty date, most likely");
             }
             result.add(item);
         }
 
-        return  result;
+        return result;
     }
 
     public void addListener(TaskCompletedListener toAdd) {
@@ -306,10 +304,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(Integer.toString(movieId), language);
     }
 
-    public void getMoviesByFilter(String filter, String language,String page) {
+    public void getMoviesByFilter(String filter, String language, String page) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_FILTER;
-        execute(filter, language,page);
+        execute(filter, language, page);
     }
 
     public void getMoviesByName(String name) {
@@ -318,10 +316,10 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         execute(name);
     }
 
-    public void getMoviesByGenre(int genreId,String language) {
+    public void getMoviesByGenre(int genreId, String language) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_GENRE;
-        execute(Integer.toString(genreId),language);
+        execute(Integer.toString(genreId), language);
     }
 
     public void getSimilarMovies(int movieId, String language) {

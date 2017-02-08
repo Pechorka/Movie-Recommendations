@@ -42,8 +42,8 @@ public class ListMoviesAdapter extends RecyclerView.Adapter<ListMoviesAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final MovieInfo movieInfo = movieInfoList.get(position);
-        holder.name.setText(movieInfo.title);
-        ImageLoader.putPoster(context, movieInfo.posterPath, holder.image, ImageLoader.sizes.w300);
+        holder.name.setText(movieInfo.getTitle());
+        ImageLoader.putPoster(context, movieInfo.getPosterPath(), holder.image, ImageLoader.sizes.w300);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
