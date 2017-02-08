@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
+        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorBackgroundDark));
 
     }
 

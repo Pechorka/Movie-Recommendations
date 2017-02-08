@@ -28,9 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
-import com.jaeger.library.StatusBarUtil;
-
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -149,9 +146,9 @@ public class PersonInfoFragment extends Fragment {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state.equals(State.COLLAPSED)) {
-                    StatusBarUtil.setColor(getActivity(), ContextCompat.getColor(getActivity(), R.color.colorAccent));
+
                 } else {
-                    StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
+
                 }
 
             }
@@ -171,14 +168,11 @@ public class PersonInfoFragment extends Fragment {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
-
-        StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
     }
 
     @Override
     public void onDetach() {
         setActivityToolbarVisibility(true);
-        StatusBarUtil.setTranslucentForCoordinatorLayout(getActivity(), 0);
         super.onDetach();
     }
 
