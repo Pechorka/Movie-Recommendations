@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.models;
 
+import java.io.Serializable;
+
 /**
  * Created by andrew on 2/3/17.
  */
 
-public class Credit {
+public class Credit implements Serializable {
 
     protected String mCreditId;
     protected Person mPerson;

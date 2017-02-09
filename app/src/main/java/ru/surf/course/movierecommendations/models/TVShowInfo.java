@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.models;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -10,7 +11,7 @@ import java.util.Locale;
  * Created by Sergey on 07.02.2017.
  */
 
-public class TVShowInfo extends Media {
+public class TVShowInfo extends Media implements Serializable {
 
     private List<Double> mEpisodesRuntime;
     private int mNumberOfEpisodes;
