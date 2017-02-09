@@ -1,7 +1,8 @@
 package ru.surf.course.movierecommendations.adapters;
 
-import android.app.Fragment;
+
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridMoviesAdapter.My
         this.movieInfoList = movieInfoList;
         this.tvShowInfoList = tvShowInfoList;
         toggle = drawerToggle;
+        movie = true;
     }
 
     public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList, List<TVShowInfo> tvShowInfoList, ActionBarDrawerToggle drawerToggle, boolean movie) {

@@ -24,4 +24,6 @@
     <string name="hours_short">ч</string>
     <string name="minutes_short">м</string>
     <string name="unknown">Неизвестно</string>
+    <string name="info">Инфо</string>
+    <string name="credits">Участвовал в</string>
 </resources>

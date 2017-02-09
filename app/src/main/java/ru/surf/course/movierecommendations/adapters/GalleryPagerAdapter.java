@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ import ru.surf.course.movierecommendations.fragments.GalleryImageFragment;
  * Created by andrew on 1/10/17.
  */
 
-public class GalleryPagerAdapter extends FragmentPagerAdapter {
+public class GalleryPagerAdapter extends FragmentStatePagerAdapter {
 
     ArrayList<String> mPaths;
 
