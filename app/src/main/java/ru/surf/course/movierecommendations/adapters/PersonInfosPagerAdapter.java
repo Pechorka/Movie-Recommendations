@@ -1,0 +1,57 @@
+package ru.surf.course.movierecommendations.adapters;
+
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+
+import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
+import ru.surf.course.movierecommendations.fragments.PersonFactsFragment;
+import ru.surf.course.movierecommendations.fragments.PersonInfoFragment;
+import ru.surf.course.movierecommendations.models.Person;
+
+/**
+ * Created by andrew on 2/9/17.
+ */
+
+public class PersonInfosPagerAdapter extends FragmentPagerAdapter {
+
+    private static final int PAGE_COUNT = 2;
+    private Context mContext;
+    private Person mPerson;
+
+    public PersonInfosPagerAdapter(FragmentManager fm, Context context, Person person) {
+        super(fm);
+        mContext = context;
+        mPerson = person;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        switch (position) {
+            case 0:
+                return PersonFactsFragment.newInstance(mPerson);    //will replace it with credits fragment
+            case 1:
+                return PersonFactsFragment.newInstance(mPerson);
+        }
+        return null;
+    }
+
+    @Override
+    public int getCount() {
+        return PAGE_COUNT;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return mContext.getResources().getString(R.string.credits);
+            case 1:
+                return mContext.getResources().getString(R.string.info);
+        }
+        return null;
+    }
+}

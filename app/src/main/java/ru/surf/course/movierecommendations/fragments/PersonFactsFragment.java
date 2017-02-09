@@ -1,7 +1,5 @@
 package ru.surf.course.movierecommendations.fragments;
 
-
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,7 +36,11 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
-public class PersonInfoFragment extends Fragment {
+/**
+ * Created by andrew on 2/9/17.
+ */
+
+public class PersonFactsFragment extends Fragment {
 
     final static String KEY_PERSON = "person";
     final static String KEY_PERSON_ID = "person_id";
@@ -46,31 +48,27 @@ public class PersonInfoFragment extends Fragment {
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
-    private TextView name;
-    private TextView birthDate;
+    private ExpandableTextView biography;
+    private Button expandCollapseBiographyButton;
     private Person currentPerson;
-    private ImageView pictureProfile;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private Toolbar toolbar;
-    private AppBarLayout appBarLayout;
-    private ViewPager infosPager;
+    private Person currentPersonEnglish;
 
     private int dataLoaded = 0;
 
-    public static PersonInfoFragment newInstance(Person person) {
-        PersonInfoFragment personInfoFragment = new PersonInfoFragment();
+    public static PersonFactsFragment newInstance(Person person) {
+        PersonFactsFragment personFactsFragment = new PersonFactsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_PERSON, person);
-        personInfoFragment.setArguments(bundle);
-        return personInfoFragment;
+        personFactsFragment.setArguments(bundle);
+        return personFactsFragment;
     }
 
-    public static PersonInfoFragment newInstance(int personId) {
-        PersonInfoFragment personInfoFragment = new PersonInfoFragment();
+    public static PersonFactsFragment newInstance(int personId) {
+        PersonFactsFragment personFactsFragment = new PersonFactsFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_PERSON_ID, personId);
-        personInfoFragment.setArguments(bundle);
-        return personInfoFragment;
+        personFactsFragment.setArguments(bundle);
+        return personFactsFragment;
     }
 
     @Nullable
@@ -79,51 +77,37 @@ public class PersonInfoFragment extends Fragment {
         if (getArguments() == null)
             onDestroy();
 
-        setActivityToolbarVisibility(false);
-
-        View root = inflater.inflate(R.layout.fragment_person_info, container, false);
+        View root = inflater.inflate(R.layout.fragment_person_facts, container, false);
         initViews(root);
         setupViews(root);
 
         return root;
     }
 
-    private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_info_progress_bar);
+    private void initViews(View root){
+        progressBar = (ProgressBar) root.findViewById(R.id.person_facts_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        name = (TextView) root.findViewById(R.id.person_info_name);
-        birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
-        pictureProfile = (ImageView) root.findViewById(R.id.person_info_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.person_info_collapsing_toolbar_layout);
-        toolbar = (Toolbar) root.findViewById(R.id.person_info_toolbar);
-        appBarLayout = (AppBarLayout) root.findViewById(R.id.person_info_appbar_layout);
-        infosPager = (ViewPager) root.findViewById(R.id.person_info_infos_pager);
+        biography = (ExpandableTextView) root.findViewById(R.id.person_facts_biography);
+        expandCollapseBiographyButton = (Button)root.findViewById(R.id.person_facts_biography_expand_btn);
     }
 
     private void setupViews(View root) {
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        biography.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        View.OnClickListener expandCollapse = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        AppBarStateChangeListener appBarStateChangeListener = new AppBarStateChangeListener() {
-            @Override
-            public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                if (state.equals(State.COLLAPSED)) {
-
-                } else {
-
-                }
-
+                biography.toggle();
+                expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
             }
         };
-        appBarLayout.addOnOffsetChangedListener(appBarStateChangeListener);
+        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
+        biography.setOnClickListener(expandCollapse);
+
+
     }
 
     @Override
@@ -138,12 +122,6 @@ public class PersonInfoFragment extends Fragment {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
-    }
-
-    @Override
-    public void onDetach() {
-        setActivityToolbarVisibility(true);
-        super.onDetach();
     }
 
     private void loadInformationInto(final Person person, String language) {
@@ -177,49 +155,42 @@ public class PersonInfoFragment extends Fragment {
     }
 
     private String firstLetterToUpper(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+        return str.substring(0,1).toUpperCase() + str.substring(1);
     }
 
 
     private void fillInformation() {
-        name.setText(currentPerson.getName());
 
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
+        if (Utilities.checkString(currentPerson.getBiography()))
+            biography.setText(currentPerson.getBiography());
+        else biography.setText(currentPersonEnglish.getBiography());
 
-        if (currentPerson.getBirthday() != null) {
-            birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
-        }
+        if (biography.getLineCount() >= biography.getMaxLines())
+            expandCollapseBiographyButton.setVisibility(View.VISIBLE);
 
-        ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
-        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(getActivity().getSupportFragmentManager(), getActivity(), currentPerson);
-        infosPager.setAdapter(personInfosPagerAdapter);
     }
 
     private void dataLoadComplete() {
-        dataLoaded++;
-        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-        if (dataLoaded == DATA_TO_LOAD) {
-            fillInformation();
-            View progressBarPlaceholder = null;
-            if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.person_info_progress_bar_placeholder);
-            if (progressBarPlaceholder != null)
-                progressBarPlaceholder.setVisibility(View.GONE);
+        if (++dataLoaded == DATA_TO_LOAD) {
+            if (!checkInformation(currentPerson) && currentPersonEnglish == null) {
+                dataLoaded--;
+                currentPersonEnglish = new Person(currentPerson.getId());
+                loadInformationInto(currentPersonEnglish, Locale.ENGLISH.getLanguage());
+            }
+            else {
+                fillInformation();
+                View progressBarPlaceholder = null;
+                if (getView() != null)
+                    progressBarPlaceholder = getView().findViewById(R.id.person_facts_progress_bar_placeholder);
+                if (progressBarPlaceholder != null)
+                    progressBarPlaceholder.setVisibility(View.GONE);
+            }
         }
+        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
     }
 
     private Locale getCurrentLocale() {
         return Locale.getDefault();
-    }
-
-    private void setActivityToolbarVisibility(boolean flag) {
-        if (getActivity() instanceof MainActivity) {
-            if (flag) {
-                ((MainActivity) getActivity()).getSupportActionBar().show();
-            } else {
-                ((MainActivity) getActivity()).getSupportActionBar().hide();
-            }
-        }
     }
 
 }
