@@ -283,8 +283,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             overview.setText(currentMovieEnglish.getOverview());
         else overview.setText(currentMovie.getOverview());
 
-        if (overview.getLineCount() >= overview.getMaxLines())
-            expandCollapseOverviewButton.setVisibility(View.VISIBLE);
+        overview.post(new Runnable() {
+            @Override
+            public void run() {
+                if (overview.getLineCount() >= overview.getMaxLines())
+                    expandCollapseOverviewButton.setVisibility(View.VISIBLE);
+            }
+        });
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 

@@ -151,9 +151,13 @@ public class PersonFactsFragment extends Fragment {
             biography.setText(currentPerson.getBiography());
         else biography.setText(currentPersonEnglish.getBiography());
 
-        if (biography.getLineCount() >= biography.getMaxLines())
-            expandCollapseBiographyButton.setVisibility(View.VISIBLE);
-
+        biography.post(new Runnable() {
+            @Override
+            public void run() {
+                if (biography.getLineCount() >= biography.getMaxLines())
+                    expandCollapseBiographyButton.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void dataLoadComplete() {
