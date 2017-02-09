@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#151515</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#2E7D32</color>
     <color name="colorStatusBar">#151515</color>
     <color name="colorAppBar">#212121</color>
     <color name="colorDialog">#424242</color>
