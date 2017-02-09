@@ -191,7 +191,7 @@ public class PersonInfoFragment extends Fragment {
         }
 
         ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
-        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(getActivity().getSupportFragmentManager(), getActivity(), currentPerson);
+        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
         infosPager.setAdapter(personInfosPagerAdapter);
     }
 
