@@ -1,13 +1,14 @@
 package ru.surf.course.movierecommendations;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -17,12 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.fragments.MoviesListFragment;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
@@ -48,25 +47,31 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
         setTitle(R.string.popular);
+        NotSwipeableViewPager viewPager = (NotSwipeableViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(), this, Filters.popular));
 
-        if (isInternetAvailable(this)) {
-            loadMainFragment(savedInstanceState, Filters.popular.toString());
-        } else {
-            final TextView error = (TextView) findViewById(R.id.activity_main_text_internet_error);
-            error.setVisibility(View.VISIBLE);
-            final Button button = (Button) findViewById(R.id.activity_main_btn_reload);
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isInternetAvailable(MainActivity.this)) {
-                        error.setVisibility(View.GONE);
-                        button.setVisibility(View.GONE);
-                        loadMainFragment(savedInstanceState, Filters.popular.toString());
-                    }
-                }
-            });
-        }
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+
+//        if (isInternetAvailable(this)) {
+//            loadMainFragment(savedInstanceState, Filters.popular.toString());
+//        } else {
+//            final TextView error = (TextView) findViewById(R.id.activity_main_text_internet_error);
+//            error.setVisibility(View.VISIBLE);
+//            final Button button = (Button) findViewById(R.id.activity_main_btn_reload);
+//            button.setVisibility(View.VISIBLE);
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (isInternetAvailable(MainActivity.this)) {
+//                        error.setVisibility(View.GONE);
+//                        button.setVisibility(View.GONE);
+//                        loadMainFragment(savedInstanceState, Filters.popular.toString());
+//                    }
+//                }
+//            });
+//        }
 
     }
 
@@ -108,15 +113,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void loadMainFragment(Bundle savedInstanceState, String filter) {
-        if (savedInstanceState == null) {
-            final FragmentManager fragmentManager = getFragmentManager();
-            moviesListFragment = MoviesListFragment.newInstance(filter, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
-            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
-        } else {
-            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
-        }
-    }
+//    private void loadMainFragment(Bundle savedInstanceState, String filter) {
+//        if (savedInstanceState == null) {
+//            final FragmentManager fragmentManager = getFragmentManager();
+//            moviesListFragment = MoviesListFragment.newInstance(filter, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
+//            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
+//        } else {
+//            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
+//        }
+//    }
 
     public static boolean isInternetAvailable(Context context) {
         NetworkInfo info = ((ConnectivityManager)
@@ -138,19 +143,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void searchByName(String name) {
-        MoviesListFragment fragment = MoviesListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_NAME);
+        MoviesListFragment fragment = MoviesListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_NAME, true);
         switchContent(R.id.activity_main_container, fragment);
     }
 
     public void switchContent(int id, Fragment fragment) {
         //noinspection ResourceType
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(id, fragment).addToBackStack(null).commit();
     }
 
     public void switchContent(int id, Fragment fragment, int[] customAnimations) {
         //noinspection ResourceType
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(customAnimations[0], customAnimations[1], customAnimations[2], customAnimations[3])
                 .replace(id, fragment).addToBackStack(null).commit();
     }

@@ -1,6 +1,6 @@
 package ru.surf.course.movierecommendations.fragments;
 
-import android.app.Fragment;
+
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -56,6 +57,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
+    private final static String KEY_MOVIE_OR_TVSHOW = "movie_or_tvshow";
     private final static String KEY_GENRES = "genres_id";
     private final static String KEY_DATE_GTE = "date_gte";
     private final static String KEY_DATE_LTE = "date_lte";
@@ -91,22 +93,24 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
     private boolean newResult;
     private boolean movies;
 
-    public static MoviesListFragment newInstance(String query, String language, Tasks task) {
+    public static MoviesListFragment newInstance(String query, String language, Tasks task, boolean movie) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putString(KEY_QUERY, query);
         bundle.putSerializable(KEY_TASK, task);
+        bundle.putBoolean(KEY_MOVIE_OR_TVSHOW, movie);
         moviesListFragment.setArguments(bundle);
         return moviesListFragment;
     }
 
-    public static MoviesListFragment newInstance(int id, String language, Tasks task) {
+    public static MoviesListFragment newInstance(int id, String language, Tasks task, boolean movie) {
         MoviesListFragment moviesListFragment = new MoviesListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putInt(KEY_MOVIE_ID, id);
         bundle.putSerializable(KEY_TASK, task);
+        bundle.putBoolean(KEY_MOVIE_OR_TVSHOW, movie);
         moviesListFragment.setArguments(bundle);
         return moviesListFragment;
     }
@@ -118,6 +122,7 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         language = getArguments().getString(KEY_LANGUAGE);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
+        movies = getArguments().getBoolean(KEY_MOVIE_OR_TVSHOW);
         PAGE = 1;
         previousFilter = query;
     }
@@ -244,7 +249,6 @@ public class MoviesListFragment extends Fragment implements GetMoviesTask.TaskCo
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         grid = sharedPref.getBoolean(KEY_GRID, true);
         newResult = true;
-        movies = true;
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);

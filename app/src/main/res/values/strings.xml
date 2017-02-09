@@ -49,4 +49,8 @@
     <string name="unknown">Unknown</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="no_internet_connection_msg">No internet connection</string>
+    <string name="reload">Reload</string>
+    <string name="movies">Movies</string>
+    <string name="tvshows">TV Shows</string>
 </resources>
