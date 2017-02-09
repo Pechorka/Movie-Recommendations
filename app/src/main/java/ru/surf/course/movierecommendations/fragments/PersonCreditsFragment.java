@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +19,15 @@ import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
+import ru.surf.course.movierecommendations.models.Media;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 
@@ -37,6 +44,8 @@ public class PersonCreditsFragment extends Fragment {
 
     private ProgressBar progressBar;
     private Person currentPerson;
+    private RecyclerView mCreditsList;
+    private PersonCreditsListAdapter mPersonCreditsListAdapter;
 
     private int dataLoaded = 0;
 
@@ -75,10 +84,12 @@ public class PersonCreditsFragment extends Fragment {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
+
+        mCreditsList = (RecyclerView)root.findViewById(R.id.person_credits_credits_list);
     }
 
     private void setupViews(View root) {
-
+        mCreditsList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
@@ -105,7 +116,22 @@ public class PersonCreditsFragment extends Fragment {
     }
 
     private void fillInformation() {
-
+        mPersonCreditsListAdapter = new PersonCreditsListAdapter(getActivity(), currentPerson.getCredits());
+        mPersonCreditsListAdapter.setListener(new PersonCreditsListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                if (getActivity() instanceof MainActivity) {
+                    Fragment fragment = null;
+                    Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
+                    if (media instanceof MovieInfo)
+                        fragment = MovieInfoFragment.newInstance((MovieInfo)media);
+                    else if (media instanceof TVShowInfo)
+                        return;
+                    ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, fragment);
+                }
+            }
+        });
+        mCreditsList.setAdapter(mPersonCreditsListAdapter);
     }
 
     private void dataLoadComplete() {

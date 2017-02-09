@@ -9,7 +9,6 @@
         android:id="@+id/person_facts_biography_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_margin="@dimen/big_text_in_cardview_margin"
         android:background="@color/cardview_dark_background"
         app:cardCornerRadius="@dimen/big_text_in_cardview_corner_radius"

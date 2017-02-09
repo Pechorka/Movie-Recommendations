@@ -15,29 +15,27 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.CrewMember;
-import ru.surf.course.movierecommendations.models.Person;
-import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
 /**
  * Created by andrew on 2/2/17.
  */
 
-public class CreditsListAdapter extends RecyclerView.Adapter<CreditsListAdapter.ViewHolder> {
+public class MovieCreditsListAdapter extends RecyclerView.Adapter<MovieCreditsListAdapter.ViewHolder> {
 
     private List<Credit> mCreditList;
     private Context mContext;
     private static OnItemClickListener listener;
 
-    public CreditsListAdapter(List<Credit> credits, Context context) {
+    public MovieCreditsListAdapter(List<Credit> credits, Context context) {
         mCreditList = credits;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.credits_list_item, parent, false);
-        return new CreditsListAdapter.ViewHolder(itemView);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_credits_list_item, parent, false);
+        return new MovieCreditsListAdapter.ViewHolder(itemView);
     }
 
     @Override
@@ -85,14 +83,14 @@ public class CreditsListAdapter extends RecyclerView.Adapter<CreditsListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CreditsListAdapter.listener.onClick(getAdapterPosition());
+                    MovieCreditsListAdapter.listener.onClick(getAdapterPosition());
                 }
             });
         }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        CreditsListAdapter.listener = listener;
+        MovieCreditsListAdapter.listener = listener;
     }
 
     public interface OnItemClickListener {

@@ -49,4 +49,13 @@
     <dimen name="big_text_in_cardview_margin">10dp</dimen>
     <dimen name="big_text_in_cardview_elevation">4dp</dimen>
     <dimen name="big_text_in_cardview_corner_radius">3dp</dimen>
+    <dimen name="credits_list_poster_height">120dp</dimen>
+    <dimen name="credits_list_poster_width">80dp</dimen>
+    <dimen name="credits_list_item_content_padding">10dp</dimen>
+    <dimen name="credits_list_content_padding">10dp</dimen>
+    <dimen name="credits_list_item_card_elevation">4dp</dimen>
+    <dimen name="credits_list_item_header_text_size">20sp</dimen>
+    <dimen name="credits_list_item_sub_header_text_size">18sp</dimen>
+    <dimen name="credits_list_item_header_margin_start">20dp</dimen>
+    <dimen name="credits_list_item_spacing">10dp</dimen>
 </resources>
