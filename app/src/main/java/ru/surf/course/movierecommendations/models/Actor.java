@@ -17,6 +17,18 @@ public class Actor extends Credit {
         this.mOrder = mOrder;
     }
 
+    public Actor(String creditId, Media media, int castId, String character, int order) {
+        super(creditId, media);
+        mCastId = castId;
+        mCharacter = character;
+        mOrder = order;
+    }
+
+    public Actor(String creditId, Media media, String character) {
+        super(creditId, media);
+        mCharacter = character;
+    }
+
     public int getCast_id() {
         return mCastId;
     }

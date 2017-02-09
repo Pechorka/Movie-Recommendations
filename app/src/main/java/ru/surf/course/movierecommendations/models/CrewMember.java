@@ -15,6 +15,12 @@ public class CrewMember extends Credit {
         this.mJob = mJob;
     }
 
+    public CrewMember(String creditId, Media media, String department, String job) {
+        super(creditId, media);
+        mDepartment = department;
+        mJob = job;
+    }
+
     public String getDepartment() {
         return mDepartment;
     }

@@ -35,6 +35,7 @@ public class Person implements Serializable {
     protected Double mPopularity;
     protected Locale mInfoLanguage;
     protected List<TmdbImage> mProfilePictures;
+    protected List<Credit> mCredits;
 
     public Person(int id) {
         mId = id;
@@ -167,6 +168,14 @@ public class Person implements Serializable {
 
     public void setProfilePictures(List<TmdbImage> profilePictures) {
         mProfilePictures = profilePictures;
+    }
+
+    public List<Credit> getCredits() {
+        return mCredits;
+    }
+
+    public void setCredits(List<Credit> credits) {
+        mCredits = credits;
     }
 
     public void fillFields(Object from) {

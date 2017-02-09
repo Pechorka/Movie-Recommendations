@@ -19,7 +19,9 @@ import java.util.Locale;
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 
 /**
@@ -83,20 +85,33 @@ public class PersonCreditsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         dataLoaded = 0;
         if (getArguments().containsKey(KEY_PERSON)) {
-
+            currentPerson = (Person)getArguments().getSerializable(KEY_PERSON);
         } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-
+            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
         }
+        loadCredits(currentPerson);
     }
 
+    private void loadCredits(final Person person) {
+        GetCreditsTask getCreditsTask = new GetCreditsTask();
+        getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
+            @Override
+            public void taskCompleted(List<Credit> result) {
+                person.setCredits(result);
+                dataLoadComplete();
+            }
+        });
+        getCreditsTask.getPersonCredits(currentPerson.getId(), getCurrentLocale());
+    }
 
     private void fillInformation() {
 
     }
 
     private void dataLoadComplete() {
-        if (++dataLoaded == DATA_TO_LOAD) {
-
+        dataLoaded++;
+        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+        if (dataLoaded == DATA_TO_LOAD) {
             fillInformation();
             View progressBarPlaceholder = null;
             if (getView() != null)
@@ -105,7 +120,7 @@ public class PersonCreditsFragment extends Fragment {
                 progressBarPlaceholder.setVisibility(View.GONE);
 
         }
-        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+
     }
 
     private Locale getCurrentLocale() {
