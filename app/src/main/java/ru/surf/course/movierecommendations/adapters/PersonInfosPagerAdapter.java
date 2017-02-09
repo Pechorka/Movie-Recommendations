@@ -4,10 +4,12 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
+import ru.surf.course.movierecommendations.fragments.PersonCreditsFragment;
 import ru.surf.course.movierecommendations.fragments.PersonFactsFragment;
 import ru.surf.course.movierecommendations.fragments.PersonInfoFragment;
 import ru.surf.course.movierecommendations.models.Person;
@@ -16,7 +18,7 @@ import ru.surf.course.movierecommendations.models.Person;
  * Created by andrew on 2/9/17.
  */
 
-public class PersonInfosPagerAdapter extends FragmentPagerAdapter {
+public class PersonInfosPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final int PAGE_COUNT = 2;
     private Context mContext;
@@ -32,7 +34,7 @@ public class PersonInfosPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return PersonFactsFragment.newInstance(mPerson);    //will replace it with credits fragment
+                return PersonCreditsFragment.newInstance(mPerson);
             case 1:
                 return PersonFactsFragment.newInstance(mPerson);
         }

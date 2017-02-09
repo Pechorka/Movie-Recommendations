@@ -44,7 +44,7 @@ public class PersonFactsFragment extends Fragment {
 
     final static String KEY_PERSON = "person";
     final static String KEY_PERSON_ID = "person_id";
-    final static int DATA_TO_LOAD = 2;
+    final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -55,7 +55,7 @@ public class PersonFactsFragment extends Fragment {
 
     private int dataLoaded = 0;
 
-    public static PersonFactsFragment newInstance(Person person) {
+    public static PersonFactsFragment newInstance(Person person) {  //considering this object already has all info
         PersonFactsFragment personFactsFragment = new PersonFactsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_PERSON, person);
@@ -115,12 +115,10 @@ public class PersonFactsFragment extends Fragment {
         dataLoaded = 0;
         if (getArguments().containsKey(KEY_PERSON)) {
             currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
+            dataLoadComplete();
         } else if (getArguments().containsKey(KEY_PERSON_ID)) {
             currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
-        }
-        if (currentPerson != null) {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
-            loadProfilePicturesInto(currentPerson);
         }
     }
 
@@ -135,18 +133,6 @@ public class PersonFactsFragment extends Fragment {
             }
         });
         getPersonsTask.getPersonById(person.getId(), new Locale(language));
-    }
-
-    private void loadProfilePicturesInto(final Person person) {
-        GetImagesTask getImagesTask = new GetImagesTask();
-        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-            @Override
-            public void getImagesTaskCompleted(List<TmdbImage> result) {
-                person.setProfilePictures(result);
-                dataLoadComplete();
-            }
-        });
-        getImagesTask.getPersonImages(person.getId(), Tasks.GET_PROFILE_PICTURES);
     }
 
     private boolean checkInformation(Person person) {
