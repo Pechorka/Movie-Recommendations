@@ -190,7 +190,8 @@ public class PersonInfoFragment extends Fragment {
             birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
         }
 
-        ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
+        if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0)
+            ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
         PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
         infosPager.setAdapter(personInfosPagerAdapter);
     }
