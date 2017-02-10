@@ -159,6 +159,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void setDrawerEnabled(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
+                DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+        mDrawer.setDrawerLockMode(lockMode);
+        drawerToggle.setDrawerIndicatorEnabled(enabled);
+    }
+
     public void selectDrawerItemMovies(MenuItem menuItem) {
         previousQuery = query;
         switch (menuItem.getItemId()) {
