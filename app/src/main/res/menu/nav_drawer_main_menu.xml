@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/nav_main">
         <item
             android:id="@+id/nav_popular"
             android:title="@string/popular"
@@ -9,14 +11,13 @@
             android:id="@+id/nav_top"
             android:title="@string/top"
             android:icon="@drawable/top_icon" />
-        <item
-            android:id="@+id/nav_upcoming"
-            android:title="@string/upcoming"
-            android:icon="@drawable/upcoming_icon" />
+        <!--<item-->
+        <!--android:id="@+id/nav_upcoming_movies"-->
+        <!--android:title="@string/upcoming"-->
+        <!--android:icon="@drawable/upcoming_icon"/>-->
         <item
             android:id="@+id/nav_custom"
             android:title="@string/custom"
             android:icon="@drawable/custom_icon" />
     </group>
-
 </menu>

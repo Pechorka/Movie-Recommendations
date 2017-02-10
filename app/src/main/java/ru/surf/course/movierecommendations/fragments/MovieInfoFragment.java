@@ -320,7 +320,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     }
 
     @Override
-    public void moviesLoaded(List<MovieInfo> result) {
+    public void moviesLoaded(List<MovieInfo> result, boolean f) {
         if (result.get(0).getInfoLanguage().getLanguage().equals(getCurrentLocale().getLanguage())) {
             currentMovie = result.get(0);
             dataLoadComplete();
@@ -357,4 +357,5 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     public Locale getCurrentLocale() {
         return Locale.getDefault();
     }
+
 }

@@ -39,6 +39,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     private final String WITH_GENRES = "with_genres";
     private final String LOG_TAG = getClass().getSimpleName();
     private boolean isLoadingList;
+    private boolean newResult;
     private Tasks task;
     private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
 
@@ -136,6 +137,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         try {
             List<MovieInfo> result = parseJson(movieJsonStr);
             fillInInfoLanguage(result, new Locale(languageName));
+            newResult = Integer.parseInt(page) <= 1;
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -283,7 +285,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
     private void invokeEvent(List<MovieInfo> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.moviesLoaded(result);
+            listener.moviesLoaded(result, newResult);
     }
 
     public void getMovieById(int movieId, String language) {
@@ -395,6 +397,6 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
 
 
     public interface TaskCompletedListener {
-        void moviesLoaded(List<MovieInfo> result);
+        void moviesLoaded(List<MovieInfo> result, boolean newResult);
     }
 }

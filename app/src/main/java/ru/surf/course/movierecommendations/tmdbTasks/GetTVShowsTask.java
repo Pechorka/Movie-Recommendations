@@ -33,6 +33,7 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
     private final String LANGUAGE_PARAM = "language";
     private final String PAGE_PARAM = "page";
     private final String NAME_PARAM = "query";
+    private boolean newResult;
 
 
     private final String LOG_TAG = getClass().getSimpleName();
@@ -131,9 +132,8 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
         }
 
         try {
-            List<TVShowInfo> result = parseJson(tShowJsonStr);
-
-            return result;
+            newResult = Integer.parseInt(page) == 1;
+            return parseJson(tShowJsonStr);
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -318,10 +318,10 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
 
     private void invokeEvent(List<TVShowInfo> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.tvshowsLoaded(result);
+            listener.tvshowsLoaded(result, newResult);
     }
 
     public interface TaskCompletedListener {
-        void tvshowsLoaded(List<TVShowInfo> result);
+        void tvshowsLoaded(List<TVShowInfo> result, boolean newResult);
     }
 }

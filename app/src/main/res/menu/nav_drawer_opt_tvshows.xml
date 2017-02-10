@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu>
+    <!--<group android:checkableBehavior="single">-->
+    <!--<item-->
+    <!--android:id="@+id/nav_popular_tvshows"-->
+    <!--android:title="@string/popular"-->
+    <!--android:icon="@drawable/popular_icon" />-->
+    <!--<item-->
+    <!--android:id="@+id/nav_top_tvshows"-->
+    <!--android:title="@string/top"-->
+    <!--android:icon="@drawable/top_icon" />-->
+    <!--<item-->
+    <!--android:id="@+id/nav_on_air_tvshows"-->
+    <!--android:title="@string/on_air"-->
+    <!--android:icon="@drawable/on_air_icon"/>-->
+    <!--<item-->
+    <!--android:id="@+id/nav_custom"-->
+    <!--android:title="@string/custom"-->
+    <!--android:icon="@drawable/custom_icon" />-->
+    <!--</group>-->
+
+</menu>
