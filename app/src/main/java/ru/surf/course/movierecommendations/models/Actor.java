@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.models;
 
+import java.io.Serializable;
+
 /**
  * Created by andrew on 1/11/17.
  */
 
-public class Actor extends Credit {
+public class Actor extends Credit implements Serializable {
 
     private int mCastId;
     private String mCharacter;
@@ -15,6 +17,18 @@ public class Actor extends Credit {
         this.mCastId = mCastId;
         this.mCharacter = mCharacter;
         this.mOrder = mOrder;
+    }
+
+    public Actor(String creditId, Media media, int castId, String character, int order) {
+        super(creditId, media);
+        mCastId = castId;
+        mCharacter = character;
+        mOrder = order;
+    }
+
+    public Actor(String creditId, Media media, String character) {
+        super(creditId, media);
+        mCharacter = character;
     }
 
     public int getCast_id() {

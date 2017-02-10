@@ -15,14 +15,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.CrewMember;
+import ru.surf.course.movierecommendations.models.Media;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
  * Created by andrew on 2/3/17.
@@ -31,6 +36,7 @@ import ru.surf.course.movierecommendations.models.Person;
 public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
 
     private final String API_KEY_PARAM = "api_key";
+    private final String API_LANGUAGE_PARAM = "language";
     private final String TMDB_CAST = "cast";
     private final String TMDB_CREW = "crew";
     private final String TMDB_CAST_ID = "cast_id";
@@ -42,9 +48,19 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     private final String TMDB_PROFILE_PATH = "profile_path";
     private final String TMDB_DEPARTMENT = "department";
     private final String TMDB_JOB = "job";
+    private final String TMDB_MEDIA_TYPE = "media_type";
+    private final String TMDB_MOVIE = "movie";
+    private final String TMDB_TV = "tv";
+    private final String TMDB_ORIGINAL_TITLE = "original_title";
+    private final String TMDB_ORIGINAL_NAME = "original_name";
+    private final String TMDB_FIRST_AIR_DATE = "first_air_date";
+    private final String TMDB_POSTER_PATH = "poster_path";
+    private final String TMDB_TITLE = "title";
+    private final String TMDB_DATE = "release_date";
     private final String LOG_TAG = getClass().getSimpleName();
 
     private Tasks task;
+    private Locale language;
     private boolean isLoadingList;
     private List<CreditsTaskCompleteListener> listeners;
 
@@ -69,6 +85,9 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
             switch (task) {
                 case GET_MOVIE_CREDITS:
                     builtUri = uriByMovieId(Integer.valueOf(strings[0]));
+                    break;
+                case GET_PERSON_CREDITS:
+                    builtUri = uriByPersonId(Integer.valueOf(strings[0]), language);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -145,6 +164,9 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
             case GET_MOVIE_CREDITS:
                 result = parseMovieCredits(jsonObject);
                 break;
+            case GET_PERSON_CREDITS:
+                result = parsePersonCredits(jsonObject);
+                break;
         }
 
         return result;
@@ -157,6 +179,13 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
         execute(String.valueOf(movieId));
     }
 
+    public void getPersonCredits(int personId, Locale language) {
+        isLoadingList = true;
+        task = Tasks.GET_PERSON_CREDITS;
+        this.language = language;
+        execute(String.valueOf(personId));
+    }
+
     private Uri uriByMovieId(int movieId) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
         final String TMDB_CREDITS = "credits";
@@ -164,6 +193,17 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
                 .appendPath(String.valueOf(movieId))
                 .appendPath(TMDB_CREDITS)
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .build();
+    }
+
+    private Uri uriByPersonId(int personId, Locale language) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/person";
+        final String TMDB_CREDITS = "combined_credits";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(personId))
+                .appendPath(TMDB_CREDITS)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(API_LANGUAGE_PARAM, language.getLanguage())
                 .build();
     }
 
@@ -202,6 +242,71 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
         }
 
         return result;
+    }
+
+    private List<Credit> parsePersonCredits(JSONObject jsonObject) throws JSONException, ParseException
+    {
+
+        JSONArray cast = jsonObject.getJSONArray(TMDB_CAST);
+        JSONArray crew = jsonObject.getJSONArray(TMDB_CREW);
+        List<Credit> result = new ArrayList<>();
+        Credit credit;
+        for (int i = 0; i < cast.length(); i++) {
+
+
+            credit = new Actor(
+                    cast.getJSONObject(i).getString(TMDB_CREDIT_ID),
+                    parseMediaInfo(cast.getJSONObject(i)),
+                    cast.getJSONObject(i).getString(TMDB_CHARACTER)
+            );
+            result.add(credit);
+        }
+
+        for (int i = 0; i < crew.length(); i++) {
+
+
+            credit = new CrewMember(
+                    crew.getJSONObject(i).getString(TMDB_CREDIT_ID),
+                    parseMediaInfo(crew.getJSONObject(i)),
+                    crew.getJSONObject(i).getString(TMDB_DEPARTMENT),
+                    crew.getJSONObject(i).getString(TMDB_JOB)
+            );
+            result.add(credit);
+        }
+
+        return result;
+    }
+
+    private Media parseMediaInfo(JSONObject jsonObject) throws JSONException, ParseException
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Media media;
+
+        if (jsonObject.getString(TMDB_MEDIA_TYPE).equals(TMDB_MOVIE)) {
+            media = new MovieInfo(jsonObject.getInt(TMDB_ID));
+            media.setOriginalTitle(jsonObject.getString(TMDB_ORIGINAL_TITLE));
+            media.setTitle(jsonObject.getString(TMDB_TITLE));
+
+            try {
+                media.setDate(simpleDateFormat.parse(jsonObject.getString(TMDB_DATE)));
+            } catch (ParseException e) {
+                Log.d(LOG_TAG, "Error parsing date");
+            }
+        }
+        else {
+            media = new TVShowInfo(jsonObject.getInt(TMDB_ID));
+            media.setOriginalTitle(jsonObject.getString(TMDB_ORIGINAL_NAME));
+            media.setTitle(jsonObject.getString(TMDB_NAME));
+
+            try {
+                media.setDate(simpleDateFormat.parse(jsonObject.getString(TMDB_FIRST_AIR_DATE)));
+            } catch (ParseException e) {
+                Log.d(LOG_TAG, "Error parsing date");
+            }
+        }
+        media.setPosterPath(jsonObject.getString(TMDB_POSTER_PATH));
+
+        return media;
     }
 
     public void addListener(CreditsTaskCompleteListener listener) {

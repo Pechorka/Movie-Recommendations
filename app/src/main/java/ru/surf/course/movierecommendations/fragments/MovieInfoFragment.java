@@ -35,7 +35,7 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.adapters.CreditsListAdapter;
+import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.MovieInfo;
@@ -79,7 +79,7 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
     private TextView status;
 
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
-    private CreditsListAdapter creditsListAdapter;
+    private MovieCreditsListAdapter mMovieCreditsListAdapter;
 
 
     private int dataLoaded = 0;
@@ -283,8 +283,13 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             overview.setText(currentMovieEnglish.getOverview());
         else overview.setText(currentMovie.getOverview());
 
-        if (overview.getLineCount() >= overview.getMaxLines())
-            expandCollapseOverviewButton.setVisibility(View.VISIBLE);
+        overview.post(new Runnable() {
+            @Override
+            public void run() {
+                if (overview.getLineCount() >= overview.getMaxLines())
+                    expandCollapseOverviewButton.setVisibility(View.VISIBLE);
+            }
+        });
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
@@ -306,12 +311,12 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
         else
             voteAverage.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorRatingNegative));
 
-        creditsListAdapter = new CreditsListAdapter(currentMovie.getCredits(), getActivity());
-        creditsList.setAdapter(creditsListAdapter);
-        creditsListAdapter.setOnItemClickListener(new CreditsListAdapter.OnItemClickListener() {
+        mMovieCreditsListAdapter = new MovieCreditsListAdapter(currentMovie.getCredits(), getActivity());
+        creditsList.setAdapter(mMovieCreditsListAdapter);
+        mMovieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                PersonInfoFragment personInfoFragment = PersonInfoFragment.newInstance(creditsListAdapter.getCredits().get(position).getPerson());
+                PersonInfoFragment personInfoFragment = PersonInfoFragment.newInstance(mMovieCreditsListAdapter.getCredits().get(position).getPerson());
                 if (getActivity() instanceof MainActivity){
                     ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, personInfoFragment);
                 }

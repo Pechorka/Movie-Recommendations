@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.models;
 
+import java.io.Serializable;
+
 /**
  * Created by andrew on 1/29/17.
  */
 
-public class CrewMember extends Credit {
+public class CrewMember extends Credit implements Serializable{
 
     private String mDepartment;
     private String mJob;
@@ -13,6 +15,12 @@ public class CrewMember extends Credit {
         super(creditId, person);
         this.mDepartment = mDepartment;
         this.mJob = mJob;
+    }
+
+    public CrewMember(String creditId, Media media, String department, String job) {
+        super(creditId, media);
+        mDepartment = department;
+        mJob = job;
     }
 
     public String getDepartment() {

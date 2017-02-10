@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.fragments;
 
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import ru.surf.course.movierecommendations.AppBarStateChangeListener;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.PersonInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
@@ -44,15 +47,13 @@ public class PersonInfoFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView name;
-    private ExpandableTextView biography;
-    private Button expandCollapseBiographyButton;
     private TextView birthDate;
     private Person currentPerson;
-    private Person currentPersonEnglish;
     private ImageView pictureProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
+    private ViewPager infosPager;
 
     private int dataLoaded = 0;
 
@@ -87,35 +88,22 @@ public class PersonInfoFragment extends Fragment {
         return root;
     }
 
-    private void initViews(View root){
+    private void initViews(View root) {
         progressBar = (ProgressBar) root.findViewById(R.id.person_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
         name = (TextView) root.findViewById(R.id.person_info_name);
-        biography = (ExpandableTextView) root.findViewById(R.id.person_info_biography);
-        expandCollapseBiographyButton = (Button)root.findViewById(R.id.person_info_biography_expand_btn);
         birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
-        pictureProfile = (ImageView)root.findViewById(R.id.person_info_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout)root.findViewById(R.id.person_info_collapsing_toolbar_layout);
-        toolbar = (Toolbar)root.findViewById(R.id.person_info_toolbar);
-        appBarLayout = (AppBarLayout)root.findViewById(R.id.person_info_appbar_layout);
+        pictureProfile = (ImageView) root.findViewById(R.id.person_info_backdrop);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.person_info_collapsing_toolbar_layout);
+        toolbar = (Toolbar) root.findViewById(R.id.person_info_toolbar);
+        appBarLayout = (AppBarLayout) root.findViewById(R.id.person_info_appbar_layout);
+        infosPager = (ViewPager) root.findViewById(R.id.person_info_infos_pager);
     }
 
     private void setupViews(View root) {
-        biography.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        View.OnClickListener expandCollapse = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                biography.toggle();
-                expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
-            }
-        };
-        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
-        biography.setOnClickListener(expandCollapse);
-
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +152,7 @@ public class PersonInfoFragment extends Fragment {
             @Override
             public void taskCompleted(List<Person> result) {
                 if (person != null)
-                   person.fillFields(result.get(0));
+                    person.fillFields(result.get(0));
                 dataLoadComplete();
             }
         });
@@ -189,19 +177,12 @@ public class PersonInfoFragment extends Fragment {
     }
 
     private String firstLetterToUpper(String str) {
-        return str.substring(0,1).toUpperCase() + str.substring(1);
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
 
     private void fillInformation() {
         name.setText(currentPerson.getName());
-
-        if (Utilities.checkString(currentPerson.getBiography()))
-            biography.setText(currentPerson.getBiography());
-        else biography.setText(currentPersonEnglish.getBiography());
-
-        if (biography.getLineCount() >= biography.getMaxLines())
-            expandCollapseBiographyButton.setVisibility(View.VISIBLE);
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
@@ -209,26 +190,23 @@ public class PersonInfoFragment extends Fragment {
             birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
         }
 
-        ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
+        if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0)
+            ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
+        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
+        infosPager.setAdapter(personInfosPagerAdapter);
     }
 
     private void dataLoadComplete() {
-        if (++dataLoaded == DATA_TO_LOAD) {
-            if (!checkInformation(currentPerson) && currentPersonEnglish == null) {
-                dataLoaded--;
-                currentPersonEnglish = new Person(currentPerson.getId());
-                loadInformationInto(currentPersonEnglish, Locale.ENGLISH.getLanguage());
-            }
-            else {
-                fillInformation();
-                View progressBarPlaceholder = null;
-                if (getView() != null)
-                    progressBarPlaceholder = getView().findViewById(R.id.person_info_progress_bar_placeholder);
-                if (progressBarPlaceholder != null)
-                    progressBarPlaceholder.setVisibility(View.GONE);
-            }
-        }
+        dataLoaded++;
         Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+        if (dataLoaded == DATA_TO_LOAD) {
+            fillInformation();
+            View progressBarPlaceholder = null;
+            if (getView() != null)
+                progressBarPlaceholder = getView().findViewById(R.id.person_info_progress_bar_placeholder);
+            if (progressBarPlaceholder != null)
+                progressBarPlaceholder.setVisibility(View.GONE);
+        }
     }
 
     private Locale getCurrentLocale() {
@@ -238,9 +216,9 @@ public class PersonInfoFragment extends Fragment {
     private void setActivityToolbarVisibility(boolean flag) {
         if (getActivity() instanceof MainActivity) {
             if (flag) {
-                ((MainActivity)getActivity()).getSupportActionBar().show();
+                ((MainActivity) getActivity()).getSupportActionBar().show();
             } else {
-                ((MainActivity)getActivity()).getSupportActionBar().hide();
+                ((MainActivity) getActivity()).getSupportActionBar().hide();
             }
         }
     }

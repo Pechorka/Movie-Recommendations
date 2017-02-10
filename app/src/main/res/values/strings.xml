@@ -54,4 +54,6 @@
     <string name="movies">Movies</string>
     <string name="tvshows">TV Shows</string>
     <string name="on_air">On Air</string>
+    <string name="info">Info</string>
+    <string name="credits">Credits</string>
 </resources>
