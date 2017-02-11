@@ -46,7 +46,7 @@ public class PersonInfosPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return mContext.getResources().getString(R.string.credits);
+                return mContext.getResources().getString(R.string.person_credits);
             case 1:
                 return mContext.getResources().getString(R.string.info);
         }

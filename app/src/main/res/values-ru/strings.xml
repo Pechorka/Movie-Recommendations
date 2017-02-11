@@ -25,7 +25,7 @@
     <string name="minutes_short">м</string>
     <string name="unknown">Неизвестно</string>
     <string name="info">Инфо</string>
-    <string name="credits">Участвовал в</string>
+    <string name="person_credits">Участвовал в</string>
     <string name="biography">Биография</string>
     <string name="gender">Пол</string>
     <string name="facts">Факты</string>
@@ -40,4 +40,5 @@
     <string name="rating">Рейтинг</string>
     <string name="overview">Описание</string>
     <string name="images">Изображения</string>
+    <string name="movie_credits">Участники</string>
 </resources>

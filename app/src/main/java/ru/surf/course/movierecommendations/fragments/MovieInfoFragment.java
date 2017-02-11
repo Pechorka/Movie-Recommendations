@@ -22,9 +22,12 @@ import java.util.Locale;
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
+import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
+import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
@@ -37,7 +40,7 @@ public class MovieInfoFragment extends Fragment {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
-    final static int DATA_TO_LOAD = 2;
+    final static int DATA_TO_LOAD = 3;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -48,6 +51,8 @@ public class MovieInfoFragment extends Fragment {
     private TextView voteAverage;
     private RecyclerView backdrops;
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
+    private RecyclerView credits;
+    private MovieCreditsListAdapter movieCreditsListAdapter;
 
     private int dataLoaded = 0;
 
@@ -90,6 +95,7 @@ public class MovieInfoFragment extends Fragment {
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.movie_info_biography_expand_btn);
         voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
         backdrops = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
+        credits = (RecyclerView)root.findViewById(R.id.movie_info_credits);
     }
 
     private void setupViews(View root) {
@@ -105,6 +111,7 @@ public class MovieInfoFragment extends Fragment {
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
         backdrops.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        credits.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     @Override
@@ -114,6 +121,7 @@ public class MovieInfoFragment extends Fragment {
             currentMovieInfo = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
             dataLoadComplete();
             loadBackdropsInto(currentMovieInfo);
+            loadCreditsInto(currentMovieInfo);
         } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
             currentMovieInfo = new MovieInfo(getArguments().getInt(KEY_MOVIE_ID));
             loadInformationInto(currentMovieInfo, getCurrentLocale().getLanguage());
@@ -129,6 +137,7 @@ public class MovieInfoFragment extends Fragment {
                     movie.fillFields(result.get(0));
                 dataLoadComplete();
                 loadBackdropsInto(currentMovieInfo);
+                loadCreditsInto(currentMovieInfo);
             }
         });
         getMovieInfosTask.getMovieById(movie.getId(), language);
@@ -144,6 +153,18 @@ public class MovieInfoFragment extends Fragment {
             }
         });
         getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
+    }
+
+    private void loadCreditsInto(final MovieInfo movieInfo) {
+        GetCreditsTask getCreditsTask = new GetCreditsTask();
+        getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
+            @Override
+            public void taskCompleted(List<Credit> result) {
+                movieInfo.setCredits(result);
+                dataLoadComplete();
+            }
+        });
+        getCreditsTask.getMovieCredits(movieInfo.getId());
     }
 
     private boolean checkInformation(MovieInfo movie) {
@@ -174,6 +195,9 @@ public class MovieInfoFragment extends Fragment {
 
         movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentMovieInfo.getBackdrops(), getActivity());
         backdrops.setAdapter(movieInfoImagesAdapter);
+
+        movieCreditsListAdapter = new MovieCreditsListAdapter(currentMovieInfo.getCredits(), getActivity());
+        credits.setAdapter(movieCreditsListAdapter);
     }
 
     private void dataLoadComplete() {

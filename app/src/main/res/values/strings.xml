@@ -55,7 +55,7 @@
     <string name="tvshows">TV Shows</string>
     <string name="on_air">On Air</string>
     <string name="info">Info</string>
-    <string name="credits">Credits</string>
+    <string name="person_credits">Credits</string>
     <string name="biography">Biography</string>
     <string name="gender">Gender</string>
     <string name="facts">Facts</string>
@@ -70,4 +70,5 @@
     <string name="rating">Rating</string>
     <string name="overview">Overview</string>
     <string name="images">Images</string>
+    <string name="movie_credits">Credits</string>
 </resources>

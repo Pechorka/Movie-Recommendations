@@ -30,6 +30,7 @@
     <dimen name="movie_info_images_list_item_elevation">4dp</dimen>
     <dimen name="movie_info_photos_btn_size">28dp</dimen>
     <dimen name="movie_info_photos_btn_margin">5dp</dimen>
+    <dimen name="movie_info_credits_vertical_margins">10dp</dimen>
     <dimen name="movie_info_content_margin">32dp</dimen>
     <dimen name="sliding_button_marginLeft">20dp</dimen>
     <dimen name="sliding_button_marginRight">20dp</dimen>
@@ -63,5 +64,5 @@
     <dimen name="credits_list_item_header_margin_start">20dp</dimen>
     <dimen name="credits_list_item_spacing">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
-    <dimen name="after_facts_spacing">20dp</dimen>
+    <dimen name="before_hint_header_spacing">20dp</dimen>
 </resources>
