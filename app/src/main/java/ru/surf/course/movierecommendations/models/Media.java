@@ -1,8 +1,10 @@
 package ru.surf.course.movierecommendations.models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +17,8 @@ import ru.surf.course.movierecommendations.models.TmdbImage;
  */
 
 public class Media implements Serializable {
+
+    private final String LOG_TAG = getClass().getSimpleName();
 
     protected String mTitle;
     protected String mOriginalTitle;
@@ -201,5 +205,20 @@ public class Media implements Serializable {
 
     public void setCredits(List<Credit> credits) {
         this.mCredits = credits;
+    }
+
+    public void fillFields(Object from) {
+        Field[] fields = from.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                Field fieldFrom = from.getClass().getDeclaredField(field.getName());
+                Object value = fieldFrom.get(from);
+                this.getClass().getDeclaredField(field.getName()).set(this, value);
+            } catch (IllegalAccessException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            } catch (NoSuchFieldException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            }
+        }
     }
 }

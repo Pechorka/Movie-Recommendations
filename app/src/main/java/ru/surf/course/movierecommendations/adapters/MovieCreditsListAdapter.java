@@ -83,7 +83,8 @@ public class MovieCreditsListAdapter extends RecyclerView.Adapter<MovieCreditsLi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MovieCreditsListAdapter.listener.onClick(getAdapterPosition());
+                    if (listener != null)
+                        MovieCreditsListAdapter.listener.onClick(getAdapterPosition());
                 }
             });
         }

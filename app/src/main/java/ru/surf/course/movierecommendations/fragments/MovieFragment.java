@@ -1,6 +1,5 @@
 package ru.surf.course.movierecommendations.fragments;
 
-
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -18,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,54 +26,54 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import at.blogc.android.views.ExpandableTextView;
-import ru.surf.course.movierecommendations.AppBarStateChangeListener;
 import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
-import ru.surf.course.movierecommendations.adapters.PersonInfosPagerAdapter;
-import ru.surf.course.movierecommendations.models.Person;
-import ru.surf.course.movierecommendations.models.TmdbImage;
-import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
+import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
+import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
-import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
-public class PersonInfoFragment extends Fragment {
+/**
+ * Created by andrew on 2/11/17.
+ */
 
-    final static String KEY_PERSON = "person";
-    final static String KEY_PERSON_ID = "person_id";
-    final static int DATA_TO_LOAD = 2;
+public class MovieFragment extends Fragment {
+
+    final static String KEY_MOVIE = "movie";
+    final static String KEY_MOVIE_ID = "movie_id";
+    final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
-    private TextView name;
-    private TextView birthDate;
-    private Person currentPerson;
-    private ImageView pictureProfile;
+    private TextView title;
+    private TextView releaseDate;
+    private MovieInfo currentMovie;
+    private ImageView poster;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
-    private ViewPager infosPager;
     private View fakeStatusBar;
+    private ViewPager infosPager;
+    private TextView originalTitle;
 
     private int dataLoaded = 0;
 
-    public static PersonInfoFragment newInstance(Person person) {
-        PersonInfoFragment personInfoFragment = new PersonInfoFragment();
+    public static MovieFragment newInstance(MovieInfo movie) {
+        MovieFragment movieInfoFragment = new MovieFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_PERSON, person);
-        personInfoFragment.setArguments(bundle);
-        return personInfoFragment;
+        bundle.putSerializable(KEY_MOVIE, movie);
+        movieInfoFragment.setArguments(bundle);
+        return movieInfoFragment;
     }
 
-    public static PersonInfoFragment newInstance(int personId) {
-        PersonInfoFragment personInfoFragment = new PersonInfoFragment();
+    public static MovieFragment newInstance(int movieId) {
+        MovieFragment movieInfoFragment = new MovieFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KEY_PERSON_ID, personId);
-        personInfoFragment.setArguments(bundle);
-        return personInfoFragment;
+        bundle.putInt(KEY_MOVIE_ID, movieId);
+        movieInfoFragment.setArguments(bundle);
+        return movieInfoFragment;
     }
 
     @Override
@@ -88,13 +85,15 @@ public class PersonInfoFragment extends Fragment {
         setActivityToolbarVisibility(false);
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() == null)
             onDestroy();
 
-        View root = inflater.inflate(R.layout.fragment_person_info, container, false);
+        View root = inflater.inflate(R.layout.fragment_movie, container, false);
         initViews(root);
         setupViews(root);
 
@@ -102,19 +101,20 @@ public class PersonInfoFragment extends Fragment {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_info_progress_bar);
+        progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        name = (TextView) root.findViewById(R.id.person_info_name);
-        birthDate = (TextView) root.findViewById(R.id.person_info_birth_date);
-        pictureProfile = (ImageView) root.findViewById(R.id.person_info_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.person_info_collapsing_toolbar_layout);
-        toolbar = (Toolbar) root.findViewById(R.id.person_info_toolbar);
-        appBarLayout = (AppBarLayout) root.findViewById(R.id.person_info_appbar_layout);
-        infosPager = (ViewPager) root.findViewById(R.id.person_info_infos_pager);
-        fakeStatusBar = root.findViewById(R.id.person_info_fake_status_bar);
+        title = (TextView) root.findViewById(R.id.movie_title);
+        releaseDate = (TextView) root.findViewById(R.id.movie_release_date);
+        poster = (ImageView) root.findViewById(R.id.movie_backdrop);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.movie_collapsing_toolbar_layout);
+        toolbar = (Toolbar) root.findViewById(R.id.movie_toolbar);
+        appBarLayout = (AppBarLayout) root.findViewById(R.id.movie_appbar_layout);
+        fakeStatusBar = root.findViewById(R.id.movie_fake_status_bar);
+        infosPager = (ViewPager) root.findViewById(R.id.movie_info_infos_pager);
+        originalTitle = (TextView)root.findViewById(R.id.movie_original_title);
     }
 
     private void setupViews(View root) {
@@ -141,14 +141,13 @@ public class PersonInfoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         dataLoaded = 0;
-        if (getArguments().containsKey(KEY_PERSON)) {
-            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
-        } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
+        if (getArguments().containsKey(KEY_MOVIE)) {
+            currentMovie = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
+        } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
+            currentMovie = new MovieInfo(getArguments().getInt(KEY_MOVIE_ID));
         }
-        if (currentPerson != null) {
-            loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
-            loadProfilePicturesInto(currentPerson);
+        if (currentMovie != null) {
+            loadInformationInto(currentMovie, getCurrentLocale().getLanguage());
         }
 
         if (Build.VERSION.SDK_INT >= 19) {
@@ -158,39 +157,29 @@ public class PersonInfoFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        setActivityToolbarVisibility(true);
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(true);
+        setStatusBarTranslucent(false);
         fakeStatusBar.setVisibility(View.GONE);
         super.onDetach();
     }
 
-    private void loadInformationInto(final Person person, String language) {
-        GetPersonsTask getPersonsTask = new GetPersonsTask();
-        getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
+    private void loadInformationInto(final MovieInfo movie, String language) {
+        GetMoviesTask getMoviesTask = new GetMoviesTask();
+        getMoviesTask.addListener(new GetMoviesTask.TaskCompletedListener() {
             @Override
-            public void taskCompleted(List<Person> result) {
-                if (person != null)
-                    person.fillFields(result.get(0));
+            public void moviesLoaded(List<MovieInfo> result, boolean newResult) {
+                if (movie != null)
+                    movie.fillFields(result.get(0));
                 dataLoadComplete();
             }
         });
-        getPersonsTask.getPersonById(person.getId(), new Locale(language));
+        getMoviesTask.getMovieById(movie.getId(), language);
     }
 
-    private void loadProfilePicturesInto(final Person person) {
-        GetImagesTask getImagesTask = new GetImagesTask();
-        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-            @Override
-            public void getImagesTaskCompleted(List<TmdbImage> result) {
-                person.setProfilePictures(result);
-                dataLoadComplete();
-            }
-        });
-        getImagesTask.getPersonImages(person.getId(), Tasks.GET_PROFILE_PICTURES);
-    }
-
-    private boolean checkInformation(Person person) {
-        return Utilities.checkString(person.getBiography());
+    private boolean checkInformation(MovieInfo movie) {
+        return Utilities.checkString(movie.getOverview());
         //for now checking only biography
     }
 
@@ -200,30 +189,30 @@ public class PersonInfoFragment extends Fragment {
 
 
     private void fillInformation() {
-        name.setText(currentPerson.getName());
+        title.setText(currentMovie.getTitle());
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
-        if (currentPerson.getBirthday() != null) {
-            birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
+        if (currentMovie.getDate() != null) {
+            releaseDate.setText("(" + dateFormat.format(currentMovie.getDate()) + ")");
         }
 
-        if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0) {
-            ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
-            pictureProfile.setOnClickListener(new View.OnClickListener() {
+        originalTitle.setText(currentMovie.getOriginalTitle());
+
+        if (Utilities.checkString(currentMovie.getPosterPath())) {
+            ImageLoader.putPosterNoResize(getActivity(), currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
+            poster.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> paths = new ArrayList<String>();
-                    for (TmdbImage image:
-                           currentPerson.getProfilePictures()) {
-                        paths.add(image.path);
-                    }
-                    GalleryActivity.start(getActivity(), paths);
+                    ArrayList<String> image = new ArrayList<String>();
+                    image.add(currentMovie.getPosterPath());
+                    GalleryActivity.start(getActivity(), image);
                 }
             });
         }
-        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
-        infosPager.setAdapter(personInfosPagerAdapter);
+
+        MovieInfosPagerAdapter movieInfosPagerAdapter = new MovieInfosPagerAdapter(getChildFragmentManager(), getActivity(), currentMovie);
+        infosPager.setAdapter(movieInfosPagerAdapter);
     }
 
     private void dataLoadComplete() {
@@ -233,7 +222,7 @@ public class PersonInfoFragment extends Fragment {
             fillInformation();
             View progressBarPlaceholder = null;
             if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.person_info_progress_bar_placeholder);
+                progressBarPlaceholder = getView().findViewById(R.id.movie_progress_bar_placeholder);
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }

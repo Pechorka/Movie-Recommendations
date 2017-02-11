@@ -91,7 +91,8 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
 
         @Override
         public void onClick(View view) {
-            MovieInfoImagesAdapter.listener.onClick(getAdapterPosition());
+            if (listener != null)
+                MovieInfoImagesAdapter.listener.onClick(getAdapterPosition());
         }
     }
 

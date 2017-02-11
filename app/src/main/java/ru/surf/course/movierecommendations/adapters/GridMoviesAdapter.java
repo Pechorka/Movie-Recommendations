@@ -13,7 +13,7 @@ import java.util.List;
 import ru.surf.course.movierecommendations.GridViewHolder;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
+import ru.surf.course.movierecommendations.fragments.MovieFragment;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -58,7 +58,7 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridViewHolder> {
     }
 
     private void fragmentToSwitch(MovieInfo info) {
-        MovieInfoFragment movieInfoFragment = MovieInfoFragment.newInstance(info);
+        MovieFragment movieInfoFragment = MovieFragment.newInstance(info);
         switchContent(R.id.activity_main_container, movieInfoFragment);
     }
 

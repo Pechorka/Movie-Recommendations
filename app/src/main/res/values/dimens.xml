@@ -26,10 +26,12 @@
     <dimen name="vote_average_text_size">23sp</dimen>
     <dimen name="toolbar_shadow_height">7dp</dimen>
     <dimen name="expand_button_width">40dp</dimen>
-    <dimen name="movie_info_images_list_item_margin">3dp</dimen>
+    <dimen name="movie_info_images_list_item_margin">8dp</dimen>
+    <dimen name="movie_info_images_list_item_elevation">4dp</dimen>
     <dimen name="movie_info_photos_btn_size">28dp</dimen>
     <dimen name="movie_info_photos_btn_margin">5dp</dimen>
-    <dimen name="movie_info_content_margin">32dp</dimen>
+    <dimen name="movie_info_credits_vertical_margins">10dp</dimen>
+    <dimen name="movie_info_content_margin">10dp</dimen>
     <dimen name="sliding_button_marginLeft">20dp</dimen>
     <dimen name="sliding_button_marginRight">20dp</dimen>
     <dimen name="sliding_button_marginBottom">10dp</dimen>
@@ -46,6 +48,7 @@
     <dimen name="movie_info_people_header_text_size">12sp</dimen>
     <dimen name="movie_info_people_sub_header_text_size">8sp</dimen>
     <dimen name="person_info_appbar_height">400dp</dimen>
+    <dimen name="movie_info_appbar_height">400dp</dimen>
     <dimen name="header_padding">8dp</dimen>
     <dimen name="big_text_in_cardview_padding">10dp</dimen>
     <dimen name="big_text_in_cardview_margin">10dp</dimen>
@@ -61,4 +64,5 @@
     <dimen name="credits_list_item_header_margin_start">20dp</dimen>
     <dimen name="credits_list_item_spacing">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="before_hint_header_spacing">20dp</dimen>
 </resources>
