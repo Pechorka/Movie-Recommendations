@@ -125,7 +125,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
         try {
             List<Person> result = new ArrayList<>();
             if (personsJsonStr != null)
-                parseJson(personsJsonStr);
+                return parseJson(personsJsonStr);
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
