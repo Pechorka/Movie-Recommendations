@@ -231,7 +231,7 @@ public class MovieInfoFragment extends Fragment {
             public void onClick(int position) {
                 if (getActivity() instanceof MainActivity) {
                     Person person = movieCreditsListAdapter.getCredits().get(position).getPerson();
-                    ((MainActivity) getActivity()).switchContent(R.id.activity_main_container, PersonInfoFragment.newInstance(person));
+                    ((MainActivity) getActivity()).switchContent(R.id.activity_main_container, PersonFragment.newInstance(person));
                 }
             }
         });

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.fragments.PersonCreditsFragment;
-import ru.surf.course.movierecommendations.fragments.PersonFactsFragment;
+import ru.surf.course.movierecommendations.fragments.PersonInfoFragment;
 import ru.surf.course.movierecommendations.models.Person;
 
 /**
@@ -32,7 +32,7 @@ public class PersonInfosPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return PersonCreditsFragment.newInstance(mPerson);
             case 1:
-                return PersonFactsFragment.newInstance(mPerson);
+                return PersonInfoFragment.newInstance(mPerson);
         }
         return null;
     }
