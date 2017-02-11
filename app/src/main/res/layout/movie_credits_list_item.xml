@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/circle_images_list_header"
-        android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:textColor="@color/colorTextPrimary"
         android:textSize="@dimen/movie_info_people_header_text_size"
         android:maxLines="2"/>
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/circle_images_list_sub_header"
-        android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:textColor="@color/colorTextSecondary"
         android:textSize="@dimen/movie_info_people_sub_header_text_size"
         android:maxLines="2"/>
