@@ -22,9 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
@@ -196,8 +198,17 @@ public class NewMovieFragment extends Fragment {
             birthDate.setText("(" + dateFormat.format(currentMovie.getDate()) + ")");
         }
 
-        if (Utilities.checkString(currentMovie.getPosterPath()))
+        if (Utilities.checkString(currentMovie.getPosterPath())) {
             ImageLoader.putPosterNoResize(getActivity(), currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ArrayList<String> image = new ArrayList<String>();
+                    image.add(currentMovie.getPosterPath());
+                    GalleryActivity.start(getActivity(), image);
+                }
+            });
+        }
 
         MovieInfosPagerAdapter movieInfosPagerAdapter = new MovieInfosPagerAdapter(getChildFragmentManager(), getActivity(), currentMovie);
         infosPager.setAdapter(movieInfosPagerAdapter);

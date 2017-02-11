@@ -25,11 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.AppBarStateChangeListener;
+import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
@@ -206,8 +208,20 @@ public class PersonInfoFragment extends Fragment {
             birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
         }
 
-        if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0)
+        if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0) {
             ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
+            pictureProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ArrayList<String> paths = new ArrayList<String>();
+                    for (TmdbImage image:
+                           currentPerson.getProfilePictures()) {
+                        paths.add(image.path);
+                    }
+                    GalleryActivity.start(getActivity(), paths);
+                }
+            });
+        }
         PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
         infosPager.setAdapter(personInfosPagerAdapter);
     }
