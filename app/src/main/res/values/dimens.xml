@@ -60,4 +60,5 @@
     <dimen name="credits_list_item_sub_header_text_size">18sp</dimen>
     <dimen name="credits_list_item_header_margin_start">20dp</dimen>
     <dimen name="credits_list_item_spacing">10dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
 </resources>

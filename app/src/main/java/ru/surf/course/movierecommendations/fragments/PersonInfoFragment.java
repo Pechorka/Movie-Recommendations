@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,6 +57,7 @@ public class PersonInfoFragment extends Fragment {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private ViewPager infosPager;
+    private View fakeStatusBar;
 
     private int dataLoaded = 0;
 
@@ -78,6 +82,7 @@ public class PersonInfoFragment extends Fragment {
         super.onAttach(context);
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(false);
+        setStatusBarTranslucent(true);
     }
 
     @Nullable
@@ -108,6 +113,7 @@ public class PersonInfoFragment extends Fragment {
         toolbar = (Toolbar) root.findViewById(R.id.person_info_toolbar);
         appBarLayout = (AppBarLayout) root.findViewById(R.id.person_info_appbar_layout);
         infosPager = (ViewPager) root.findViewById(R.id.person_info_infos_pager);
+        fakeStatusBar = root.findViewById(R.id.person_info_fake_status_bar);
     }
 
     private void setupViews(View root) {
@@ -119,18 +125,16 @@ public class PersonInfoFragment extends Fragment {
             }
         });
 
-        AppBarStateChangeListener appBarStateChangeListener = new AppBarStateChangeListener() {
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
-            public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                if (state.equals(State.COLLAPSED)) {
-
-                } else {
-
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                verticalOffset = Math.abs(verticalOffset);
+                if (verticalOffset >= appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight()) {
+                    int offsetToToolbar = appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight();
+                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/toolbar.getMeasuredHeight());
                 }
-
             }
-        };
-        appBarLayout.addOnOffsetChangedListener(appBarStateChangeListener);
+        });
     }
 
     @Override
@@ -145,6 +149,10 @@ public class PersonInfoFragment extends Fragment {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            fakeStatusBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -152,6 +160,8 @@ public class PersonInfoFragment extends Fragment {
         setActivityToolbarVisibility(true);
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(true);
+        setStatusBarTranslucent(false);
+        fakeStatusBar.setVisibility(View.GONE);
         super.onDetach();
     }
 
@@ -231,5 +241,17 @@ public class PersonInfoFragment extends Fragment {
             }
         }
     }
+
+    private void setStatusBarTranslucent(boolean flag) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            Window window = getActivity().getWindow();
+            if (flag)
+                window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
+        }
+    }
+
 
 }
