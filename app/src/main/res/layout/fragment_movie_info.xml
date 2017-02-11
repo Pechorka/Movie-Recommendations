@@ -85,11 +85,22 @@
             android:background="@drawable/ic_arrow_down"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/movie_info_images_hint"
+            style="@style/InfoHintHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/images"
+            android:layout_alignLeft="@+id/movie_info_overview_placeholder"
+            android:layout_alignStart="@+id/movie_info_overview_placeholder"
+            android:layout_below="@id/movie_info_biography_expand_btn"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/movie_info_images_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/movie_info_biography_expand_btn"/>
+            android:layout_below="@id/movie_info_images_hint"/>
 
         <RelativeLayout
             android:id="@+id/movie_info_progress_bar_placeholder"
