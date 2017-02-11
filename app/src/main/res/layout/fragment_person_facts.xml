@@ -8,11 +8,98 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/person_facts_facts_hint"
+            style="@style/InfoHintHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/facts"
+            android:layout_alignLeft="@+id/person_facts_biography_placeholder"
+            android:layout_alignStart="@+id/person_facts_biography_placeholder"
+            />
+
+        <TextView
+            android:id="@+id/person_facts_gender_hint"
+            style="@style/InfoHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/person_facts_facts_hint"
+            android:layout_alignStart="@id/person_facts_facts_hint"
+            android:layout_below="@id/person_facts_facts_hint"
+            android:text="@string/gender"/>
+
+        <TextView
+            android:id="@+id/person_facts_gender"
+            style="@style/InfoFact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/person_facts_gender_hint"
+            android:layout_toEndOf="@id/person_facts_gender_hint"
+            android:layout_marginLeft="@dimen/fact_hint_spacing"
+            android:layout_marginStart="@dimen/fact_hint_spacing"
+            android:layout_alignBottom="@id/person_facts_gender_hint"
+            android:text="@string/unknown"/>
+
+        <TextView
+            android:id="@+id/person_facts_place_of_birth_hint"
+            style="@style/InfoHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/person_facts_facts_hint"
+            android:layout_alignStart="@id/person_facts_facts_hint"
+            android:layout_below="@id/person_facts_gender_hint"
+            android:text="@string/place_of_birth"/>
+
+        <TextView
+            android:id="@+id/person_facts_place_of_birth"
+            style="@style/InfoFact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/person_facts_place_of_birth_hint"
+            android:layout_toEndOf="@id/person_facts_place_of_birth_hint"
+            android:layout_marginLeft="@dimen/fact_hint_spacing"
+            android:layout_marginStart="@dimen/fact_hint_spacing"
+            android:layout_alignBottom="@id/person_facts_place_of_birth_hint"
+            android:text="@string/unknown"/>
+
+        <TextView
+            android:id="@+id/person_facts_popularity_hint"
+            style="@style/InfoHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/person_facts_facts_hint"
+            android:layout_alignStart="@id/person_facts_facts_hint"
+            android:layout_below="@id/person_facts_place_of_birth_hint"
+            android:text="@string/popularity"/>
+
+        <TextView
+            android:id="@+id/person_facts_popularity"
+            style="@style/InfoFact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/person_facts_popularity_hint"
+            android:layout_toEndOf="@id/person_facts_popularity_hint"
+            android:layout_marginLeft="@dimen/fact_hint_spacing"
+            android:layout_marginStart="@dimen/fact_hint_spacing"
+            android:layout_alignBottom="@id/person_facts_popularity_hint"
+            android:text="@string/unknown"/>
+
+        <TextView
+            android:id="@+id/person_facts_biography_hint"
+            style="@style/InfoHintHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/biography"
+            android:layout_alignLeft="@+id/person_facts_biography_placeholder"
+            android:layout_alignStart="@+id/person_facts_biography_placeholder"
+            android:layout_below="@id/person_facts_popularity_hint"
+            />
 
         <android.support.v7.widget.CardView
             android:id="@+id/person_facts_biography_placeholder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/person_facts_biography_hint"
             android:layout_margin="@dimen/big_text_in_cardview_margin"
             android:background="@color/cardview_dark_background"
             app:cardCornerRadius="@dimen/big_text_in_cardview_corner_radius"

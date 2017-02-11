@@ -56,4 +56,14 @@
     <string name="on_air">On Air</string>
     <string name="info">Info</string>
     <string name="credits">Credits</string>
+    <string name="biography">Biography</string>
+    <string name="gender">Gender</string>
+    <string name="facts">Facts</string>
+    <string name="place_of_birth">Place of birth</string>
+    <string name="popularity">Popularity</string>
+    <array name="genders">
+        <item>Unknown</item>
+        <item>Female</item>
+        <item>Male</item>
+    </array>
 </resources>

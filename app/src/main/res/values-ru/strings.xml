@@ -26,4 +26,14 @@
     <string name="unknown">Неизвестно</string>
     <string name="info">Инфо</string>
     <string name="credits">Участвовал в</string>
+    <string name="biography">Биография</string>
+    <string name="gender">Пол</string>
+    <string name="facts">Факты</string>
+    <string name="place_of_birth">Место рождения</string>
+    <string name="popularity">Популярность</string>
+    <array name="genders">
+        <item>Неизвестно</item>
+        <item>Женский</item>
+        <item>Мужской</item>
+    </array>
 </resources>

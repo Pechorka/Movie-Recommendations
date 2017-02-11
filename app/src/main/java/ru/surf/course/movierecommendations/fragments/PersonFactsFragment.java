@@ -52,6 +52,9 @@ public class PersonFactsFragment extends Fragment {
     private Button expandCollapseBiographyButton;
     private Person currentPerson;
     private Person currentPersonEnglish;
+    private TextView gender;
+    private TextView placeOfBirth;
+    private TextView popularity;
 
     private int dataLoaded = 0;
 
@@ -92,6 +95,9 @@ public class PersonFactsFragment extends Fragment {
         }
         biography = (ExpandableTextView) root.findViewById(R.id.person_facts_biography);
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.person_facts_biography_expand_btn);
+        gender = (TextView)root.findViewById(R.id.person_facts_gender);
+        placeOfBirth = (TextView)root.findViewById(R.id.person_facts_place_of_birth);
+        popularity = (TextView)root.findViewById(R.id.person_facts_popularity);
     }
 
     private void setupViews(View root) {
@@ -106,8 +112,6 @@ public class PersonFactsFragment extends Fragment {
         };
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         biography.setOnClickListener(expandCollapse);
-
-
     }
 
     @Override
@@ -136,7 +140,8 @@ public class PersonFactsFragment extends Fragment {
     }
 
     private boolean checkInformation(Person person) {
-        return Utilities.checkString(person.getBiography());
+        return Utilities.checkString(person.getBiography()) &&
+                Utilities.checkString(person.getPlaceOfBirth());
         //for now checking only biography
     }
 
@@ -158,6 +163,15 @@ public class PersonFactsFragment extends Fragment {
                     expandCollapseBiographyButton.setVisibility(View.VISIBLE);
             }
         });
+
+        gender.setText(getResources().getStringArray(R.array.genders)[currentPerson.getGender().ordinal()]);
+
+        if (Utilities.checkString(currentPerson.getPlaceOfBirth()))
+            placeOfBirth.setText(currentPerson.getPlaceOfBirth());
+        else if (Utilities.checkString(currentPersonEnglish.getPlaceOfBirth()))
+            placeOfBirth.setText(currentPersonEnglish.getPlaceOfBirth());
+
+        popularity.setText(String.valueOf(currentPerson.getPopularity()));
     }
 
     private void dataLoadComplete() {

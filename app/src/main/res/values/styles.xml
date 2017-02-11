@@ -27,6 +27,21 @@
         <item name="android:textSize">@dimen/title_font_size</item>
     </style>
 
+    <style name="InfoHintHeader" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/fact_hint_header_text_size</item>
+    </style>
+
+    <style name="InfoHint" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textSize">@dimen/fact_hint_text_size</item>
+    </style>
+
+    <style name="InfoFact" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:textSize">@dimen/fact_text_size</item>
+    </style>
+
     <style name="GenreButton" parent="Base.Widget.AppCompat.Button">
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
