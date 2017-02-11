@@ -83,6 +83,7 @@ public class PersonInfoFragment extends Fragment {
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(false);
         setStatusBarTranslucent(true);
+        setActivityToolbarVisibility(false);
     }
 
     @Nullable
@@ -90,8 +91,6 @@ public class PersonInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() == null)
             onDestroy();
-
-        setActivityToolbarVisibility(false);
 
         View root = inflater.inflate(R.layout.fragment_person_info, container, false);
         initViews(root);
@@ -157,10 +156,8 @@ public class PersonInfoFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        setActivityToolbarVisibility(true);
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(true);
-        setStatusBarTranslucent(false);
         fakeStatusBar.setVisibility(View.GONE);
         super.onDetach();
     }

@@ -82,15 +82,16 @@ public class NewMovieFragment extends Fragment {
         if (getActivity() instanceof MainActivity)
             ((MainActivity)getActivity()).setDrawerEnabled(false);
         setStatusBarTranslucent(true);
+        setActivityToolbarVisibility(false);
     }
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getArguments() == null)
             onDestroy();
-
-        setActivityToolbarVisibility(false);
 
         View root = inflater.inflate(R.layout.fragment_new_movie, container, false);
         initViews(root);

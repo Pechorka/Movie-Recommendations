@@ -16,16 +16,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import ru.surf.course.movierecommendations.GalleryActivity;
+import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
@@ -194,9 +198,29 @@ public class MovieInfoFragment extends Fragment {
         voteAverage.setText(String.valueOf(currentMovieInfo.getVoteAverage()));
 
         movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentMovieInfo.getBackdrops(), getActivity());
+        movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                ArrayList<String> paths = new ArrayList<String>();
+                for (TmdbImage image:
+                        movieInfoImagesAdapter.getImages()) {
+                    paths.add(image.path);
+                }
+                GalleryActivity.start(getActivity(), paths, position);
+            }
+        });
         backdrops.setAdapter(movieInfoImagesAdapter);
 
         movieCreditsListAdapter = new MovieCreditsListAdapter(currentMovieInfo.getCredits(), getActivity());
+        movieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                if (getActivity() instanceof MainActivity) {
+                    Person person = movieCreditsListAdapter.getCredits().get(position).getPerson();
+                    ((MainActivity) getActivity()).switchContent(R.id.activity_main_container, PersonInfoFragment.newInstance(person));
+                }
+            }
+        });
         credits.setAdapter(movieCreditsListAdapter);
     }
 
