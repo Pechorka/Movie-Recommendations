@@ -57,6 +57,11 @@ public class MovieInfoFragment extends Fragment {
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
     private RecyclerView credits;
     private MovieCreditsListAdapter movieCreditsListAdapter;
+    private TextView runtime;
+    private TextView status;
+    private TextView budget;
+    private TextView revenue;
+    private TextView productionCountries;
 
     private int dataLoaded = 0;
 
@@ -100,6 +105,11 @@ public class MovieInfoFragment extends Fragment {
         voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
         backdrops = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
         credits = (RecyclerView)root.findViewById(R.id.movie_info_credits);
+        budget = (TextView)root.findViewById(R.id.movie_info_budget);
+        revenue = (TextView)root.findViewById(R.id.movie_info_revenue);
+        runtime = (TextView)root.findViewById(R.id.movie_info_runtime);
+        status = (TextView)root.findViewById(R.id.movie_info_status);
+        productionCountries = (TextView)root.findViewById(R.id.movie_info_production);
     }
 
     private void setupViews(View root) {
@@ -222,6 +232,28 @@ public class MovieInfoFragment extends Fragment {
             }
         });
         credits.setAdapter(movieCreditsListAdapter);
+
+        if (!currentMovieInfo.getBudget().equals("0"))
+            budget.setText(currentMovieInfo.getBudget() + "$");
+
+        if (!currentMovieInfo.getRevenue().equals("0"))
+            revenue.setText(currentMovieInfo.getRevenue() + "$");
+
+        if (currentMovieInfo.getRuntime() != 0)
+            runtime.setText(currentMovieInfo.getRuntime()/60 + getResources().getString(R.string.hours_short) + " " + currentMovieInfo.getRuntime()%60 + getResources().getString(R.string.minutes_short));
+
+        status.setText(currentMovieInfo.getStatus());
+
+        if (currentMovieInfo.getProductionCountriesNames() != null && currentMovieInfo.getProductionCountriesNames().size() != 0) {
+            ArrayList<String> productionCountriesList = new ArrayList<>(currentMovieInfo.getProductionCountriesNames());
+            String string = "";
+            for (int i = 0; i < productionCountriesList.size(); i++) {
+                string += productionCountriesList.get(i);
+                if (i < productionCountriesList.size() - 1)
+                    string += ",";
+            }
+            productionCountries.setText(string);
+        }
     }
 
     private void dataLoadComplete() {
