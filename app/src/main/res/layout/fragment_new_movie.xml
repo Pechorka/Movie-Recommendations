@@ -50,14 +50,23 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_centerHorizontal="true"
-                android:padding="@dimen/header_padding"
                 android:paddingBottom="0dp" />
+
+            <TextView
+                android:id="@+id/new_movie_info_original_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/new_movie_info_title"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/movie_info_release_date_text_size" />
 
             <TextView
                 android:id="@+id/new_movie_info_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/new_movie_info_title"
+                android:layout_below="@id/new_movie_info_original_title"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
                 android:textColor="@color/colorTextSecondary"

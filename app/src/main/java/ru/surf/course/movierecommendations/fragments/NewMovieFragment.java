@@ -32,11 +32,8 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
-import ru.surf.course.movierecommendations.models.TmdbImage;
-import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
-import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 /**
  * Created by andrew on 2/11/17.
@@ -51,7 +48,7 @@ public class NewMovieFragment extends Fragment {
 
     private ProgressBar progressBar;
     private TextView title;
-    private TextView birthDate;
+    private TextView releaseDate;
     private MovieInfo currentMovie;
     private ImageView poster;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -59,6 +56,7 @@ public class NewMovieFragment extends Fragment {
     private AppBarLayout appBarLayout;
     private View fakeStatusBar;
     private ViewPager infosPager;
+    private TextView originalTitle;
 
     private int dataLoaded = 0;
 
@@ -109,13 +107,14 @@ public class NewMovieFragment extends Fragment {
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
         title = (TextView) root.findViewById(R.id.new_movie_info_title);
-        birthDate = (TextView) root.findViewById(R.id.new_movie_info_release_date);
+        releaseDate = (TextView) root.findViewById(R.id.new_movie_info_release_date);
         poster = (ImageView) root.findViewById(R.id.new_movie_info_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.new_movie_info_collapsing_toolbar_layout);
         toolbar = (Toolbar) root.findViewById(R.id.new_movie_info_toolbar);
         appBarLayout = (AppBarLayout) root.findViewById(R.id.new_movie_info_appbar_layout);
         fakeStatusBar = root.findViewById(R.id.new_movie_info_fake_status_bar);
         infosPager = (ViewPager) root.findViewById(R.id.movie_info_infos_pager);
+        originalTitle = (TextView)root.findViewById(R.id.new_movie_info_original_title);
     }
 
     private void setupViews(View root) {
@@ -195,8 +194,10 @@ public class NewMovieFragment extends Fragment {
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
 
         if (currentMovie.getDate() != null) {
-            birthDate.setText("(" + dateFormat.format(currentMovie.getDate()) + ")");
+            releaseDate.setText("(" + dateFormat.format(currentMovie.getDate()) + ")");
         }
+
+        originalTitle.setText(currentMovie.getOriginalTitle());
 
         if (Utilities.checkString(currentMovie.getPosterPath())) {
             ImageLoader.putPosterNoResize(getActivity(), currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
