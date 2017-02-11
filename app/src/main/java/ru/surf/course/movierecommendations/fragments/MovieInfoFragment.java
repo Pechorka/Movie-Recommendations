@@ -25,6 +25,7 @@ import ru.surf.course.movierecommendations.GalleryActivity;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.GenresListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
@@ -57,6 +58,8 @@ public class MovieInfoFragment extends Fragment {
     private MovieInfoImagesAdapter movieInfoImagesAdapter;
     private RecyclerView credits;
     private MovieCreditsListAdapter movieCreditsListAdapter;
+    private RecyclerView genres;
+    private GenresListAdapter genresListAdapter;
     private TextView runtime;
     private TextView status;
     private TextView budget;
@@ -110,6 +113,7 @@ public class MovieInfoFragment extends Fragment {
         runtime = (TextView)root.findViewById(R.id.movie_info_runtime);
         status = (TextView)root.findViewById(R.id.movie_info_status);
         productionCountries = (TextView)root.findViewById(R.id.movie_info_production);
+        genres = (RecyclerView)root.findViewById(R.id.movie_info_genres_list);
     }
 
     private void setupViews(View root) {
@@ -126,6 +130,7 @@ public class MovieInfoFragment extends Fragment {
         overview.setOnClickListener(expandCollapse);
         backdrops.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         credits.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        genres.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     @Override
@@ -254,6 +259,9 @@ public class MovieInfoFragment extends Fragment {
             }
             productionCountries.setText(string);
         }
+
+        genresListAdapter = new GenresListAdapter(getActivity(), currentMovieInfo.getGenreNames());
+        genres.setAdapter(genresListAdapter);
     }
 
     private void dataLoadComplete() {

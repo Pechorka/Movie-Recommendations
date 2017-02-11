@@ -10,13 +10,33 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/movie_info_genres_hint"
+            style="@style/InfoHintHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/genres"
+            android:layout_marginStart="@dimen/movie_info_content_margin"
+            android:layout_marginLeft="@dimen/movie_info_content_margin"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/movie_info_genres_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_info_genres_hint"
+            android:layout_alignLeft="@id/movie_info_genres_hint"
+            android:layout_alignStart="@id/movie_info_genres_hint"/>
+
+        <TextView
             android:id="@+id/movie_info_facts_hint"
             style="@style/InfoHintHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/facts"
+            android:layout_below="@id/movie_info_genres_list"
             android:layout_marginStart="@dimen/movie_info_content_margin"
             android:layout_marginLeft="@dimen/movie_info_content_margin"
+            android:layout_marginTop="@dimen/before_hint_header_spacing"
             />
 
         <TextView
