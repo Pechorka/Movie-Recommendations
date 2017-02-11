@@ -7,19 +7,19 @@
     android:background="@color/colorBackground">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/new_movie_info_appbar_layout"
+        android:id="@+id/movie_appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/new_movie_info_collapsing_toolbar_layout"
+            android:id="@+id/movie_collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:statusBarScrim="@color/colorAccent">
 
             <ImageView
-                android:id="@+id/new_movie_info_backdrop"
+                android:id="@+id/movie_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/movie_info_appbar_height"
                 android:scaleType="centerCrop"
@@ -44,7 +44,7 @@
             android:layout_marginTop="@dimen/status_bar_height">
 
             <TextView
-                android:id="@+id/new_movie_info_title"
+                android:id="@+id/movie_title"
                 style="@style/Header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,20 +53,20 @@
                 android:paddingBottom="0dp" />
 
             <TextView
-                android:id="@+id/new_movie_info_original_title"
+                android:id="@+id/movie_original_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/new_movie_info_title"
+                android:layout_below="@id/movie_title"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="@dimen/movie_info_release_date_text_size" />
 
             <TextView
-                android:id="@+id/new_movie_info_release_date"
+                android:id="@+id/movie_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/new_movie_info_original_title"
+                android:layout_below="@id/movie_original_title"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
                 android:textColor="@color/colorTextSecondary"
@@ -76,7 +76,7 @@
                 android:id="@+id/movie_info_infos_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/new_movie_info_release_date">
+                android:layout_below="@id/movie_release_date">
 
             <android.support.design.widget.TabLayout
                 android:layout_width="match_parent"
@@ -91,26 +91,26 @@
 
 
     <RelativeLayout
-        android:id="@+id/new_movie_info_progress_bar_placeholder"
+        android:id="@+id/movie_progress_bar_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground">
 
         <ProgressBar
-            android:id="@+id/new_movie_info_progress_bar"
+            android:id="@+id/movie_progress_bar"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/new_movie_info_toolbar_placeholder"
+        android:id="@+id/movie_toolbar_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <View
-            android:id="@+id/new_movie_info_fake_status_bar"
+            android:id="@+id/movie_fake_status_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/status_bar_height"
             android:background="@color/colorAccent"
@@ -118,7 +118,7 @@
             android:alpha="0"/>
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/new_movie_info_toolbar"
+            android:id="@+id/movie_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorTransparent" />

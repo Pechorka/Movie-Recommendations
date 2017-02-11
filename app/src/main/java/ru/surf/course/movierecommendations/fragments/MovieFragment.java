@@ -39,7 +39,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 2/11/17.
  */
 
-public class NewMovieFragment extends Fragment {
+public class MovieFragment extends Fragment {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
@@ -60,16 +60,16 @@ public class NewMovieFragment extends Fragment {
 
     private int dataLoaded = 0;
 
-    public static NewMovieFragment newInstance(MovieInfo movie) {
-        NewMovieFragment movieInfoFragment = new NewMovieFragment();
+    public static MovieFragment newInstance(MovieInfo movie) {
+        MovieFragment movieInfoFragment = new MovieFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_MOVIE, movie);
         movieInfoFragment.setArguments(bundle);
         return movieInfoFragment;
     }
 
-    public static NewMovieFragment newInstance(int movieId) {
-        NewMovieFragment movieInfoFragment = new NewMovieFragment();
+    public static MovieFragment newInstance(int movieId) {
+        MovieFragment movieInfoFragment = new MovieFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_MOVIE_ID, movieId);
         movieInfoFragment.setArguments(bundle);
@@ -93,7 +93,7 @@ public class NewMovieFragment extends Fragment {
         if (getArguments() == null)
             onDestroy();
 
-        View root = inflater.inflate(R.layout.fragment_new_movie, container, false);
+        View root = inflater.inflate(R.layout.fragment_movie, container, false);
         initViews(root);
         setupViews(root);
 
@@ -106,15 +106,15 @@ public class NewMovieFragment extends Fragment {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        title = (TextView) root.findViewById(R.id.new_movie_info_title);
-        releaseDate = (TextView) root.findViewById(R.id.new_movie_info_release_date);
-        poster = (ImageView) root.findViewById(R.id.new_movie_info_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.new_movie_info_collapsing_toolbar_layout);
-        toolbar = (Toolbar) root.findViewById(R.id.new_movie_info_toolbar);
-        appBarLayout = (AppBarLayout) root.findViewById(R.id.new_movie_info_appbar_layout);
-        fakeStatusBar = root.findViewById(R.id.new_movie_info_fake_status_bar);
+        title = (TextView) root.findViewById(R.id.movie_title);
+        releaseDate = (TextView) root.findViewById(R.id.movie_release_date);
+        poster = (ImageView) root.findViewById(R.id.movie_backdrop);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.movie_collapsing_toolbar_layout);
+        toolbar = (Toolbar) root.findViewById(R.id.movie_toolbar);
+        appBarLayout = (AppBarLayout) root.findViewById(R.id.movie_appbar_layout);
+        fakeStatusBar = root.findViewById(R.id.movie_fake_status_bar);
         infosPager = (ViewPager) root.findViewById(R.id.movie_info_infos_pager);
-        originalTitle = (TextView)root.findViewById(R.id.new_movie_info_original_title);
+        originalTitle = (TextView)root.findViewById(R.id.movie_original_title);
     }
 
     private void setupViews(View root) {
@@ -222,7 +222,7 @@ public class NewMovieFragment extends Fragment {
             fillInformation();
             View progressBarPlaceholder = null;
             if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.new_movie_info_progress_bar_placeholder);
+                progressBarPlaceholder = getView().findViewById(R.id.movie_progress_bar_placeholder);
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }

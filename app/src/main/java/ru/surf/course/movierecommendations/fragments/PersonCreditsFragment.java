@@ -119,7 +119,7 @@ public class PersonCreditsFragment extends Fragment {
                     Fragment fragment = null;
                     Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
                     if (media instanceof MovieInfo)
-                        fragment = OldMovieInfoFragment.newInstance((MovieInfo)media);
+                        fragment = MovieFragment.newInstance((MovieInfo)media);
                     else if (media instanceof TVShowInfo)
                         return;
                     ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, fragment);

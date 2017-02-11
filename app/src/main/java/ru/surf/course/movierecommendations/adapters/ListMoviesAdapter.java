@@ -15,7 +15,7 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.fragments.OldMovieInfoFragment;
+import ru.surf.course.movierecommendations.fragments.MovieFragment;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -59,8 +59,8 @@ public class ListMoviesAdapter extends RecyclerView.Adapter<ListMoviesAdapter.My
     }
 
     private void fragmentToSwitch(MovieInfo info) {
-        OldMovieInfoFragment oldMovieInfoFragment = OldMovieInfoFragment.newInstance(info);
-        switchContent(R.id.activity_main_container, oldMovieInfoFragment);
+        MovieFragment movieFragment = MovieFragment.newInstance(info);
+        switchContent(R.id.activity_main_container, movieFragment);
     }
 
     public void setMovieInfoList(List<MovieInfo> list) {
