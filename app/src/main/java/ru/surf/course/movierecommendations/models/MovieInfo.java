@@ -1,8 +1,10 @@
 package ru.surf.course.movierecommendations.models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MovieInfo extends Media implements Serializable{
+
+    private final String LOG_TAG = getClass().getSimpleName();
 
     private String mRevenue;
     private int mRuntime;
@@ -61,5 +65,20 @@ public class MovieInfo extends Media implements Serializable{
             movieInfoList.add(movieInfo);
         }
         return movieInfoList;
+    }
+
+    public void fillFields(Object from) {
+        Field[] fields = from.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                Field fieldFrom = from.getClass().getDeclaredField(field.getName());
+                Object value = fieldFrom.get(from);
+                this.getClass().getDeclaredField(field.getName()).set(this, value);
+            } catch (IllegalAccessException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            } catch (NoSuchFieldException e) {
+                Log.d(LOG_TAG, "Copy error" + e.getMessage());
+            }
+        }
     }
 }
