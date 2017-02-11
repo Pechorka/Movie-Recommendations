@@ -131,6 +131,11 @@ public class PersonFactsFragment extends Fragment {
                     person.fillFields(result.get(0));
                 dataLoadComplete();
             }
+
+            @Override
+            public void error(Exception e) {
+
+            }
         });
         getPersonsTask.getPersonById(person.getId(), new Locale(language));
     }

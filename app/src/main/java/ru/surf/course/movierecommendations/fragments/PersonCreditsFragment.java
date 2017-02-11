@@ -111,6 +111,11 @@ public class PersonCreditsFragment extends Fragment {
                 person.setCredits(result);
                 dataLoadComplete();
             }
+
+            @Override
+            public void error(Exception e) {
+
+            }
         });
         getCreditsTask.getPersonCredits(currentPerson.getId(), getCurrentLocale());
     }

@@ -293,6 +293,11 @@ public class MovieListFragment extends Fragment implements GetMoviesTask.TaskCom
                     genres = result;
                 }
             }
+
+            @Override
+            public void error(Exception e) {
+
+            }
         };
         GetGenresTask getGenresTask = new GetGenresTask();
         getGenresTask.addListener(listener);

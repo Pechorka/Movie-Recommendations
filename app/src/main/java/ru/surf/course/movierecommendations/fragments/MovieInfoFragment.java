@@ -235,6 +235,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
                     }
                 });
             }
+
+            @Override
+            public void error(Exception e) {
+
+            }
         });
         getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
     }
@@ -246,6 +251,11 @@ public class MovieInfoFragment extends Fragment implements GetMoviesTask.TaskCom
             public void taskCompleted(List<Credit> result) {
                 currentMovie.setCredits(result);
                 dataLoadComplete();
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
         getCreditsTask.getMovieCredits(movieId);

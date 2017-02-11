@@ -118,6 +118,7 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
             Log.v(LOG_TAG, "TVShow list: " + tShowJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
+            invokeErrorEvent(e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -133,10 +134,13 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
 
         try {
             newResult = Integer.parseInt(page) == 1;
-            return parseJson(tShowJsonStr);
+            if (tShowJsonStr != null)
+                return parseJson(tShowJsonStr);
+            else return new ArrayList<>();
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+            invokeErrorEvent(e);
         }
 
         return null;
@@ -321,7 +325,13 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
             listener.tvshowsLoaded(result, newResult);
     }
 
+    private void invokeErrorEvent(Exception e) {
+        for (TaskCompletedListener listener : listeners)
+            listener.error(e);
+    }
+
     public interface TaskCompletedListener {
         void tvshowsLoaded(List<TVShowInfo> result, boolean newResult);
+        void error(Exception e);
     }
 }

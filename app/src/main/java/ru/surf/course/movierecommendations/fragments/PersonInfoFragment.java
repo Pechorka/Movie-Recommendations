@@ -151,9 +151,15 @@ public class PersonInfoFragment extends Fragment {
         getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Person> result) {
-                if (person != null)
+                if (person != null && result.size() != 0) {
                     person.fillFields(result.get(0));
-                dataLoadComplete();
+                    dataLoadComplete();
+                }
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
         getPersonsTask.getPersonById(person.getId(), new Locale(language));
@@ -166,6 +172,11 @@ public class PersonInfoFragment extends Fragment {
             public void getImagesTaskCompleted(List<TmdbImage> result) {
                 person.setProfilePictures(result);
                 dataLoadComplete();
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
         getImagesTask.getPersonImages(person.getId(), Tasks.GET_PROFILE_PICTURES);

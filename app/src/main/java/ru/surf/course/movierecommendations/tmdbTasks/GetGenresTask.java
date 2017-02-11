@@ -79,6 +79,7 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
             Log.v(LOG_TAG, "Genres list: " + genresJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
+            invokeErrorEvent(e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -92,10 +93,13 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
             }
         }
         try {
-            return parseJson(genresJsonStr);
+            if (genresJsonStr != null)
+                return parseJson(genresJsonStr);
+            else return new HashMap<>();
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+            invokeErrorEvent(e);
         }
         return null;
     }
@@ -108,6 +112,11 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
     private void invokeEvent(Map<String, Integer> result) {
         for (GetGenresTask.TaskCompletedListener listener : listeners)
             listener.taskCompleted(result);
+    }
+
+    private void invokeErrorEvent(Exception e) {
+        for (TaskCompletedListener listener : listeners)
+            listener.error(e);
     }
 
     public void addListener(GetGenresTask.TaskCompletedListener toAdd) {
@@ -144,6 +153,7 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
 
     public interface TaskCompletedListener {
         void taskCompleted(Map<String, Integer> result);
+        void error(Exception e);
     }
 
 }
