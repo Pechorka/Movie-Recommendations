@@ -129,8 +129,8 @@ public class PersonInfoFragment extends Fragment {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 verticalOffset = Math.abs(verticalOffset);
-                if (verticalOffset >= appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight()) {
-                    int offsetToToolbar = appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight();
+                int offsetToToolbar = appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight() - fakeStatusBar.getMeasuredHeight();
+                if (verticalOffset >= offsetToToolbar) {
                     fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/toolbar.getMeasuredHeight());
                 }
             }
