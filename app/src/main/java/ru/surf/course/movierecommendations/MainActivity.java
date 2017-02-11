@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(drawerToggle);
+        //?????
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.setDrawerIndicatorEnabled(true);
         language = Locale.getDefault().getLanguage();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -160,10 +163,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setDrawerEnabled(boolean enabled) {
-        int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
-                DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-        mDrawer.setDrawerLockMode(lockMode);
-        drawerToggle.setDrawerIndicatorEnabled(enabled);
+        if (mDrawer != null) {
+            int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
+                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+            mDrawer.setDrawerLockMode(lockMode);
+            drawerToggle.setDrawerIndicatorEnabled(enabled);
+        }
     }
 
     public void selectDrawerItemMovies(MenuItem menuItem) {
