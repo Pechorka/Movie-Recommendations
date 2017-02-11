@@ -48,6 +48,7 @@
                 style="@style/Header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:layout_centerHorizontal="true"
                 android:padding="@dimen/header_padding"
                 android:paddingBottom="0dp" />
