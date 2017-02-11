@@ -124,11 +124,6 @@ public class TVShowListFragment extends Fragment implements GetTVShowsTask.TaskC
         }
     }
 
-    @Override
-    public void error(Exception e) {
-
-    }
-
     private void initViews(View root) {
         recyclerView = (RecyclerView) root.findViewById(R.id.movie_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -296,11 +291,6 @@ public class TVShowListFragment extends Fragment implements GetTVShowsTask.TaskC
                 if (result != null) {
                     genres = result;
                 }
-            }
-
-            @Override
-            public void error(Exception e) {
-
             }
         };
         GetGenresTask getGenresTask = new GetGenresTask();

@@ -108,7 +108,6 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
             Log.v(LOG_TAG, "Person list: " + personsJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            invokeErrorEvent(e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -123,14 +122,11 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
         }
 
         try {
-            List<Person> result = new ArrayList<>();
-            if (personsJsonStr != null)
-                return parseJson(personsJsonStr);
+            List<Person> result = parseJson(personsJsonStr);
             return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-            invokeErrorEvent(e);
         }
 
         return null;
@@ -235,14 +231,8 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
             listeners.get(i).taskCompleted(result);
     }
 
-    private void invokeErrorEvent(Exception e) {
-        for (PersonsTaskCompleteListener listener : listeners)
-            listener.error(e);
-    }
-
     public interface PersonsTaskCompleteListener {
         void taskCompleted(List<Person> result);
-        void error(Exception e);
     }
 
 

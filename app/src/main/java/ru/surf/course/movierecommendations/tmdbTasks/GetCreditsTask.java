@@ -120,7 +120,6 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
             Log.v(LOG_TAG, "Credits list: " + creditsJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
-            invokeErrorEvent(e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -135,13 +134,11 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
         }
 
         try {
-            if (creditsJsonStr != null)
-                return parseJson(creditsJsonStr);
-            else return new ArrayList<>();
+            List<Credit> result = parseJson(creditsJsonStr);
+            return result;
         } catch (JSONException | ParseException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-            invokeErrorEvent(e);
         }
 
         return null;
@@ -321,14 +318,8 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
             listeners.get(i).taskCompleted(result);
     }
 
-    private void invokeErrorEvent(Exception e) {
-        for (CreditsTaskCompleteListener listener : listeners)
-            listener.error(e);
-    }
-
     public interface CreditsTaskCompleteListener {
         void taskCompleted(List<Credit> result);
-        void error(Exception e);
     }
 
 }

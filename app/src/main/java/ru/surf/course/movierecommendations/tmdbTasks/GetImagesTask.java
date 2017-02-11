@@ -92,7 +92,6 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
             Log.v(LOG_TAG, "Images list: " + imagesJsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
-            invokeErrorEvent(e);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -107,13 +106,10 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         }
 
         try {
-            if (imagesJsonStr != null)
-                return parseJson(imagesJsonStr);
-            else return new ArrayList<>();
+            return parseJson(imagesJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-            invokeErrorEvent(e);
         }
 
         return null;
@@ -184,6 +180,10 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
                 .build();
     }
 
+    public interface TaskCompletedListener {
+        public void getImagesTaskCompleted(List<TmdbImage> result);
+    }
+
     public void addListener(TaskCompletedListener listener) {
         listeners.add(listener);
     }
@@ -193,15 +193,5 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
                 listeners) {
             listener.getImagesTaskCompleted(result);
         }
-    }
-
-    private void invokeErrorEvent(Exception e) {
-        for (TaskCompletedListener listener : listeners)
-            listener.error(e);
-    }
-
-    public interface TaskCompletedListener {
-        void getImagesTaskCompleted(List<TmdbImage> result);
-        void error(Exception e);
     }
 }
