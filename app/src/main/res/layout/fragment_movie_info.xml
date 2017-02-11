@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/facts"
-            android:layout_alignLeft="@+id/movie_info_overview_placeholder"
-            android:layout_alignStart="@+id/movie_info_overview_placeholder"
+            android:layout_marginStart="@dimen/movie_info_content_margin"
+            android:layout_marginLeft="@dimen/movie_info_content_margin"
             />
 
         <TextView
@@ -157,27 +157,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/overview"
-            android:layout_alignLeft="@+id/movie_info_overview_placeholder"
-            android:layout_alignStart="@+id/movie_info_overview_placeholder"
+            android:layout_alignLeft="@id/movie_info_facts_hint"
+            android:layout_alignStart="@id/movie_info_facts_hint"
             android:layout_below="@id/movie_info_production"
             android:layout_marginTop="@dimen/before_hint_header_spacing"
             />
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/movie_info_overview_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/movie_info_overview_hint"
-            android:layout_margin="@dimen/big_text_in_cardview_margin"
-            android:background="@color/cardview_dark_background"
-            app:cardCornerRadius="@dimen/big_text_in_cardview_corner_radius"
-            app:cardElevation="@dimen/big_text_in_cardview_elevation"
-            app:contentPadding="@dimen/big_text_in_cardview_padding">
+
 
             <at.blogc.android.views.ExpandableTextView
-                android:id="@+id/movie_info_biography"
+                android:id="@+id/movie_info_overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/movie_info_overview_hint"
+                android:layout_alignLeft="@id/movie_info_facts_hint"
+                android:layout_alignStart="@id/movie_info_facts_hint"
+                android:layout_marginRight="@dimen/movie_info_content_margin"
+                android:layout_marginEnd="@dimen/movie_info_content_margin"
                 android:ellipsize="end"
                 android:maxLines="5"
                 android:gravity="start"
@@ -185,13 +181,12 @@
                 app:animation_duration="1000" />
 
 
-        </android.support.v7.widget.CardView>
 
         <Button
             android:id="@+id/movie_info_biography_expand_btn"
             android:layout_width="@dimen/expand_button_width"
             android:layout_height="@dimen/expand_button_width"
-            android:layout_below="@id/movie_info_overview_placeholder"
+            android:layout_below="@id/movie_info_overview"
             android:layout_centerHorizontal="true"
             android:background="@drawable/ic_arrow_down"
             android:visibility="gone" />
@@ -202,8 +197,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/images"
-            android:layout_alignLeft="@+id/movie_info_overview_placeholder"
-            android:layout_alignStart="@+id/movie_info_overview_placeholder"
+            android:layout_alignLeft="@+id/movie_info_facts_hint"
+            android:layout_alignStart="@+id/movie_info_facts_hint"
             android:layout_below="@id/movie_info_biography_expand_btn"
             />
 
@@ -219,8 +214,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/movie_credits"
-            android:layout_alignLeft="@+id/movie_info_overview_placeholder"
-            android:layout_alignStart="@+id/movie_info_overview_placeholder"
+            android:layout_alignLeft="@+id/movie_info_facts_hint"
+            android:layout_alignStart="@+id/movie_info_facts_hint"
             android:layout_below="@id/movie_info_images_list"
             android:layout_marginTop="@dimen/before_hint_header_spacing"
             />

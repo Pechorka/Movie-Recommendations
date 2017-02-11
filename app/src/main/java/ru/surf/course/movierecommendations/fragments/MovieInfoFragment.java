@@ -100,7 +100,7 @@ public class MovieInfoFragment extends Fragment {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_biography);
+        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.movie_info_biography_expand_btn);
         voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
         backdrops = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
