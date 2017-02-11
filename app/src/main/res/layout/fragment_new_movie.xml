@@ -44,7 +44,7 @@
             android:layout_marginTop="@dimen/status_bar_height">
 
             <TextView
-                android:id="@+id/new_movie_info_name"
+                android:id="@+id/new_movie_info_title"
                 style="@style/Header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,16 +53,26 @@
                 android:paddingBottom="0dp" />
 
             <TextView
-                android:id="@+id/new_movie_info_birth_date"
+                android:id="@+id/new_movie_info_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/new_movie_info_name"
+                android:layout_below="@id/new_movie_info_title"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="@dimen/movie_info_release_date_text_size" />
-            
 
+            <android.support.v4.view.ViewPager
+                android:id="@+id/movie_info_infos_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/new_movie_info_release_date">
+
+            <android.support.design.widget.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            </android.support.v4.view.ViewPager>
             
 
         </RelativeLayout>

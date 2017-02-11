@@ -66,4 +66,7 @@
         <item>Female</item>
         <item>Male</item>
     </array>
+    <string name="reviews">Reviews</string>
+    <string name="rating">Rating</string>
+    <string name="overview">Overview</string>
 </resources>

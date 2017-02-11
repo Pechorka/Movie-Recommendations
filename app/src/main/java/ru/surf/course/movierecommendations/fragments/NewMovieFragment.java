@@ -28,6 +28,7 @@ import java.util.Locale;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
@@ -39,7 +40,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
  * Created by andrew on 2/11/17.
  */
 
-public class NewMovieInfoFragment extends Fragment {
+public class NewMovieFragment extends Fragment {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
@@ -55,19 +56,20 @@ public class NewMovieInfoFragment extends Fragment {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private View fakeStatusBar;
+    private ViewPager infosPager;
 
     private int dataLoaded = 0;
 
-    public static NewMovieInfoFragment newInstance(MovieInfo movie) {
-        NewMovieInfoFragment movieInfoFragment = new NewMovieInfoFragment();
+    public static NewMovieFragment newInstance(MovieInfo movie) {
+        NewMovieFragment movieInfoFragment = new NewMovieFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_MOVIE, movie);
         movieInfoFragment.setArguments(bundle);
         return movieInfoFragment;
     }
 
-    public static NewMovieInfoFragment newInstance(int movieId) {
-        NewMovieInfoFragment movieInfoFragment = new NewMovieInfoFragment();
+    public static NewMovieFragment newInstance(int movieId) {
+        NewMovieFragment movieInfoFragment = new NewMovieFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_MOVIE_ID, movieId);
         movieInfoFragment.setArguments(bundle);
@@ -90,7 +92,7 @@ public class NewMovieInfoFragment extends Fragment {
 
         setActivityToolbarVisibility(false);
 
-        View root = inflater.inflate(R.layout.fragment_new_movie_info, container, false);
+        View root = inflater.inflate(R.layout.fragment_new_movie, container, false);
         initViews(root);
         setupViews(root);
 
@@ -103,13 +105,14 @@ public class NewMovieInfoFragment extends Fragment {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        title = (TextView) root.findViewById(R.id.new_movie_info_name);
-        birthDate = (TextView) root.findViewById(R.id.new_movie_info_birth_date);
+        title = (TextView) root.findViewById(R.id.new_movie_info_title);
+        birthDate = (TextView) root.findViewById(R.id.new_movie_info_release_date);
         poster = (ImageView) root.findViewById(R.id.new_movie_info_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.new_movie_info_collapsing_toolbar_layout);
         toolbar = (Toolbar) root.findViewById(R.id.new_movie_info_toolbar);
         appBarLayout = (AppBarLayout) root.findViewById(R.id.new_movie_info_appbar_layout);
         fakeStatusBar = root.findViewById(R.id.new_movie_info_fake_status_bar);
+        infosPager = (ViewPager) root.findViewById(R.id.movie_info_infos_pager);
     }
 
     private void setupViews(View root) {
@@ -207,6 +210,9 @@ public class NewMovieInfoFragment extends Fragment {
 
         if (Utilities.checkString(currentMovie.getPosterPath()))
             ImageLoader.putPosterNoResize(getActivity(), currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
+
+        MovieInfosPagerAdapter movieInfosPagerAdapter = new MovieInfosPagerAdapter(getChildFragmentManager(), getActivity(), currentMovie);
+        infosPager.setAdapter(movieInfosPagerAdapter);
     }
 
     private void dataLoadComplete() {

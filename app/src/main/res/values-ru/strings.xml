@@ -36,4 +36,7 @@
         <item>Женский</item>
         <item>Мужской</item>
     </array>
+    <string name="reviews">Отзывы</string>
+    <string name="rating">Рейтинг</string>
+    <string name="overview">Описание</string>
 </resources>

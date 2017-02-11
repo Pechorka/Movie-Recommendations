@@ -6,33 +6,32 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.fragments.PersonCreditsFragment;
-import ru.surf.course.movierecommendations.fragments.PersonFactsFragment;
-import ru.surf.course.movierecommendations.models.Person;
+import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 
 /**
- * Created by andrew on 2/9/17.
+ * Created by andrew on 2/11/17.
  */
 
-public class PersonInfosPagerAdapter extends FragmentStatePagerAdapter {
+public class MovieInfosPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final int PAGE_COUNT = 2;
     private Context mContext;
-    private Person mPerson;
+    private MovieInfo mMovieInfo;
 
-    public PersonInfosPagerAdapter(FragmentManager fm, Context context, Person person) {
+    public MovieInfosPagerAdapter(FragmentManager fm, Context context, MovieInfo movieInfo) {
         super(fm);
         mContext = context;
-        mPerson = person;
+        mMovieInfo = movieInfo;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return PersonCreditsFragment.newInstance(mPerson);
+                return MovieInfoFragment.newInstance(mMovieInfo);
             case 1:
-                return PersonFactsFragment.newInstance(mPerson);
+                return MovieInfoFragment.newInstance(mMovieInfo);
         }
         return null;
     }
@@ -46,9 +45,9 @@ public class PersonInfosPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return mContext.getResources().getString(R.string.credits);
-            case 1:
                 return mContext.getResources().getString(R.string.info);
+            case 1:
+                return mContext.getResources().getString(R.string.reviews);
         }
         return null;
     }

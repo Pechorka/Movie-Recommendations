@@ -11,17 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import java.util.List;
 import java.util.Locale;
 
-import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Media;
@@ -29,7 +25,6 @@ import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 
 /**
  * Created by andrew on 2/9/17.
@@ -124,7 +119,7 @@ public class PersonCreditsFragment extends Fragment {
                     Fragment fragment = null;
                     Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
                     if (media instanceof MovieInfo)
-                        fragment = MovieInfoFragment.newInstance((MovieInfo)media);
+                        fragment = OldMovieInfoFragment.newInstance((MovieInfo)media);
                     else if (media instanceof TVShowInfo)
                         return;
                     ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, fragment);
