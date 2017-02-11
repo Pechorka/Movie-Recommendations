@@ -85,6 +85,12 @@
             android:background="@drawable/ic_arrow_down"
             android:visibility="gone" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/movie_info_images_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_info_biography_expand_btn"/>
+
         <RelativeLayout
             android:id="@+id/movie_info_progress_bar_placeholder"
             android:layout_width="match_parent"

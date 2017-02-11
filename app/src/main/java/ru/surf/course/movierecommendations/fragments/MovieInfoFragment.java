@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +22,12 @@ import java.util.Locale;
 import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.TmdbImage;
+import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 /**
  * Created by andrew on 2/11/17.
@@ -31,7 +37,7 @@ public class MovieInfoFragment extends Fragment {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
-    final static int DATA_TO_LOAD = 1;
+    final static int DATA_TO_LOAD = 2;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -40,6 +46,8 @@ public class MovieInfoFragment extends Fragment {
     private MovieInfo currentMovieInfo;
     private MovieInfo currentMovieInfoEnglish;
     private TextView voteAverage;
+    private RecyclerView backdrops;
+    private MovieInfoImagesAdapter movieInfoImagesAdapter;
 
     private int dataLoaded = 0;
 
@@ -81,6 +89,7 @@ public class MovieInfoFragment extends Fragment {
         overview = (ExpandableTextView) root.findViewById(R.id.movie_info_biography);
         expandCollapseBiographyButton = (Button)root.findViewById(R.id.movie_info_biography_expand_btn);
         voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
+        backdrops = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
     }
 
     private void setupViews(View root) {
@@ -95,6 +104,7 @@ public class MovieInfoFragment extends Fragment {
         };
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
+        backdrops.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     @Override
@@ -103,6 +113,7 @@ public class MovieInfoFragment extends Fragment {
         if (getArguments().containsKey(KEY_MOVIE)) {
             currentMovieInfo = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
             dataLoadComplete();
+            loadBackdropsInto(currentMovieInfo);
         } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
             currentMovieInfo = new MovieInfo(getArguments().getInt(KEY_MOVIE_ID));
             loadInformationInto(currentMovieInfo, getCurrentLocale().getLanguage());
@@ -117,9 +128,22 @@ public class MovieInfoFragment extends Fragment {
                 if (movie != null)
                     movie.fillFields(result.get(0));
                 dataLoadComplete();
+                loadBackdropsInto(currentMovieInfo);
             }
         });
         getMovieInfosTask.getMovieById(movie.getId(), language);
+    }
+
+    private void loadBackdropsInto(final MovieInfo movie) {
+        GetImagesTask getImagesTask = new GetImagesTask();
+        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
+            @Override
+            public void getImagesTaskCompleted(List<TmdbImage> result) {
+                movie.setBackdrops(result);
+                dataLoadComplete();
+            }
+        });
+        getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
     }
 
     private boolean checkInformation(MovieInfo movie) {
@@ -147,6 +171,9 @@ public class MovieInfoFragment extends Fragment {
         });
 
         voteAverage.setText(String.valueOf(currentMovieInfo.getVoteAverage()));
+
+        movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentMovieInfo.getBackdrops(), getActivity());
+        backdrops.setAdapter(movieInfoImagesAdapter);
     }
 
     private void dataLoadComplete() {

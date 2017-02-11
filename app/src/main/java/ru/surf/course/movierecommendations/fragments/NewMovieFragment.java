@@ -44,7 +44,7 @@ public class NewMovieFragment extends Fragment {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
-    final static int DATA_TO_LOAD = 2;
+    final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
@@ -146,7 +146,6 @@ public class NewMovieFragment extends Fragment {
         }
         if (currentMovie != null) {
             loadInformationInto(currentMovie, getCurrentLocale().getLanguage());
-            loadBackdropsInto(currentMovie);
         }
 
         if (Build.VERSION.SDK_INT >= 19) {
@@ -175,18 +174,6 @@ public class NewMovieFragment extends Fragment {
             }
         });
         getMoviesTask.getMovieById(movie.getId(), language);
-    }
-
-    private void loadBackdropsInto(final MovieInfo movie) {
-        GetImagesTask getImagesTask = new GetImagesTask();
-        getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-            @Override
-            public void getImagesTaskCompleted(List<TmdbImage> result) {
-                movie.setBackdrops(result);
-                dataLoadComplete();
-            }
-        });
-        getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
     }
 
     private boolean checkInformation(MovieInfo movie) {
