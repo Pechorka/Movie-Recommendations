@@ -73,6 +73,13 @@ public class PersonInfoFragment extends Fragment {
         return personInfoFragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).setDrawerEnabled(false);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,6 +150,8 @@ public class PersonInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         setActivityToolbarVisibility(true);
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).setDrawerEnabled(true);
         super.onDetach();
     }
 
