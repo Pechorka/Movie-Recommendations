@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,11 +55,11 @@ public class MovieFragment extends Fragment {
     private MovieInfo currentMovie;
     private ImageView poster;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private View fakeStatusBar;
     private ViewPager infosPager;
     private TextView originalTitle;
+    private Button backButton;
 
     private int dataLoaded = 0;
 
@@ -112,16 +113,15 @@ public class MovieFragment extends Fragment {
         releaseDate = (TextView) root.findViewById(R.id.movie_release_date);
         poster = (ImageView) root.findViewById(R.id.movie_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.movie_collapsing_toolbar_layout);
-        toolbar = (Toolbar) root.findViewById(R.id.movie_toolbar);
         appBarLayout = (AppBarLayout) root.findViewById(R.id.movie_appbar_layout);
         fakeStatusBar = root.findViewById(R.id.movie_fake_status_bar);
         infosPager = (ViewPager) root.findViewById(R.id.movie_info_infos_pager);
         originalTitle = (TextView)root.findViewById(R.id.movie_original_title);
+        backButton = (Button)root.findViewById(R.id.movie_back_button);
     }
 
     private void setupViews(View root) {
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -132,9 +132,9 @@ public class MovieFragment extends Fragment {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 verticalOffset = Math.abs(verticalOffset);
-                int offsetToToolbar = appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight() - fakeStatusBar.getMeasuredHeight();
+                int offsetToToolbar = appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(getActivity()) - fakeStatusBar.getMeasuredHeight();
                 if (verticalOffset >= offsetToToolbar) {
-                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/toolbar.getMeasuredHeight());
+                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/Utilities.getActionBarHeight(getActivity()));
                 }
             }
         });

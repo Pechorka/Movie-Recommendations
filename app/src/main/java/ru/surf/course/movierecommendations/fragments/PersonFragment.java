@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,10 +53,10 @@ public class PersonFragment extends Fragment {
     private Person currentPerson;
     private ImageView pictureProfile;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private ViewPager infosPager;
     private View fakeStatusBar;
+    private Button backButton;
 
     private int dataLoaded = 0;
 
@@ -107,28 +108,27 @@ public class PersonFragment extends Fragment {
         birthDate = (TextView) root.findViewById(R.id.person_birth_date);
         pictureProfile = (ImageView) root.findViewById(R.id.person_backdrop);
         collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.person_collapsing_toolbar_layout);
-        toolbar = (Toolbar) root.findViewById(R.id.person_toolbar);
         appBarLayout = (AppBarLayout) root.findViewById(R.id.person_appbar_layout);
         infosPager = (ViewPager) root.findViewById(R.id.person_infos_pager);
         fakeStatusBar = root.findViewById(R.id.person_fake_status_bar);
+        backButton = (Button)root.findViewById(R.id.person_back_button);
     }
 
     private void setupViews(View root) {
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+       backButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               getActivity().onBackPressed();
+           }
+       });
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 verticalOffset = Math.abs(verticalOffset);
-                int offsetToToolbar = appBarLayout.getTotalScrollRange() - toolbar.getMeasuredHeight() - fakeStatusBar.getMeasuredHeight();
+                int offsetToToolbar = appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(getActivity()) - fakeStatusBar.getMeasuredHeight();
                 if (verticalOffset >= offsetToToolbar) {
-                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/toolbar.getMeasuredHeight());
+                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/Utilities.getActionBarHeight(getActivity()));
                 }
             }
         });
