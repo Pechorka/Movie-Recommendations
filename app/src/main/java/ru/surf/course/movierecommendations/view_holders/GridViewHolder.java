@@ -1,9 +1,11 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.view_holders;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+
+import ru.surf.course.movierecommendations.R;
 
 /**
  * Created by Sergey on 09.02.2017.

@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.tmdbTasks;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -21,25 +20,14 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
  * Created by Sergey on 07.02.2017.
  */
 
-public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
-
-    private final String API_KEY_PARAM = "api_key";
-    private final String LANGUAGE_PARAM = "language";
-    private final String PAGE_PARAM = "page";
-    private final String NAME_PARAM = "query";
-    private boolean newResult;
-
-
-    private final String LOG_TAG = getClass().getSimpleName();
-    private boolean isLoadingList;
-    private Tasks task;
-    private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
+public class GetTVShowsTask extends GetMediaTask {
 
     @Override
     protected List<TVShowInfo> doInBackground(String... params) {
@@ -72,9 +60,9 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
 //                case SEARCH_BY_ID:
 //                    builtUri = uriByFilterOrId(params[0], languageName, page);
 //                    break;
-//                case SEARCH_BY_NAME:
-//                    builtUri = uriByName(params[0]);
-//                    break;
+                case SEARCH_BY_NAME:
+                    builtUri = uriByName(params[0], languageName, page);
+                    break;
 //                case SEARCH_BY_GENRE:
 //                    builtUri = uriByGenre(Integer.parseInt(params[0]), languageName);
 //                    break;
@@ -142,19 +130,50 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
         return null;
     }
 
-    private Uri uriByFilterOrId(String filter, String language, String page) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv/" + filter + "?";
-        return Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-                .appendQueryParameter(LANGUAGE_PARAM, language)
-                .appendQueryParameter(PAGE_PARAM, page)
-                .build();
+    @Override
+    protected void onPostExecute(List<? extends Media> medias) {
+        invokeEvent(medias);
+    }
+
+
+    @Override
+    public void getMediaById(int movieId, String language) {
+
     }
 
     @Override
-    protected void onPostExecute(List<TVShowInfo> movieInfos) {
-        invokeEvent(movieInfos);
+    public void getMediaByFilter(String filter, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_FILTER;
+        execute(filter, language, page);
     }
+
+    @Override
+    public void getMediaByName(String name, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_NAME;
+        execute(name, language, page);
+    }
+
+    @Override
+    public void getMediaByGenre(int genreId, String language) {
+
+    }
+
+    @Override
+    public void getSimilarMedia(int movieId, String language) {
+
+    }
+
+    @Override
+    public void getMediaByKeyword(int keywordId, String language) {
+
+    }
+
+    @Override
+    public void getMediaByCustomFilter(String language, String page, String genres, String releaseDateGTE, String releaseDateLTE) {
+    }
+
 
     private List<TVShowInfo> parseJson(String jsonStr) throws JSONException, ParseException {
         final String TMDB_RESULTS = "results";
@@ -305,23 +324,29 @@ public class GetTVShowsTask extends AsyncTask<String, Void, List<TVShowInfo>> {
         return result;
     }
 
-    public void addListener(TaskCompletedListener toAdd) {
-        listeners.add(toAdd);
+    private Uri uriByFilterOrId(String filter, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv/" + filter + "?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .build();
     }
 
-    public void getTVShowsByFilter(String filter, String language, String page) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_FILTER;
-        execute(filter, language, page);
+    private Uri uriByName(String name, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/tv?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(NAME_PARAM, name)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .build();
     }
 
 
-    private void invokeEvent(List<TVShowInfo> result) {
+    private void invokeEvent(List<? extends Media> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.tvshowsLoaded(result, newResult);
+            listener.mediaLoaded(result, newResult);
     }
 
-    public interface TaskCompletedListener {
-        void tvshowsLoaded(List<TVShowInfo> result, boolean newResult);
-    }
 }

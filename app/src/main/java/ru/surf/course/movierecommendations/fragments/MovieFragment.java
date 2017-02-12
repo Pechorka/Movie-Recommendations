@@ -26,12 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ru.surf.course.movierecommendations.GalleryActivity;
-import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.activities.GalleryActivity;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
+import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -167,15 +169,15 @@ public class MovieFragment extends Fragment {
 
     private void loadInformationInto(final MovieInfo movie, String language) {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
-        getMoviesTask.addListener(new GetMoviesTask.TaskCompletedListener() {
+        getMoviesTask.addListener(new GetMediaTask.TaskCompletedListener() {
             @Override
-            public void moviesLoaded(List<MovieInfo> result, boolean newResult) {
+            public void mediaLoaded(List<? extends Media> result, boolean newResult) {
                 if (movie != null)
                     movie.fillFields(result.get(0));
                 dataLoadComplete();
             }
         });
-        getMoviesTask.getMovieById(movie.getId(), language);
+        getMoviesTask.getMediaById(movie.getId(), language);
     }
 
     private boolean checkInformation(MovieInfo movie) {

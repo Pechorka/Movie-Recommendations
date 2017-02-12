@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.GalleryPagerAdapter;
 
 /**
@@ -19,6 +20,7 @@ public class GalleryActivity extends AppCompatActivity {
 
     public static final String IMAGES_TAG = "images";
     public static final String INIT_POSITION_TAG = "init_position";
+    ViewPager viewPager;
 
     public static void start(Context context, ArrayList<String> paths) {
         Intent intent = new Intent(context, GalleryActivity.class);
@@ -32,8 +34,6 @@ public class GalleryActivity extends AppCompatActivity {
         intent.putExtra(INIT_POSITION_TAG, initPosition);
         context.startActivity(intent);
     }
-
-    ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

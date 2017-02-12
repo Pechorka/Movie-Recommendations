@@ -1,6 +1,5 @@
 package ru.surf.course.movierecommendations.adapters;
 
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -10,28 +9,26 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import ru.surf.course.movierecommendations.GridViewHolder;
-import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.fragments.MovieFragment;
+import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.view_holders.GridViewHolder;
 
 /**
- * Created by sergey on 05.12.16.
+ * Created by Sergey on 12.02.2017.
  */
 
-public class GridMoviesAdapter extends RecyclerView.Adapter<GridViewHolder> {
-
-    private List<MovieInfo> movieInfoList;
+public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
+    private List<? extends Media> mediaList;
     private Context context;
 
-    public GridMoviesAdapter(Context context, List<MovieInfo> movieInfoList) {
+    public GridMediaAdapter(Context context, List<? extends Media> mediaList) {
         this.context = context;
-        this.movieInfoList = movieInfoList;
+        this.mediaList = mediaList;
     }
-
-
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,13 +37,13 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(GridViewHolder holder, int position) {
-        final MovieInfo movieInfo = movieInfoList.get(position);
-        ImageLoader.putPoster(context, movieInfo.getPosterPath(), holder.image, ImageLoader.sizes.w500);
+    public void onBindViewHolder(final GridViewHolder holder, int position) {
+        Media media = mediaList.get(position);
+        ImageLoader.putPoster(context, media.getPosterPath(), holder.image, ImageLoader.sizes.w500);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentToSwitch(movieInfo);
+                fragmentToSwitch(holder.getAdapterPosition());
             }
         });
     }
@@ -54,16 +51,18 @@ public class GridMoviesAdapter extends RecyclerView.Adapter<GridViewHolder> {
 
     @Override
     public int getItemCount() {
-        return movieInfoList.size();
+        return mediaList.size();
     }
 
-    private void fragmentToSwitch(MovieInfo info) {
-        MovieFragment movieInfoFragment = MovieFragment.newInstance(info);
-        switchContent(R.id.activity_main_container, movieInfoFragment);
+    private void fragmentToSwitch(int position) {
+        if (mediaList.get(position) instanceof MovieInfo) {
+            MovieFragment movieInfoFragment = MovieFragment.newInstance((MovieInfo) mediaList.get(position));
+            switchContent(R.id.activity_main_container, movieInfoFragment);
+        }
     }
 
-    public void setMovieInfoList(List<MovieInfo> list) {
-        movieInfoList = list;
+    public void setMediaList(List<? extends Media> list) {
+        mediaList = list;
     }
 
 

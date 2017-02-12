@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.tmdbTasks;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 
 /**
@@ -28,20 +28,7 @@ import ru.surf.course.movierecommendations.models.MovieInfo;
  */
 
 
-public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
-
-    private final String API_KEY_PARAM = "api_key";
-    private final String LANGUAGE_PARAM = "language";
-    private final String PAGE_PARAM = "page";
-    private final String NAME_PARAM = "query";
-    private final String RELEASE_DATE_GTE = "release_date.gte";
-    private final String RELEASE_DATE_LTE = "release_date.lte";
-    private final String WITH_GENRES = "with_genres";
-    private final String LOG_TAG = getClass().getSimpleName();
-    private boolean isLoadingList;
-    private boolean newResult;
-    private Tasks task;
-    private List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
+public class GetMoviesTask extends GetMediaTask {
 
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
@@ -76,7 +63,7 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                     builtUri = uriByFilterOrId(params[0], languageName, page);
                     break;
                 case SEARCH_BY_NAME:
-                    builtUri = uriByName(params[0]);
+                    builtUri = uriByName(params[0], languageName, page);
                     break;
                 case SEARCH_BY_GENRE:
                     builtUri = uriByGenre(Integer.parseInt(params[0]), languageName);
@@ -156,8 +143,59 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
     }
 
     @Override
-    protected void onPostExecute(List<MovieInfo> movieInfos) {
+    protected void onPostExecute(List<? extends Media> movieInfos) {
         invokeEvent(movieInfos);
+    }
+
+    @Override
+    public void getMediaById(int movieId, String language) {
+        isLoadingList = false;
+        task = Tasks.SEARCH_BY_ID;
+        execute(Integer.toString(movieId), language);
+    }
+
+    @Override
+    public void getMediaByFilter(String filter, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_FILTER;
+        execute(filter, language, page);
+    }
+
+    @Override
+    public void getMediaByName(String name, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_NAME;
+        execute(name, language, page);
+    }
+
+    @Override
+    public void getMediaByGenre(int genreId, String language) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_GENRE;
+        execute(Integer.toString(genreId), language);
+    }
+
+    @Override
+    public void getSimilarMedia(int movieId, String language) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_SIMILAR;
+        execute(Integer.toString(movieId), language);
+    }
+
+    @Override
+    public void getMediaByKeyword(int keywordId, String language) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_KEYWORD;
+        execute(Integer.toString(keywordId), language);
+    }
+
+    @Override
+    public void getMediaByCustomFilter(String language, String page, String genres,
+                                       String releaseDateGTE, String releaseDateLTE) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
+
     }
 
     private List<MovieInfo> parseJson(String jsonStr) throws JSONException, ParseException {
@@ -279,68 +317,22 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
         return result;
     }
 
-    public void addListener(TaskCompletedListener toAdd) {
-        listeners.add(toAdd);
-    }
-
-    private void invokeEvent(List<MovieInfo> result) {
+    private void invokeEvent(List<? extends Media> result) {
         for (TaskCompletedListener listener : listeners)
-            listener.moviesLoaded(result, newResult);
-    }
-
-    public void getMovieById(int movieId, String language) {
-        isLoadingList = false;
-        task = Tasks.SEARCH_BY_ID;
-        execute(Integer.toString(movieId), language);
-    }
-
-    public void getMoviesByFilter(String filter, String language, String page) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_FILTER;
-        execute(filter, language, page);
-    }
-
-    public void getMoviesByName(String name) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_NAME;
-        execute(name);
-    }
-
-    public void getMoviesByGenre(int genreId, String language) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_GENRE;
-        execute(Integer.toString(genreId), language);
-    }
-
-    public void getSimilarMovies(int movieId, String language) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_SIMILAR;
-        execute(Integer.toString(movieId), language);
-    }
-
-    public void getMoviesByKeyword(int keywordId, String language) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_KEYWORD;
-        execute(Integer.toString(keywordId), language);
-    }
-
-    public void getMoviesByCustomFilter(String language, String page, String genres,
-                                        String releaseDateGTE, String releaseDateLTE) {
-        isLoadingList = true;
-        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
-        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
-
+            listener.mediaLoaded(result, newResult);
     }
 
     private String prepareForUri(String filter) {
         return filter.toLowerCase().replace(' ', '_');
     }
 
-    private Uri uriByName(String name) {
+    private Uri uriByName(String name, String language, String page) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(NAME_PARAM, name)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
                 .build();
     }
 
@@ -395,8 +387,4 @@ public class GetMoviesTask extends AsyncTask<String, Void, List<MovieInfo>> {
                 .build();
     }
 
-
-    public interface TaskCompletedListener {
-        void moviesLoaded(List<MovieInfo> result, boolean newResult);
-    }
 }

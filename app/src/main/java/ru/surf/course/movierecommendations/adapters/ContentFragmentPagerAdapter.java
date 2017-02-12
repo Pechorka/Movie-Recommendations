@@ -5,8 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ru.surf.course.movierecommendations.fragments.MovieListFragment;
-import ru.surf.course.movierecommendations.fragments.TVShowListFragment;
+import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 
 /**
@@ -18,11 +17,11 @@ public class ContentFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private Context context;
     private String filter;
-    private MovieListFragment movieListFragment;
-    private TVShowListFragment tvShowListFragment;
+    private MediaListFragment movieListFragment;
+    private MediaListFragment tvShowListFragment;
 
     public ContentFragmentPagerAdapter(FragmentManager fm, Context context, Filters filter
-            , MovieListFragment movieListFragment, TVShowListFragment tvShowListFragment) {
+            , MediaListFragment movieListFragment, MediaListFragment tvShowListFragment) {
         super(fm);
         this.context = context;
         this.filter = filter.toString();

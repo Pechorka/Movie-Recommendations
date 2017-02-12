@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.listeners;
 
 import android.support.design.widget.AppBarLayout;
 
@@ -7,12 +7,6 @@ import android.support.design.widget.AppBarLayout;
  */
 
 public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
-
-    public enum State {
-        EXPANDED,
-        COLLAPSED,
-        IDLE
-    }
 
     private State mCurrentState = State.IDLE;
 
@@ -41,4 +35,10 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
     }
 
     public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
+
+    public enum State {
+        EXPANDED,
+        COLLAPSED,
+        IDLE
+    }
 }

@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ru.surf.course.movierecommendations.GalleryActivity;
-import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
+import ru.surf.course.movierecommendations.activities.GalleryActivity;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.PersonInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;

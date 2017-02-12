@@ -16,8 +16,8 @@ import android.widget.ProgressBar;
 import java.util.List;
 import java.util.Locale;
 
-import ru.surf.course.movierecommendations.MainActivity;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Media;

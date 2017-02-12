@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations;
+package ru.surf.course.movierecommendations.activities;
 
 
 import android.content.Context;
@@ -30,9 +30,9 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
-import ru.surf.course.movierecommendations.fragments.MovieListFragment;
-import ru.surf.course.movierecommendations.fragments.TVShowListFragment;
+import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -40,24 +40,43 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
+    public static final String KEY_SEARCH_QUERY = "search_query";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final int UPCOMING_OR_ONAIR_ID = 2;
 
-    private MovieListFragment movieListFragment;
-    private TVShowListFragment tvShowListFragment;
+
+    private MediaListFragment movieListFragment;
+    private MediaListFragment tvShowListFragment;
+    private DrawerLayout mDrawer;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+    private String language;
+    private String query;
+    private String previousQuery;
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
         context.startActivity(intent);
     }
 
-    private DrawerLayout mDrawer;
-    private NavigationView nvDrawer;
-    private ActionBarDrawerToggle drawerToggle;
+    public static boolean isInternetAvailable(Context context) {
+        NetworkInfo info = ((ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
-    private String language;
-    private String query;
-    private String previousQuery;
+        if (info == null) {
+            Log.d(LOG_TAG, "no internet connection");
+            return false;
+        } else {
+            if (info.isConnected()) {
+                Log.d(LOG_TAG, " internet connection available...");
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -97,10 +116,10 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         query = Filters.popular.toString();
-        movieListFragment = MovieListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER);
-        tvShowListFragment = TVShowListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER);
+        movieListFragment = MediaListFragment.newInstance(query,
+                language, Tasks.SEARCH_BY_FILTER, true);
+        tvShowListFragment = MediaListFragment.newInstance(query,
+                language, Tasks.SEARCH_BY_FILTER, false);
         viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
                 this, Filters.popular, movieListFragment, tvShowListFragment));
 
@@ -120,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         nvDrawer.getMenu().removeItem(2);
-                        nvDrawer.getMenu().add(R.id.nav_main, 2, 3, getResources().getString(R.string.upcoming));
+                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_OR_ONAIR_ID, 2, getResources().getString(R.string.upcoming));
                         nvDrawer.getMenu().getItem(3).setIcon(R.drawable.upcoming_icon);
                         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                             @Override
@@ -132,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         nvDrawer.getMenu().removeItem(2);
-                        nvDrawer.getMenu().add(R.id.nav_main, 2, 3, getResources().getString(R.string.on_air));
+                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_OR_ONAIR_ID, 2, getResources().getString(R.string.on_air));
                         nvDrawer.getMenu().getItem(3).setIcon(R.drawable.on_air_icon);
                         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                             @Override
@@ -182,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 query = Filters.top_rated.toString();
                 setTitle(R.string.top);
                 break;
-            case 2://upcoming
+            case UPCOMING_OR_ONAIR_ID:
                 query = Filters.upcoming.toString();
                 setTitle(R.string.upcoming);
                 break;
@@ -199,10 +218,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (!query.equals(Filters.custom.toString())) {
             movieListFragment.setCallOptionsVisability(View.GONE);
-            movieListFragment.loadMoviesInfoByFilter(query, language, "1");
+            movieListFragment.loadMediaInfoByFilter(query, language, "1");
         } else {
             movieListFragment.setCallOptionsVisability(View.VISIBLE);
-            movieListFragment.loadMovieInfoByCustomFilter(language, "1");
+            movieListFragment.loadMediaInfoByCustomFilter(language, "1");
         }
         mDrawer.closeDrawers();
     }
@@ -218,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 query = Filters.top_rated.toString();
                 setTitle(R.string.top);
                 break;
-            case 2:
+            case UPCOMING_OR_ONAIR_ID:
                 query = Filters.upcoming.toString();
                 setTitle(R.string.upcoming);
                 break;
@@ -235,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!query.equals(Filters.custom.toString())) {
             tvShowListFragment.setCallOptionsVisability(View.GONE);
-            tvShowListFragment.loadTVShowInfoByFilter(query, language, "1");
+            tvShowListFragment.loadMediaInfoByFilter(query, language, "1");
         } else {
             tvShowListFragment.setCallOptionsVisability(View.VISIBLE);
         }
@@ -276,6 +295,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    //    private void loadMainFragment(Bundle savedInstanceState, String filter) {
+//        if (savedInstanceState == null) {
+//            final FragmentManager fragmentManager = getFragmentManager();
+//            moviesListFragment = MoviesListFragment.newInstance(filter, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
+//            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
+//        } else {
+//            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
+//        }
+//    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -297,38 +327,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //    private void loadMainFragment(Bundle savedInstanceState, String filter) {
-//        if (savedInstanceState == null) {
-//            final FragmentManager fragmentManager = getFragmentManager();
-//            moviesListFragment = MoviesListFragment.newInstance(filter, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
-//            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
-//        } else {
-//            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
-//        }
-//    }
-
-    public static boolean isInternetAvailable(Context context) {
-        NetworkInfo info = ((ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-
-        if (info == null) {
-            Log.d(LOG_TAG, "no internet connection");
-            return false;
-        } else {
-            if (info.isConnected()) {
-                Log.d(LOG_TAG, " internet connection available...");
-                return true;
-            } else {
-                return false;
-            }
-
-        }
-    }
-
-
 //    private void searchByName(String name) {
-//        MoviesListFragment fragment = MoviesListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_NAME, true);
-//        switchContent(R.id.activity_main_container, fragment);
+//        MovieListFragment fragment = MovieListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_MOVIES_BY_NAME);
+//        switchContent(R.id.viewpager, fragment);
 //    }
 
     public void switchContent(int id, Fragment fragment) {
