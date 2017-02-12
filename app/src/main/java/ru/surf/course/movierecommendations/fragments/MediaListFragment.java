@@ -143,8 +143,8 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         }
     }
 
-    public void setCallOptionsVisability(int visability) {
-        callOptions.setVisibility(visability);
+    public void setCallOptionsVisibility(int visibility) {
+        callOptions.setVisibility(visibility);
     }
 
     public void dataLoadComplete() {

@@ -23,7 +23,7 @@ public abstract class GetMediaTask extends AsyncTask<String, Void, List<? extend
     protected boolean isLoadingList;
     protected boolean newResult;
     protected Tasks task;
-    protected List<TaskCompletedListener> listeners = new ArrayList<TaskCompletedListener>();
+    protected List<TaskCompletedListener> listeners = new ArrayList<>();
 
     public abstract void getMediaById(int movieId, String language);
 

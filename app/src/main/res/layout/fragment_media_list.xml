@@ -18,7 +18,7 @@
                 android:id="@+id/movie_list_call_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="setup filter"
+                android:text="@string/setup_filter"
                 android:textSize="30sp"
                 android:visibility="gone" />
 
