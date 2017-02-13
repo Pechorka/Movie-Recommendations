@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private String language;
     private String query;
     private String previousQuery;
+    private int movieLastDrawerItemId;
+    private int tvshowLastDrawerItemId;
     private MediaListFragment movieListFragment;
     private MediaListFragment tvShowListFragment;
 
@@ -171,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
         nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
         nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+        nvDrawer.getMenu().getItem(0).setChecked(true);
+        movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -194,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             }
                         });
+                        nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
                         break;
                     case 1:
                         nvDrawer.getMenu().removeItem(UPCOMING_ID);
@@ -202,10 +207,11 @@ public class MainActivity extends AppCompatActivity {
                         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                             @Override
                             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                selectDrawerItem(item, true);
+                                selectDrawerItem(item, false);
                                 return true;
                             }
                         });
+                        nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
                         break;
                 }
             }
@@ -247,8 +253,8 @@ public class MainActivity extends AppCompatActivity {
                 setTitle(R.string.top);
                 break;
             case ON_AIR_ID:
-                query = Filters.upcoming.toString();
-                setTitle(R.string.upcoming);
+                query = Filters.on_the_air.toString();
+                setTitle(R.string.on_air);
                 break;
             case UPCOMING_ID:
                 query = Filters.upcoming.toString();
@@ -264,6 +270,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         menuItem.setChecked(true);
+        if (movie) {
+            movieLastDrawerItemId = menuItem.getItemId();
+        } else {
+            tvshowLastDrawerItemId = menuItem.getItemId();
+        }
         loadInformation(movie);
         mDrawer.closeDrawers();
     }
@@ -283,13 +294,14 @@ public class MainActivity extends AppCompatActivity {
                 tvShowListFragment.loadMediaInfoByFilter(query, language, "1");
             } else {
                 tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
+                tvShowListFragment.loadMediaInfoByCustomFilter(language, "1");
             }
         }
     }
 
 
 //    private void searchByName(String name) {
-//        MovieListFragment fragment = MovieListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_MOVIES_BY_NAME);
+//
 //        switchContent(R.id.viewpager, fragment);
 //    }
 

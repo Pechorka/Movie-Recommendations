@@ -66,13 +66,13 @@ public class GetMoviesTask extends GetMediaTask {
                     builtUri = uriByName(params[0], languageName, page);
                     break;
                 case SEARCH_BY_GENRE:
-                    builtUri = uriByGenre(Integer.parseInt(params[0]), languageName);
+                    builtUri = uriByGenreIds(params[0], languageName, page);
                     break;
                 case SEARCH_SIMILAR:
-                    builtUri = uriSimilar(params[0], languageName, page);
+                    builtUri = uriForSimilar(params[0], languageName, page);
                     break;
                 case SEARCH_BY_KEYWORD:
-                    builtUri = uriByKeyword(params[0], languageName);
+                    builtUri = uriByKeywords(params[0], languageName, page);
                     break;
                 case SEARCH_BY_CUSTOM_FILTER:
                     builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4]);
@@ -169,25 +169,26 @@ public class GetMoviesTask extends GetMediaTask {
     }
 
     @Override
-    public void getMediaByGenre(int genreId, String language) {
+    public void getMediaByGenre(String genreIds, String language, String page) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_GENRE;
-        execute(Integer.toString(genreId), language);
+        execute(genreIds, language, page);
     }
 
     @Override
-    public void getSimilarMedia(int movieId, String language) {
+    public void getSimilarMedia(int tvId, String language, String page) {
         isLoadingList = true;
         task = Tasks.SEARCH_SIMILAR;
-        execute(Integer.toString(movieId), language);
+        execute(Integer.toString(tvId), language, page);
     }
 
     @Override
-    public void getMediaByKeyword(int keywordId, String language) {
+    public void getMediaByKeywords(String keywordIds, String language, String page) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_KEYWORD;
-        execute(Integer.toString(keywordId), language);
+        execute(keywordIds, language, page);
     }
+
 
     @Override
     public void getMediaByCustomFilter(String language, String page, String genres,
@@ -352,25 +353,31 @@ public class GetMoviesTask extends GetMediaTask {
         Uri.Builder uri = Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
-                .appendQueryParameter(PAGE_PARAM, page)
-                .appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE)
-                .appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE);
+                .appendQueryParameter(PAGE_PARAM, page);
+        if (releaseDateLTE != null) {
+            uri.appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE);
+        }
+        if (releaseDateGTE != null) {
+            uri.appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE);
+        }
         if (genres.length() != 0) {
             uri.appendQueryParameter(WITH_GENRES, genres);
         }
         return uri.build();
     }
 
-    private Uri uriByGenre(int genreID, String language) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/genre/" + genreID + "?/movies";
+    private Uri uriByGenreIds(String genreIDs, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
         //TODO add sort
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .appendQueryParameter(WITH_GENRES, genreIDs)
                 .build();
     }
 
-    private Uri uriSimilar(String movieId, String language, String page) {
+    private Uri uriForSimilar(String movieId, String language, String page) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/" + movieId + "/similar?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
@@ -379,11 +386,12 @@ public class GetMoviesTask extends GetMediaTask {
                 .build();
     }
 
-    private Uri uriByKeyword(String keywordID, String language) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/keyword/" + keywordID + "/movies?";
+    private Uri uriByKeywords(String keywords, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(WITH_KEYWORDS, keywords)
                 .build();
     }
 

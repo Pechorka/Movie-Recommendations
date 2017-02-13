@@ -10,7 +10,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
-import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -169,9 +167,9 @@ public class MovieFragment extends Fragment {
 
     private void loadInformationInto(final MovieInfo movie, String language) {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
-        getMoviesTask.addListener(new GetMediaTask.TaskCompletedListener() {
+        getMoviesTask.addListener(new GetMediaTask.TaskCompletedListener<MovieInfo>() {
             @Override
-            public void mediaLoaded(List<? extends Media> result, boolean newResult) {
+            public void mediaLoaded(List<MovieInfo> result, boolean newResult) {
                 if (movie != null)
                     movie.fillFields(result.get(0));
                 dataLoadComplete();

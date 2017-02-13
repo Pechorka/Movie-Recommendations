@@ -8,5 +8,6 @@ public enum Filters {
     popular,
     top_rated,
     upcoming,
-    custom
+    custom,
+    on_the_air
 }

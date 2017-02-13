@@ -30,7 +30,6 @@ import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
-import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
@@ -150,9 +149,9 @@ public class MovieInfoFragment extends Fragment {
 
     private void loadInformationInto(final MovieInfo movie, String language) {
         GetMoviesTask getMovieInfosTask = new GetMoviesTask();
-        getMovieInfosTask.addListener(new GetMediaTask.TaskCompletedListener() {
+        getMovieInfosTask.addListener(new GetMediaTask.TaskCompletedListener<MovieInfo>() {
             @Override
-            public void mediaLoaded(List<? extends Media> result, boolean newResult) {
+            public void mediaLoaded(List<MovieInfo> result, boolean newResult) {
                 if (movie != null)
                     movie.fillFields(result.get(0));
                 dataLoadComplete();
