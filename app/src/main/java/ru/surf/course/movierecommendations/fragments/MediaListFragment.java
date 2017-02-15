@@ -69,6 +69,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private EndlessRecyclerViewScrollListener scrollListener;
     private Button callOptions;
     private Button showGenres;
+    private Button showSort;
     private CustomFilterOptions customFilterOptions;
 
     public static MediaListFragment newInstance(String query, String language, Tasks task, boolean movie) {
@@ -144,6 +145,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
+        showSort = (Button) root.findViewById(R.id.sort_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
@@ -235,7 +237,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     }
 
     public void loadMediaInfoByFilter(String query, String language, String page) {
-        GetMediaTask getMediaTask = null;
+        GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
         } else {
@@ -243,10 +245,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         }
         getMediaTask.addListener(this);
         getMediaTask.getMediaByFilter(query, language, page);
+        this.page = Integer.parseInt(page);
     }
 
     public void loadMediaInfoByIds(String ids, String language, String page, Tasks task) {
-        GetMediaTask getMediaTask = null;
+        GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
         } else {
@@ -261,10 +264,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 getMediaTask.getMediaByKeywords(ids, language, page);
                 break;
         }
+        this.page = Integer.parseInt(page);
     }
 
     public void loadMediInfoById(int id, String language, String page, Tasks task) {
-        GetMediaTask getMediaTask = null;
+        GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
         } else {
@@ -279,17 +283,17 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 getMediaTask.getSimilarMedia(id, language, page);
                 break;
         }
+        this.page = Integer.parseInt(page);
     }
 
     public void loadMediaInfoByCustomFilter(String language, String page) {
-        GetMediaTask getMediaTask = null;
+        GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
         } else {
             getMediaTask = new GetTVShowsTask();
         }
         getMediaTask.addListener(this);
-        getMediaTask.getMediaByFilter(query, language, page);
         String minYear = customFilterOptions.getMinYear() + "-01-01";
         String maxYear = customFilterOptions.getMaxYear() + "-12-31";
         Set<Integer> selected = genresDialogFragment.getSelected(getActivity());
@@ -304,6 +308,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             }
         }
         getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear);
+        this.page = Integer.parseInt(page);
     }
 
     public void setCallOptionsVisibility(int visibility) {

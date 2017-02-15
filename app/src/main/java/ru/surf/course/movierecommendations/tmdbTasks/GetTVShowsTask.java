@@ -215,6 +215,8 @@ public class GetTVShowsTask extends GetMediaTask {
         final String TMDB_NUMBER_OF_EPISODES = "number_of_episodes";
         final String TMDB_NUMBER_OF_SEASONS = "number_of_seasons";
         final String TMDB_TYPE = "type";
+        final String TMDB_FIRST_AIR_DATE = "first_air_date";
+        final String TMDB_ORIGIN_COUNTRY = "origin_country";
 
 
         JSONObject tvShowsJson = new JSONObject(jsonStr);
@@ -229,10 +231,11 @@ public class GetTVShowsTask extends GetMediaTask {
 
             JSONArray tvShowArray = tvShowsJson.getJSONArray(TMDB_RESULTS);
             JSONArray genres;
-            JSONArray episodesRuntime;
+            JSONArray originCountries;
 
             List<Integer> genresList;
-            List<Double> episodesRintimeList;
+            List<String> originCountryList;
+
             for (int i = 0; i < tvShowArray.length(); i++) {
                 //get genres
                 genres = tvShowArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
@@ -240,29 +243,30 @@ public class GetTVShowsTask extends GetMediaTask {
                 for (int k = 0; k < genres.length(); k++) {
                     genresList.add(genres.getInt(k));
                 }
-//                episodesRuntime = tvShowArray.getJSONObject(i).getJSONArray(TMDB_EPICSODE_RUNTIME);
-//                episodesRintimeList = new ArrayList<>();
-//                for (int k = 0; k < episodesRintimeList.size(); k++) {
-//                    episodesRintimeList.add(episodesRuntime.getDouble(k));
-//                }
+                originCountries = tvShowArray.getJSONObject(i).getJSONArray(TMDB_ORIGIN_COUNTRY);
+                originCountryList = new ArrayList<>();
+                for (int k = 0; k < originCountries.length(); k++) {
+                    originCountryList.add(originCountries.getString(k));
+                }
+//
 
                 item = new TVShowInfo(tvShowArray.getJSONObject(i).getInt(TMDB_ID));
                 item.setTitle(tvShowArray.getJSONObject(i).getString(TMDB_NAME));
                 item.setOriginalTitle(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME));
                 item.setGenreIds(genresList);
+                item.setOriginCountryList(originCountryList);
                 item.setPosterPath(tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
                 item.setOverview(tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW));
                 item.setBackdropPath(tvShowArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH));
                 item.setVoteCount(tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT));
-//                item.episode_runtime = episodesRintimeList;
-//                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
-//                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
-//                item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
-//                try {
-//                    item.date = formatter.parse(tvShowArray.getJSONObject(i).getString(TMDB_DATE));
-//                } catch (ParseException e) {
-//                    Log.d(LOG_TAG, "Empty date, most likely");
-//                }
+                item.setVoteAverage(tvShowArray.getJSONObject(i).getDouble(TMDB_RATING));
+                item.setOriginalLanguage(new Locale(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_LANGUAGE)));
+//
+                try {
+                    item.setDate(formatter.parse(tvShowArray.getJSONObject(i).getString(TMDB_FIRST_AIR_DATE)));
+                } catch (ParseException e) {
+                    Log.d(LOG_TAG, "Empty date, most likely");
+                }
                 result.add(item);
             }
         } else {
@@ -270,6 +274,18 @@ public class GetTVShowsTask extends GetMediaTask {
             JSONArray genres;
             List<Integer> genresListIds;
             List<String> genresListNames;
+            JSONArray episodesRuntime;
+            List<Double> episodesRintimeList;
+//            episodesRuntime = tvShowArray.getJSONObject(i).getJSONArray(TMDB_EPICSODE_RUNTIME);
+//            item.episode_runtime = episodesRintimeList;
+//                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
+//                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
+//                item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
+//                episodesRintimeList = new ArrayList<>();
+//                for (int k = 0; k < episodesRintimeList.size(); k++) {
+//                    episodesRintimeList.add(episodesRuntime.getDouble(k));
+//                }
+
             genres = tvShowsJson.getJSONArray(TMDB_GENRES);
             genresListIds = new ArrayList<>();
             genresListNames = new ArrayList<>();
@@ -368,7 +384,7 @@ public class GetTVShowsTask extends GetMediaTask {
 
     private Uri uriForCustomFilter(String language, String page,
                                    String genres, String releaseDateGTE, String releaseDateLTE) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
         Uri.Builder uri = Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)

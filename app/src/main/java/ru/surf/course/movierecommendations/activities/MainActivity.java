@@ -300,10 +300,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    private void searchByName(String name) {
-//
-//        switchContent(R.id.viewpager, fragment);
-//    }
+    private void searchByName(String name) {
+        MediaListFragment fragment = MediaListFragment.newInstance(name, language, Tasks.SEARCH_BY_NAME, true);
+        switchContent(R.id.viewpager, fragment);
+    }
 
     public void switchContent(int id, Fragment fragment) {
         //noinspection ResourceType

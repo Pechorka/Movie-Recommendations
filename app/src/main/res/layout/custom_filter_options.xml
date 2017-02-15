@@ -15,5 +15,11 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_genres" />
 
+    <Button
+        android:id="@+id/sort_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_sort" />
+
 
 </LinearLayout>
