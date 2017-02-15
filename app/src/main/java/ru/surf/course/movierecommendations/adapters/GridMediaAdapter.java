@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.activities.MainActivity;
-import ru.surf.course.movierecommendations.fragments.MovieFragment;
+import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
@@ -56,8 +54,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
 
     private void fragmentToSwitch(int position) {
         if (mediaList.get(position) instanceof MovieInfo) {
-            MovieFragment movieInfoFragment = MovieFragment.newInstance((MovieInfo) mediaList.get(position));
-            switchContent(R.id.activity_main_container, movieInfoFragment);
+            switchContent((MovieInfo) mediaList.get(position));
         }
     }
 
@@ -66,13 +63,10 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
     }
 
 
-    private void switchContent(int id, Fragment fragment) {
+    private void switchContent(MovieInfo movieInfo) {
         if (context == null)
             return;
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-            mainActivity.switchContent(id, fragment);
-        }
+        MovieActivity.start(context ,movieInfo);
 
     }
 }

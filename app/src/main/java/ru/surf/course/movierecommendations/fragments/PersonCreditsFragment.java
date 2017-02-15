@@ -18,6 +18,7 @@ import java.util.Locale;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.activities.MainActivity;
+import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Media;
@@ -80,7 +81,7 @@ public class PersonCreditsFragment extends Fragment {
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
 
-        mCreditsList = (RecyclerView)root.findViewById(R.id.person_credits_credits_list);
+        mCreditsList = (RecyclerView) root.findViewById(R.id.person_credits_credits_list);
     }
 
     private void setupViews(View root) {
@@ -91,7 +92,7 @@ public class PersonCreditsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         dataLoaded = 0;
         if (getArguments().containsKey(KEY_PERSON)) {
-            currentPerson = (Person)getArguments().getSerializable(KEY_PERSON);
+            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
         } else if (getArguments().containsKey(KEY_PERSON_ID)) {
             currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
         }
@@ -115,15 +116,13 @@ public class PersonCreditsFragment extends Fragment {
         mPersonCreditsListAdapter.setListener(new PersonCreditsListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                if (getActivity() instanceof MainActivity) {
-                    Fragment fragment = null;
-                    Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
-                    if (media instanceof MovieInfo)
-                        fragment = MovieFragment.newInstance((MovieInfo)media);
-                    else if (media instanceof TVShowInfo)
-                        return;
-                    ((MainActivity)getActivity()).switchContent(R.id.activity_main_container, fragment);
-                }
+
+                Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
+                if (media instanceof MovieInfo)
+                    MovieActivity.start(getActivity(), (MovieInfo) media);
+                else if (media instanceof TVShowInfo)
+                    return;
+
             }
         });
         mCreditsList.setAdapter(mPersonCreditsListAdapter);

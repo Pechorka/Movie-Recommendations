@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.fragments;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
+import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
@@ -99,22 +101,22 @@ public class MovieInfoFragment extends Fragment {
         return root;
     }
 
-    private void initViews(View root){
+    private void initViews(View root) {
         progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
         overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
-        expandCollapseBiographyButton = (Button)root.findViewById(R.id.movie_info_biography_expand_btn);
-        voteAverage = (TextView)root.findViewById(R.id.movie_info_vote_average);
-        backdrops = (RecyclerView)root.findViewById(R.id.movie_info_images_list);
-        credits = (RecyclerView)root.findViewById(R.id.movie_info_credits);
-        budget = (TextView)root.findViewById(R.id.movie_info_budget);
-        revenue = (TextView)root.findViewById(R.id.movie_info_revenue);
-        runtime = (TextView)root.findViewById(R.id.movie_info_runtime);
-        status = (TextView)root.findViewById(R.id.movie_info_status);
-        productionCountries = (TextView)root.findViewById(R.id.movie_info_production);
+        expandCollapseBiographyButton = (Button) root.findViewById(R.id.movie_info_biography_expand_btn);
+        voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
+        backdrops = (RecyclerView) root.findViewById(R.id.movie_info_images_list);
+        credits = (RecyclerView) root.findViewById(R.id.movie_info_credits);
+        budget = (TextView) root.findViewById(R.id.movie_info_budget);
+        revenue = (TextView) root.findViewById(R.id.movie_info_revenue);
+        runtime = (TextView) root.findViewById(R.id.movie_info_runtime);
+        status = (TextView) root.findViewById(R.id.movie_info_status);
+        productionCountries = (TextView) root.findViewById(R.id.movie_info_production);
         genres = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
     }
 
@@ -193,7 +195,7 @@ public class MovieInfoFragment extends Fragment {
     }
 
     private String firstLetterToUpper(String str) {
-        return str.substring(0,1).toUpperCase() + str.substring(1);
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
 
@@ -218,7 +220,7 @@ public class MovieInfoFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 ArrayList<String> paths = new ArrayList<String>();
-                for (TmdbImage image:
+                for (TmdbImage image :
                         movieInfoImagesAdapter.getImages()) {
                     paths.add(image.path);
                 }
@@ -231,10 +233,7 @@ public class MovieInfoFragment extends Fragment {
         movieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                if (getActivity() instanceof MainActivity) {
-                    Person person = movieCreditsListAdapter.getCredits().get(position).getPerson();
-                    ((MainActivity) getActivity()).switchContent(R.id.activity_main_container, PersonFragment.newInstance(person));
-                }
+                PersonActivity.start(getActivity(), movieCreditsListAdapter.getCredits().get(position).getPerson());
             }
         });
         credits.setAdapter(movieCreditsListAdapter);
@@ -246,7 +245,7 @@ public class MovieInfoFragment extends Fragment {
             revenue.setText(currentMovieInfo.getRevenue() + "$");
 
         if (currentMovieInfo.getRuntime() != 0)
-            runtime.setText(currentMovieInfo.getRuntime()/60 + getResources().getString(R.string.hours_short) + " " + currentMovieInfo.getRuntime()%60 + getResources().getString(R.string.minutes_short));
+            runtime.setText(currentMovieInfo.getRuntime() / 60 + getResources().getString(R.string.hours_short) + " " + currentMovieInfo.getRuntime() % 60 + getResources().getString(R.string.minutes_short));
 
         status.setText(currentMovieInfo.getStatus());
 
@@ -277,8 +276,7 @@ public class MovieInfoFragment extends Fragment {
                 dataLoaded--;
                 currentMovieInfoEnglish = new MovieInfo(currentMovieInfo.getId());
                 loadInformationInto(currentMovieInfoEnglish, Locale.ENGLISH.getLanguage());
-            }
-            else {
+            } else {
                 fillInformation();
                 View progressBarPlaceholder = null;
                 if (getView() != null)
@@ -293,5 +291,5 @@ public class MovieInfoFragment extends Fragment {
     private Locale getCurrentLocale() {
         return Locale.getDefault();
     }
-    
+
 }

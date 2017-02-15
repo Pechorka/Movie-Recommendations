@@ -1,17 +1,16 @@
-package ru.surf.course.movierecommendations.fragments;
-
+package ru.surf.course.movierecommendations.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +29,6 @@ import java.util.Locale;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
-import ru.surf.course.movierecommendations.activities.GalleryActivity;
-import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.PersonInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.Person;
 import ru.surf.course.movierecommendations.models.TmdbImage;
@@ -40,7 +37,11 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
-public class PersonFragment extends Fragment {
+/**
+ * Created by andrew on 2/15/17.
+ */
+
+public class PersonActivity extends AppCompatActivity {
 
     final static String KEY_PERSON = "person";
     final static String KEY_PERSON_ID = "person_id";
@@ -60,87 +61,77 @@ public class PersonFragment extends Fragment {
 
     private int dataLoaded = 0;
 
-    public static PersonFragment newInstance(Person person) {
-        PersonFragment personFragment = new PersonFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_PERSON, person);
-        personFragment.setArguments(bundle);
-        return personFragment;
+    public static void start(Context context, Person person) {
+        Intent intent = new Intent(context, PersonActivity.class);
+        intent.putExtra(KEY_PERSON, person);
+        context.startActivity(intent);
     }
 
-    public static PersonFragment newInstance(int personId) {
-        PersonFragment personFragment = new PersonFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(KEY_PERSON_ID, personId);
-        personFragment.setArguments(bundle);
-        return personFragment;
+    public static void start(Context context, int personId) {
+        Intent intent = new Intent(context, PersonActivity.class);
+        intent.putExtra(KEY_PERSON_ID, personId);
+        context.startActivity(intent);
     }
+
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity)getActivity()).setDrawerEnabled(false);
-        setStatusBarTranslucent(true);
-        setActivityToolbarVisibility(false);
-    }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (getArguments() == null)
+        if (!getIntent().hasExtra(KEY_PERSON) && !getIntent().hasExtra(KEY_PERSON_ID))
             onDestroy();
 
-        View root = inflater.inflate(R.layout.fragment_person, container, false);
-        initViews(root);
-        setupViews(root);
+        setContentView(R.layout.activity_person);
 
-        return root;
+        initViews();
+        setupViews();
+
     }
 
-    private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_progress_bar);
+    private void initViews() {
+        progressBar = (ProgressBar) findViewById(R.id.person_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
-            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        name = (TextView) root.findViewById(R.id.person_name);
-        birthDate = (TextView) root.findViewById(R.id.person_birth_date);
-        pictureProfile = (ImageView) root.findViewById(R.id.person_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.person_collapsing_toolbar_layout);
-        appBarLayout = (AppBarLayout) root.findViewById(R.id.person_appbar_layout);
-        infosPager = (ViewPager) root.findViewById(R.id.person_infos_pager);
-        fakeStatusBar = root.findViewById(R.id.person_fake_status_bar);
-        backButton = (Button)root.findViewById(R.id.person_back_button);
+        name = (TextView) findViewById(R.id.person_name);
+        birthDate = (TextView) findViewById(R.id.person_birth_date);
+        pictureProfile = (ImageView) findViewById(R.id.person_backdrop);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.person_collapsing_toolbar_layout);
+        appBarLayout = (AppBarLayout) findViewById(R.id.person_appbar_layout);
+        infosPager = (ViewPager) findViewById(R.id.person_infos_pager);
+        fakeStatusBar = findViewById(R.id.person_fake_status_bar);
+        backButton = (Button) findViewById(R.id.person_back_button);
     }
 
-    private void setupViews(View root) {
-       backButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               getActivity().onBackPressed();
-           }
-       });
+    private void setupViews() {
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 verticalOffset = Math.abs(verticalOffset);
-                int offsetToToolbar = appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(getActivity()) - fakeStatusBar.getMeasuredHeight();
+                int offsetToToolbar = appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(PersonActivity.this) - fakeStatusBar.getMeasuredHeight();
                 if (verticalOffset >= offsetToToolbar) {
-                    fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/Utilities.getActionBarHeight(getActivity()));
+                    fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities.getActionBarHeight(PersonActivity.this));
                 }
             }
         });
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         dataLoaded = 0;
-        if (getArguments().containsKey(KEY_PERSON)) {
-            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
-        } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
+        if (getIntent().hasExtra(KEY_PERSON)) {
+            currentPerson = (Person) getIntent().getSerializableExtra(KEY_PERSON);
+        } else if (getIntent().hasExtra(KEY_PERSON_ID)) {
+            currentPerson = new Person(getIntent().getIntExtra(KEY_PERSON_ID, -1));
         }
         if (currentPerson != null) {
             loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
@@ -150,14 +141,6 @@ public class PersonFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= 19) {
             fakeStatusBar.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onDetach() {
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity)getActivity()).setDrawerEnabled(true);
-        fakeStatusBar.setVisibility(View.GONE);
-        super.onDetach();
     }
 
     private void loadInformationInto(final Person person, String language) {
@@ -198,27 +181,27 @@ public class PersonFragment extends Fragment {
     private void fillInformation() {
         name.setText(currentPerson.getName());
 
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity());
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
 
         if (currentPerson.getBirthday() != null) {
             birthDate.setText("(" + dateFormat.format(currentPerson.getBirthday()) + ")");
         }
 
         if (currentPerson.getProfilePictures() != null && currentPerson.getProfilePictures().size() != 0) {
-            ImageLoader.putPosterNoResize(getActivity(), currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
+            ImageLoader.putPosterNoResize(this, currentPerson.getProfilePictures().get(0).path, pictureProfile, ImageLoader.sizes.w500);
             pictureProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ArrayList<String> paths = new ArrayList<String>();
-                    for (TmdbImage image:
-                           currentPerson.getProfilePictures()) {
+                    for (TmdbImage image :
+                            currentPerson.getProfilePictures()) {
                         paths.add(image.path);
                     }
-                    GalleryActivity.start(getActivity(), paths);
+                    GalleryActivity.start(PersonActivity.this, paths);
                 }
             });
         }
-        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(this.getChildFragmentManager(), getActivity(), currentPerson);
+        PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(getSupportFragmentManager(), this, currentPerson);
         infosPager.setAdapter(personInfosPagerAdapter);
     }
 
@@ -228,8 +211,7 @@ public class PersonFragment extends Fragment {
         if (dataLoaded == DATA_TO_LOAD) {
             fillInformation();
             View progressBarPlaceholder = null;
-            if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.person_progress_bar_placeholder);
+            progressBarPlaceholder = findViewById(R.id.person_progress_bar_placeholder);
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }
@@ -237,27 +219,6 @@ public class PersonFragment extends Fragment {
 
     private Locale getCurrentLocale() {
         return Locale.getDefault();
-    }
-
-    private void setActivityToolbarVisibility(boolean flag) {
-        if (getActivity() instanceof MainActivity) {
-            if (flag) {
-                ((MainActivity) getActivity()).getSupportActionBar().show();
-            } else {
-                ((MainActivity) getActivity()).getSupportActionBar().hide();
-            }
-        }
-    }
-
-    private void setStatusBarTranslucent(boolean flag) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            Window window = getActivity().getWindow();
-            if (flag)
-                window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-        }
     }
 
 
