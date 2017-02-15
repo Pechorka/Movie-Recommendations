@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.tmdbTasks;
 import android.content.Context;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -47,6 +48,13 @@ public class ImageLoader {
                 .into(target);
     }
 
+
+    public static void putPosterNoResize(Context context, String path, ImageView target, sizes size, Callback callback) {
+        Picasso.with(context)
+                .load(TMDB_BASE_POSTER_URL + size.toString() + "/" + path)
+                .noFade()
+                .into(target, callback);
+    }
 
 
 }

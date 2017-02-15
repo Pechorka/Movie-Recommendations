@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -57,23 +58,16 @@ public class GalleryImageFragment extends Fragment {
     }
 
     private void loadImage(final String path) {
-        Target target = new Target() {
+        ImageLoader.putPosterNoResize(getActivity(), path, image, ImageLoader.sizes.w780, new Callback() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                image.setImageBitmap(bitmap);
+            public void onSuccess() {
                 progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                loadImage(path);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            public void onError() {
 
             }
-        };
-        ImageLoader.getPosterNoResize(getActivity(), path, target, ImageLoader.sizes.w780);
+        });
     }
 }
