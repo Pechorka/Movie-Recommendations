@@ -1,18 +1,29 @@
 package ru.surf.course.movierecommendations.activities;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
+import android.transition.AutoTransition;
+import android.transition.Slide;
+import android.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Explode;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -40,6 +51,8 @@ public class MovieActivity extends AppCompatActivity {
 
     final static String KEY_MOVIE = "movie";
     final static String KEY_MOVIE_ID = "movie_id";
+    final static String KEY_POSTER = "poster";
+    final static String KEY_TRANSITION_NAME = "transition_name";
     final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
@@ -58,15 +71,29 @@ public class MovieActivity extends AppCompatActivity {
     private int dataLoaded = 0;
 
     public static void start(Context context, MovieInfo movieInfo) {
+        Bundle bundle = null;
+        if (Build.VERSION.SDK_INT >= 21) {
+            ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation((Activity) context, null);
+            bundle = activityOptions.toBundle();
+        }
         Intent intent = new Intent(context, MovieActivity.class);
         intent.putExtra(KEY_MOVIE, movieInfo);
-        context.startActivity(intent);
+        context.startActivity(intent, bundle);
     }
 
     public static void start(Context context, int movieId) {
         Intent intent = new Intent(context, MovieActivity.class);
         intent.putExtra(KEY_MOVIE_ID, movieId);
         context.startActivity(intent);
+    }
+
+    @RequiresApi(21)
+    public static void start(Context context, MovieInfo movieInfo, Pair<View, String> sharedElement) {
+        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation((Activity) context, sharedElement).toBundle();
+        Intent intent = new Intent(context, MovieActivity.class);
+        intent.putExtra(KEY_MOVIE, movieInfo);
+        intent.putExtra(KEY_TRANSITION_NAME, sharedElement.second);
+        context.startActivity(intent, bundle);
     }
 
     @Override
@@ -80,6 +107,13 @@ public class MovieActivity extends AppCompatActivity {
 
         initViews();
         setupViews();
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            Transition transition = new Slide();
+            getWindow().setEnterTransition(transition);
+
+            poster.setTransitionName(getIntent().getStringExtra(KEY_TRANSITION_NAME));
+        }
     }
 
     private void initViews() {

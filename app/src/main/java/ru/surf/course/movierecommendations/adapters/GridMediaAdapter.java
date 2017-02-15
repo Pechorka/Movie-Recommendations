@@ -1,10 +1,13 @@
 package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -41,9 +44,12 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentToSwitch(holder.getAdapterPosition());
+                switchContent(holder.getAdapterPosition(), view);
             }
         });
+
+        if (Build.VERSION.SDK_INT >= 21)
+            holder.image.setTransitionName(context.getString(R.string.transition_image) + position);
     }
 
 
@@ -52,21 +58,22 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
         return mediaList.size();
     }
 
-    private void fragmentToSwitch(int position) {
+    private void switchContent(int position, View view) {
         if (mediaList.get(position) instanceof MovieInfo) {
-            switchContent((MovieInfo) mediaList.get(position));
+            if (context == null)
+                return;
+            if (Build.VERSION.SDK_INT >= 21) {
+                View sharedView = view.findViewById(R.id.grid_image);
+                MovieActivity.start(context, (MovieInfo) mediaList.get(position), new Pair<View, String>(sharedView, sharedView.getTransitionName()));
+            }
+            else
+                MovieActivity.start(context , (MovieInfo) mediaList.get(position));
         }
+
     }
 
     public void setMediaList(List<? extends Media> list) {
         mediaList = list;
     }
 
-
-    private void switchContent(MovieInfo movieInfo) {
-        if (context == null)
-            return;
-        MovieActivity.start(context ,movieInfo);
-
-    }
 }
