@@ -31,7 +31,7 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
 
     private final String LOG_TAG = getClass().getSimpleName();
 
-    private List<GetGenresTask.TaskCompletedListener> listeners = new ArrayList<GetGenresTask.TaskCompletedListener>();
+    private List<GetGenresTask.TaskCompletedListener> listeners = new ArrayList<>();
 
     @Override
     protected Map<String, Integer> doInBackground(Tasks... params) {

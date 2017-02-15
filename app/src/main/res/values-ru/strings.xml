@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Рекоммендации фильмов</string>
+    <string name="app_name">Рекомендации фильмов</string>
     <string name="collapse">Меньше</string>
     <string name="custom">Свой</string>
     <string name="expand">Больше</string>
@@ -43,4 +43,14 @@
     <string name="movie_credits">Участники</string>
     <string name="production_countries">Производство</string>
     <string name="genres">Жанры</string>
+    <string name="cancel">Отмена</string>
+    <string name="choose_genres">Выберите жанры</string>
+    <string name="header">Заголовок</string>
+    <string name="on_air">В эфире</string>
+    <string name="reload">Перезагрузка</string>
+    <string name="save">Сохранить</string>
+    <string name="setup_filter">Настроить фильтры</string>
+    <string name="tvshows">Телешоу</string>
+    <string name="no_internet_connection_msg">Нет соединения с интернетом</string>
+    <string name="movies">Фиильмы</string>
 </resources>

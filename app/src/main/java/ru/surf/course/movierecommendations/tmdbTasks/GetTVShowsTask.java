@@ -57,24 +57,24 @@ public class GetTVShowsTask extends GetMediaTask {
                 case SEARCH_BY_FILTER:
                     builtUri = uriByFilterOrId(params[0], languageName, page);
                     break;
-//                case SEARCH_BY_ID:
-//                    builtUri = uriByFilterOrId(params[0], languageName, page);
-//                    break;
+                case SEARCH_BY_ID:
+                    builtUri = uriByFilterOrId(params[0], languageName, page);
+                    break;
                 case SEARCH_BY_NAME:
                     builtUri = uriByName(params[0], languageName, page);
                     break;
-//                case SEARCH_BY_GENRE:
-//                    builtUri = uriByGenre(Integer.parseInt(params[0]), languageName);
-//                    break;
-//                case SEARCH_SIMILAR:
-//                    builtUri = uriSimilar(params[0], languageName, page);
-//                    break;
-//                case SEARCH_BY_KEYWORD:
-//                    builtUri = uriByKeyword(params[0], languageName);
-//                    break;
-//                case SEARCH_BY_CUSTOM_FILTER:
-//                    builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4]);
-//                    break;
+                case SEARCH_BY_GENRE:
+                    builtUri = uriByGenres(params[0], languageName, page);
+                    break;
+                case SEARCH_SIMILAR:
+                    builtUri = uriForSimilar(params[0], languageName, page);
+                    break;
+                case SEARCH_BY_KEYWORD:
+                    builtUri = uriByKeywords(params[0], languageName, page);
+                    break;
+                case SEARCH_BY_CUSTOM_FILTER:
+                    builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4]);
+                    break;
                 default:
                     builtUri = Uri.EMPTY;
             }
@@ -138,7 +138,9 @@ public class GetTVShowsTask extends GetMediaTask {
 
     @Override
     public void getMediaById(int movieId, String language) {
-
+        isLoadingList = false;
+        task = Tasks.SEARCH_BY_ID;
+        execute(Integer.toString(movieId), language);
     }
 
     @Override
@@ -156,23 +158,35 @@ public class GetTVShowsTask extends GetMediaTask {
     }
 
     @Override
-    public void getMediaByGenre(int genreId, String language) {
-
+    public void getMediaByGenre(String genreIds, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_GENRE;
+        execute(genreIds, language, page);
     }
 
     @Override
-    public void getSimilarMedia(int movieId, String language) {
-
+    public void getSimilarMedia(int tvId, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_SIMILAR;
+        execute(Integer.toString(tvId), language, page);
     }
 
     @Override
-    public void getMediaByKeyword(int keywordId, String language) {
-
+    public void getMediaByKeywords(String keywordIds, String language, String page) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_KEYWORD;
+        execute(keywordIds, language, page);
     }
 
     @Override
-    public void getMediaByCustomFilter(String language, String page, String genres, String releaseDateGTE, String releaseDateLTE) {
+    public void getMediaByCustomFilter(String language, String page, String genres,
+                                       String releaseDateGTE, String releaseDateLTE) {
+        isLoadingList = true;
+        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
+
     }
+
 
 
     private List<TVShowInfo> parseJson(String jsonStr) throws JSONException, ParseException {
@@ -342,6 +356,65 @@ public class GetTVShowsTask extends GetMediaTask {
                 .appendQueryParameter(PAGE_PARAM, page)
                 .build();
     }
+
+    private Uri uriOnAir(String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv/on_the_air?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .build();
+    }
+
+    private Uri uriForCustomFilter(String language, String page,
+                                   String genres, String releaseDateGTE, String releaseDateLTE) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
+        Uri.Builder uri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page);
+        if (releaseDateLTE != null) {
+            uri.appendQueryParameter(RELEASE_DATE_LTE, releaseDateLTE);
+        }
+        if (releaseDateGTE != null) {
+            uri.appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE);
+        }
+        if (genres.length() != 0) {
+            uri.appendQueryParameter(WITH_GENRES, genres);
+        }
+        return uri.build();
+    }
+
+    private Uri uriByGenres(String genreIDs, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
+        //TODO add sort
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .appendQueryParameter(WITH_GENRES, genreIDs)
+                .build();
+    }
+
+    private Uri uriForSimilar(String tvId, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv/" + tvId + "/similar?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .build();
+    }
+
+    private Uri uriByKeywords(String keywords, String language, String page) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .appendQueryParameter(PAGE_PARAM, page)
+                .appendQueryParameter(WITH_KEYWORDS, keywords)
+                .build();
+    }
+
 
 
     private void invokeEvent(List<? extends Media> result) {

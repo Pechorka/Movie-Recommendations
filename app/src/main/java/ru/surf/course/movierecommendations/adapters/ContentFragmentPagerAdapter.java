@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
-import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 
 /**
  * Created by Sergey on 09.02.2017.
@@ -20,11 +19,11 @@ public class ContentFragmentPagerAdapter extends FragmentPagerAdapter {
     private MediaListFragment movieListFragment;
     private MediaListFragment tvShowListFragment;
 
-    public ContentFragmentPagerAdapter(FragmentManager fm, Context context, Filters filter
+    public ContentFragmentPagerAdapter(FragmentManager fm, Context context, String filter
             , MediaListFragment movieListFragment, MediaListFragment tvShowListFragment) {
         super(fm);
         this.context = context;
-        this.filter = filter.toString();
+        this.filter = filter;
         this.movieListFragment = movieListFragment;
         this.tvShowListFragment = tvShowListFragment;
     }

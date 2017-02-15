@@ -26,11 +26,6 @@ public class ChooseGenresDialogFragment extends DialogFragment {
     private List<SavePressedListener> listeners = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final boolean[] checked = loadChecked(getActivity());

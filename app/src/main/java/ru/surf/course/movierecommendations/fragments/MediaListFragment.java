@@ -27,8 +27,6 @@ import ru.surf.course.movierecommendations.adapters.ListMediaAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
-import ru.surf.course.movierecommendations.models.MovieInfo;
-import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
@@ -39,7 +37,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
  * Created by Sergey on 12.02.2017.
  */
 
-public class MediaListFragment extends Fragment implements GetMediaTask.TaskCompletedListener {
+public class MediaListFragment<T extends Media> extends Fragment implements GetMediaTask.TaskCompletedListener<T> {
 
     public final static String KEY_GRID = "grid";
     private final static String KEY_QUERY = "query";
@@ -52,13 +50,15 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
 
     private boolean grid;
     private boolean filterSetupOpen;
-    private List<? extends Media> mediaList;
+    private List<T> mediaList;
     private Map<String, Integer> genres;
     private Tasks task;
-    private int PAGE;
+    private int page;
     private String query;
     private String language;
+    private String ids;
     private int id;
+    private boolean movie;
 
     private ChooseGenresDialogFragment genresDialogFragment;
     private RecyclerView recyclerView;
@@ -100,7 +100,9 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         language = getArguments().getString(KEY_LANGUAGE);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
-        PAGE = 1;
+        ids = query;
+        movie = getArguments().getBoolean(KEY_MOVIE);
+        page = 1;
     }
 
     @Nullable
@@ -122,62 +124,15 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
     }
 
     @Override
-    public void mediaLoaded(List<? extends Media> result, boolean newResult) {
+    public void mediaLoaded(List<T> result, boolean newResult) {
         if (result != null) {
             if (mediaList != null && !newResult) {
-                if (result.get(0) instanceof MovieInfo) {
-                    List<MovieInfo> previousMovieInfos = fromMediaListToMovieInfoList(mediaList);
-                    List<MovieInfo> movieInfos = fromMediaListToMovieInfoList(result);
-                    previousMovieInfos.addAll(movieInfos);
-                    mediaList = previousMovieInfos;
-                } else {
-                    List<TVShowInfo> previousTVShowInfos = fromMediaListToTVShowInfoList(mediaList);
-                    List<TVShowInfo> tvShowInfos = fromMediaListToTVShowInfoList(result);
-                    previousTVShowInfos.addAll(tvShowInfos);
-                    mediaList = previousTVShowInfos;
-                }
+                mediaList.addAll(result);
             } else {
                 mediaList = result;
             }
             dataLoadComplete();
         }
-    }
-
-    public void setCallOptionsVisability(int visability) {
-        callOptions.setVisibility(visability);
-    }
-
-    public void dataLoadComplete() {
-        fillInformation();
-        View progressBarPlaceholder = null;
-        if (getView() != null)
-            progressBarPlaceholder = getView().findViewById(R.id.movie_list_progress_bar_placeholder);
-        if (progressBarPlaceholder != null)
-            progressBarPlaceholder.setVisibility(View.GONE);
-    }
-
-    public void fillInformation() {
-        gridMediaAdapter.setMediaList(mediaList);
-        listMediaAdapter.setMediaList(mediaList);
-        gridMediaAdapter.notifyDataSetChanged();
-        listMediaAdapter.notifyDataSetChanged();
-
-    }
-
-    private List<MovieInfo> fromMediaListToMovieInfoList(List<? extends Media> mediaList) {
-        List<MovieInfo> result = new ArrayList<>(mediaList.size());
-        for (Media m : mediaList) {
-            result.add((MovieInfo) m);
-        }
-        return result;
-    }
-
-    private List<TVShowInfo> fromMediaListToTVShowInfoList(List<? extends Media> mediaList) {
-        List<TVShowInfo> result = new ArrayList<>(mediaList.size());
-        for (Media m : mediaList) {
-            result.add((TVShowInfo) m);
-        }
-        return result;
     }
 
     private void initViews(View root) {
@@ -192,15 +147,6 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         genresDialogFragment = new ChooseGenresDialogFragment();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
-        if (getArguments().getBoolean(KEY_MOVIE)) {
-            List<MovieInfo> movieInfos = new ArrayList<>(1);
-            movieInfos.add(new MovieInfo(1));
-            mediaList = movieInfos;
-        } else {
-            List<TVShowInfo> tvShowInfos = new ArrayList<>(1);
-            tvShowInfos.add(new TVShowInfo(1));
-            mediaList = tvShowInfos;
-        }
     }
 
     private void setupViews() {
@@ -220,7 +166,7 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         customFilterOptions.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
             @Override
             public void finalValue(Number minValue, Number maxValue) {
-                PAGE = 1;
+                page = 1;
                 loadInformation(task);
             }
         });
@@ -235,12 +181,11 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         ChooseGenresDialogFragment.SavePressedListener listener = new ChooseGenresDialogFragment.SavePressedListener() {
             @Override
             public void saved() {
-                PAGE = 1;
+                page = 1;
                 loadInformation(task);
             }
         };
         genresDialogFragment.addListener(listener);
-
     }
 
     private void switchToLinear() {
@@ -250,7 +195,7 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                PAGE++;
+                MediaListFragment.this.page++;
                 loadInformation(task);
             }
         };
@@ -260,10 +205,11 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
     private void switchToGrid() {
         recyclerView.setAdapter(gridMediaAdapter);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        recyclerView.setAdapter(gridMediaAdapter);
         scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                PAGE++;
+                MediaListFragment.this.page++;
                 loadInformation(task);
             }
         };
@@ -273,80 +219,112 @@ public class MediaListFragment extends Fragment implements GetMediaTask.TaskComp
     private void loadInformation(Tasks task) {
         switch (task) {
             case SEARCH_BY_FILTER:
-                loadMediaInfoByFilter(query, language, String.valueOf(PAGE));
+                loadMediaInfoByFilter(query, language, String.valueOf(page));
                 break;
             case SEARCH_BY_CUSTOM_FILTER:
-                loadMediaInfoByCustomFilter(language, String.valueOf(PAGE));
+                loadMediaInfoByCustomFilter(language, String.valueOf(page));
                 break;
-            default:
-                loadMediaInfoById(id, language, task);
+            case SEARCH_BY_GENRE:
+            case SEARCH_BY_KEYWORD:
+                loadMediaInfoByIds(ids, language, String.valueOf(page), task);
+                break;
+            case SEARCH_BY_ID:
+            case SEARCH_SIMILAR:
+                loadMediInfoById(id, language, String.valueOf(page), task);
         }
     }
 
     public void loadMediaInfoByFilter(String query, String language, String page) {
         GetMediaTask getMediaTask = null;
-        if (mediaList.get(0) instanceof MovieInfo) {
+        if (movie) {
             getMediaTask = new GetMoviesTask();
-        } else if (mediaList.get(0) instanceof TVShowInfo) {
+        } else {
             getMediaTask = new GetTVShowsTask();
         }
-        if (getMediaTask != null) {
-            getMediaTask.addListener(this);
-            getMediaTask.getMediaByFilter(query, language, page);
+        getMediaTask.addListener(this);
+        getMediaTask.getMediaByFilter(query, language, page);
+    }
+
+    public void loadMediaInfoByIds(String ids, String language, String page, Tasks task) {
+        GetMediaTask getMediaTask = null;
+        if (movie) {
+            getMediaTask = new GetMoviesTask();
+        } else {
+            getMediaTask = new GetTVShowsTask();
+        }
+        getMediaTask.addListener(this);
+        switch (task) {
+            case SEARCH_BY_GENRE:
+                getMediaTask.getMediaByGenre(ids, language, page);
+                break;
+            case SEARCH_BY_KEYWORD:
+                getMediaTask.getMediaByKeywords(ids, language, page);
+                break;
         }
     }
 
-    public void loadMediaInfoById(int id, String language, Tasks task) {
+    public void loadMediInfoById(int id, String language, String page, Tasks task) {
         GetMediaTask getMediaTask = null;
-        if (mediaList.get(0) instanceof MovieInfo) {
+        if (movie) {
             getMediaTask = new GetMoviesTask();
-        } else if (mediaList.get(0) instanceof TVShowInfo) {
+        } else {
             getMediaTask = new GetTVShowsTask();
         }
-        if (getMediaTask != null) {
-            getMediaTask.addListener(this);
-            switch (task) {
-                case SEARCH_BY_ID:
-                    getMediaTask.getMediaById(id, language);
-                    break;
-                case SEARCH_BY_GENRE:
-                    getMediaTask.getMediaByGenre(id, language);
-                    break;
-                case SEARCH_SIMILAR:
-                    getMediaTask.getSimilarMedia(id, language);
-                    break;
-                case SEARCH_BY_KEYWORD:
-                    getMediaTask.getMediaByKeyword(id, language);
-                    break;
-            }
+        getMediaTask.addListener(this);
+        switch (task) {
+            case SEARCH_BY_ID:
+                getMediaTask.getMediaById(id, language);
+                break;
+            case SEARCH_SIMILAR:
+                getMediaTask.getSimilarMedia(id, language, page);
+                break;
         }
     }
 
     public void loadMediaInfoByCustomFilter(String language, String page) {
         GetMediaTask getMediaTask = null;
-        if (mediaList.get(0) instanceof MovieInfo) {
+        if (movie) {
             getMediaTask = new GetMoviesTask();
-        } else if (mediaList.get(0) instanceof TVShowInfo) {
+        } else {
             getMediaTask = new GetTVShowsTask();
         }
-        if (getMediaTask != null) {
-            getMediaTask.addListener(this);
-            getMediaTask.getMediaByFilter(query, language, page);
-            String minYear = customFilterOptions.getMinYear() + "-01-01";
-            String maxYear = customFilterOptions.getMaxYear() + "-12-31";
-            Set<Integer> selected = genresDialogFragment.getSelected(getActivity());
-            StringBuilder genres_ids = new StringBuilder();
-            if (selected.size() != 0) {
-                String[] genresNames = getActivity().getResources().getStringArray(R.array.genres);
-                for (Integer s :
-                        selected) {
-                    if (genres.containsKey(genresNames[s])) {
-                        genres_ids.append(genres.get(genresNames[s])).append(",");
-                    }
+        getMediaTask.addListener(this);
+        getMediaTask.getMediaByFilter(query, language, page);
+        String minYear = customFilterOptions.getMinYear() + "-01-01";
+        String maxYear = customFilterOptions.getMaxYear() + "-12-31";
+        Set<Integer> selected = genresDialogFragment.getSelected(getActivity());
+        StringBuilder genres_ids = new StringBuilder();
+        if (selected.size() != 0) {
+            String[] genresNames = getActivity().getResources().getStringArray(R.array.genres);
+            for (Integer s :
+                    selected) {
+                if (genres.containsKey(genresNames[s])) {
+                    genres_ids.append(genres.get(genresNames[s])).append(",");
                 }
             }
-            getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear);
         }
+        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear);
+    }
+
+    public void setCallOptionsVisibility(int visibility) {
+        callOptions.setVisibility(visibility);
+    }
+
+    public void dataLoadComplete() {
+        fillInformation();
+        View progressBarPlaceholder = null;
+        if (getView() != null)
+            progressBarPlaceholder = getView().findViewById(R.id.movie_list_progress_bar_placeholder);
+        if (progressBarPlaceholder != null)
+            progressBarPlaceholder.setVisibility(View.GONE);
+    }
+
+    public void fillInformation() {
+        gridMediaAdapter.setMediaList(mediaList);
+        listMediaAdapter.setMediaList(mediaList);
+        gridMediaAdapter.notifyDataSetChanged();
+        listMediaAdapter.notifyDataSetChanged();
+
     }
 
     private void loadGenres() {

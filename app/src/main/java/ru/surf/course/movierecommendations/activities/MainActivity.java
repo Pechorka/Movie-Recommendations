@@ -38,26 +38,31 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    public static final String TAG_MOVIES_LIST_FRAGMENT = "movie_list_fragment";
     public static final String KEY_SEARCH_QUERY = "search_query";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final int UPCOMING_ID = 2;
+    private static final int ON_AIR_ID = 3;
+    private static final int UPCOMING_POSITION = 3;
+    private static final int ON_AIR_POSITION = 3;
 
-    private static final int UPCOMING_OR_ONAIR_ID = 2;
-
-
-    private MediaListFragment movieListFragment;
-    private MediaListFragment tvShowListFragment;
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
     private String language;
     private String query;
     private String previousQuery;
+    private int movieLastDrawerItemId;
+    private int tvshowLastDrawerItemId;
+    private MediaListFragment movieListFragment;
+    private MediaListFragment tvShowListFragment;
 
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
         context.startActivity(intent);
+
     }
 
     public static boolean isInternetAvailable(Context context) {
@@ -82,184 +87,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+        setup();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-        setSupportActionBar(toolbar);
-
-//        if (!isInternetAvailable(this)) {
-//            final TextView error = (TextView) findViewById(R.id.activity_main_text_internet_error);
-//            error.setVisibility(View.VISIBLE);
-//            final Button button = (Button) findViewById(R.id.activity_main_btn_reload);
-//            button.setVisibility(View.VISIBLE);
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (isInternetAvailable(MainActivity.this)) {
-//                        error.setVisibility(View.GONE);
-//                        button.setVisibility(View.GONE);
-//                    }
-//                }
-//            });
-//            while (!isInternetAvailable(this)){
-//
-//            }
-//        }
-        setTitle(R.string.popular);
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-        mDrawer.addDrawerListener(drawerToggle);
-        //?????
-        drawerToggle.setDrawerIndicatorEnabled(false);
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        language = Locale.getDefault().getLanguage();
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        query = Filters.popular.toString();
-        movieListFragment = MediaListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER, true);
-        tvShowListFragment = MediaListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER, false);
-        viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
-                this, Filters.popular, movieListFragment, tvShowListFragment));
-
-        nvDrawer.getMenu().add(R.id.nav_main, 2, 3, getResources().getString(R.string.upcoming));
-        nvDrawer.getMenu().getItem(3).setIcon(R.drawable.upcoming_icon);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        nvDrawer.getMenu().removeItem(2);
-                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_OR_ONAIR_ID, 2, getResources().getString(R.string.upcoming));
-                        nvDrawer.getMenu().getItem(3).setIcon(R.drawable.upcoming_icon);
-                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                selectDrawerItemMovies(item);
-                                return true;
-                            }
-                        });
-                        break;
-                    case 1:
-                        nvDrawer.getMenu().removeItem(2);
-                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_OR_ONAIR_ID, 2, getResources().getString(R.string.on_air));
-                        nvDrawer.getMenu().getItem(3).setIcon(R.drawable.on_air_icon);
-                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                selectDrawerItemTVShows(item);
-                                return true;
-                            }
-                        });
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItemMovies(item);
-                return true;
-            }
-        });
-
-
-    }
-
-    public void setDrawerEnabled(boolean enabled) {
-        if (mDrawer != null) {
-            int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
-                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
-            mDrawer.setDrawerLockMode(lockMode);
-            drawerToggle.setDrawerIndicatorEnabled(enabled);
-        }
-    }
-
-    public void selectDrawerItemMovies(MenuItem menuItem) {
-        previousQuery = query;
-        switch (menuItem.getItemId()) {
-            case R.id.nav_popular:
-                query = Filters.popular.toString();
-                setTitle(R.string.popular);
-                break;
-            case R.id.nav_top:
-                query = Filters.top_rated.toString();
-                setTitle(R.string.top);
-                break;
-            case UPCOMING_OR_ONAIR_ID:
-                query = Filters.upcoming.toString();
-                setTitle(R.string.upcoming);
-                break;
-            case R.id.nav_custom:
-                query = Filters.custom.toString();
-                setTitle(R.string.custom);
-                break;
-        }
-        if (previousQuery.equals(query)) {
-            Toast.makeText(this, "Filter already selected", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        menuItem.setChecked(true);
-
-        if (!query.equals(Filters.custom.toString())) {
-            movieListFragment.setCallOptionsVisability(View.GONE);
-            movieListFragment.loadMediaInfoByFilter(query, language, "1");
-        } else {
-            movieListFragment.setCallOptionsVisability(View.VISIBLE);
-            movieListFragment.loadMediaInfoByCustomFilter(language, "1");
-        }
-        mDrawer.closeDrawers();
-    }
-
-    public void selectDrawerItemTVShows(MenuItem menuItem) {
-        previousQuery = query;
-        switch (menuItem.getItemId()) {
-            case R.id.nav_popular:
-                query = Filters.popular.toString();
-                setTitle(R.string.popular);
-                break;
-            case R.id.nav_top:
-                query = Filters.top_rated.toString();
-                setTitle(R.string.top);
-                break;
-            case UPCOMING_OR_ONAIR_ID:
-                query = Filters.upcoming.toString();
-                setTitle(R.string.upcoming);
-                break;
-            case R.id.nav_custom:
-                query = Filters.custom.toString();
-                setTitle(R.string.custom);
-                break;
-        }
-        if (previousQuery.equals(query)) {
-            Toast.makeText(this, "Filter already selected", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        menuItem.setChecked(true);
-
-        if (!query.equals(Filters.custom.toString())) {
-            tvShowListFragment.setCallOptionsVisability(View.GONE);
-            tvShowListFragment.loadMediaInfoByFilter(query, language, "1");
-        } else {
-            tvShowListFragment.setCallOptionsVisability(View.VISIBLE);
-        }
-
-        mDrawer.closeDrawers();
     }
 
     @Override
@@ -296,16 +126,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //    private void loadMainFragment(Bundle savedInstanceState, String filter) {
-//        if (savedInstanceState == null) {
-//            final FragmentManager fragmentManager = getFragmentManager();
-//            moviesListFragment = MoviesListFragment.newInstance(filter, Locale.getDefault().getLanguage(), Tasks.SEARCH_BY_FILTER);
-//            fragmentManager.beginTransaction().add(R.id.activity_main_container, moviesListFragment, TAG_MOVIES_LIST_FRAGMENT).commit();
-//        } else {
-//            moviesListFragment = (MoviesListFragment) getFragmentManager().findFragmentByTag(TAG_MOVIES_LIST_FRAGMENT);
-//        }
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -326,9 +146,162 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    private void init() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(toolbar);
+        setTitle(R.string.popular);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        language = Locale.getDefault().getLanguage();
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        query = Filters.popular.toString();
+        movieListFragment = MediaListFragment.newInstance(query,
+                language, Tasks.SEARCH_BY_FILTER, true);
+        tvShowListFragment = MediaListFragment.newInstance(query,
+                language, Tasks.SEARCH_BY_FILTER, false);
+    }
+
+    private void setup() {
+        mDrawer.addDrawerListener(drawerToggle);
+        //?????
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.setDrawerIndicatorEnabled(true);
+
+        viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
+                this, query, movieListFragment, tvShowListFragment));
+
+        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
+        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+        nvDrawer.getMenu().getItem(0).setChecked(true);
+        movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
+
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        nvDrawer.getMenu().removeItem(ON_AIR_POSITION);
+                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
+                        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                            @Override
+                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                selectDrawerItem(item, true);
+                                return true;
+                            }
+                        });
+                        nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
+                        break;
+                    case 1:
+                        nvDrawer.getMenu().removeItem(UPCOMING_ID);
+                        nvDrawer.getMenu().add(R.id.nav_main, ON_AIR_ID, ON_AIR_POSITION, getResources().getString(R.string.on_air));
+                        nvDrawer.getMenu().getItem(ON_AIR_POSITION).setIcon(R.drawable.on_air_icon);
+                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                            @Override
+                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                selectDrawerItem(item, false);
+                                return true;
+                            }
+                        });
+                        nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item, true);
+                return true;
+            }
+        });
+    }
+
+    public void setDrawerEnabled(boolean enabled) {
+        if (mDrawer != null) {
+            int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
+                    DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+            mDrawer.setDrawerLockMode(lockMode);
+            drawerToggle.setDrawerIndicatorEnabled(enabled);
+        }
+    }
+
+
+    public void selectDrawerItem(MenuItem menuItem, boolean movie) {
+        previousQuery = query;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_popular:
+                query = Filters.popular.toString();
+                setTitle(R.string.popular);
+                break;
+            case R.id.nav_top:
+                query = Filters.top_rated.toString();
+                setTitle(R.string.top);
+                break;
+            case ON_AIR_ID:
+                query = Filters.on_the_air.toString();
+                setTitle(R.string.on_air);
+                break;
+            case UPCOMING_ID:
+                query = Filters.upcoming.toString();
+                setTitle(R.string.upcoming);
+                break;
+            case R.id.nav_custom:
+                query = Filters.custom.toString();
+                setTitle(R.string.custom);
+                break;
+        }
+        if (previousQuery.equals(query)) {
+            Toast.makeText(this, "Filter already selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        menuItem.setChecked(true);
+        if (movie) {
+            movieLastDrawerItemId = menuItem.getItemId();
+        } else {
+            tvshowLastDrawerItemId = menuItem.getItemId();
+        }
+        loadInformation(movie);
+        mDrawer.closeDrawers();
+    }
+
+    private void loadInformation(boolean movie) {
+        if (movie) {
+            if (!query.equals(Filters.custom.toString())) {
+                movieListFragment.setCallOptionsVisibility(View.GONE);
+                movieListFragment.loadMediaInfoByFilter(query, language, "1");
+            } else {
+                movieListFragment.setCallOptionsVisibility(View.VISIBLE);
+                movieListFragment.loadMediaInfoByCustomFilter(language, "1");
+            }
+        } else {
+            if (!query.equals(Filters.custom.toString())) {
+                tvShowListFragment.setCallOptionsVisibility(View.GONE);
+                tvShowListFragment.loadMediaInfoByFilter(query, language, "1");
+            } else {
+                tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
+                tvShowListFragment.loadMediaInfoByCustomFilter(language, "1");
+            }
+        }
+    }
+
 
 //    private void searchByName(String name) {
-//        MovieListFragment fragment = MovieListFragment.newInstance(name, Locale.getDefault().getLanguage(), Tasks.SEARCH_MOVIES_BY_NAME);
+//
 //        switchContent(R.id.viewpager, fragment);
 //    }
 
