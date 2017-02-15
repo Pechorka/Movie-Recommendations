@@ -141,7 +141,7 @@ public class MovieActivity extends AppCompatActivity {
         GetMoviesTask getMoviesTask = new GetMoviesTask();
         getMoviesTask.addListener(new GetMediaTask.TaskCompletedListener() {
             @Override
-            public void mediaLoaded(List<? extends Media> result, boolean newResult) {
+            public void mediaLoaded(List result, boolean newResult) {
                 if (movie != null)
                     movie.fillFields(result.get(0));
                 dataLoadComplete();
