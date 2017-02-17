@@ -131,4 +131,8 @@
 
     </LinearLayout>
 
+    <include layout="@layout/screen_no_internet"
+        android:id="@+id/movie_no_internet_screen"
+        android:visibility="gone"/>
+
 </android.support.design.widget.CoordinatorLayout>

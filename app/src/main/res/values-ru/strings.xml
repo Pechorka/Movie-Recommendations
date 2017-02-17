@@ -55,4 +55,6 @@
     <string name="movies">Фиильмы</string>
     <string name="choose_sort">Выберите сортировку</string>
     <string name="choose_sort_direction">Выберите направление сортировки</string>
+    <string name="no_internet">Похоже, какие-то проблемы с соединением</string>
+    <string name="retry">Попробовать снова</string>
 </resources>

@@ -78,4 +78,6 @@
     <string name="header">Header</string>
     <string name="choose_sort">choose_sort</string>
     <string name="choose_sort_direction">choose sort direction</string>
+    <string name="no_internet">Seems like there are some problems with connecting</string>
+    <string name="retry">Retry</string>
 </resources>

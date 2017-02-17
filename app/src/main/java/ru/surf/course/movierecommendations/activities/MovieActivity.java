@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -122,6 +123,24 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (Utilities.isConnectionAvailable(this))
+            startLoading();
+        else {
+            final View errorPlaceholder = findViewById(R.id.movie_no_internet_screen);
+            errorPlaceholder.setVisibility(View.VISIBLE);
+            ((Button)findViewById(R.id.message_no_internet_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Utilities.isConnectionAvailable(MovieActivity.this)) {
+                        errorPlaceholder.setVisibility(View.GONE);
+                        startLoading();
+                    }
+                }
+            });
+        }
+    }
+
+    private void startLoading() {
         dataLoaded = 0;
         if (getIntent().hasExtra(KEY_MOVIE)) {
             currentMovie = (MovieInfo) getIntent().getSerializableExtra(KEY_MOVIE);
