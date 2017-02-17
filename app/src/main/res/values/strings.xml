@@ -10,7 +10,7 @@
     <string name="popular">Popular</string>
     <string name="top">Top Rated</string>
     <string name="upcoming">Upcoming</string>
-    <string name="custom">Custom</string>
+    <string name="custom">Custom Filter</string>
     <string name="top_btn_hint">Best movies of all time</string>
     <string name="upcoming_btn_hint">Upcoming movies</string>
     <string name="original_title">Original title</string>

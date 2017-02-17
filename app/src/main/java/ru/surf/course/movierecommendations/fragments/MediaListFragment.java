@@ -268,7 +268,21 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             case SEARCH_BY_ID:
             case SEARCH_SIMILAR:
                 loadMediInfoById(id, language, String.valueOf(page), task);
+                break;
+            default:
+                loadMediaByName(query, language, String.valueOf(page));
         }
+    }
+
+    public void loadMediaByName(String query, String language, String page) {
+        GetMediaTask getMediaTask;
+        if (movie) {
+            getMediaTask = new GetMoviesTask();
+        } else {
+            getMediaTask = new GetTVShowsTask();
+        }
+        getMediaTask.addListener(this);
+        getMediaTask.getMediaByName(query, language, page);
     }
 
     public void loadMediaInfoByFilter(String query, String language, String page) {

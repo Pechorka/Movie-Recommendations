@@ -106,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (Utilities.isConnectionAvailable(MainActivity.this)) {
-//                    searchByName(query.replace(' ', '+'));
+                    searchByName(query.replace(' ', '+'));
                 }
                 searchView.clearFocus();
-
                 return true;
             }
 
@@ -212,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -271,11 +271,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             tvshowLastDrawerItemId = menuItem.getItemId();
         }
-        loadInformation(movie);
+        loadInformationByFilter(movie);
         mDrawer.closeDrawers();
     }
 
-    private void loadInformation(boolean movie) {
+    private void loadInformationByFilter(boolean movie) {
         if (movie) {
             if (!query.equals(Filters.custom.toString())) {
                 movieListFragment.setCallOptionsVisibility(View.GONE);
@@ -295,11 +295,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadInformationBySearchQuery(boolean movie) {
+        if (movie) {
+            movieListFragment.loadMediaByName(query, language, "1");
+        } else {
+            tvShowListFragment.loadMediaByName(query, language, "1");
+        }
+    }
 
     private void searchByName(String name) {
-        MediaListFragment fragment = MediaListFragment.newInstance(name, language, Tasks.SEARCH_BY_NAME, true);
-        switchContent(R.id.viewpager, fragment);
+        query = name;
+        setTitle("Search results");
+        loadInformationBySearchQuery(tabLayout.getSelectedTabPosition() == 0);
     }
+
 
     public void switchContent(int id, Fragment fragment) {
         //noinspection ResourceType
