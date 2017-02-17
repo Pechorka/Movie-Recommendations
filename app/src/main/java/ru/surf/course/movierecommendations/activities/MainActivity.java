@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -68,8 +69,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
-        setup();
+        if (Utilities.isConnectionAvailable(this)) {
+            init();
+            setup();
+        } else {
+            final View errorPlaceholder = findViewById(R.id.main_no_internet_screen);
+            errorPlaceholder.setVisibility(View.VISIBLE);
+            ((Button) findViewById(R.id.message_no_internet_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Utilities.isConnectionAvailable(MainActivity.this)) {
+                        errorPlaceholder.setVisibility(View.GONE);
+                        init();
+                        setup();
+                    }
+                }
+            });
+        }
 
     }
 

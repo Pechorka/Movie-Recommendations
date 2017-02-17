@@ -36,31 +36,10 @@
             android:layout_height="match_parent"
             android:layout_below="@id/sliding_tabs" />
 
-        <LinearLayout
-            android:id="@+id/activity_main_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/activity_main_toolbar"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/activity_main_text_internet_error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/no_internet_connection_msg"
-                android:textSize="30sp"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/activity_main_btn_reload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/reload"
-                android:visibility="gone" />
-        </LinearLayout>
+        <include
+            android:id="@+id/main_no_internet_screen"
+            layout="@layout/screen_no_internet"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
