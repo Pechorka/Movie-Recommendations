@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             final View errorPlaceholder = findViewById(R.id.main_no_internet_screen);
             errorPlaceholder.setVisibility(View.VISIBLE);
-            ((Button) findViewById(R.id.message_no_internet_button)).setOnClickListener(new View.OnClickListener() {
+            (findViewById(R.id.message_no_internet_button)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (Utilities.isConnectionAvailable(MainActivity.this)) {
@@ -184,30 +183,10 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        nvDrawer.getMenu().removeItem(ON_AIR_POSITION);
-                        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
-                        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
-                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                selectDrawerItem(item, true);
-                                return true;
-                            }
-                        });
-                        nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
+                        movieDrawer();
                         break;
                     case 1:
-                        nvDrawer.getMenu().removeItem(UPCOMING_ID);
-                        nvDrawer.getMenu().add(R.id.nav_main, ON_AIR_ID, ON_AIR_POSITION, getResources().getString(R.string.on_air));
-                        nvDrawer.getMenu().getItem(ON_AIR_POSITION).setIcon(R.drawable.on_air_icon);
-                        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                selectDrawerItem(item, false);
-                                return true;
-                            }
-                        });
-                        nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
+                        tvShowDrawer();
                         break;
                 }
             }
@@ -234,6 +213,34 @@ public class MainActivity extends AppCompatActivity {
             mDrawer.setDrawerLockMode(lockMode);
             drawerToggle.setDrawerIndicatorEnabled(enabled);
         }
+    }
+
+    private void movieDrawer() {
+        nvDrawer.getMenu().removeItem(ON_AIR_POSITION);
+        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
+        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item, true);
+                return true;
+            }
+        });
+        nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
+    }
+
+    private void tvShowDrawer() {
+        nvDrawer.getMenu().removeItem(UPCOMING_ID);
+        nvDrawer.getMenu().add(R.id.nav_main, ON_AIR_ID, ON_AIR_POSITION, getResources().getString(R.string.on_air));
+        nvDrawer.getMenu().getItem(ON_AIR_POSITION).setIcon(R.drawable.on_air_icon);
+        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item, false);
+                return true;
+            }
+        });
+        nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
     }
 
 
@@ -306,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
     private void searchByName(String name) {
         query = name;
         setTitle("Search results");
+        //0 - movie tab
         loadInformationBySearchQuery(tabLayout.getSelectedTabPosition() == 0);
     }
 

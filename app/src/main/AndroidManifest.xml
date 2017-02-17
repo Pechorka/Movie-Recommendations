@@ -22,7 +22,6 @@
         <activity
             android:name=".activities.GalleryActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity android:name=".activities.SearchResultActivity"></activity>
 
         <activity android:name=".activities.MovieActivity"
                   android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>

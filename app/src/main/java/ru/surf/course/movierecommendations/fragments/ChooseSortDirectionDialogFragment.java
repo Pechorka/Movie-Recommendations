@@ -22,7 +22,7 @@ public class ChooseSortDirectionDialogFragment extends DialogFragment {
 
     private static final String SORT_PREFS = "sort_direction_prefs";
     private static final String CHOSEN_SORT = "chosen_sort_direction";
-    CharSequence[] sortDirectionNames = new CharSequence[]{"In descending order", "In ascending order"};
+    private CharSequence[] sortDirectionNames = new CharSequence[]{"In descending order", "In ascending order"};
     private List<ChooseSortDirectionDialogFragment.SavePressedListener> listeners = new ArrayList<>();
     private int chosen;
     private int previous;

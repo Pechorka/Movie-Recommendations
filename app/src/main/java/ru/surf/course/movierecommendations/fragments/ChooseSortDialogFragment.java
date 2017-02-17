@@ -22,7 +22,7 @@ public class ChooseSortDialogFragment extends DialogFragment {
 
     private static final String SORT_PREFS = "sort_prefs";
     private static final String CHOSEN_SORT = "chosen_sort";
-    CharSequence[] sortNames = new CharSequence[]{"By popularity", "By average votes"};
+    private CharSequence[] sortNames = new CharSequence[]{"By popularity", "By average votes"};
     private List<ChooseSortDialogFragment.SavePressedListener> listeners = new ArrayList<>();
     private int chosen;
     private int previous;
