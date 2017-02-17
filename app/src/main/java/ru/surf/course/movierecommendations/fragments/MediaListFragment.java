@@ -61,6 +61,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private boolean movie;
 
     private ChooseGenresDialogFragment genresDialogFragment;
+    private ChooseSortDialogFragment sortDialogFragment;
+    private ChooseSortDirection sortDirectionFragment;
     private RecyclerView recyclerView;
     private GridMediaAdapter gridMediaAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
@@ -70,6 +72,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private Button callOptions;
     private Button showGenres;
     private Button showSort;
+    private Button showSortDirection;
     private CustomFilterOptions customFilterOptions;
 
     public static MediaListFragment newInstance(String query, String language, Tasks task, boolean movie) {
@@ -146,9 +149,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
         showSort = (Button) root.findViewById(R.id.sort_dialog);
+        showSortDirection = (Button) root.findViewById(R.id.sort_direction_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
+        sortDialogFragment = new ChooseSortDialogFragment();
+        sortDirectionFragment = new ChooseSortDirection();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
+        GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
+        getTVShowsTask.getMediaById(65352, "en");
     }
 
     private void setupViews() {
@@ -173,21 +181,50 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             }
         });
 
+        final FragmentManager fm = getActivity().getFragmentManager();
         showGenres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getActivity().getFragmentManager();
                 genresDialogFragment.show(fm, "fragment_genres");
             }
         });
-        ChooseGenresDialogFragment.SavePressedListener listener = new ChooseGenresDialogFragment.SavePressedListener() {
+        ChooseGenresDialogFragment.SavePressedListener genresSaved = new ChooseGenresDialogFragment.SavePressedListener() {
             @Override
             public void saved() {
                 page = 1;
                 loadInformation(task);
             }
         };
-        genresDialogFragment.addListener(listener);
+        genresDialogFragment.addListener(genresSaved);
+        ChooseSortDialogFragment.SavePressedListener sortTypeSaved = new ChooseSortDialogFragment.SavePressedListener() {
+            @Override
+            public void saved() {
+                page = 1;
+                loadInformation(task);
+            }
+        };
+        sortDialogFragment.addListener(sortTypeSaved);
+        showSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortDialogFragment.show(fm, "fragment_sort");
+            }
+        });
+        ChooseSortDirection.SavePressedListener directionSaved = new ChooseSortDirection.SavePressedListener() {
+            @Override
+            public void saved() {
+                page = 1;
+                loadInformation(task);
+            }
+        };
+        sortDirectionFragment.addListener(directionSaved);
+        showSortDirection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortDirectionFragment.show(fm, "fragment_direction_sort");
+            }
+        });
+
     }
 
     private void switchToLinear() {

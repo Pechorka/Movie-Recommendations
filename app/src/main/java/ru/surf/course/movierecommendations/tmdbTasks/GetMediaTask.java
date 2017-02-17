@@ -20,7 +20,6 @@ public abstract class GetMediaTask extends AsyncTask<String, Void, List<? extend
     protected final String RELEASE_DATE_LTE = "release_date.lte";
     protected final String WITH_GENRES = "with_genres";
     protected final String WITH_KEYWORDS = "with_keywords";
-    protected final String LOG_TAG = getClass().getSimpleName();
     protected boolean isLoadingList;
     protected boolean newResult;
     protected Tasks task;

@@ -14,6 +14,9 @@ public class TVShowInfo extends Media implements Serializable {
     private int mNumberOfSeasons;
     private String mType;
     private List<String> originCountryList;
+    private List<Season> seasonList;
+    private String homePage;
+    private List<Network> networks;
 
     public TVShowInfo(int id) {
         super(id);
@@ -57,5 +60,29 @@ public class TVShowInfo extends Media implements Serializable {
 
     public void setOriginCountryList(List<String> originCountryList) {
         this.originCountryList = originCountryList;
+    }
+
+    public List<Season> getSeasonList() {
+        return seasonList;
+    }
+
+    public void setSeasonList(List<Season> seasonList) {
+        this.seasonList = seasonList;
+    }
+
+    public String getHomePage() {
+        return homePage;
+    }
+
+    public void setHomePage(String homePage) {
+        this.homePage = homePage;
+    }
+
+    public List<Network> getNetworks() {
+        return networks;
+    }
+
+    public void setNetworks(List<Network> networks) {
+        this.networks = networks;
     }
 }

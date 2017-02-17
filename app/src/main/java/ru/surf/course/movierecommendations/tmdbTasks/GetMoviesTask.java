@@ -30,6 +30,8 @@ import ru.surf.course.movierecommendations.models.MovieInfo;
 
 public class GetMoviesTask extends GetMediaTask {
 
+    protected final String LOG_TAG = getClass().getSimpleName();
+
     @Override
     protected List<MovieInfo> doInBackground(String... params) {
         if (params.length == 0)

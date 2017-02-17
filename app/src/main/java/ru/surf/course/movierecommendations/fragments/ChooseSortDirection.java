@@ -13,20 +13,19 @@ import java.util.List;
 import ru.surf.course.movierecommendations.R;
 
 /**
- * Created by Sergey on 13.02.2017.
+ * Created by Sergey on 16.02.2017.
  */
 
-public class ChooseSortDialogFragment extends DialogFragment {
-
-    private List<ChooseSortDialogFragment.SavePressedListener> listeners = new ArrayList<>();
+public class ChooseSortDirection extends DialogFragment {
+    private List<ChooseSortDirection.SavePressedListener> listeners = new ArrayList<>();
     private int chosen;
     private int previous;
-    private List<String> sortTypes = Arrays.asList("vote_average", "first_air_date", "popularity");
+    private List<String> directionsTypes = Arrays.asList("desc", "asc");
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        CharSequence[] charSequences = new CharSequence[]{"By popularity", "By first air date", "By average votes"};
+        CharSequence[] charSequences = new CharSequence[]{"In descending order", "In ascending order"};
         builder.setTitle("Choose sort type")
                 .setSingleChoiceItems(charSequences, 0, new DialogInterface.OnClickListener() {
                     @Override
@@ -38,7 +37,7 @@ public class ChooseSortDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (previous != chosen) {
-                            for (ChooseSortDialogFragment.SavePressedListener listener :
+                            for (ChooseSortDirection.SavePressedListener listener :
                                     listeners
                                     ) {
                                 listener.saved();
@@ -54,16 +53,15 @@ public class ChooseSortDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void addListener(ChooseSortDialogFragment.SavePressedListener toAdd) {
+    public void addListener(ChooseSortDirection.SavePressedListener toAdd) {
         listeners.add(toAdd);
     }
 
     public String getChosenSort() {
-        return sortTypes.get(chosen);
+        return directionsTypes.get(chosen);
     }
 
     public interface SavePressedListener {
         void saved();
     }
-
 }

@@ -21,6 +21,8 @@ import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.models.Media;
+import ru.surf.course.movierecommendations.models.Network;
+import ru.surf.course.movierecommendations.models.Season;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
@@ -28,6 +30,7 @@ import ru.surf.course.movierecommendations.models.TVShowInfo;
  */
 
 public class GetTVShowsTask extends GetMediaTask {
+    protected final String LOG_TAG = getClass().getSimpleName();
 
     @Override
     protected List<TVShowInfo> doInBackground(String... params) {
@@ -188,7 +191,6 @@ public class GetTVShowsTask extends GetMediaTask {
     }
 
 
-
     private List<TVShowInfo> parseJson(String jsonStr) throws JSONException, ParseException {
         final String TMDB_RESULTS = "results";
         final String TMDB_POSTER_PATH = "poster_path";
@@ -217,6 +219,12 @@ public class GetTVShowsTask extends GetMediaTask {
         final String TMDB_TYPE = "type";
         final String TMDB_FIRST_AIR_DATE = "first_air_date";
         final String TMDB_ORIGIN_COUNTRY = "origin_country";
+        final String TMDB_HOMEPAGE = "homepage";
+        final String TMDB_NETWORKS = "networks";
+        final String TMDB_SEASONS = "seasons";
+        final String TMDB_EPISODE_COUNT = "episode_count";
+        final String TMDB_SEASON_NUMBER = "season_number";
+        final String TMDB_AIR_DATE = "air_date";
 
 
         JSONObject tvShowsJson = new JSONObject(jsonStr);
@@ -243,12 +251,13 @@ public class GetTVShowsTask extends GetMediaTask {
                 for (int k = 0; k < genres.length(); k++) {
                     genresList.add(genres.getInt(k));
                 }
+                //get originCountries
                 originCountries = tvShowArray.getJSONObject(i).getJSONArray(TMDB_ORIGIN_COUNTRY);
                 originCountryList = new ArrayList<>();
                 for (int k = 0; k < originCountries.length(); k++) {
                     originCountryList.add(originCountries.getString(k));
                 }
-//
+
 
                 item = new TVShowInfo(tvShowArray.getJSONObject(i).getInt(TMDB_ID));
                 item.setTitle(tvShowArray.getJSONObject(i).getString(TMDB_NAME));
@@ -261,7 +270,6 @@ public class GetTVShowsTask extends GetMediaTask {
                 item.setVoteCount(tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT));
                 item.setVoteAverage(tvShowArray.getJSONObject(i).getDouble(TMDB_RATING));
                 item.setOriginalLanguage(new Locale(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_LANGUAGE)));
-//
                 try {
                     item.setDate(formatter.parse(tvShowArray.getJSONObject(i).getString(TMDB_FIRST_AIR_DATE)));
                 } catch (ParseException e) {
@@ -271,84 +279,95 @@ public class GetTVShowsTask extends GetMediaTask {
             }
         } else {
             //get genres
-            JSONArray genres;
-            List<Integer> genresListIds;
-            List<String> genresListNames;
-            JSONArray episodesRuntime;
-            List<Double> episodesRintimeList;
-//            episodesRuntime = tvShowArray.getJSONObject(i).getJSONArray(TMDB_EPICSODE_RUNTIME);
-//            item.episode_runtime = episodesRintimeList;
-//                item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
-//                item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
-//                item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
-//                episodesRintimeList = new ArrayList<>();
-//                for (int k = 0; k < episodesRintimeList.size(); k++) {
-//                    episodesRintimeList.add(episodesRuntime.getDouble(k));
-//                }
+            JSONArray genres = tvShowsJson.getJSONArray(TMDB_GENRES);
+            List<Integer> genresListIds = new ArrayList<>();
+            List<String> genresListNames = new ArrayList<>();
+            for (int k = 0; k < genres.length(); k++) {
+                genresListIds.add(genres.getJSONObject(k).getInt(TMDB_ID));
+                genresListNames.add(genres.getJSONObject(k).getString(TMDB_NAME));
+            }
 
-            genres = tvShowsJson.getJSONArray(TMDB_GENRES);
-            genresListIds = new ArrayList<>();
-            genresListNames = new ArrayList<>();
-//            for (int k = 0; k < genres.length(); k++) {
-//                genresListIds.add(genres.getJSONObject(k).getInt(TMDB_ID));
-//                genresListNames.add(genres.getJSONObject(k).getString(TMDB_NAME));
-//            }
+            //get runtime of episodes
+            JSONArray episodesRuntime = tvShowsJson.getJSONArray(TMDB_EPICSODE_RUNTIME);
+            List<Double> episodesRuntimeList = new ArrayList<>();
+            for (int k = 0; k < episodesRuntime.length(); k++) {
+                episodesRuntimeList.add(episodesRuntime.getDouble(k));
+            }
 
-//            //get production companies names
-//            JSONArray productionCompanies;
-//            List<String> productionCompaniesNames;
-//            productionCompanies = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
-//            productionCompaniesNames = new ArrayList<>();
-//            for (int k = 0; k < productionCompanies.length(); k++)
-//                productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
-//
-//            //get production countries
-//            JSONArray productionCountries;
-//            List<String> productionCountriesNames;
-//            productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
-//            productionCountriesNames = new ArrayList<>();
-//            for (int k = 0; k < productionCountries.length(); k++)
-//                productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+            //get production companies names
+            JSONArray productionCompanies = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
+            List<String> productionCompaniesNames = new ArrayList<>();
+            for (int k = 0; k < productionCompanies.length(); k++)
+                productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
 
-//            item = new TVShowInfo();
-//            item.title = tvShowArray.getJSONObject(i).getString(TMDB_TITLE);
-//            item.originalTitle = tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE);
-//            item.genreIds = genresList;
-//            item.posterPath = tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH);
-//            item.overview = tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW);
-//            item.backdropPath = tvShowArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH);
-//            item.voteAverage = tvShowArray.getJSONObject(i).getDouble(TMDB_RATING);
-//            item.voteCount = tvShowArray.getJSONObject(i).getInt(TMDB_VOTE_COUNT);
-//            item.id = tvShowArray.getJSONObject(i).getInt(TMDB_ID);
-//            item.status = tvShowArray.getJSONObject(i).getString(TMDB_STATUS);
-//            item.budget = tvShowArray.getJSONObject(i).getString(TMDB_BUDGET);
-//            item.episode_runtime =episodesRintimeList;
-//            item.number_of_episodes = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_EPISODES);
-//            item.number_of_seasons = tvShowArray.getJSONObject(i).getInt(TMDB_NUMBER_OF_SEASONS);
-//            item.type = tvShowArray.getJSONObject(i).getString(TMDB_TYPE);
-//            tvShowsJson.getString(TMDB_TITLE),
-//                    tvShowsJson.getString(TMDB_ORIGINAL_TITLE),
-//                    new Locale(tvShowsJson.getString(TMDB_ORIGINAL_LANGUAGE)),
-//                    genresListIds,
-//                    tvShowsJson.getString(TMDB_POSTER_PATH),
-//                    tvShowsJson.getString(TMDB_OVERVIEW),
-//                    tvShowsJson.getString(TMDB_BACKDROP_PATH),
-//                    tvShowsJson.getDouble(TMDB_RATING),
-//                    tvShowsJson.getInt(TMDB_VOTE_COUNT),
-//                    tvShowsJson.getInt(TMDB_ID),
-//                    tvShowsJson.getString(TMDB_BUDGET),
-//                    genresListNames,
-//                    productionCompaniesNames,
-//                    productionCountriesNames,
-//                    tvShowsJson.getString(TMDB_REVENUE),
-//                    tvShowsJson.getString(TMDB_STATUS),
-//                    tvShowsJson.getInt(TMDB_RUNTIME)
-//            try {
-//                item.date = formatter.parse(tvShowsJson.getString(TMDB_DATE));
-//            } catch (ParseException e) {
-//                Log.d(LOG_TAG, "Empty date, most likely");
-//            }
-//            result.add(item);
+            //get production countries
+            JSONArray productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
+            List<String> productionCountriesNames = new ArrayList<>();
+            for (int k = 0; k < productionCountries.length(); k++)
+                productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+
+            //get networks
+            JSONArray netmworks = tvShowsJson.getJSONArray(TMDB_NETWORKS);
+            List<Network> networksList = new ArrayList<>();
+            Network network;
+            for (int k = 0; k < netmworks.length(); k++) {
+                network = new Network();
+                network.setId(netmworks.getJSONObject(k).getInt(TMDB_ID));
+                network.setName(netmworks.getJSONObject(k).getString(TMDB_NAME));
+                networksList.add(network);
+            }
+
+            //get originCountries
+            JSONArray originCountries = tvShowsJson.getJSONArray(TMDB_ORIGIN_COUNTRY);
+            List<String> originCountryList = new ArrayList<>();
+            for (int k = 0; k < originCountries.length(); k++) {
+                originCountryList.add(originCountries.getString(k));
+            }
+
+            JSONArray seasons = tvShowsJson.getJSONArray(TMDB_SEASONS);
+            List<Season> seasonList = new ArrayList<>();
+            Season season;
+            for (int k = 0; k < seasons.length(); k++) {
+                season = new Season();
+                season.setId(seasons.getJSONObject(k).getInt(TMDB_ID));
+                season.setEpisodeCount(seasons.getJSONObject(k).getInt(TMDB_EPISODE_COUNT));
+                season.setPosterPath(seasons.getJSONObject(k).getString(TMDB_POSTER_PATH));
+                season.setSeasonNumber(seasons.getJSONObject(k).getInt(TMDB_SEASON_NUMBER));
+                try {
+                    season.setAirDate(formatter.parse(tvShowsJson.getString(TMDB_AIR_DATE)));
+                } catch (ParseException e) {
+                    Log.d(LOG_TAG, "Empty date in season, most likely");
+                }
+            }
+
+            item = new TVShowInfo(tvShowsJson.getInt(TMDB_ID));
+            item.setTitle(tvShowsJson.getString(TMDB_TITLE));
+            item.setOriginalTitle(tvShowsJson.getString(TMDB_ORIGINAL_TITLE));
+            item.setGenreIds(genresListIds);
+            item.setGenreNames(genresListNames);
+            item.setPosterPath(tvShowsJson.getString(TMDB_POSTER_PATH));
+            item.setOverview(tvShowsJson.getString(TMDB_OVERVIEW));
+            item.setBackdropPath(tvShowsJson.getString(TMDB_BACKDROP_PATH));
+            item.setVoteCount(tvShowsJson.getInt(TMDB_VOTE_COUNT));
+            item.setVoteAverage(tvShowsJson.getDouble(TMDB_RATING));
+            item.setOriginalLanguage(new Locale(tvShowsJson.getString(TMDB_ORIGINAL_LANGUAGE)));
+            item.setEpisodesRuntime(episodesRuntimeList);
+            item.setHomePage(tvShowsJson.getString(TMDB_HOMEPAGE));
+            item.setNumberOfEpisodes(tvShowsJson.getInt(TMDB_NUMBER_OF_EPISODES));
+            item.setNumberOfSeasons(tvShowsJson.getInt(TMDB_NUMBER_OF_SEASONS));
+            item.setType(tvShowsJson.getString(TMDB_TYPE));
+            item.setStatus(tvShowsJson.getString(TMDB_STATUS));
+            item.setProductionCompaniesNames(productionCompaniesNames);
+            item.setProductionCountriesNames(productionCountriesNames);
+            item.setNetworks(networksList);
+            item.setOriginCountryList(originCountryList);
+            item.setSeasonList(seasonList);
+            try {
+                item.setDate(formatter.parse(tvShowsJson.getString(TMDB_FIRST_AIR_DATE)));
+            } catch (ParseException e) {
+                Log.d(LOG_TAG, "Empty date, most likely");
+            }
+            result.add(item);
         }
 
         return result;
@@ -430,7 +449,6 @@ public class GetTVShowsTask extends GetMediaTask {
                 .appendQueryParameter(WITH_KEYWORDS, keywords)
                 .build();
     }
-
 
 
     private void invokeEvent(List<? extends Media> result) {

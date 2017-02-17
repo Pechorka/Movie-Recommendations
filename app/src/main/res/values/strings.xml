@@ -77,4 +77,5 @@
     <string name="setup_filter">setup filter</string>
     <string name="header">Header</string>
     <string name="choose_sort">choose_sort</string>
+    <string name="choose_sort_direction">choose sort direction</string>
 </resources>
