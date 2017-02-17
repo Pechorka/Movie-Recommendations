@@ -369,7 +369,7 @@ public class GetMoviesTask extends GetMediaTask {
     }
 
     private Uri uriByGenreIds(String genreIDs, String language, String page) {
-        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie?";
         //TODO add sort
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)

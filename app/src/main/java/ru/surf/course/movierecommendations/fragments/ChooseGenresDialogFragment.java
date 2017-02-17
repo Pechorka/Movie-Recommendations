@@ -68,7 +68,7 @@ public class ChooseGenresDialogFragment extends DialogFragment {
 
     private boolean[] loadChecked(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(CHECKED_GENRES, Context.MODE_PRIVATE);
-        int size = prefs.getInt(CHECKED_ARRAY + "_size", 0);
+        int size = prefs.getInt(CHECKED_ARRAY + "_size", 19);
         boolean[] array = new boolean[size];
         for (int i = 0; i < size; i++)
             array[i] = prefs.getBoolean(CHECKED_ARRAY + "_" + i, false);

@@ -155,8 +155,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         sortDirectionFragment = new ChooseSortDirection();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
-        GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
-        getTVShowsTask.getMediaById(65352, "en");
     }
 
     private void setupViews() {
@@ -283,6 +281,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         getMediaTask.addListener(this);
         getMediaTask.getMediaByFilter(query, language, page);
         this.page = Integer.parseInt(page);
+        task = Tasks.SEARCH_BY_FILTER;
     }
 
     public void loadMediaInfoByIds(String ids, String language, String page, Tasks task) {
@@ -302,6 +301,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 break;
         }
         this.page = Integer.parseInt(page);
+        this.task = task;
     }
 
     public void loadMediInfoById(int id, String language, String page, Tasks task) {
@@ -321,6 +321,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 break;
         }
         this.page = Integer.parseInt(page);
+        this.task = task;
     }
 
     public void loadMediaInfoByCustomFilter(String language, String page) {
@@ -346,6 +347,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         }
         getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear);
         this.page = Integer.parseInt(page);
+        task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }
 
     public void setCallOptionsVisibility(int visibility) {

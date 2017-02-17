@@ -4,8 +4,6 @@ package ru.surf.course.movierecommendations.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -21,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +28,7 @@ import android.widget.Toast;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
@@ -65,28 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static boolean isInternetAvailable(Context context) {
-        NetworkInfo info = ((ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-
-        if (info == null) {
-            Log.d(LOG_TAG, "no internet connection");
-            return false;
-        } else {
-            if (info.isConnected()) {
-                Log.d(LOG_TAG, " internet connection available...");
-                return true;
-            } else {
-                return false;
-            }
-
-        }
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         init();
         setup();
 
@@ -108,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (isInternetAvailable(MainActivity.this)) {
+                if (Utilities.isConnectionAvailable(MainActivity.this)) {
 //                    searchByName(query.replace(' ', '+'));
                 }
                 searchView.clearFocus();
@@ -215,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 

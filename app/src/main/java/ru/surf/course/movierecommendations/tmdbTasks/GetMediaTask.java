@@ -37,9 +37,12 @@ public abstract class GetMediaTask extends AsyncTask<String, Void, List<? extend
 
     public abstract void getMediaByKeywords(String keywordIds, String language, String page);
 
+//    public abstract void getMediaByCustomFilter(String language, String page, String genres,
+//                                                String releaseDateGTE, String releaseDateLTE,
+//                                                String filter,String filterDirection);
+
     public abstract void getMediaByCustomFilter(String language, String page, String genres,
                                                 String releaseDateGTE, String releaseDateLTE);
-
 
     public void addListener(TaskCompletedListener toAdd) {
         listeners.add(toAdd);
