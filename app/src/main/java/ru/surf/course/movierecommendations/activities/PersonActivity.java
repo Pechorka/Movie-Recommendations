@@ -127,6 +127,24 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (Utilities.isConnectionAvailable(this))
+            startLoading();
+        else {
+            final View errorPlaceholder = findViewById(R.id.person_no_internet_screen);
+            errorPlaceholder.setVisibility(View.VISIBLE);
+            ((Button)findViewById(R.id.message_no_internet_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Utilities.isConnectionAvailable(PersonActivity.this)) {
+                        errorPlaceholder.setVisibility(View.GONE);
+                        startLoading();
+                    }
+                }
+            });
+        }
+    }
+
+    private void startLoading() {
         dataLoaded = 0;
         if (getIntent().hasExtra(KEY_PERSON)) {
             currentPerson = (Person) getIntent().getSerializableExtra(KEY_PERSON);
