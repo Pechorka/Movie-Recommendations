@@ -21,8 +21,8 @@ import ru.surf.course.movierecommendations.R;
 
 public class ChooseGenresDialogFragment extends DialogFragment {
 
-    public static final String CHECKED_GENRES = "checked_genres";
-    public static final String CHECKED_ARRAY = "checked_array";
+    private static final String GENRES_PREFS = "genres_prefs";
+    private static final String CHECKED_ARRAY = "checked_array";
     private List<SavePressedListener> listeners = new ArrayList<>();
 
     @Override
@@ -55,7 +55,7 @@ public class ChooseGenresDialogFragment extends DialogFragment {
     }
 
     private boolean saveChecked(boolean[] array, Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(CHECKED_GENRES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(GENRES_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(CHECKED_ARRAY + "_size", array.length);
 
@@ -67,7 +67,7 @@ public class ChooseGenresDialogFragment extends DialogFragment {
 
 
     private boolean[] loadChecked(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(CHECKED_GENRES, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(GENRES_PREFS, Context.MODE_PRIVATE);
         int size = prefs.getInt(CHECKED_ARRAY + "_size", 19);
         boolean[] array = new boolean[size];
         for (int i = 0; i < size; i++)

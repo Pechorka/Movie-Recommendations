@@ -62,7 +62,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
 
     private ChooseGenresDialogFragment genresDialogFragment;
     private ChooseSortDialogFragment sortDialogFragment;
-    private ChooseSortDirection sortDirectionFragment;
+    private ChooseSortDirectionDialogFragment sortDirectionFragment;
     private RecyclerView recyclerView;
     private GridMediaAdapter gridMediaAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
@@ -152,7 +152,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         showSortDirection = (Button) root.findViewById(R.id.sort_direction_dialog);
         genresDialogFragment = new ChooseGenresDialogFragment();
         sortDialogFragment = new ChooseSortDialogFragment();
-        sortDirectionFragment = new ChooseSortDirection();
+        sortDirectionFragment = new ChooseSortDirectionDialogFragment();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
     }
@@ -208,7 +208,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 sortDialogFragment.show(fm, "fragment_sort");
             }
         });
-        ChooseSortDirection.SavePressedListener directionSaved = new ChooseSortDirection.SavePressedListener() {
+        ChooseSortDirectionDialogFragment.SavePressedListener directionSaved = new ChooseSortDirectionDialogFragment.SavePressedListener() {
             @Override
             public void saved() {
                 page = 1;
@@ -345,7 +345,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 }
             }
         }
-        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear);
+        String sortBy = sortDialogFragment.getChosenSort() + "." + sortDirectionFragment.getChosenSortDirection();
+        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }

@@ -76,7 +76,7 @@ public class GetTVShowsTask extends GetMediaTask {
                     builtUri = uriByKeywords(params[0], languageName, page);
                     break;
                 case SEARCH_BY_CUSTOM_FILTER:
-                    builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4]);
+                    builtUri = uriForCustomFilter(languageName, page, params[0], params[3], params[4], params[5]);
                     break;
                 default:
                     builtUri = Uri.EMPTY;
@@ -183,10 +183,11 @@ public class GetTVShowsTask extends GetMediaTask {
 
     @Override
     public void getMediaByCustomFilter(String language, String page, String genres,
-                                       String releaseDateGTE, String releaseDateLTE) {
+                                       String releaseDateGTE, String releaseDateLTE,
+                                       String sortBy) {
         isLoadingList = true;
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
-        execute(genres, language, page, releaseDateLTE, releaseDateGTE);
+        execute(genres, language, page, releaseDateLTE, releaseDateGTE, sortBy);
 
     }
 
@@ -402,7 +403,8 @@ public class GetTVShowsTask extends GetMediaTask {
     }
 
     private Uri uriForCustomFilter(String language, String page,
-                                   String genres, String releaseDateGTE, String releaseDateLTE) {
+                                   String genres, String releaseDateGTE, String releaseDateLTE,
+                                   String sortBy) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
         Uri.Builder uri = Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
@@ -414,8 +416,11 @@ public class GetTVShowsTask extends GetMediaTask {
         if (releaseDateGTE != null) {
             uri.appendQueryParameter(RELEASE_DATE_GTE, releaseDateGTE);
         }
-        if (genres.length() != 0) {
+        if (genres != null && genres.length() != 0) {
             uri.appendQueryParameter(WITH_GENRES, genres);
+        }
+        if (sortBy != null && sortBy.length() != 0) {
+            uri.appendQueryParameter(SORT_BY, sortBy);
         }
         return uri.build();
     }

@@ -2,7 +2,9 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
@@ -18,17 +20,20 @@ import ru.surf.course.movierecommendations.R;
 
 public class ChooseSortDialogFragment extends DialogFragment {
 
+    private static final String SORT_PREFS = "sort_prefs";
+    private static final String CHOSEN_SORT = "chosen_sort";
+    CharSequence[] sortNames = new CharSequence[]{"By popularity", "By average votes"};
     private List<ChooseSortDialogFragment.SavePressedListener> listeners = new ArrayList<>();
     private int chosen;
     private int previous;
-    private List<String> sortTypes = Arrays.asList("vote_average", "first_air_date", "popularity");
+    private List<String> sortTypes = Arrays.asList("popularity", "vote_average");
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        CharSequence[] charSequences = new CharSequence[]{"By popularity", "By first air date", "By average votes"};
+        chosen = getChosen(getActivity());
         builder.setTitle("Choose sort type")
-                .setSingleChoiceItems(charSequences, 0, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(sortNames, chosen, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         previous = chosen;
@@ -43,6 +48,7 @@ public class ChooseSortDialogFragment extends DialogFragment {
                                     ) {
                                 listener.saved();
                             }
+                            saveChosen(chosen, getActivity());
                         }
                     }
                 })
@@ -53,6 +59,19 @@ public class ChooseSortDialogFragment extends DialogFragment {
                 });
         return builder.create();
     }
+
+    private int getChosen(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(SORT_PREFS, Context.MODE_PRIVATE);
+        return prefs.getInt(CHOSEN_SORT, 0);
+    }
+
+    private boolean saveChosen(int chosen, Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(SORT_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(CHOSEN_SORT, chosen);
+        return editor.commit();
+    }
+
 
     public void addListener(ChooseSortDialogFragment.SavePressedListener toAdd) {
         listeners.add(toAdd);
