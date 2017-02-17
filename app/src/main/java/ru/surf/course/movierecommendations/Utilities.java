@@ -1,6 +1,8 @@
 package ru.surf.course.movierecommendations;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -35,6 +37,12 @@ public class Utilities {
                 return result;
             }
         }
+    }
+
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
 }
