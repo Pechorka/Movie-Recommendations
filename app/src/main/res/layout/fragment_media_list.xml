@@ -9,44 +9,45 @@
     android:orientation="vertical"
     tools:context="ru.surf.course.movierecommendations.activities.MainActivity">
 
+    <RelativeLayout
+        android:id="@+id/movie_list_progress_bar_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground">
+
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/movie_list_call_options"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:text="@string/setup_filter"
+            android:textSize="30sp"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/movie_list_call_options"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_filter"
-                android:textSize="30sp"
-                android:visibility="gone" />
-
-            <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions
-                android:id="@+id/custom_filter_options"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/movie_list_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/movie_list_progress_bar_placeholder"
+        <ru.surf.course.movierecommendations.custom_views.CustomFilterOptions
+            android:id="@+id/custom_filter_options"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorBackground">
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
-            <ProgressBar
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/movie_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
+
+
+</LinearLayout>
 
