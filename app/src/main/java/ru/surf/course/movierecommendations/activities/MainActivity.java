@@ -105,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (Utilities.isConnectionAvailable(MainActivity.this)) {
-                    searchByName(query.replace(' ', '+'));
+                    //0 - movie tab
+                    searchByName(query.replace(' ', '+'), tabLayout.getSelectedTabPosition() == 0);
                 }
                 searchView.clearFocus();
                 return true;
@@ -310,13 +311,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void searchByName(String name) {
+    private void searchByName(String name, boolean movie) {
         query = name;
         setTitle("Search results");
-        //0 - movie tab
-        loadInformationBySearchQuery(tabLayout.getSelectedTabPosition() == 0);
+        loadInformationBySearchQuery(movie);
     }
 
+    public void loadInformationByGenreIds(String genreIds, boolean movie) {
+        if (movie) {
+            movieListFragment.loadMediaInfoByIds(genreIds, language, "1", Tasks.SEARCH_BY_GENRE);
+        } else {
+            tvShowListFragment.loadMediaInfoByIds(genreIds, language, "1", Tasks.SEARCH_BY_GENRE);
+        }
+        query = genreIds;
+    }
 
     public void switchContent(int id, Fragment fragment) {
         //noinspection ResourceType
