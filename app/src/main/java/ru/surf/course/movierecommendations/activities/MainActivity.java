@@ -37,6 +37,8 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 public class MainActivity extends AppCompatActivity {
 
     public static final String KEY_SEARCH_QUERY = "search_query";
+    public static final String KEY_GENRE_IDS = "genre_ids";
+    public static final String KEY_MOVIE = "movie";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int UPCOMING_ID = 2;
     private static final int ON_AIR_ID = 3;
@@ -60,7 +62,13 @@ public class MainActivity extends AppCompatActivity {
     public static void start(Context context, Class c) {
         Intent intent = new Intent(context, c);
         context.startActivity(intent);
+    }
 
+    public static void start(Context context, Class c, String ids, boolean movie) {
+        Intent intent = new Intent(context, c);
+        intent.putExtra(KEY_GENRE_IDS, ids);
+        intent.putExtra(KEY_MOVIE, movie);
+        context.startActivity(intent);
     }
 
     @Override
@@ -151,11 +159,20 @@ public class MainActivity extends AppCompatActivity {
         language = Locale.getDefault().getLanguage();
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        query = Filters.popular.toString();
-        movieListFragment = MediaListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER, true);
-        tvShowListFragment = MediaListFragment.newInstance(query,
-                language, Tasks.SEARCH_BY_FILTER, false);
+        if (getIntent().hasExtra(KEY_GENRE_IDS)) {
+            query = getIntent().getStringExtra(KEY_GENRE_IDS);
+            movieListFragment = MediaListFragment.newInstance(query,
+                    language, Tasks.SEARCH_BY_GENRE, true);
+            tvShowListFragment = MediaListFragment.newInstance(query,
+                    language, Tasks.SEARCH_BY_GENRE, false);
+        } else {
+            query = Filters.popular.toString();
+            movieListFragment = MediaListFragment.newInstance(query,
+                    language, Tasks.SEARCH_BY_FILTER, true);
+            tvShowListFragment = MediaListFragment.newInstance(query,
+                    language, Tasks.SEARCH_BY_FILTER, false);
+        }
+
     }
 
     private void setup() {
@@ -167,13 +184,12 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
                 this, query, movieListFragment, tvShowListFragment));
 
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
         nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
         nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
         nvDrawer.getMenu().getItem(0).setChecked(true);
         movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
-
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -198,13 +214,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItem(item, true);
-                return true;
-            }
-        });
+        if (!getIntent().getBooleanExtra(KEY_MOVIE, true)) {
+            tvShowDrawer();
+            viewPager.setCurrentItem(1);
+            nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    selectDrawerItem(item, false);
+                    return true;
+                }
+            });
+        } else {
+            nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    selectDrawerItem(item, true);
+                    return true;
+                }
+            });
+        }
+
     }
 
     public void setDrawerEnabled(boolean enabled) {
