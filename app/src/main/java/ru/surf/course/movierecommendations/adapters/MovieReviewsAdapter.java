@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.models.Actor;
@@ -62,14 +63,26 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        View mPlaceholder;
         TextView mAuthor;
-        TextView mContent;
+        ExpandableTextView mContent;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
+            mPlaceholder = itemView.findViewById(R.id.recycler_item_review_placeholder);
             mAuthor = (TextView)itemView.findViewById(R.id.recycler_item_review_author);
-            mContent = (TextView)itemView.findViewById(R.id.recycler_item_review_content);
+            mContent = (ExpandableTextView) itemView.findViewById(R.id.recycler_item_review_content);
+
+            mPlaceholder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onClick(getAdapterPosition());
+
+                    mContent.toggle();
+                }
+            });
         }
     }
 
