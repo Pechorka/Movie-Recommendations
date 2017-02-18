@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_SEARCH_QUERY = "search_query";
     public static final String KEY_GENRE_IDS = "genre_ids";
     public static final String KEY_MOVIE = "movie";
+    public static final String KEY_GENRE_NAME = "genre_name";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int UPCOMING_ID = 2;
     private static final int ON_AIR_ID = 3;
@@ -64,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    public static void start(Context context, Class c, String ids, boolean movie) {
+    public static void start(Context context, Class c, String ids, String genreName, boolean movie) {
         Intent intent = new Intent(context, c);
         intent.putExtra(KEY_GENRE_IDS, ids);
         intent.putExtra(KEY_MOVIE, movie);
+        intent.putExtra(KEY_GENRE_NAME, genreName);
         context.startActivity(intent);
     }
 
@@ -153,7 +155,11 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        setTitle(R.string.popular);
+        if (getIntent().hasExtra(KEY_GENRE_NAME)) {
+            setTitle(getIntent().getStringExtra(KEY_GENRE_NAME));
+        } else {
+            setTitle(R.string.popular);
+        }
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         language = Locale.getDefault().getLanguage();
