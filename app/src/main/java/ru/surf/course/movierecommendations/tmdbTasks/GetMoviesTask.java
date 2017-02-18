@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 
@@ -238,19 +239,19 @@ public class GetMoviesTask extends GetMediaTask {
             JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
             JSONArray genres;
 
-            List<Integer> genresList;
+            List<Genre> genresList;
             for (int i = 0; i < movieArray.length(); i++) {
                 //get genres
                 genres = movieArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
                 genresList = new ArrayList<>();
                 for (int k = 0; k < genres.length(); k++)
-                    genresList.add(genres.getInt(k));
+                    genresList.add(new Genre(genres.getInt(k)));
 
 
                 item = new MovieInfo(movieArray.getJSONObject(i).getInt(TMDB_ID));
                 item.setTitle(movieArray.getJSONObject(i).getString(TMDB_TITLE));
                 item.setOriginalTitle(movieArray.getJSONObject(i).getString(TMDB_ORIGINAL_TITLE));
-                item.setGenreIds(genresList);
+                item.setGenres(genresList);
                 item.setPosterPath(movieArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
                 item.setOverview(movieArray.getJSONObject(i).getString(TMDB_OVERVIEW));
                 item.setBackdropPath(movieArray.getJSONObject(i).getString(TMDB_BACKDROP_PATH));
@@ -267,14 +268,12 @@ public class GetMoviesTask extends GetMediaTask {
         } else {
             //get genres
             JSONArray genres;
-            List<Integer> genresListIds;
-            List<String> genresListNames;
+            List<Genre> genreList = new ArrayList<>();
             genres = movieJson.getJSONArray(TMDB_GENRES);
-            genresListIds = new ArrayList<>();
-            genresListNames = new ArrayList<>();
             for (int k = 0; k < genres.length(); k++) {
-                genresListIds.add(genres.getJSONObject(k).getInt(TMDB_ID));
-                genresListNames.add(genres.getJSONObject(k).getString(TMDB_NAME));
+                genreList.add(new Genre(
+                        genres.getJSONObject(k).getInt(TMDB_ID),
+                        genres.getJSONObject(k).getString(TMDB_NAME)));
             }
 
             //get production companies names
@@ -297,14 +296,13 @@ public class GetMoviesTask extends GetMediaTask {
             item.setTitle(movieJson.getString(TMDB_TITLE));
             item.setOriginalTitle(movieJson.getString(TMDB_ORIGINAL_TITLE));
             item.setOriginalLanguage(new Locale(movieJson.getString(TMDB_ORIGINAL_LANGUAGE)));
-            item.setGenreIds(genresListIds);
             item.setPosterPath(movieJson.getString(TMDB_POSTER_PATH));
             item.setOverview(movieJson.getString(TMDB_OVERVIEW));
             item.setBackdropPath(movieJson.getString(TMDB_BACKDROP_PATH));
+            item.setGenres(genreList);
             item.setVoteAverage(movieJson.getDouble(TMDB_RATING));
             item.setVoteCount(movieJson.getInt(TMDB_VOTE_COUNT));
             item.setBudget(movieJson.getString(TMDB_BUDGET));
-            item.setGenreNames(genresListNames);
             item.setProductionCompaniesNames(productionCompaniesNames);
             item.setProductionCountriesNames(productionCountriesNames);
             item.setRevenue(movieJson.getString(TMDB_REVENUE));

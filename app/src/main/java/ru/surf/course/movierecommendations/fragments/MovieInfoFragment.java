@@ -30,6 +30,7 @@ import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
+import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
@@ -256,9 +257,9 @@ public class MovieInfoFragment extends Fragment {
             productionCountries.setText(string);
         }
 
-        for (String genreName : currentMovieInfo.getGenreNames()) {
+        for (Genre genre : currentMovieInfo.getGenres()) {
             Button genreButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
-            genreButton.setText(genreName);
+            genreButton.setText(genre.getName());
             genres.addView(genreButton);
             FlowLayout.LayoutParams layoutParams = (FlowLayout.LayoutParams) genreButton.getLayoutParams();
             layoutParams.setMargins(0, 0, (int) getResources().getDimension(R.dimen.genre_button_margin_right), (int) getResources().getDimension(R.dimen.genre_button_margin_bottom));

@@ -1,12 +1,13 @@
 package ru.surf.course.movierecommendations.models;
 
+import java.io.Serializable;
 import java.net.URL;
 
 /**
  * Created by andrew on 2/18/17.
  */
 
-public class Review {
+public class Review implements Serializable{
 
     private String mId;
     private String mAuthor;

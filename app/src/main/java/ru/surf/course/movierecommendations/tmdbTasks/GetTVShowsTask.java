@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.Network;
 import ru.surf.course.movierecommendations.models.Season;
@@ -242,7 +243,7 @@ public class GetTVShowsTask extends GetMediaTask {
             JSONArray genres;
             JSONArray originCountries;
 
-            List<Integer> genresList;
+            List<Genre> genresList;
             List<String> originCountryList;
 
             for (int i = 0; i < tvShowArray.length(); i++) {
@@ -250,7 +251,7 @@ public class GetTVShowsTask extends GetMediaTask {
                 genres = tvShowArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
                 genresList = new ArrayList<>();
                 for (int k = 0; k < genres.length(); k++) {
-                    genresList.add(genres.getInt(k));
+                    genresList.add(new Genre(genres.getInt(k)));
                 }
                 //get originCountries
                 originCountries = tvShowArray.getJSONObject(i).getJSONArray(TMDB_ORIGIN_COUNTRY);
@@ -263,7 +264,7 @@ public class GetTVShowsTask extends GetMediaTask {
                 item = new TVShowInfo(tvShowArray.getJSONObject(i).getInt(TMDB_ID));
                 item.setTitle(tvShowArray.getJSONObject(i).getString(TMDB_NAME));
                 item.setOriginalTitle(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME));
-                item.setGenreIds(genresList);
+                item.setGenres(genresList);
                 item.setOriginCountryList(originCountryList);
                 item.setPosterPath(tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
                 item.setOverview(tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW));
@@ -281,11 +282,12 @@ public class GetTVShowsTask extends GetMediaTask {
         } else {
             //get genres
             JSONArray genres = tvShowsJson.getJSONArray(TMDB_GENRES);
-            List<Integer> genresListIds = new ArrayList<>();
-            List<String> genresListNames = new ArrayList<>();
+            List<Genre> genreList = new ArrayList<>();
             for (int k = 0; k < genres.length(); k++) {
-                genresListIds.add(genres.getJSONObject(k).getInt(TMDB_ID));
-                genresListNames.add(genres.getJSONObject(k).getString(TMDB_NAME));
+                genreList.add(new Genre(
+                        genres.getJSONObject(k).getInt(TMDB_ID),
+                        genres.getJSONObject(k).getString(TMDB_NAME)
+                ));
             }
 
             //get runtime of episodes
@@ -344,8 +346,7 @@ public class GetTVShowsTask extends GetMediaTask {
             item = new TVShowInfo(tvShowsJson.getInt(TMDB_ID));
             item.setTitle(tvShowsJson.getString(TMDB_TITLE));
             item.setOriginalTitle(tvShowsJson.getString(TMDB_ORIGINAL_TITLE));
-            item.setGenreIds(genresListIds);
-            item.setGenreNames(genresListNames);
+            item.setGenres(genreList);
             item.setPosterPath(tvShowsJson.getString(TMDB_POSTER_PATH));
             item.setOverview(tvShowsJson.getString(TMDB_OVERVIEW));
             item.setBackdropPath(tvShowsJson.getString(TMDB_BACKDROP_PATH));
