@@ -8,20 +8,20 @@ import java.net.URL;
 
 public class Review {
 
-    private int mId;
+    private String mId;
     private String mAuthor;
     private String mContent;
     private URL mURL;
 
-    public Review(int id) {
+    public Review(String id) {
         mId = id;
     }
 
-    public int getId() {
+    public String getId() {
         return mId;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         mId = id;
     }
 
