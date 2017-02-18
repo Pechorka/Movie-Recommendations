@@ -57,4 +57,5 @@
     <string name="choose_sort_direction">Выберите направление сортировки</string>
     <string name="no_internet">Похоже, какие-то проблемы с соединением</string>
     <string name="retry">Попробовать снова</string>
+    <string name="no_reviews">Пока нет отзывов</string>
 </resources>

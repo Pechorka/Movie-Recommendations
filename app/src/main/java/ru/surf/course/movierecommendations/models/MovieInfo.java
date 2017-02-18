@@ -40,20 +40,6 @@ public class MovieInfo extends Media implements Serializable{
         this.mRuntime = runtime;
     }
 
-    private void sortGenresNamesByLength(){
-        Collections.sort(mGenreNames, new Comparator<String>() {
-            @Override
-            public int compare(String s, String t1) {
-                if (s.length() > t1.length())
-                    return 1;
-                else if (s.length() < t1.length())
-                    return -1;
-                else return 0;
-            }
-        });
-    }
-
-
     public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
         if (imageIDs.length != names.length) {
             throw new IllegalArgumentException("Length of arrays should be same");

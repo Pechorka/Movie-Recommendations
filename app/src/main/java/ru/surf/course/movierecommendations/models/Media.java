@@ -23,7 +23,7 @@ public class Media implements Serializable {
     protected String mTitle;
     protected String mOriginalTitle;
     protected Locale mOriginalLanguage;
-    protected List<Integer> mGenreIds;
+    protected List<Genre> mGenres;
     protected String mPosterPath;
     protected List<TmdbImage> mBackdrops;
     protected Bitmap mPosterBitmap;
@@ -34,7 +34,6 @@ public class Media implements Serializable {
     protected int mVoteCount;
     protected int mId;
     protected String mBudget;
-    protected List<String> mGenreNames;
     protected List<String> mProductionCompaniesNames;
     protected List<String> mProductionCountriesNames;
     protected Locale mInfoLanguage;
@@ -72,12 +71,12 @@ public class Media implements Serializable {
         this.mOriginalLanguage = originalLanguage;
     }
 
-    public List<Integer> getGenreIds() {
-        return mGenreIds;
+    public List<Genre> getGenres() {
+        return mGenres;
     }
 
-    public void setGenreIds(List<Integer> genreIds) {
-        this.mGenreIds = genreIds;
+    public void setGenres(List<Genre> genres) {
+        mGenres = genres;
     }
 
     public String getPosterPath() {
@@ -158,14 +157,6 @@ public class Media implements Serializable {
 
     public void setBudget(String budget) {
         this.mBudget = budget;
-    }
-
-    public List<String> getGenreNames() {
-        return mGenreNames;
-    }
-
-    public void setGenreNames(List<String> genreNames) {
-        this.mGenreNames = genreNames;
     }
 
     public List<String> getProductionCompaniesNames() {

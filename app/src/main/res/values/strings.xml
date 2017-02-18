@@ -80,4 +80,5 @@
     <string name="choose_sort_direction">choose sort direction</string>
     <string name="no_internet">Seems like there are some problems with connecting</string>
     <string name="retry">Retry</string>
+    <string name="no_reviews">No reviews yet</string>
 </resources>
