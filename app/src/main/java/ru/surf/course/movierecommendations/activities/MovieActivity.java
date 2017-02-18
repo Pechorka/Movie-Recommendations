@@ -218,6 +218,9 @@ public class MovieActivity extends AppCompatActivity {
         }
     }
 
+    public void onGenreClick(int genreId) {
+    }
+
     private Locale getCurrentLocale() {
         return Locale.getDefault();
     }
