@@ -40,6 +40,7 @@ public class Media implements Serializable {
     protected Locale mInfoLanguage;
     protected String mStatus;
     protected List<Credit> mCredits;
+    protected List<Review> mReviews;
 
 
     public Media(int mId) {
@@ -205,6 +206,14 @@ public class Media implements Serializable {
 
     public void setCredits(List<Credit> credits) {
         this.mCredits = credits;
+    }
+
+    public List<Review> getReviews() {
+        return mReviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        mReviews = reviews;
     }
 
     public void fillFields(Object from) {
