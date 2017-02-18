@@ -271,7 +271,7 @@ public class MovieInfoFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (getActivity() instanceof MovieActivity)
-                        ((MovieActivity)getActivity()).onGenreClick(genre.getId());
+                        ((MovieActivity)getActivity()).onGenreClick(genre);
                 }
             });
         }

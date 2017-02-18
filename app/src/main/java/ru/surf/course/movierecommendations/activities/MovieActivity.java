@@ -27,6 +27,7 @@ import java.util.Locale;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
+import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
@@ -218,8 +219,8 @@ public class MovieActivity extends AppCompatActivity {
         }
     }
 
-    public void onGenreClick(int genreId) {
-        MainActivity.start(this, MainActivity.class, String.valueOf(genreId), true);
+    public void onGenreClick(Genre genre) {
+        MainActivity.start(this, MainActivity.class, String.valueOf(genre.getId()), genre.getName(), true);
     }
 
     private Locale getCurrentLocale() {
