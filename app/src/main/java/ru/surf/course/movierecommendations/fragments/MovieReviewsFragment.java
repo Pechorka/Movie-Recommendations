@@ -110,8 +110,12 @@ public class MovieReviewsFragment extends Fragment {
     }
 
     private void fillInformation() {
-        movieReviewsAdapter = new MovieReviewsAdapter(getActivity(), currentMovie.getReviews());
-        reviewsList.setAdapter(movieReviewsAdapter);
+        if (currentMovie.getReviews() != null && currentMovie.getReviews().size() != 0) {
+            movieReviewsAdapter = new MovieReviewsAdapter(getActivity(), currentMovie.getReviews());
+            reviewsList.setAdapter(movieReviewsAdapter);
+        } else {
+            getView().findViewById(R.id.fragment_movie_reviews_no_reviews_message_placeholder).setVisibility(View.VISIBLE);
+        }
     }
 
     private void dataLoadComplete() {
