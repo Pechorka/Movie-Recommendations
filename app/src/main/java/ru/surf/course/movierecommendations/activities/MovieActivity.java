@@ -219,6 +219,7 @@ public class MovieActivity extends AppCompatActivity {
     }
 
     public void onGenreClick(int genreId) {
+        MainActivity.start(this, MainActivity.class, String.valueOf(genreId), true);
     }
 
     private Locale getCurrentLocale() {
