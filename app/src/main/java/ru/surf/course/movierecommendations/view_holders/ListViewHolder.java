@@ -17,6 +17,7 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     public TextView name;
     public ImageView image;
     public CardView cardView;
+    public TextView averageRating;
 
     public ListViewHolder(View itemView) {
         super(itemView);
@@ -24,5 +25,6 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         name = (TextView) itemView.findViewById(R.id.list_text);
         image = (ImageView) itemView.findViewById(R.id.list_image);
         cardView = (CardView) itemView.findViewById(R.id.list_cv);
+        averageRating = (TextView) itemView.findViewById(R.id.list_average_rating);
     }
 }

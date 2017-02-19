@@ -114,6 +114,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         ids = query;
         movie = getArguments().getBoolean(KEY_MOVIE);
         page = 1;
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        grid = sharedPref.getBoolean(KEY_GRID, true);
     }
 
     @Nullable
@@ -133,6 +135,13 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         }
         setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPref.edit().putBoolean(KEY_GRID, grid).commit();
     }
 
     @Override
@@ -177,8 +186,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        grid = sharedPref.getBoolean(KEY_GRID, true);
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
