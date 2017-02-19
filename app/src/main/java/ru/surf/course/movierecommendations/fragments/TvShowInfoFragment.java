@@ -28,6 +28,7 @@ import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
+import ru.surf.course.movierecommendations.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
@@ -143,8 +144,7 @@ public class TvShowInfoFragment extends Fragment {
             currentTvShowInfo = (TVShowInfo) getArguments().getSerializable(KEY_TV_SHOW);
             dataLoadComplete();
             loadBackdropsInto(currentTvShowInfo);
-            //loadCreditsInto(currentTvShowInfo);
-            dataLoadComplete();
+            loadCreditsInto(currentTvShowInfo);
         } else if (getArguments().containsKey(KEY_TV_SHOW_ID)) {
             currentTvShowInfo = new TVShowInfo(getArguments().getInt(KEY_TV_SHOW_ID));
             loadInformationInto(currentTvShowInfo, getCurrentLocale().getLanguage());
@@ -175,19 +175,19 @@ public class TvShowInfoFragment extends Fragment {
                 dataLoadComplete();
             }
         });
-        getImagesTask.getMovieImages(tvShow.getId(), Tasks.GET_BACKDROPS);
+        getImagesTask.getTvImages(tvShow.getId(), Tasks.GET_TV_BACKDROPS);
     }
 
-    private void loadCreditsInto(final TVShowInfo movieInfo) {
+    private void loadCreditsInto(final TVShowInfo tvShowInfo) {
         GetCreditsTask getCreditsTask = new GetCreditsTask();
         getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Credit> result) {
-                movieInfo.setCredits(result);
+                tvShowInfo.setCredits(result);
                 dataLoadComplete();
             }
         });
-        getCreditsTask.getMovieCredits(movieInfo.getId());
+        getCreditsTask.getTVShowCredits(tvShowInfo.getId());
     }
 
     private boolean checkInformation(TVShowInfo tvShow) {
@@ -230,7 +230,7 @@ public class TvShowInfoFragment extends Fragment {
         });
         backdrops.setAdapter(movieInfoImagesAdapter);
 
-        /**
+
         movieCreditsListAdapter = new MovieCreditsListAdapter(currentTvShowInfo.getCredits(), getActivity());
         movieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
             @Override
@@ -239,7 +239,6 @@ public class TvShowInfoFragment extends Fragment {
             }
         });
         credits.setAdapter(movieCreditsListAdapter);
-         */
 
 
         
@@ -258,8 +257,8 @@ public class TvShowInfoFragment extends Fragment {
             genreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (getActivity() instanceof MovieActivity)
-                        ((MovieActivity)getActivity()).onGenreClick(genre);
+                    if (getActivity() instanceof TvShowActivity)
+                        ((TvShowActivity)getActivity()).onGenreClick(genre);
                 }
             });
         }

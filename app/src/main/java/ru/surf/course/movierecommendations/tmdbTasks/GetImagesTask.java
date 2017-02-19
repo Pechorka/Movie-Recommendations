@@ -57,6 +57,9 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
                 case GET_POSTERS:
                     builtUri = uriForMovieImages(Integer.valueOf(strings[0]));
                     break;
+                case GET_TV_BACKDROPS:
+                    builtUri = uriForTvImages(Integer.valueOf(strings[0]));
+                    break;
                 case GET_PROFILE_PICTURES:
                     builtUri = uriForPersonImages(Integer.valueOf(strings[0]));
                     break;
@@ -131,6 +134,7 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         JSONArray jsonArray;
         switch (task) {
             case GET_BACKDROPS:
+            case GET_TV_BACKDROPS:
                 jsonArray = jsonObject.getJSONArray(BACKDROPS);
                 break;
             case GET_POSTERS:
@@ -157,6 +161,11 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         execute(String.valueOf(movieId));
     }
 
+    public void getTvImages(int tvId, Tasks task) {
+        this.task = task;
+        execute(String.valueOf(tvId));
+    }
+
     public void getPersonImages(int personId, Tasks task) {
         this.task = task;
         execute(String.valueOf(personId));
@@ -166,6 +175,15 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie";
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendPath(String.valueOf(movieId))
+                .appendPath(IMAGES)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .build();
+    }
+
+    private Uri uriForTvImages(int tvId) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(tvId))
                 .appendPath(IMAGES)
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .build();
