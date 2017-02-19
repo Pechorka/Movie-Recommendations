@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.fragments;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -185,7 +186,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private void initViews(View root) {
         recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        } else {
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
+        }
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
