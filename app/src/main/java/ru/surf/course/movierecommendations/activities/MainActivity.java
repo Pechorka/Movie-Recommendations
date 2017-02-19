@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
 
     private String language;
+    private String region;
     private String query;
     private String previousQuery;
     private int movieLastDrawerItemId;
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(KEY_GENRE_NAME, genreName);
         context.startActivity(intent);
     }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,28 +155,24 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
-        if (getIntent().hasExtra(KEY_GENRE_NAME)) {
-            setTitle(getIntent().getStringExtra(KEY_GENRE_NAME));
-        } else {
-            setTitle(R.string.popular);
-        }
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         language = Locale.getDefault().getLanguage();
+        region = Locale.getDefault().getCountry();
         drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (getIntent().hasExtra(KEY_GENRE_IDS)) {
             query = getIntent().getStringExtra(KEY_GENRE_IDS);
             movieListFragment = MediaListFragment.newInstance(query,
-                    language, Tasks.SEARCH_BY_GENRE, true);
+                    language, region, Tasks.SEARCH_BY_GENRE, true);
             tvShowListFragment = MediaListFragment.newInstance(query,
-                    language, Tasks.SEARCH_BY_GENRE, false);
+                    language, region, Tasks.SEARCH_BY_GENRE, false);
         } else {
             query = Filters.popular.toString();
             movieListFragment = MediaListFragment.newInstance(query,
-                    language, Tasks.SEARCH_BY_FILTER, true);
+                    language, region, Tasks.SEARCH_BY_FILTER, true);
             tvShowListFragment = MediaListFragment.newInstance(query,
-                    language, Tasks.SEARCH_BY_FILTER, false);
+                    language, region, Tasks.SEARCH_BY_FILTER, false);
         }
 
     }
@@ -219,6 +215,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        if (getIntent().hasExtra(KEY_GENRE_NAME)) {
+            setTitle(getIntent().getStringExtra(KEY_GENRE_NAME));
+        } else {
+            setTitle(R.string.popular);
+        }
 
         if (!getIntent().getBooleanExtra(KEY_MOVIE, true)) {
             tvShowDrawer();
@@ -279,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
         nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
     }
 
-
     private void selectDrawerItem(MenuItem menuItem, boolean movie) {
         previousQuery = query;
         switch (menuItem.getItemId()) {
@@ -325,18 +326,18 @@ public class MainActivity extends AppCompatActivity {
         if (movie) {
             if (!query.equals(Filters.custom.toString())) {
                 movieListFragment.setCallOptionsVisibility(View.GONE);
-                movieListFragment.loadMediaInfoByFilter(query, language, "1");
+                movieListFragment.loadMediaInfoByFilter(query, language, "1", region);
             } else {
                 movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-                movieListFragment.loadMediaInfoByCustomFilter(language, "1");
+                movieListFragment.loadMediaInfoByCustomFilter(language, "1", region);
             }
         } else {
             if (!query.equals(Filters.custom.toString())) {
                 tvShowListFragment.setCallOptionsVisibility(View.GONE);
-                tvShowListFragment.loadMediaInfoByFilter(query, language, "1");
+                tvShowListFragment.loadMediaInfoByFilter(query, language, "1", region);
             } else {
                 tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
-                tvShowListFragment.loadMediaInfoByCustomFilter(language, "1");
+                tvShowListFragment.loadMediaInfoByCustomFilter(language, "1", region);
             }
         }
     }
@@ -357,9 +358,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadInformationByGenreIds(String genreIds, boolean movie) {
         if (movie) {
-            movieListFragment.loadMediaInfoByIds(genreIds, language, "1", Tasks.SEARCH_BY_GENRE);
+            movieListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
         } else {
-            tvShowListFragment.loadMediaInfoByIds(genreIds, language, "1", Tasks.SEARCH_BY_GENRE);
+            tvShowListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
         }
         query = genreIds;
     }

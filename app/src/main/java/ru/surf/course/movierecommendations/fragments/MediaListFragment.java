@@ -44,6 +44,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private final static String KEY_LINEAR_POS = "lin_pos";
     private final static String KEY_GRID_POS = "grid_pos";
     private final static String KEY_LANGUAGE = "language";
+    private final static String KEY_REGION = "region";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
     private static final String KEY_MOVIE = "movie?";
@@ -56,6 +57,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private int page;
     private String query;
     private String language;
+    private String region;
     private String ids;
     private int id;
     private boolean movie;
@@ -75,13 +77,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private Button showSortDirection;
     private CustomFilterOptions customFilterOptions;
 
-    public static MediaListFragment newInstance(String query, String language, Tasks task, boolean movie) {
+    public static MediaListFragment newInstance(String query, String language, String region, Tasks task, boolean movie) {
         MediaListFragment mediaListFragment = new MediaListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putString(KEY_QUERY, query);
         bundle.putSerializable(KEY_TASK, task);
         bundle.putBoolean(KEY_MOVIE, movie);
+        bundle.putString(KEY_REGION, region);
         mediaListFragment.setArguments(bundle);
         return mediaListFragment;
     }
@@ -102,6 +105,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         super.onCreate(savedInstanceState);
         query = getArguments().getString(KEY_QUERY);
         language = getArguments().getString(KEY_LANGUAGE);
+        region = getArguments().getString(KEY_REGION);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
         ids = query;
@@ -259,14 +263,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private void loadInformation(Tasks task) {
         switch (task) {
             case SEARCH_BY_FILTER:
-                loadMediaInfoByFilter(query, language, String.valueOf(page));
+                loadMediaInfoByFilter(query, language, String.valueOf(page), region);
                 break;
             case SEARCH_BY_CUSTOM_FILTER:
-                loadMediaInfoByCustomFilter(language, String.valueOf(page));
+                loadMediaInfoByCustomFilter(language, String.valueOf(page), region);
                 break;
             case SEARCH_BY_GENRE:
             case SEARCH_BY_KEYWORD:
-                loadMediaInfoByIds(ids, language, String.valueOf(page), task);
+                loadMediaInfoByIds(ids, language, String.valueOf(page), region, task);
                 break;
             case SEARCH_BY_ID:
             case SEARCH_SIMILAR:
@@ -288,7 +292,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         getMediaTask.getMediaByName(query, language, page);
     }
 
-    public void loadMediaInfoByFilter(String query, String language, String page) {
+    public void loadMediaInfoByFilter(String query, String language, String page, String region) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -296,12 +300,12 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             getMediaTask = new GetTVShowsTask();
         }
         getMediaTask.addListener(this);
-        getMediaTask.getMediaByFilter(query, language, page);
+        getMediaTask.getMediaByFilter(query, language, page, region);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_FILTER;
     }
 
-    public void loadMediaInfoByIds(String ids, String language, String page, Tasks task) {
+    public void loadMediaInfoByIds(String ids, String language, String page, String region, Tasks task) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -311,10 +315,10 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         getMediaTask.addListener(this);
         switch (task) {
             case SEARCH_BY_GENRE:
-                getMediaTask.getMediaByGenre(ids, language, page);
+                getMediaTask.getMediaByGenre(ids, language, page, region);
                 break;
             case SEARCH_BY_KEYWORD:
-                getMediaTask.getMediaByKeywords(ids, language, page);
+                getMediaTask.getMediaByKeywords(ids, language, page, region);
                 break;
         }
         this.page = Integer.parseInt(page);
@@ -341,7 +345,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         this.task = task;
     }
 
-    public void loadMediaInfoByCustomFilter(String language, String page) {
+    public void loadMediaInfoByCustomFilter(String language, String page, String region) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -363,7 +367,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             }
         }
         String sortBy = sortDialogFragment.getChosenSort() + "." + sortDirectionFragment.getChosenSortDirection();
-        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy);
+        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy, region);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }

@@ -21,6 +21,7 @@ public abstract class GetMediaTask extends AsyncTask<String, Void, List<? extend
     protected final String WITH_GENRES = "with_genres";
     protected final String WITH_KEYWORDS = "with_keywords";
     protected final String SORT_BY = "sort_by";
+    protected final String REGION = "region";
     protected boolean isLoadingList;
     protected boolean newResult;
     protected Tasks task;
@@ -28,19 +29,19 @@ public abstract class GetMediaTask extends AsyncTask<String, Void, List<? extend
 
     public abstract void getMediaById(int movieId, String language);
 
-    public abstract void getMediaByFilter(String filter, String language, String page);
+    public abstract void getMediaByFilter(String filter, String language, String page, String region);
 
     public abstract void getMediaByName(String name, String language, String page);
 
-    public abstract void getMediaByGenre(String genreIds, String language, String page);
+    public abstract void getMediaByGenre(String genreIds, String language, String page, String region);
 
     public abstract void getSimilarMedia(int movieId, String language, String page);
 
-    public abstract void getMediaByKeywords(String keywordIds, String language, String page);
+    public abstract void getMediaByKeywords(String keywordIds, String language, String page, String region);
 
     public abstract void getMediaByCustomFilter(String language, String page, String genres,
                                                 String releaseDateGTE, String releaseDateLTE,
-                                                String sortBy);
+                                                String sortBy, String region);
 
     public void addListener(TaskCompletedListener toAdd) {
         listeners.add(toAdd);
