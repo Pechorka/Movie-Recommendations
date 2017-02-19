@@ -196,19 +196,17 @@ public class GetTVShowsTask extends GetMediaTask {
     private List<TVShowInfo> parseJson(String jsonStr) throws JSONException, ParseException {
         final String TMDB_RESULTS = "results";
         final String TMDB_POSTER_PATH = "poster_path";
-        final String TMDB_TITLE = "title";
+        final String TMDB_NAME = "name";
         final String TMDB_OVERVIEW = "overview";
         final String TMDB_DATE = "release_date";
         final String TMDB_BACKDROP_PATH = "backdrop_path";
         final String TMDB_VOTE_COUNT = "vote_count";
         final String TMDB_RATING = "vote_average";
         final String TMDB_ID = "id";
-        final String TMDB_ORIGINAL_TITLE = "original_title";
+        final String TMDB_ORIGINAL_NAME = "original_name";
         final String TMDB_ORIGINAL_LANGUAGE = "original_language";
         final String TMDB_GENRE_IDS = "genre_ids";
         final String TMDB_GENRES = "genres";
-        final String TMDB_NAME = "name";
-        final String TMDB_ORIGINAL_NAME = "original_name";
         final String TMDB_PRODUCTION_COMPANIES = "production_companies";
         final String TMDB_PRODUCTION_COUNTRIES = "production_countries";
         final String TMDB_BUDGET = "budget";
@@ -304,10 +302,14 @@ public class GetTVShowsTask extends GetMediaTask {
                 productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
 
             //get production countries
-            JSONArray productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
             List<String> productionCountriesNames = new ArrayList<>();
-            for (int k = 0; k < productionCountries.length(); k++)
-                productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+            try {
+                JSONArray productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
+                for (int k = 0; k < productionCountries.length(); k++)
+                    productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+            } catch (JSONException e) {
+                Log.d(LOG_TAG, "No production countries ", e);
+            }
 
             //get networks
             JSONArray netmworks = tvShowsJson.getJSONArray(TMDB_NETWORKS);
@@ -338,14 +340,14 @@ public class GetTVShowsTask extends GetMediaTask {
                 season.setSeasonNumber(seasons.getJSONObject(k).getInt(TMDB_SEASON_NUMBER));
                 try {
                     season.setAirDate(formatter.parse(tvShowsJson.getString(TMDB_AIR_DATE)));
-                } catch (ParseException e) {
+                } catch (ParseException | JSONException e) {
                     Log.d(LOG_TAG, "Empty date in season, most likely");
                 }
             }
 
             item = new TVShowInfo(tvShowsJson.getInt(TMDB_ID));
-            item.setTitle(tvShowsJson.getString(TMDB_TITLE));
-            item.setOriginalTitle(tvShowsJson.getString(TMDB_ORIGINAL_TITLE));
+            item.setTitle(tvShowsJson.getString(TMDB_NAME));
+            item.setOriginalTitle(tvShowsJson.getString(TMDB_ORIGINAL_NAME));
             item.setGenres(genreList);
             item.setPosterPath(tvShowsJson.getString(TMDB_POSTER_PATH));
             item.setOverview(tvShowsJson.getString(TMDB_OVERVIEW));
