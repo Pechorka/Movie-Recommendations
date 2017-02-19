@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
 import ru.surf.course.movierecommendations.fragments.MovieReviewsFragment;
+import ru.surf.course.movierecommendations.fragments.TvShowInfoFragment;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
@@ -29,7 +30,7 @@ public class TVShowInfosPagerAdapter extends FragmentStatePagerAdapter{
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MovieInfoFragment.newInstance(381288);
+                return TvShowInfoFragment.newInstance(mTVShowInfo);
             case 1:
                 return MovieReviewsFragment.newInstance(381288);
         }
