@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
         nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
-        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+        nvDrawer.getMenu().getItem(UPCOMING_POSITION + 1).setIcon(R.drawable.upcoming_icon);
         nvDrawer.getMenu().getItem(0).setChecked(true);
         movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
     private void movieDrawer() {
         nvDrawer.getMenu().removeItem(ON_AIR_POSITION);
         nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
-        nvDrawer.getMenu().getItem(UPCOMING_POSITION).setIcon(R.drawable.upcoming_icon);
+        nvDrawer.getMenu().getItem(UPCOMING_POSITION + 1).setIcon(R.drawable.upcoming_icon);
         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
     private void tvShowDrawer() {
         nvDrawer.getMenu().removeItem(UPCOMING_ID);
         nvDrawer.getMenu().add(R.id.nav_main, ON_AIR_ID, ON_AIR_POSITION, getResources().getString(R.string.on_air));
-        nvDrawer.getMenu().getItem(ON_AIR_POSITION).setIcon(R.drawable.on_air_icon);
+        nvDrawer.getMenu().getItem(ON_AIR_POSITION + 1).setIcon(R.drawable.on_air_icon);
         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void selectDrawerItem(MenuItem menuItem, boolean movie) {
+    private void selectDrawerItem(MenuItem menuItem, boolean movie) {
         previousQuery = query;
         switch (menuItem.getItemId()) {
             case R.id.nav_popular:
@@ -303,6 +303,9 @@ public class MainActivity extends AppCompatActivity {
                 query = Filters.custom.toString();
                 setTitle(R.string.custom);
                 break;
+            case R.id.nav_settings:
+                start(this, SettingsActivity.class);
+                return;
         }
         if (previousQuery.equals(query)) {
             Toast.makeText(this, "Filter already selected", Toast.LENGTH_SHORT).show();

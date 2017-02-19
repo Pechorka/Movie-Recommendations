@@ -45,6 +45,10 @@
         <item>English</item>
         <item>Русский</item>
     </array>
+    <array name="languagesValues">
+        <item>en</item>
+        <item>ru</item>
+    </array>
     <string name="hours_short">h</string>
     <string name="minutes_short">m</string>
     <string name="original_language">Original language</string>
@@ -87,4 +91,5 @@
     <string name="retry">Retry</string>
     <string name="no_reviews">No reviews yet</string>
     <string name="language">Language</string>
+    <string name="drawer_settings">Settings</string>
 </resources>
