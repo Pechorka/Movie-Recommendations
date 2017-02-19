@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -128,7 +131,34 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         if (genres == null) {
             loadGenres();
         }
+        setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.media_list_menu, menu);
+        if (grid) {
+            menu.getItem(1).setIcon(R.drawable.ic_list_black_48dp);
+        } else {
+            menu.getItem(1).setIcon(R.drawable.ic_grid_on_black_48dp);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_switch_layout_type:
+                if (grid) {
+                    switchToLinear();
+                    item.setIcon(R.drawable.ic_grid_on_black_48dp);
+                } else {
+                    switchToGrid();
+                    item.setIcon(R.drawable.ic_list_black_48dp);
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

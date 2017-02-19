@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movie Recommendations</string>
     <string name="movie_poster">movie poster</string>
-    <string name="layout_switch">layout_switch</string>
+    <string name="switch_layout_type">Switch layout type</string>
     <string name="genre">Genre</string>
     <string name="search">Search</string>
     <string name="expand">More</string>
