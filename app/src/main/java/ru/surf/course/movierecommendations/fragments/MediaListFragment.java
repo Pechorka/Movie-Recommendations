@@ -158,6 +158,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     }
 
     private void setupViews() {
+
         recyclerView.addOnScrollListener(scrollListener);
         callOptions.setOnClickListener(new View.OnClickListener() {
             @Override
