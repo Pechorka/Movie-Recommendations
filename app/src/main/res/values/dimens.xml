@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="poster_height">260dp</dimen>
     <dimen name="poster_width">180dp</dimen>
+    <dimen name="grid_element_image_height">260dp</dimen>
+    <dimen name="grid_element_image_width">170dp</dimen>
     <dimen name="backdrop_width">249dp</dimen>
     <dimen name="backdrop_height">140dp</dimen>
     <dimen name="poster_big_height">525dp</dimen>
