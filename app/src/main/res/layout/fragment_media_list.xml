@@ -30,7 +30,7 @@
             android:id="@+id/movie_list_call_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setup_filter"
+            android:text="@string/show_filter_setup"
             android:textSize="30sp"
             android:visibility="gone" />
 
@@ -42,11 +42,10 @@
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/movie_list_rv"
+            android:id="@+id/media_list_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
     </LinearLayout>
 
 </LinearLayout>
-

@@ -140,7 +140,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     }
 
     private void initViews(View root) {
-        recyclerView = (RecyclerView) root.findViewById(R.id.movie_list_rv);
+        recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -165,9 +165,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 if (!filterSetupOpen) {
                     customFilterOptions.setVisibility(View.VISIBLE);
                     filterSetupOpen = true;
+                    callOptions.setText(R.string.hide_filter_setup);
                 } else {
                     customFilterOptions.setVisibility(View.GONE);
                     filterSetupOpen = false;
+                    callOptions.setText(R.string.show_filter_setup);
                 }
             }
         });
