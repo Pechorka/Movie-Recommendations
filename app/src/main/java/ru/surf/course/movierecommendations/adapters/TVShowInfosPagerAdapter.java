@@ -9,6 +9,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.fragments.MovieInfoFragment;
 import ru.surf.course.movierecommendations.fragments.MovieReviewsFragment;
 import ru.surf.course.movierecommendations.fragments.TvShowInfoFragment;
+import ru.surf.course.movierecommendations.fragments.TvShowSeasonsFragment;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
@@ -32,7 +33,7 @@ public class TVShowInfosPagerAdapter extends FragmentStatePagerAdapter{
             case 0:
                 return TvShowInfoFragment.newInstance(mTVShowInfo);
             case 1:
-                return MovieReviewsFragment.newInstance(381288);
+                return TvShowSeasonsFragment.newInstance(mTVShowInfo);
         }
         return null;
     }
@@ -48,7 +49,7 @@ public class TVShowInfosPagerAdapter extends FragmentStatePagerAdapter{
             case 0:
                 return mContext.getResources().getString(R.string.info);
             case 1:
-                return mContext.getResources().getString(R.string.reviews);
+                return mContext.getResources().getString(R.string.seasons);
         }
         return null;
     }

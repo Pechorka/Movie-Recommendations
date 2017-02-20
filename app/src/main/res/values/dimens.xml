@@ -27,15 +27,29 @@
     <dimen name="movie_info_people_header_text_size">12sp</dimen>
     <dimen name="movie_info_people_sub_header_text_size">8sp</dimen>
     <dimen name="movie_info_appbar_height">400dp</dimen>
+    <dimen name="reviews_no_reviews_message_text_size">20sp</dimen>
+    <dimen name="people_profile_picture_size">70dp</dimen>
+    <dimen name="people_list_item_width">85dp</dimen>
+    <dimen name="people_list_item_height">120dp</dimen>
 
     <!-- person activity dimens-->
     <dimen name="person_appbar_height">400dp</dimen>
+    <dimen name="credits_list_poster_height">120dp</dimen>
+    <dimen name="credits_list_poster_width">80dp</dimen>
+    <dimen name="credits_list_item_content_padding">10dp</dimen>
+    <dimen name="credits_list_content_padding">10dp</dimen>
+    <dimen name="credits_list_item_card_elevation">4dp</dimen>
+    <dimen name="credits_list_item_header_text_size">20sp</dimen>
+    <dimen name="credits_list_item_sub_header_text_size">18sp</dimen>
+    <dimen name="credits_list_item_header_margin_start">20dp</dimen>
+    <dimen name="credits_list_item_spacing">10dp</dimen>
 
     <!-- tv show activity dimens-->
     <dimen name="tv_show_info_credits_vertical_margins">10dp</dimen>
     <dimen name="tv_show_info_content_margin">10dp</dimen>
     <dimen name="tv_show_info_appbar_height">400dp</dimen>
     <dimen name="tv_show_info_release_date_text_size">17sp</dimen>
+    <dimen name="seasons_no_seasons_message_text_size">20sp</dimen>
 
 
     <dimen name="fact_hint_text_size">16sp</dimen>
@@ -71,25 +85,11 @@
 
     <dimen name="divider_corners_radius">40dip</dimen>
 
-    <dimen name="people_profile_picture_size">70dp</dimen>
-    <dimen name="people_list_item_width">85dp</dimen>
-    <dimen name="people_list_item_height">120dp</dimen>
-
 
     <dimen name="header_padding">8dp</dimen>
 
-    <dimen name="credits_list_poster_height">120dp</dimen>
-    <dimen name="credits_list_poster_width">80dp</dimen>
-    <dimen name="credits_list_item_content_padding">10dp</dimen>
-    <dimen name="credits_list_content_padding">10dp</dimen>
-    <dimen name="credits_list_item_card_elevation">4dp</dimen>
-    <dimen name="credits_list_item_header_text_size">20sp</dimen>
-    <dimen name="credits_list_item_sub_header_text_size">18sp</dimen>
-    <dimen name="credits_list_item_header_margin_start">20dp</dimen>
-    <dimen name="credits_list_item_spacing">10dp</dimen>
-
     <dimen name="before_hint_header_spacing">20dp</dimen>
     <dimen name="back_button_size">38dp</dimen>
-    <dimen name="reviews_no_reviews_message_text_size">20sp</dimen>
+
 
 </resources>
