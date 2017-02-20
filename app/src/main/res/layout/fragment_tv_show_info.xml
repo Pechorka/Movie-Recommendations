@@ -66,25 +66,25 @@
             android:text="@string/unknown"/>
 
         <TextView
-            android:id="@+id/tv_show_info_runtime_hint"
+            android:id="@+id/tv_show_info_episode_runtime_hint"
             style="@style/InfoHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_show_info_facts_hint"
             android:layout_alignStart="@id/tv_show_info_facts_hint"
             android:layout_below="@id/tv_show_info_vote_average_hint"
-            android:text="@string/runtime"/>
+            android:text="@string/episode_runtime"/>
 
         <TextView
-            android:id="@+id/tv_show_info_runtime"
+            android:id="@+id/tv_show_info_episode_runtime"
             style="@style/InfoFact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_show_info_runtime_hint"
-            android:layout_toEndOf="@id/tv_show_info_runtime_hint"
+            android:layout_toRightOf="@id/tv_show_info_episode_runtime_hint"
+            android:layout_toEndOf="@id/tv_show_info_episode_runtime_hint"
             android:layout_marginLeft="@dimen/fact_hint_spacing"
             android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/tv_show_info_runtime_hint"
+            android:layout_alignBottom="@id/tv_show_info_episode_runtime_hint"
             android:text="@string/unknown"/>
 
         <TextView
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_show_info_facts_hint"
             android:layout_alignStart="@id/tv_show_info_facts_hint"
-            android:layout_below="@id/tv_show_info_runtime_hint"
+            android:layout_below="@id/tv_show_info_episode_runtime_hint"
             android:text="@string/status"/>
 
         <TextView
@@ -110,69 +110,25 @@
             android:text="@string/unknown"/>
 
         <TextView
-            android:id="@+id/tv_show_info_budget_hint"
+            android:id="@+id/tv_show_info_number_of_seasons_hint"
             style="@style/InfoHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_show_info_facts_hint"
             android:layout_alignStart="@id/tv_show_info_facts_hint"
             android:layout_below="@id/tv_show_info_status_hint"
-            android:text="@string/budget"/>
+            android:text="@string/number_of_seasons"/>
 
         <TextView
-            android:id="@+id/tv_show_info_budget"
+            android:id="@+id/tv_show_info_number_of_seasons"
             style="@style/InfoFact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_show_info_budget_hint"
-            android:layout_toEndOf="@id/tv_show_info_budget_hint"
+            android:layout_toRightOf="@id/tv_show_info_number_of_seasons_hint"
+            android:layout_toEndOf="@id/tv_show_info_number_of_seasons_hint"
             android:layout_marginLeft="@dimen/fact_hint_spacing"
             android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/tv_show_info_budget_hint"
-            android:text="@string/unknown"/>
-
-        <TextView
-            android:id="@+id/tv_show_info_revenue_hint"
-            style="@style/InfoHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_show_info_facts_hint"
-            android:layout_alignStart="@id/tv_show_info_facts_hint"
-            android:layout_below="@id/tv_show_info_budget_hint"
-            android:text="@string/revenue"/>
-
-        <TextView
-            android:id="@+id/tv_show_info_revenue"
-            style="@style/InfoFact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_show_info_revenue_hint"
-            android:layout_toEndOf="@id/tv_show_info_revenue_hint"
-            android:layout_marginLeft="@dimen/fact_hint_spacing"
-            android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/tv_show_info_revenue_hint"
-            android:text="@string/unknown"/>
-
-        <TextView
-            android:id="@+id/tv_show_info_production_hint"
-            style="@style/InfoHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_show_info_facts_hint"
-            android:layout_alignStart="@id/tv_show_info_facts_hint"
-            android:layout_below="@id/tv_show_info_revenue_hint"
-            android:text="@string/production_countries"/>
-
-        <TextView
-            android:id="@+id/tv_show_info_production"
-            style="@style/InfoFact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_show_info_production_hint"
-            android:layout_toEndOf="@id/tv_show_info_production_hint"
-            android:layout_marginLeft="@dimen/fact_hint_spacing"
-            android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignTop="@id/tv_show_info_production_hint"
+            android:layout_alignTop="@id/tv_show_info_number_of_seasons_hint"
             android:text="@string/unknown"/>
 
         <TextView
@@ -183,7 +139,7 @@
             android:text="@string/overview"
             android:layout_alignLeft="@id/tv_show_info_facts_hint"
             android:layout_alignStart="@id/tv_show_info_facts_hint"
-            android:layout_below="@id/tv_show_info_production"
+            android:layout_below="@id/tv_show_info_number_of_seasons"
             android:layout_marginTop="@dimen/before_hint_header_spacing"
             />
 

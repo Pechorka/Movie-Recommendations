@@ -26,12 +26,10 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
-import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
 import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
-import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
@@ -39,7 +37,6 @@ import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -56,7 +53,7 @@ public class TvShowInfoFragment extends Fragment {
 
     private ProgressBar progressBar;
     private ExpandableTextView overview;
-    private Button expandCollapseBiographyButton;
+    private Button expandCollapseOverviewButton;
     private TVShowInfo currentTvShowInfo;
     private TVShowInfo currentTvShowInfoEnglish;
     private TextView voteAverage;
@@ -65,11 +62,9 @@ public class TvShowInfoFragment extends Fragment {
     private RecyclerView credits;
     private MovieCreditsListAdapter movieCreditsListAdapter;
     private FlowLayout genres;
-    private TextView runtime;
+    private TextView episodeRuntime;
     private TextView status;
-    private TextView budget;
-    private TextView revenue;
-    private TextView productionCountries;
+    private TextView numberOfSeasons;
 
     private int dataLoaded = 0;
 
@@ -109,15 +104,13 @@ public class TvShowInfoFragment extends Fragment {
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
         overview = (ExpandableTextView) root.findViewById(R.id.tv_show_info_overview);
-        expandCollapseBiographyButton = (Button) root.findViewById(R.id.tv_show_info_biography_expand_btn);
+        expandCollapseOverviewButton = (Button) root.findViewById(R.id.tv_show_info_biography_expand_btn);
         voteAverage = (TextView) root.findViewById(R.id.tv_show_info_vote_average);
         backdrops = (RecyclerView) root.findViewById(R.id.tv_show_info_images_list);
         credits = (RecyclerView) root.findViewById(R.id.tv_show_info_credits);
-        budget = (TextView) root.findViewById(R.id.tv_show_info_budget);
-        revenue = (TextView) root.findViewById(R.id.tv_show_info_revenue);
-        runtime = (TextView) root.findViewById(R.id.tv_show_info_runtime);
+        episodeRuntime = (TextView) root.findViewById(R.id.tv_show_info_episode_runtime);
         status = (TextView) root.findViewById(R.id.tv_show_info_status);
-        productionCountries = (TextView) root.findViewById(R.id.tv_show_info_production);
+        numberOfSeasons = (TextView) root.findViewById(R.id.tv_show_info_number_of_seasons);
         genres = (FlowLayout) root.findViewById(R.id.tv_show_info_genres_placeholder);
     }
 
@@ -128,10 +121,10 @@ public class TvShowInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 overview.toggle();
-                expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
+                expandCollapseOverviewButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
             }
         };
-        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
+        expandCollapseOverviewButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
         backdrops.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         credits.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -210,11 +203,17 @@ public class TvShowInfoFragment extends Fragment {
             @Override
             public void run() {
                 if (overview.getLineCount() >= overview.getMaxLines())
-                    expandCollapseBiographyButton.setVisibility(View.VISIBLE);
+                    expandCollapseOverviewButton.setVisibility(View.VISIBLE);
             }
         });
 
         voteAverage.setText(String.valueOf(currentTvShowInfo.getVoteAverage()));
+
+        status.setText(currentTvShowInfo.getStatus());
+
+        episodeRuntime.setText(String.valueOf(currentTvShowInfo.getEpisodesRuntime().get(0)));
+
+        numberOfSeasons.setText(String.valueOf(currentTvShowInfo.getNumberOfSeasons()));
 
         movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentTvShowInfo.getBackdrops(), getActivity());
         movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
@@ -239,11 +238,6 @@ public class TvShowInfoFragment extends Fragment {
             }
         });
         credits.setAdapter(movieCreditsListAdapter);
-
-
-        
-
-        status.setText(currentTvShowInfo.getStatus());
 
 
         for (final Genre genre : currentTvShowInfo.getGenres()) {
