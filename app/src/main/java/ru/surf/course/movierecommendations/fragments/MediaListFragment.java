@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.fragments;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +48,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private final static String KEY_LINEAR_POS = "lin_pos";
     private final static String KEY_GRID_POS = "grid_pos";
     private final static String KEY_LANGUAGE = "language";
+    private final static String KEY_REGION = "region";
     private final static String KEY_TASK = "task";
     private final static String KEY_MOVIE_ID = "id";
     private static final String KEY_MOVIE = "movie?";
@@ -56,6 +61,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private int page;
     private String query;
     private String language;
+    private String region;
     private String ids;
     private int id;
     private boolean movie;
@@ -75,13 +81,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private Button showSortDirection;
     private CustomFilterOptions customFilterOptions;
 
-    public static MediaListFragment newInstance(String query, String language, Tasks task, boolean movie) {
+    public static MediaListFragment newInstance(String query, String language, String region, Tasks task, boolean movie) {
         MediaListFragment mediaListFragment = new MediaListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
         bundle.putString(KEY_QUERY, query);
         bundle.putSerializable(KEY_TASK, task);
         bundle.putBoolean(KEY_MOVIE, movie);
+        bundle.putString(KEY_REGION, region);
         mediaListFragment.setArguments(bundle);
         return mediaListFragment;
     }
@@ -102,11 +109,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         super.onCreate(savedInstanceState);
         query = getArguments().getString(KEY_QUERY);
         language = getArguments().getString(KEY_LANGUAGE);
+        region = getArguments().getString(KEY_REGION);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
         id = getArguments().getInt(KEY_MOVIE_ID);
         ids = query;
         movie = getArguments().getBoolean(KEY_MOVIE);
         page = 1;
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        grid = sharedPref.getBoolean(KEY_GRID, true);
     }
 
     @Nullable
@@ -124,7 +134,41 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         if (genres == null) {
             loadGenres();
         }
+        setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPref.edit().putBoolean(KEY_GRID, grid).commit();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.media_list_menu, menu);
+        if (grid) {
+            menu.getItem(1).setIcon(R.drawable.ic_list_black_48dp);
+        } else {
+            menu.getItem(1).setIcon(R.drawable.ic_grid_on_black_48dp);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_switch_layout_type:
+                if (grid) {
+                    switchToLinear();
+                    item.setIcon(R.drawable.ic_grid_on_black_48dp);
+                } else {
+                    switchToGrid();
+                    item.setIcon(R.drawable.ic_list_black_48dp);
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -142,9 +186,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private void initViews(View root) {
         recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        grid = sharedPref.getBoolean(KEY_GRID, true);
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        } else {
+            staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
+        }
         callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
         customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
         showGenres = (Button) root.findViewById(R.id.genres_dialog);
@@ -259,14 +305,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private void loadInformation(Tasks task) {
         switch (task) {
             case SEARCH_BY_FILTER:
-                loadMediaInfoByFilter(query, language, String.valueOf(page));
+                loadMediaInfoByFilter(query, language, String.valueOf(page), region);
                 break;
             case SEARCH_BY_CUSTOM_FILTER:
-                loadMediaInfoByCustomFilter(language, String.valueOf(page));
+                loadMediaInfoByCustomFilter(language, String.valueOf(page), region);
                 break;
             case SEARCH_BY_GENRE:
             case SEARCH_BY_KEYWORD:
-                loadMediaInfoByIds(ids, language, String.valueOf(page), task);
+                loadMediaInfoByIds(ids, language, String.valueOf(page), region, task);
                 break;
             case SEARCH_BY_ID:
             case SEARCH_SIMILAR:
@@ -288,7 +334,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         getMediaTask.getMediaByName(query, language, page);
     }
 
-    public void loadMediaInfoByFilter(String query, String language, String page) {
+    public void loadMediaInfoByFilter(String query, String language, String page, String region) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -296,12 +342,12 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             getMediaTask = new GetTVShowsTask();
         }
         getMediaTask.addListener(this);
-        getMediaTask.getMediaByFilter(query, language, page);
+        getMediaTask.getMediaByFilter(query, language, page, region);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_FILTER;
     }
 
-    public void loadMediaInfoByIds(String ids, String language, String page, Tasks task) {
+    public void loadMediaInfoByIds(String ids, String language, String page, String region, Tasks task) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -311,10 +357,10 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         getMediaTask.addListener(this);
         switch (task) {
             case SEARCH_BY_GENRE:
-                getMediaTask.getMediaByGenre(ids, language, page);
+                getMediaTask.getMediaByGenre(ids, language, page, region);
                 break;
             case SEARCH_BY_KEYWORD:
-                getMediaTask.getMediaByKeywords(ids, language, page);
+                getMediaTask.getMediaByKeywords(ids, language, page, region);
                 break;
         }
         this.page = Integer.parseInt(page);
@@ -341,7 +387,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         this.task = task;
     }
 
-    public void loadMediaInfoByCustomFilter(String language, String page) {
+    public void loadMediaInfoByCustomFilter(String language, String page, String region) {
         GetMediaTask getMediaTask;
         if (movie) {
             getMediaTask = new GetMoviesTask();
@@ -363,7 +409,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             }
         }
         String sortBy = sortDialogFragment.getChosenSort() + "." + sortDirectionFragment.getChosenSortDirection();
-        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy);
+        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy, region);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }

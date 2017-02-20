@@ -40,6 +40,7 @@ public class ListMediaAdapter extends RecyclerView.Adapter<ListViewHolder> {
     public void onBindViewHolder(final ListViewHolder holder, int position) {
         Media media = mediaList.get(position);
         holder.name.setText(media.getTitle());
+        holder.averageRating.setText("Rating:" + media.getVoteAverage());
         ImageLoader.putPoster(context, media.getPosterPath(), holder.image, ImageLoader.sizes.w300);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/grid_image"
-        style="@style/MovieInfoPoster"
+        style="@style/GridListElementImage"
         android:contentDescription="@string/movie_poster" />
 
 </android.support.v7.widget.CardView>

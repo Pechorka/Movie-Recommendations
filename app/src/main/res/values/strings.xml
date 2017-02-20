@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movie Recommendations</string>
     <string name="movie_poster">movie poster</string>
-    <string name="layout_switch">layout_switch</string>
+    <string name="switch_layout_type">Switch layout type</string>
     <string name="genre">Genre</string>
     <string name="search">Search</string>
     <string name="expand">More</string>
@@ -45,6 +45,10 @@
         <item>English</item>
         <item>Русский</item>
     </array>
+    <array name="languagesValues">
+        <item>en</item>
+        <item>ru</item>
+    </array>
     <string name="hours_short">h</string>
     <string name="minutes_short">m</string>
     <string name="original_language">Original language</string>
@@ -87,6 +91,7 @@
     <string name="retry">Retry</string>
     <string name="no_reviews">No reviews yet</string>
     <string name="language">Language</string>
+
     <string name="created_by">Created by</string>
     <string name="episode_runtime">Episode runtime</string>
     <string name="last_air_date">Last air date</string>
@@ -99,4 +104,7 @@
         <item quantity="one">%d episode</item>
         <item quantity="other">%d episodes</item>
     </plurals>
+
+    <string name="drawer_settings">Settings</string>
+
 </resources>

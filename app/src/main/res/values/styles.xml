@@ -26,6 +26,13 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="GridListElementImage">
+        <item name="android:layout_width">@dimen/grid_element_image_width</item>
+        <item name="android:layout_height">@dimen/grid_element_image_height</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
     <style name="Header" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:textSize">@dimen/title_font_size</item>
