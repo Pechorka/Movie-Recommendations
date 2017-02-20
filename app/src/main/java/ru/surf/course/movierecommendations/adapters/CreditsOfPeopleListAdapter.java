@@ -21,13 +21,13 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 2/2/17.
  */
 
-public class MovieCreditsListAdapter extends RecyclerView.Adapter<MovieCreditsListAdapter.ViewHolder> {
+public class CreditsOfPeopleListAdapter extends RecyclerView.Adapter<CreditsOfPeopleListAdapter.ViewHolder> {
 
     private List<Credit> mCreditList;
     private Context mContext;
     private static OnItemClickListener listener;
 
-    public MovieCreditsListAdapter(List<Credit> credits, Context context) {
+    public CreditsOfPeopleListAdapter(List<Credit> credits, Context context) {
         mCreditList = credits;
         mContext = context;
     }
@@ -35,7 +35,7 @@ public class MovieCreditsListAdapter extends RecyclerView.Adapter<MovieCreditsLi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_credits_list_item, parent, false);
-        return new MovieCreditsListAdapter.ViewHolder(itemView);
+        return new CreditsOfPeopleListAdapter.ViewHolder(itemView);
     }
 
     @Override
@@ -84,14 +84,14 @@ public class MovieCreditsListAdapter extends RecyclerView.Adapter<MovieCreditsLi
                 @Override
                 public void onClick(View view) {
                     if (listener != null)
-                        MovieCreditsListAdapter.listener.onClick(getAdapterPosition());
+                        CreditsOfPeopleListAdapter.listener.onClick(getAdapterPosition());
                 }
             });
         }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        MovieCreditsListAdapter.listener = listener;
+        CreditsOfPeopleListAdapter.listener = listener;
     }
 
     public interface OnItemClickListener {

@@ -28,6 +28,10 @@
 
         <activity android:name=".activities.PersonActivity"
                   android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
+
+        <activity android:name=".activities.TvShowActivity"
+                  android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
+
         <activity android:name=".activities.SettingsActivity" />
     </application>
 

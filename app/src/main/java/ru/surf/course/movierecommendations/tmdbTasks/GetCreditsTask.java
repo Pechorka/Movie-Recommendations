@@ -89,6 +89,9 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
                 case GET_PERSON_CREDITS:
                     builtUri = uriByPersonId(Integer.valueOf(strings[0]), language);
                     break;
+                case GET_TV_CREDITS:
+                    builtUri = uriByTVShowId(Integer.valueOf(strings[0]));
+                    break;
                 default:
                     builtUri = Uri.EMPTY;
             }
@@ -162,7 +165,8 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
 
         switch (task) {
             case GET_MOVIE_CREDITS:
-                result = parseMovieCredits(jsonObject);
+            case GET_TV_CREDITS:
+                result = parseMediaCredits(jsonObject);
                 break;
             case GET_PERSON_CREDITS:
                 result = parsePersonCredits(jsonObject);
@@ -177,6 +181,12 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
         isLoadingList = true;
         task = Tasks.GET_MOVIE_CREDITS;
         execute(String.valueOf(movieId));
+    }
+
+    public void getTVShowCredits(int tvShowId) {
+        isLoadingList = true;
+        task = Tasks.GET_TV_CREDITS;
+        execute(String.valueOf(tvShowId));
     }
 
     public void getPersonCredits(int personId, Locale language) {
@@ -196,6 +206,16 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
                 .build();
     }
 
+    private Uri uriByTVShowId(int tvShowId) {
+        final String TMDB_BASE_URL = "https://api.themoviedb.org/3/tv";
+        final String TMDB_CREDITS = "credits";
+        return Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(tvShowId))
+                .appendPath(TMDB_CREDITS)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
+                .build();
+    }
+
     private Uri uriByPersonId(int personId, Locale language) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/person";
         final String TMDB_CREDITS = "combined_credits";
@@ -207,12 +227,21 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
                 .build();
     }
 
-    private List<Credit> parseMovieCredits(JSONObject jsonObject) throws JSONException {
+    private List<Credit> parseMediaCredits(JSONObject jsonObject) throws JSONException {
         JSONArray cast = jsonObject.getJSONArray(TMDB_CAST);
         JSONArray crew = jsonObject.getJSONArray(TMDB_CREW);
         List<Credit> result = new ArrayList<>();
         Credit credit;
+
         for (int i = 0; i < cast.length(); i++) {
+
+            int castId = 0;
+            try {
+                castId = cast.getJSONObject(i).getInt(TMDB_CAST_ID);
+            } catch (JSONException e ) {
+                Log.d(LOG_TAG, "No cast id ", e);
+            }
+
             credit = new Actor(
                     cast.getJSONObject(i).getString(TMDB_CREDIT_ID),
                     new Person(
@@ -220,7 +249,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
                             cast.getJSONObject(i).getInt(TMDB_ID),
                             cast.getJSONObject(i).getString(TMDB_PROFILE_PATH)
                     ),
-                    cast.getJSONObject(i).getInt(TMDB_CAST_ID),
+                    castId,
                     cast.getJSONObject(i).getString(TMDB_CHARACTER),
                     cast.getJSONObject(i).getInt(TMDB_ORDER)
             );

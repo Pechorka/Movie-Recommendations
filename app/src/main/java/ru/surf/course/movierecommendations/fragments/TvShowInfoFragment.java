@@ -26,62 +26,60 @@ import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
-import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
+import ru.surf.course.movierecommendations.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
-import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 /**
- * Created by andrew on 2/11/17.
+ * Created by andrew on 2/19/17.
  */
 
-public class MovieInfoFragment extends Fragment {
+public class TvShowInfoFragment extends Fragment {
 
-    final static String KEY_MOVIE = "movie";
-    final static String KEY_MOVIE_ID = "movie_id";
+    final static String KEY_TV_SHOW = "tvShow";
+    final static String KEY_TV_SHOW_ID = "movie_id";
     final static int DATA_TO_LOAD = 3;
     final String LOG_TAG = getClass().getSimpleName();
 
     private ProgressBar progressBar;
     private ExpandableTextView overview;
-    private Button expandCollapseBiographyButton;
-    private MovieInfo currentMovieInfo;
-    private MovieInfo currentMovieInfoEnglish;
+    private Button expandCollapseOverviewButton;
+    private TVShowInfo currentTvShowInfo;
+    private TVShowInfo currentTvShowInfoEnglish;
     private TextView voteAverage;
     private RecyclerView backdrops;
     private ImagesListAdapter mImagesListAdapter;
     private RecyclerView credits;
     private CreditsOfPeopleListAdapter mCreditsOfPeopleListAdapter;
     private FlowLayout genres;
-    private TextView runtime;
+    private TextView episodeRuntime;
     private TextView status;
-    private TextView budget;
-    private TextView revenue;
-    private TextView productionCountries;
+    private TextView numberOfSeasons;
 
     private int dataLoaded = 0;
 
-    public static MovieInfoFragment newInstance(MovieInfo movie) {  //considering this object already has all info
-        MovieInfoFragment movieFactsFragment = new MovieInfoFragment();
+    public static TvShowInfoFragment newInstance(TVShowInfo tvShow) {  //considering this object already has all info
+        TvShowInfoFragment movieFactsFragment = new TvShowInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_MOVIE, movie);
+        bundle.putSerializable(KEY_TV_SHOW, tvShow);
         movieFactsFragment.setArguments(bundle);
         return movieFactsFragment;
     }
 
-    public static MovieInfoFragment newInstance(int movieId) {
-        MovieInfoFragment movieFactsFragment = new MovieInfoFragment();
+    public static TvShowInfoFragment newInstance(int movieId) {
+        TvShowInfoFragment movieFactsFragment = new TvShowInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KEY_MOVIE_ID, movieId);
+        bundle.putInt(KEY_TV_SHOW_ID, movieId);
         movieFactsFragment.setArguments(bundle);
         return movieFactsFragment;
     }
@@ -92,7 +90,7 @@ public class MovieInfoFragment extends Fragment {
         if (getArguments() == null)
             onDestroy();
 
-        View root = inflater.inflate(R.layout.fragment_movie_info, container, false);
+        View root = inflater.inflate(R.layout.fragment_tv_show_info, container, false);
         initViews(root);
         setupViews(root);
 
@@ -100,22 +98,20 @@ public class MovieInfoFragment extends Fragment {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
+        progressBar = (ProgressBar) root.findViewById(R.id.tv_show_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         }
-        overview = (ExpandableTextView) root.findViewById(R.id.movie_info_overview);
-        expandCollapseBiographyButton = (Button) root.findViewById(R.id.movie_info_biography_expand_btn);
-        voteAverage = (TextView) root.findViewById(R.id.movie_info_vote_average);
-        backdrops = (RecyclerView) root.findViewById(R.id.movie_info_images_list);
-        credits = (RecyclerView) root.findViewById(R.id.movie_info_credits);
-        budget = (TextView) root.findViewById(R.id.movie_info_budget);
-        revenue = (TextView) root.findViewById(R.id.movie_info_revenue);
-        runtime = (TextView) root.findViewById(R.id.movie_info_runtime);
-        status = (TextView) root.findViewById(R.id.movie_info_status);
-        productionCountries = (TextView) root.findViewById(R.id.movie_info_production);
-        genres = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
+        overview = (ExpandableTextView) root.findViewById(R.id.tv_show_info_overview);
+        expandCollapseOverviewButton = (Button) root.findViewById(R.id.tv_show_info_biography_expand_btn);
+        voteAverage = (TextView) root.findViewById(R.id.tv_show_info_vote_average);
+        backdrops = (RecyclerView) root.findViewById(R.id.tv_show_info_images_list);
+        credits = (RecyclerView) root.findViewById(R.id.tv_show_info_credits);
+        episodeRuntime = (TextView) root.findViewById(R.id.tv_show_info_episode_runtime);
+        status = (TextView) root.findViewById(R.id.tv_show_info_status);
+        numberOfSeasons = (TextView) root.findViewById(R.id.tv_show_info_number_of_seasons);
+        genres = (FlowLayout) root.findViewById(R.id.tv_show_info_genres_placeholder);
     }
 
     private void setupViews(View root) {
@@ -125,10 +121,10 @@ public class MovieInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 overview.toggle();
-                expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
+                expandCollapseOverviewButton.setBackground(overview.isExpanded() ? ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_down) : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
             }
         };
-        expandCollapseBiographyButton.setOnClickListener(expandCollapse);
+        expandCollapseOverviewButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
         backdrops.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         credits.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -137,58 +133,58 @@ public class MovieInfoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         dataLoaded = 0;
-        if (getArguments().containsKey(KEY_MOVIE)) {
-            currentMovieInfo = (MovieInfo) getArguments().getSerializable(KEY_MOVIE);
+        if (getArguments().containsKey(KEY_TV_SHOW)) {
+            currentTvShowInfo = (TVShowInfo) getArguments().getSerializable(KEY_TV_SHOW);
             dataLoadComplete();
-            loadBackdropsInto(currentMovieInfo);
-            loadCreditsInto(currentMovieInfo);
-        } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
-            currentMovieInfo = new MovieInfo(getArguments().getInt(KEY_MOVIE_ID));
-            loadInformationInto(currentMovieInfo, getCurrentLocale().getLanguage());
+            loadBackdropsInto(currentTvShowInfo);
+            loadCreditsInto(currentTvShowInfo);
+        } else if (getArguments().containsKey(KEY_TV_SHOW_ID)) {
+            currentTvShowInfo = new TVShowInfo(getArguments().getInt(KEY_TV_SHOW_ID));
+            loadInformationInto(currentTvShowInfo, getCurrentLocale().getLanguage());
         }
     }
 
-    private void loadInformationInto(final MovieInfo movie, String language) {
-        GetMoviesTask getMovieInfosTask = new GetMoviesTask();
-        getMovieInfosTask.addListener(new GetMediaTask.TaskCompletedListener<MovieInfo>() {
+    private void loadInformationInto(final TVShowInfo tvShow, String language) {
+        GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
+        getTVShowsTask.addListener(new GetMediaTask.TaskCompletedListener<TVShowInfo>() {
             @Override
-            public void mediaLoaded(List<MovieInfo> result, boolean newResult) {
-                if (movie != null)
-                    movie.fillFields(result.get(0));
+            public void mediaLoaded(List<TVShowInfo> result, boolean newResult) {
+                if (tvShow != null)
+                    tvShow.fillFields(result.get(0));
                 dataLoadComplete();
-                loadBackdropsInto(currentMovieInfo);
-                loadCreditsInto(currentMovieInfo);
+                loadBackdropsInto(currentTvShowInfo);
+                loadCreditsInto(currentTvShowInfo);
             }
         });
-        getMovieInfosTask.getMediaById(movie.getId(), language);
+        getTVShowsTask.getMediaById(tvShow.getId(), language);
     }
 
-    private void loadBackdropsInto(final MovieInfo movie) {
+    private void loadBackdropsInto(final TVShowInfo tvShow) {
         GetImagesTask getImagesTask = new GetImagesTask();
         getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
             @Override
             public void getImagesTaskCompleted(List<TmdbImage> result) {
-                movie.setBackdrops(result);
+                tvShow.setBackdrops(result);
                 dataLoadComplete();
             }
         });
-        getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
+        getImagesTask.getTvImages(tvShow.getId(), Tasks.GET_TV_BACKDROPS);
     }
 
-    private void loadCreditsInto(final MovieInfo movieInfo) {
+    private void loadCreditsInto(final TVShowInfo tvShowInfo) {
         GetCreditsTask getCreditsTask = new GetCreditsTask();
         getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
             @Override
             public void taskCompleted(List<Credit> result) {
-                movieInfo.setCredits(result);
+                tvShowInfo.setCredits(result);
                 dataLoadComplete();
             }
         });
-        getCreditsTask.getMovieCredits(movieInfo.getId());
+        getCreditsTask.getTVShowCredits(tvShowInfo.getId());
     }
 
-    private boolean checkInformation(MovieInfo movie) {
-        return Utilities.checkString(movie.getOverview());
+    private boolean checkInformation(TVShowInfo tvShow) {
+        return Utilities.checkString(tvShow.getOverview());
         //for now checking only overview
     }
 
@@ -199,21 +195,27 @@ public class MovieInfoFragment extends Fragment {
 
     private void fillInformation() {
 
-        if (Utilities.checkString(currentMovieInfo.getOverview()))
-            overview.setText(currentMovieInfo.getOverview());
-        else overview.setText(currentMovieInfoEnglish.getOverview());
+        if (Utilities.checkString(currentTvShowInfo.getOverview()))
+            overview.setText(currentTvShowInfo.getOverview());
+        else overview.setText(currentTvShowInfoEnglish.getOverview());
 
         overview.post(new Runnable() {
             @Override
             public void run() {
                 if (overview.getLineCount() >= overview.getMaxLines())
-                    expandCollapseBiographyButton.setVisibility(View.VISIBLE);
+                    expandCollapseOverviewButton.setVisibility(View.VISIBLE);
             }
         });
 
-        voteAverage.setText(String.valueOf(currentMovieInfo.getVoteAverage()));
+        voteAverage.setText(String.valueOf(currentTvShowInfo.getVoteAverage()));
 
-        mImagesListAdapter = new ImagesListAdapter(currentMovieInfo.getBackdrops(), getActivity());
+        status.setText(currentTvShowInfo.getStatus());
+
+        episodeRuntime.setText(String.valueOf(currentTvShowInfo.getEpisodesRuntime().get(0)));
+
+        numberOfSeasons.setText(String.valueOf(currentTvShowInfo.getNumberOfSeasons()));
+
+        mImagesListAdapter = new ImagesListAdapter(currentTvShowInfo.getBackdrops(), getActivity());
         mImagesListAdapter.setOnItemClickListener(new ImagesListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -227,7 +229,8 @@ public class MovieInfoFragment extends Fragment {
         });
         backdrops.setAdapter(mImagesListAdapter);
 
-        mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentMovieInfo.getCredits(), getActivity());
+
+        mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentTvShowInfo.getCredits(), getActivity());
         mCreditsOfPeopleListAdapter.setOnItemClickListener(new CreditsOfPeopleListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -236,29 +239,8 @@ public class MovieInfoFragment extends Fragment {
         });
         credits.setAdapter(mCreditsOfPeopleListAdapter);
 
-        if (!currentMovieInfo.getBudget().equals("0"))
-            budget.setText(currentMovieInfo.getBudget() + "$");
 
-        if (!currentMovieInfo.getRevenue().equals("0"))
-            revenue.setText(currentMovieInfo.getRevenue() + "$");
-
-        if (currentMovieInfo.getRuntime() != 0)
-            runtime.setText(currentMovieInfo.getRuntime() / 60 + getResources().getString(R.string.hours_short) + " " + currentMovieInfo.getRuntime() % 60 + getResources().getString(R.string.minutes_short));
-
-        status.setText(currentMovieInfo.getStatus());
-
-        if (currentMovieInfo.getProductionCountriesNames() != null && currentMovieInfo.getProductionCountriesNames().size() != 0) {
-            ArrayList<String> productionCountriesList = new ArrayList<>(currentMovieInfo.getProductionCountriesNames());
-            String string = "";
-            for (int i = 0; i < productionCountriesList.size(); i++) {
-                string += productionCountriesList.get(i);
-                if (i < productionCountriesList.size() - 1)
-                    string += ",";
-            }
-            productionCountries.setText(string);
-        }
-
-        for (final Genre genre : currentMovieInfo.getGenres()) {
+        for (final Genre genre : currentTvShowInfo.getGenres()) {
             Button genreButton = (Button) getActivity().getLayoutInflater().inflate(R.layout.genre_btn_template, null);
             genreButton.setText(genre.getName());
             genres.addView(genreButton);
@@ -269,8 +251,8 @@ public class MovieInfoFragment extends Fragment {
             genreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (getActivity() instanceof MovieActivity)
-                        ((MovieActivity)getActivity()).onGenreClick(genre);
+                    if (getActivity() instanceof TvShowActivity)
+                        ((TvShowActivity)getActivity()).onGenreClick(genre);
                 }
             });
         }
@@ -278,15 +260,15 @@ public class MovieInfoFragment extends Fragment {
 
     private void dataLoadComplete() {
         if (++dataLoaded == DATA_TO_LOAD) {
-            if (!checkInformation(currentMovieInfo) && currentMovieInfoEnglish == null) {
+            if (!checkInformation(currentTvShowInfo) && currentTvShowInfoEnglish == null) {
                 dataLoaded--;
-                currentMovieInfoEnglish = new MovieInfo(currentMovieInfo.getId());
-                loadInformationInto(currentMovieInfoEnglish, Locale.ENGLISH.getLanguage());
+                currentTvShowInfoEnglish = new TVShowInfo(currentTvShowInfo.getId());
+                loadInformationInto(currentTvShowInfoEnglish, Locale.ENGLISH.getLanguage());
             } else {
                 fillInformation();
                 View progressBarPlaceholder = null;
                 if (getView() != null)
-                    progressBarPlaceholder = getView().findViewById(R.id.movie_info_progress_bar_placeholder);
+                    progressBarPlaceholder = getView().findViewById(R.id.tv_show_info_progress_bar_placeholder);
                 if (progressBarPlaceholder != null)
                     progressBarPlaceholder.setVisibility(View.GONE);
             }
@@ -297,5 +279,5 @@ public class MovieInfoFragment extends Fragment {
     private Locale getCurrentLocale() {
         return Locale.getDefault();
     }
-
+    
 }

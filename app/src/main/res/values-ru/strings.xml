@@ -58,4 +58,18 @@
     <string name="no_internet">Похоже, какие-то проблемы с соединением</string>
     <string name="retry">Попробовать снова</string>
     <string name="no_reviews">Пока нет отзывов</string>
+    <string name="created_by">Создатели</string>
+    <string name="episode_runtime">Продолжительность эпизода</string>
+    <string name="number_of_seasons">Сезонов</string>
+    <string name="no_seasons">Пока что нет ни одного сезона</string>
+    <string name="seasons">Сезоны</string>
+    <string name="season">Сезон</string>
+    <plurals name="episodes">
+        <item quantity="zero">%d эпизодов</item>
+        <item quantity="one">%d эпизод</item>
+        <item quantity="two">%d эпизода</item>
+        <item quantity="few">%d эпизода</item>
+        <item quantity="many">%d эпизодов</item>
+        <item quantity="other">%d эпизодов</item>
+    </plurals>
 </resources>

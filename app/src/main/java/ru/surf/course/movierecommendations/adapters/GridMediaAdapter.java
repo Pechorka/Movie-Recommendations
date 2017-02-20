@@ -10,8 +10,10 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
+import ru.surf.course.movierecommendations.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.view_holders.GridViewHolder;
 
@@ -55,6 +57,8 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
     private void fragmentToSwitch(int position) {
         if (mediaList.get(position) instanceof MovieInfo) {
             switchContent((MovieInfo) mediaList.get(position));
+        } else if (mediaList.get(position) instanceof TVShowInfo) {
+            TvShowActivity.start(context, (TVShowInfo)mediaList.get(position));
         }
     }
 
