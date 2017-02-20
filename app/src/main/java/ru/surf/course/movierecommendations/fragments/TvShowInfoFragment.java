@@ -28,8 +28,8 @@ import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.activities.TvShowActivity;
-import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
-import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
+import ru.surf.course.movierecommendations.adapters.CreditsOfPeopleListAdapter;
+import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
@@ -58,9 +58,9 @@ public class TvShowInfoFragment extends Fragment {
     private TVShowInfo currentTvShowInfoEnglish;
     private TextView voteAverage;
     private RecyclerView backdrops;
-    private MovieInfoImagesAdapter movieInfoImagesAdapter;
+    private ImagesListAdapter mImagesListAdapter;
     private RecyclerView credits;
-    private MovieCreditsListAdapter movieCreditsListAdapter;
+    private CreditsOfPeopleListAdapter mCreditsOfPeopleListAdapter;
     private FlowLayout genres;
     private TextView episodeRuntime;
     private TextView status;
@@ -215,29 +215,29 @@ public class TvShowInfoFragment extends Fragment {
 
         numberOfSeasons.setText(String.valueOf(currentTvShowInfo.getNumberOfSeasons()));
 
-        movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentTvShowInfo.getBackdrops(), getActivity());
-        movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
+        mImagesListAdapter = new ImagesListAdapter(currentTvShowInfo.getBackdrops(), getActivity());
+        mImagesListAdapter.setOnItemClickListener(new ImagesListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 ArrayList<String> paths = new ArrayList<String>();
                 for (TmdbImage image :
-                        movieInfoImagesAdapter.getImages()) {
+                        mImagesListAdapter.getImages()) {
                     paths.add(image.path);
                 }
                 GalleryActivity.start(getActivity(), paths, position);
             }
         });
-        backdrops.setAdapter(movieInfoImagesAdapter);
+        backdrops.setAdapter(mImagesListAdapter);
 
 
-        movieCreditsListAdapter = new MovieCreditsListAdapter(currentTvShowInfo.getCredits(), getActivity());
-        movieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
+        mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentTvShowInfo.getCredits(), getActivity());
+        mCreditsOfPeopleListAdapter.setOnItemClickListener(new CreditsOfPeopleListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                PersonActivity.start(getActivity(), movieCreditsListAdapter.getCredits().get(position).getPerson());
+                PersonActivity.start(getActivity(), mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson());
             }
         });
-        credits.setAdapter(movieCreditsListAdapter);
+        credits.setAdapter(mCreditsOfPeopleListAdapter);
 
 
         for (final Genre genre : currentTvShowInfo.getGenres()) {

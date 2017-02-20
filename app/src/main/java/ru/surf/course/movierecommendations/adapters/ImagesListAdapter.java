@@ -19,13 +19,13 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 12/30/16.
  */
 
-public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImagesAdapter.MyViewHolder> {
+public class ImagesListAdapter extends RecyclerView.Adapter<ImagesListAdapter.MyViewHolder> {
 
     private List<TmdbImage> images;
     private Context context;
     private static OnItemClickListener listener;
 
-    public MovieInfoImagesAdapter(List<TmdbImage> images, Context context) {
+    public ImagesListAdapter(List<TmdbImage> images, Context context) {
         this.images = images;
         this.context = context;
     }
@@ -33,7 +33,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_info_image_list_item, parent, false);
-        return new MovieInfoImagesAdapter.MyViewHolder(itemView);
+        return new ImagesListAdapter.MyViewHolder(itemView);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        MovieInfoImagesAdapter.listener = listener;
+        ImagesListAdapter.listener = listener;
     }
 
 
@@ -92,7 +92,7 @@ public class MovieInfoImagesAdapter extends RecyclerView.Adapter<MovieInfoImages
         @Override
         public void onClick(View view) {
             if (listener != null)
-                MovieInfoImagesAdapter.listener.onClick(getAdapterPosition());
+                ImagesListAdapter.listener.onClick(getAdapterPosition());
         }
     }
 

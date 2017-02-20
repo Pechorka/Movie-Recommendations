@@ -15,7 +15,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apmem.tools.layouts.FlowLayout;
 
@@ -29,8 +28,8 @@ import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
-import ru.surf.course.movierecommendations.adapters.MovieCreditsListAdapter;
-import ru.surf.course.movierecommendations.adapters.MovieInfoImagesAdapter;
+import ru.surf.course.movierecommendations.adapters.CreditsOfPeopleListAdapter;
+import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MovieInfo;
@@ -59,9 +58,9 @@ public class MovieInfoFragment extends Fragment {
     private MovieInfo currentMovieInfoEnglish;
     private TextView voteAverage;
     private RecyclerView backdrops;
-    private MovieInfoImagesAdapter movieInfoImagesAdapter;
+    private ImagesListAdapter mImagesListAdapter;
     private RecyclerView credits;
-    private MovieCreditsListAdapter movieCreditsListAdapter;
+    private CreditsOfPeopleListAdapter mCreditsOfPeopleListAdapter;
     private FlowLayout genres;
     private TextView runtime;
     private TextView status;
@@ -214,28 +213,28 @@ public class MovieInfoFragment extends Fragment {
 
         voteAverage.setText(String.valueOf(currentMovieInfo.getVoteAverage()));
 
-        movieInfoImagesAdapter = new MovieInfoImagesAdapter(currentMovieInfo.getBackdrops(), getActivity());
-        movieInfoImagesAdapter.setOnItemClickListener(new MovieInfoImagesAdapter.OnItemClickListener() {
+        mImagesListAdapter = new ImagesListAdapter(currentMovieInfo.getBackdrops(), getActivity());
+        mImagesListAdapter.setOnItemClickListener(new ImagesListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 ArrayList<String> paths = new ArrayList<String>();
                 for (TmdbImage image :
-                        movieInfoImagesAdapter.getImages()) {
+                        mImagesListAdapter.getImages()) {
                     paths.add(image.path);
                 }
                 GalleryActivity.start(getActivity(), paths, position);
             }
         });
-        backdrops.setAdapter(movieInfoImagesAdapter);
+        backdrops.setAdapter(mImagesListAdapter);
 
-        movieCreditsListAdapter = new MovieCreditsListAdapter(currentMovieInfo.getCredits(), getActivity());
-        movieCreditsListAdapter.setOnItemClickListener(new MovieCreditsListAdapter.OnItemClickListener() {
+        mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentMovieInfo.getCredits(), getActivity());
+        mCreditsOfPeopleListAdapter.setOnItemClickListener(new CreditsOfPeopleListAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                PersonActivity.start(getActivity(), movieCreditsListAdapter.getCredits().get(position).getPerson());
+                PersonActivity.start(getActivity(), mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson());
             }
         });
-        credits.setAdapter(movieCreditsListAdapter);
+        credits.setAdapter(mCreditsOfPeopleListAdapter);
 
         if (!currentMovieInfo.getBudget().equals("0"))
             budget.setText(currentMovieInfo.getBudget() + "$");
