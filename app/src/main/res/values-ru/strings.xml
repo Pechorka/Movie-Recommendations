@@ -63,4 +63,13 @@
     <string name="number_of_seasons">Сезонов</string>
     <string name="no_seasons">Пока что нет ни одного сезона</string>
     <string name="seasons">Сезоны</string>
+    <string name="season">Сезон</string>
+    <plurals name="episodes">
+        <item quantity="zero">%d эпизодов</item>
+        <item quantity="one">%d эпизод</item>
+        <item quantity="two">%d эпизода</item>
+        <item quantity="few">%d эпизода</item>
+        <item quantity="many">%d эпизодов</item>
+        <item quantity="other">%d эпизодов</item>
+    </plurals>
 </resources>

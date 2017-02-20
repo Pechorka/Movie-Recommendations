@@ -93,4 +93,10 @@
     <string name="number_of_seasons">Number of seasons</string>
     <string name="no_seasons">There are no seasons yet</string>
     <string name="seasons">Seasons</string>
+    <string name="season">Season</string>
+    <string name="separator">|</string>
+    <plurals name="episodes">
+        <item quantity="one">%d episode</item>
+        <item quantity="other">%d episodes</item>
+    </plurals>
 </resources>

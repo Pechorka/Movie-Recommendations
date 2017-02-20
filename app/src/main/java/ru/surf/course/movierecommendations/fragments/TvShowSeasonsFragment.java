@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import java.util.Locale;
 
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.adapters.TvShowSeasonsListAdapter;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 
@@ -33,6 +34,7 @@ public class TvShowSeasonsFragment extends Fragment {
     private ProgressBar progressBar;
     private TVShowInfo currentTv;
     private RecyclerView seasonsList;
+    private TvShowSeasonsListAdapter tvShowSeasonsListAdapter;
 
     private int dataLoaded = 0;
 
@@ -92,11 +94,13 @@ public class TvShowSeasonsFragment extends Fragment {
 
     private void loadReviews(final TVShowInfo tv) {
         //load seasons
+        dataLoadComplete();
     }
 
     private void fillInformation() {
         if (currentTv.getSeasonList() != null && currentTv.getSeasonList().size() != 0) {
-           //set seasons adapter
+            tvShowSeasonsListAdapter = new TvShowSeasonsListAdapter(getActivity(), currentTv.getSeasonList());
+            seasonsList.setAdapter(tvShowSeasonsListAdapter);
         } else {
             getView().findViewById(R.id.fragment_tv_show_seasons_no_seasons_message_placeholder).setVisibility(View.VISIBLE);
         }

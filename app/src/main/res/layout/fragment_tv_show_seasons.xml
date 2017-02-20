@@ -6,7 +6,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_tv_show_seasons_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:padding="@dimen/seasons_list_content_padding"/>
 
     <FrameLayout
         android:id="@+id/fragment_tv_show_seasons_no_seasons_message_placeholder"

@@ -339,10 +339,11 @@ public class GetTVShowsTask extends GetMediaTask {
                 season.setPosterPath(seasons.getJSONObject(k).getString(TMDB_POSTER_PATH));
                 season.setSeasonNumber(seasons.getJSONObject(k).getInt(TMDB_SEASON_NUMBER));
                 try {
-                    season.setAirDate(formatter.parse(tvShowsJson.getString(TMDB_AIR_DATE)));
+                    season.setAirDate(formatter.parse(seasons.getJSONObject(k).getString(TMDB_AIR_DATE)));
                 } catch (ParseException | JSONException e) {
                     Log.d(LOG_TAG, "Empty date in season, most likely");
                 }
+                seasonList.add(season);
             }
 
             item = new TVShowInfo(tvShowsJson.getInt(TMDB_ID));
