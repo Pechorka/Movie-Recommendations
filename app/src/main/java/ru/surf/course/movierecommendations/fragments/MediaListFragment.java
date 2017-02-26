@@ -27,7 +27,6 @@ import java.util.Set;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
-import ru.surf.course.movierecommendations.adapters.ListMediaAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
@@ -43,9 +42,7 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MediaListFragment<T extends Media> extends Fragment implements GetMediaTask.TaskCompletedListener<T> {
 
-    public final static String KEY_GRID = "grid";
     private final static String KEY_QUERY = "query";
-    private final static String KEY_LINEAR_POS = "lin_pos";
     private final static String KEY_GRID_POS = "grid_pos";
     private final static String KEY_LANGUAGE = "language";
     private final static String KEY_REGION = "region";
@@ -53,7 +50,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private final static String KEY_MOVIE_ID = "id";
     private static final String KEY_MOVIE = "movie?";
 
-    private boolean grid;
     private boolean filterSetupOpen;
     private List<T> mediaList;
     private Map<String, Integer> genres;
@@ -72,8 +68,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private RecyclerView recyclerView;
     private GridMediaAdapter gridMediaAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-    private ListMediaAdapter listMediaAdapter;
-    private LinearLayoutManager linearLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
     private Button callOptions;
     private Button showGenres;
@@ -116,7 +110,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         movie = getArguments().getBoolean(KEY_MOVIE);
         page = 1;
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        grid = sharedPref.getBoolean(KEY_GRID, true);
     }
 
     @Nullable
@@ -124,11 +117,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_media_list, container, false);
         initViews(root);
-        if (grid) {
-            switchToGrid();
-        } else {
-            switchToLinear();
-        }
         setupViews();
         loadInformation(task);
         if (genres == null) {
@@ -142,34 +130,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     public void onStop() {
         super.onStop();
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        sharedPref.edit().putBoolean(KEY_GRID, grid).commit();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.media_list_menu, menu);
-        if (grid) {
-            menu.getItem(1).setIcon(R.drawable.ic_list_black_48dp);
-        } else {
-            menu.getItem(1).setIcon(R.drawable.ic_grid_on_black_48dp);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_switch_layout_type:
-                if (grid) {
-                    switchToLinear();
-                    item.setIcon(R.drawable.ic_grid_on_black_48dp);
-                } else {
-                    switchToGrid();
-                    item.setIcon(R.drawable.ic_list_black_48dp);
-                }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void mediaLoaded(List<T> result, boolean newResult) {
@@ -185,7 +147,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
 
     private void initViews(View root) {
         recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         } else {
@@ -200,7 +161,13 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         sortDialogFragment = new ChooseSortDialogFragment();
         sortDirectionFragment = new ChooseSortDirectionDialogFragment();
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
-        listMediaAdapter = new ListMediaAdapter(getActivity(), new ArrayList<Media>(1));
+        scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                MediaListFragment.this.page++;
+                loadInformation(task);
+            }
+        };
     }
 
     private void setupViews() {
@@ -271,35 +238,10 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 sortDirectionFragment.show(fm, "fragment_direction_sort");
             }
         });
-
-    }
-
-    private void switchToLinear() {
-        recyclerView.setAdapter(listMediaAdapter);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(listMediaAdapter);
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                MediaListFragment.this.page++;
-                loadInformation(task);
-            }
-        };
-        grid = false;
-    }
-
-    private void switchToGrid() {
-        recyclerView.setAdapter(gridMediaAdapter);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(gridMediaAdapter);
-        scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                MediaListFragment.this.page++;
-                loadInformation(task);
-            }
-        };
-        grid = true;
+
+
     }
 
     private void loadInformation(Tasks task) {
@@ -429,9 +371,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
 
     public void fillInformation() {
         gridMediaAdapter.setMediaList(mediaList);
-        listMediaAdapter.setMediaList(mediaList);
         gridMediaAdapter.notifyDataSetChanged();
-        listMediaAdapter.notifyDataSetChanged();
 
     }
 

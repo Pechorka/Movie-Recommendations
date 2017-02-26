@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private SearchView searchView;
 
     private String language;
     private String region;
@@ -109,8 +110,9 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setInputType(InputType.TYPE_CLASS_TEXT);
+        searchView.setQueryHint("Search for movies");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -203,9 +205,11 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         movieDrawer();
+                        searchView.setQueryHint("Search movies");
                         break;
                     case 1:
                         tvShowDrawer();
+                        searchView.setQueryHint("Search tvshows");
                         break;
                 }
             }
