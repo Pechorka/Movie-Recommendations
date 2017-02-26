@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private SearchView searchView;
 
     private String language;
     private String region;
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (Utilities.isConnectionAvailable(this)) {
             init();
             setup();
@@ -111,15 +110,20 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setInputType(InputType.TYPE_CLASS_TEXT);
-        searchView.setQueryHint("Search for movies");
+        if (tabLayout.getSelectedTabPosition() == 0) {
+            searchView.setQueryHint(getString(R.string.search_hint_movies));
+        } else {
+            searchView.setQueryHint(getString(R.string.search_hint_tvshows));
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (Utilities.isConnectionAvailable(MainActivity.this)) {
                     //0 - movie tab
                     searchByName(query.replace(' ', '+'), tabLayout.getSelectedTabPosition() == 0);
+
                 }
                 searchView.clearFocus();
                 return true;
@@ -259,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
             menuItem.setIcon(R.drawable.upcoming_icon);
             menuItem.setTitle(R.string.upcoming);
             nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
-        }else {
+        } else {
             menuItem.setIcon(R.drawable.on_air_icon);
             menuItem.setTitle(R.string.on_air);
             nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
@@ -286,10 +290,10 @@ public class MainActivity extends AppCompatActivity {
                 setTitle(R.string.top);
                 break;
             case R.id.nav_upcoming_or_on_air:
-                if(tabLayout.getSelectedTabPosition() == 0){
+                if (tabLayout.getSelectedTabPosition() == 0) {
                     query = Filters.upcoming.toString();
                     setTitle(R.string.upcoming);
-                }else {
+                } else {
                     query = Filters.on_the_air.toString();
                     setTitle(R.string.on_air);
                 }

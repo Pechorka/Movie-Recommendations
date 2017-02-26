@@ -72,4 +72,7 @@
         <item quantity="many">%d эпизодов</item>
         <item quantity="other">%d эпизодов</item>
     </plurals>
+
+    <string name="search_hint_movies">Искать фильмы</string>
+    <string name="search_hint_tvshows">Искать сериалы</string>
 </resources>
