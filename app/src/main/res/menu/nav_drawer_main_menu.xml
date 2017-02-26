@@ -16,6 +16,10 @@
             android:id="@+id/nav_custom"
             android:icon="@drawable/custom_filter_icon"
             android:title="@string/custom" />
+        <item
+            android:id="@+id/nav_upcoming_or_on_air"
+            android:icon="@drawable/upcoming_icon"
+            android:title="@string/upcoming"/>
     </group>
 
     <group

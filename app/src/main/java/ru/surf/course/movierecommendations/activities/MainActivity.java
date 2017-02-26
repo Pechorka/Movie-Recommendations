@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(KEY_GENRE_NAME, genreName);
         context.startActivity(intent);
     }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,9 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
-        nvDrawer.getMenu().getItem(UPCOMING_POSITION + 1).setIcon(R.drawable.upcoming_icon);
-        nvDrawer.getMenu().getItem(0).setChecked(true);
         movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -204,12 +202,10 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        movieDrawer();
-                        searchView.setQueryHint("Search movies");
+                        switchDrawer(true);
                         break;
                     case 1:
-                        tvShowDrawer();
-                        searchView.setQueryHint("Search tvshows");
+                        switchDrawer(false);
                         break;
                 }
             }
@@ -227,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!getIntent().getBooleanExtra(KEY_MOVIE, true)) {
-            tvShowDrawer();
+            switchDrawer(false);
             viewPager.setCurrentItem(1);
             nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -257,32 +253,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void movieDrawer() {
-        nvDrawer.getMenu().removeItem(ON_AIR_POSITION);
-        nvDrawer.getMenu().add(R.id.nav_main, UPCOMING_ID, UPCOMING_POSITION, getResources().getString(R.string.upcoming));
-        nvDrawer.getMenu().getItem(UPCOMING_POSITION + 1).setIcon(R.drawable.upcoming_icon);
+    private void switchDrawer(final boolean movie) {
+        MenuItem menuItem = nvDrawer.getMenu().findItem(R.id.nav_upcoming_or_on_air);
+        if (movie) {
+            menuItem.setIcon(R.drawable.upcoming_icon);
+            menuItem.setTitle(R.string.upcoming);
+            nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
+        }else {
+            menuItem.setIcon(R.drawable.on_air_icon);
+            menuItem.setTitle(R.string.on_air);
+            nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
+        }
         nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItem(item, true);
+                selectDrawerItem(item, movie);
                 return true;
             }
         });
-        nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
-    }
 
-    private void tvShowDrawer() {
-        nvDrawer.getMenu().removeItem(UPCOMING_ID);
-        nvDrawer.getMenu().add(R.id.nav_main, ON_AIR_ID, ON_AIR_POSITION, getResources().getString(R.string.on_air));
-        nvDrawer.getMenu().getItem(ON_AIR_POSITION + 1).setIcon(R.drawable.on_air_icon);
-        nvDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItem(item, false);
-                return true;
-            }
-        });
-        nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
     }
 
     private void selectDrawerItem(MenuItem menuItem, boolean movie) {
@@ -296,13 +285,14 @@ public class MainActivity extends AppCompatActivity {
                 query = Filters.top_rated.toString();
                 setTitle(R.string.top);
                 break;
-            case ON_AIR_ID:
-                query = Filters.on_the_air.toString();
-                setTitle(R.string.on_air);
-                break;
-            case UPCOMING_ID:
-                query = Filters.upcoming.toString();
-                setTitle(R.string.upcoming);
+            case R.id.nav_upcoming_or_on_air:
+                if(tabLayout.getSelectedTabPosition() == 0){
+                    query = Filters.upcoming.toString();
+                    setTitle(R.string.upcoming);
+                }else {
+                    query = Filters.on_the_air.toString();
+                    setTitle(R.string.on_air);
+                }
                 break;
             case R.id.nav_custom:
                 query = Filters.custom.toString();
