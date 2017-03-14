@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,7 @@ public class PersonActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private ViewPager infosPager;
     private View fakeStatusBar;
-    private Button backButton;
+    private Toolbar toolbar;
 
     private int dataLoaded = 0;
 
@@ -101,13 +102,14 @@ public class PersonActivity extends AppCompatActivity {
         appBarLayout = (AppBarLayout) findViewById(R.id.person_appbar_layout);
         infosPager = (ViewPager) findViewById(R.id.person_infos_pager);
         fakeStatusBar = findViewById(R.id.person_fake_status_bar);
-        backButton = (Button) findViewById(R.id.person_back_button);
+        toolbar = (Toolbar)findViewById(R.id.person_toolbar);
     }
 
     private void setupViews() {
-        backButton.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 onBackPressed();
             }
         });
