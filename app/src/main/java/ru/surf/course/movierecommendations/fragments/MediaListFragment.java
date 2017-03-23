@@ -2,39 +2,37 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
-
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.activities.CustomFilterActivity;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
-import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Sergey on 12.02.2017.
@@ -50,9 +48,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private final static String KEY_MOVIE_ID = "id";
     private static final String KEY_MOVIE = "movie?";
 
-    private boolean filterSetupOpen;
+    public static final int GET_GENRES_REQUEST = 1;
+    public final static String KEY_MAX_YEAR = "maxYear";
+    public final static String KEY_MIN_YEAR = "minYear";
+    public final static String KEY_GENRES = "genre_ids";
+    public final static String KEY_SORT_TYPE = "sort_type";
+    public final static String KEY_SORT_DIRECTION = "sort_direction";
+
     private List<T> mediaList;
-    private Map<String, Integer> genres;
     private Tasks task;
     private int page;
     private String query;
@@ -61,19 +64,18 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     private String ids;
     private int id;
     private boolean movie;
+    private String maxYear;
+    private String minYear;
+    private String genre_ids;
+    private String sort_type;
+    private String sort_direction;
 
-    private ChooseGenresDialogFragment genresDialogFragment;
-    private ChooseSortDialogFragment sortDialogFragment;
-    private ChooseSortDirectionDialogFragment sortDirectionFragment;
+
     private RecyclerView recyclerView;
     private GridMediaAdapter gridMediaAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private EndlessRecyclerViewScrollListener scrollListener;
-    private Button callOptions;
-    private Button showGenres;
-    private Button showSort;
-    private Button showSortDirection;
-    private CustomFilterOptions customFilterOptions;
+    private FloatingActionButton showCustomFilterOpt;
 
     public static MediaListFragment newInstance(String query, String language, String region, Tasks task, boolean movie) {
         MediaListFragment mediaListFragment = new MediaListFragment();
@@ -109,19 +111,16 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         ids = query;
         movie = getArguments().getBoolean(KEY_MOVIE);
         page = 1;
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_media_list, container, false);
+        initFields();
         initViews(root);
         setupViews();
         loadInformation(task);
-        if (genres == null) {
-            loadGenres();
-        }
         setHasOptionsMenu(true);
         return root;
     }
@@ -132,6 +131,21 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==GET_GENRES_REQUEST){
+            if(resultCode == RESULT_OK){
+                maxYear = data.getStringExtra(KEY_MAX_YEAR);
+                minYear = data.getStringExtra(KEY_MIN_YEAR);
+                genre_ids = data.getStringExtra(KEY_GENRES);
+                sort_type = data.getStringExtra(KEY_SORT_TYPE);
+                sort_direction = data.getStringExtra(KEY_SORT_DIRECTION);
+                page = 1;
+                loadMediaInfoByCustomFilter(language,String.valueOf(page),region);
+            }
+        }
+    }
 
     @Override
     public void mediaLoaded(List<T> result, boolean newResult) {
@@ -145,6 +159,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         }
     }
 
+    private void initFields(){
+        maxYear = String.valueOf(new GregorianCalendar().get(Calendar.YEAR));
+        minYear = "1930";
+        genre_ids = "";
+        sort_type = CustomFilterActivity.POPULARITY;
+        sort_direction = CustomFilterActivity.DESC;
+    }
+
     private void initViews(View root) {
         recyclerView = (RecyclerView) root.findViewById(R.id.media_list_rv);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -152,14 +174,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         } else {
             staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
         }
-        callOptions = (Button) root.findViewById(R.id.movie_list_call_options);
-        customFilterOptions = (CustomFilterOptions) root.findViewById(R.id.custom_filter_options);
-        showGenres = (Button) root.findViewById(R.id.genres_dialog);
-        showSort = (Button) root.findViewById(R.id.sort_dialog);
-        showSortDirection = (Button) root.findViewById(R.id.sort_direction_dialog);
-        genresDialogFragment = new ChooseGenresDialogFragment();
-        sortDialogFragment = new ChooseSortDialogFragment();
-        sortDirectionFragment = new ChooseSortDirectionDialogFragment();
+        showCustomFilterOpt = (FloatingActionButton)root.findViewById(R.id.media_list_fab);
         gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
         scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
@@ -171,71 +186,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
     }
 
     private void setupViews() {
-
         recyclerView.addOnScrollListener(scrollListener);
-        callOptions.setOnClickListener(new View.OnClickListener() {
+        showCustomFilterOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!filterSetupOpen) {
-                    customFilterOptions.setVisibility(View.VISIBLE);
-                    filterSetupOpen = true;
-                    callOptions.setText(R.string.hide_filter_setup);
-                } else {
-                    customFilterOptions.setVisibility(View.GONE);
-                    filterSetupOpen = false;
-                    callOptions.setText(R.string.show_filter_setup);
-                }
-            }
-        });
-        customFilterOptions.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
-            @Override
-            public void finalValue(Number minValue, Number maxValue) {
-                page = 1;
-                loadInformation(task);
-            }
-        });
-
-        final FragmentManager fm = getActivity().getFragmentManager();
-        showGenres.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                genresDialogFragment.show(fm, "fragment_genres");
-            }
-        });
-        ChooseGenresDialogFragment.SavePressedListener genresSaved = new ChooseGenresDialogFragment.SavePressedListener() {
-            @Override
-            public void saved() {
-                page = 1;
-                loadInformation(task);
-            }
-        };
-        genresDialogFragment.addListener(genresSaved);
-        ChooseSortDialogFragment.SavePressedListener sortTypeSaved = new ChooseSortDialogFragment.SavePressedListener() {
-            @Override
-            public void saved() {
-                page = 1;
-                loadInformation(task);
-            }
-        };
-        sortDialogFragment.addListener(sortTypeSaved);
-        showSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortDialogFragment.show(fm, "fragment_sort");
-            }
-        });
-        ChooseSortDirectionDialogFragment.SavePressedListener directionSaved = new ChooseSortDirectionDialogFragment.SavePressedListener() {
-            @Override
-            public void saved() {
-                page = 1;
-                loadInformation(task);
-            }
-        };
-        sortDirectionFragment.addListener(directionSaved);
-        showSortDirection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortDirectionFragment.show(fm, "fragment_direction_sort");
+                Intent intent = new Intent(getActivity(),CustomFilterActivity.class);
+                intent.putExtra(KEY_SORT_TYPE,sort_type);
+                intent.putExtra(KEY_SORT_DIRECTION,sort_direction);
+                startActivityForResult(intent,GET_GENRES_REQUEST);
             }
         });
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -337,27 +295,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
             getMediaTask = new GetTVShowsTask();
         }
         getMediaTask.addListener(this);
-        String minYear = customFilterOptions.getMinYear() + "-01-01";
-        String maxYear = customFilterOptions.getMaxYear() + "-12-31";
-        Set<Integer> selected = genresDialogFragment.getSelected(getActivity());
-        StringBuilder genres_ids = new StringBuilder();
-        if (selected.size() != 0) {
-            String[] genresNames = getActivity().getResources().getStringArray(R.array.genres);
-            for (Integer s :
-                    selected) {
-                if (genres.containsKey(genresNames[s])) {
-                    genres_ids.append(genres.get(genresNames[s])).append(",");
-                }
-            }
-        }
-        String sortBy = sortDialogFragment.getChosenSort() + "." + sortDirectionFragment.getChosenSortDirection();
-        getMediaTask.getMediaByCustomFilter(language, page, genres_ids.toString(), maxYear, minYear, sortBy, region);
+        String sortBy = sort_type + "." + sort_direction;
+        getMediaTask.getMediaByCustomFilter(language, page, genre_ids, maxYear, minYear, sortBy, region);
         this.page = Integer.parseInt(page);
         task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }
 
     public void setCallOptionsVisibility(int visibility) {
-        callOptions.setVisibility(visibility);
+        showCustomFilterOpt.setVisibility(visibility);
     }
 
     public void dataLoadComplete() {
@@ -375,18 +320,5 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
 
     }
 
-    private void loadGenres() {
-        GetGenresTask.TaskCompletedListener listener = new GetGenresTask.TaskCompletedListener() {
-            @Override
-            public void taskCompleted(Map<String, Integer> result) {
-                if (result != null) {
-                    genres = result;
-                }
-            }
-        };
-        GetGenresTask getGenresTask = new GetGenresTask();
-        getGenresTask.addListener(listener);
-        getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
-    }
 
 }

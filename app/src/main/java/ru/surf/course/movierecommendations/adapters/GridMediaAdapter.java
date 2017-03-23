@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -15,13 +17,12 @@ import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
-import ru.surf.course.movierecommendations.view_holders.GridViewHolder;
 
 /**
  * Created by Sergey on 12.02.2017.
  */
 
-public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
+public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.GridViewHolder> {
     private List<? extends Media> mediaList;
     private Context context;
 
@@ -58,7 +59,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
         if (mediaList.get(position) instanceof MovieInfo) {
             switchContent((MovieInfo) mediaList.get(position));
         } else if (mediaList.get(position) instanceof TVShowInfo) {
-            TvShowActivity.start(context, (TVShowInfo)mediaList.get(position));
+            TvShowActivity.start(context, (TVShowInfo) mediaList.get(position));
         }
     }
 
@@ -70,7 +71,20 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridViewHolder> {
     private void switchContent(MovieInfo movieInfo) {
         if (context == null)
             return;
-        MovieActivity.start(context ,movieInfo);
+        MovieActivity.start(context, movieInfo);
 
+    }
+
+    public static class GridViewHolder extends RecyclerView.ViewHolder {
+
+        public ImageView image;
+        public CardView cardView;
+
+        public GridViewHolder(View itemView) {
+            super(itemView);
+
+            image = (ImageView) itemView.findViewById(R.id.grid_image);
+            cardView = (CardView) itemView.findViewById(R.id.grid_cv);
+        }
     }
 }

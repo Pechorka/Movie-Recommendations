@@ -7,6 +7,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import ru.surf.course.movierecommendations.R;
+
 /**
  * Created by andrew on 12/4/16.
  */
@@ -19,6 +21,7 @@ public class ImageLoader {
     public static void putPoster(Context context, String path, ImageView target, sizes size) {
         Picasso.with(context)
                 .load(TMDB_BASE_POSTER_URL + size.toString() + "/" + path)
+                .placeholder(R.drawable.placeholder_large_dark)
                 .noFade()
                 .resize(target.getLayoutParams().width, target.getLayoutParams().height)
                 .centerCrop()

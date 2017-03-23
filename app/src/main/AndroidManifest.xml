@@ -18,21 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.GalleryActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-
-        <activity android:name=".activities.MovieActivity"
-                  android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
-
-        <activity android:name=".activities.PersonActivity"
-                  android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
-
-        <activity android:name=".activities.TvShowActivity"
-                  android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
-
+        <activity
+            android:name=".activities.MovieActivity"
+            android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent" />
+        <activity
+            android:name=".activities.PersonActivity"
+            android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent" />
+        <activity
+            android:name=".activities.TvShowActivity"
+            android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent" />
         <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.CustomFilterActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>

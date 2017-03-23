@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.models.Genre;
 
 /**
  * Created by Sergey on 06.02.2017.
  */
 
-public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> {
+public class GetGenresTask extends AsyncTask<Tasks, Void, List<Genre>> {
 
     private final String API_KEY_PARAM = "api_key";
 
@@ -34,7 +35,7 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
     private List<GetGenresTask.TaskCompletedListener> listeners = new ArrayList<>();
 
     @Override
-    protected Map<String, Integer> doInBackground(Tasks... params) {
+    protected List<Genre> doInBackground(Tasks... params) {
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
 
@@ -101,13 +102,13 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
     }
 
     @Override
-    protected void onPostExecute(Map<String, Integer> movieInfos) {
-        invokeEvent(movieInfos);
+    protected void onPostExecute(List<Genre> genres) {
+        invokeEvent(genres);
     }
 
-    private void invokeEvent(Map<String, Integer> result) {
+    private void invokeEvent(List<Genre> genres) {
         for (GetGenresTask.TaskCompletedListener listener : listeners)
-            listener.taskCompleted(result);
+            listener.taskCompleted(genres);
     }
 
     public void addListener(GetGenresTask.TaskCompletedListener toAdd) {
@@ -118,17 +119,19 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
         execute(task);
     }
 
-    private Map<String, Integer> parseJson(String jsonStr) throws JSONException {
+
+    private List<Genre> parseJson(String jsonStr) throws JSONException {
         final String TMDB_GENRES = "genres";
         final String TMDB_ID = "id";
         final String TMDB_NAME = "name";
 
         JSONObject genreJson = new JSONObject(jsonStr);
-        HashMap<String, Integer> result = new HashMap<>();
+        List<Genre> result = new ArrayList<>();
         JSONArray genresArray = genreJson.getJSONArray(TMDB_GENRES);
+        Genre genre;
         for (int i = 0; i < genresArray.length(); i++) {
-            result.put(genresArray.getJSONObject(i).getString(TMDB_NAME)
-                    , genresArray.getJSONObject(i).getInt(TMDB_ID));
+            genre = new Genre(genresArray.getJSONObject(i).getInt(TMDB_ID),genresArray.getJSONObject(i).getString(TMDB_NAME));
+            result.add(genre);
         }
         return result;
     }
@@ -143,7 +146,7 @@ public class GetGenresTask extends AsyncTask<Tasks, Void, Map<String, Integer>> 
 
 
     public interface TaskCompletedListener {
-        void taskCompleted(Map<String, Integer> result);
+        void taskCompleted(List<Genre> genres);
     }
 
 }
