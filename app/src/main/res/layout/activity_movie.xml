@@ -43,13 +43,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/status_bar_height">
 
-            <Button
-                android:id="@+id/movie_back_button"
-                android:layout_width="@dimen/back_button_size"
-                android:layout_height="@dimen/back_button_size"
-                android:layout_alignBaseline="@+id/movie_title"
-                android:background="@drawable/ic_action_back"/>
-
             <TextView
                 android:id="@+id/movie_title"
                 style="@style/Header"
@@ -128,6 +121,12 @@
             android:background="@color/colorAccent"
             android:visibility="gone"
             android:alpha="0"/>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/movie_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"/>
 
     </LinearLayout>
 
