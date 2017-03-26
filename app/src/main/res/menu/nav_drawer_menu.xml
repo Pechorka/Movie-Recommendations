@@ -20,6 +20,10 @@
             android:id="@+id/nav_upcoming_or_on_air"
             android:icon="@drawable/upcoming_icon"
             android:title="@string/upcoming"/>
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/favorite_icon"
+            android:title="@string/favorites" />
     </group>
 
     <group

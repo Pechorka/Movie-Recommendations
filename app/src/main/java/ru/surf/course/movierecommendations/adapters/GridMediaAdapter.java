@@ -57,7 +57,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
 
     private void fragmentToSwitch(int position) {
         if (mediaList.get(position) instanceof MovieInfo) {
-            switchContent((MovieInfo) mediaList.get(position));
+            MovieActivity.start(context, (MovieInfo) mediaList.get(position));
         } else if (mediaList.get(position) instanceof TVShowInfo) {
             TvShowActivity.start(context, (TVShowInfo) mediaList.get(position));
         }
@@ -65,14 +65,6 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
 
     public void setMediaList(List<? extends Media> list) {
         mediaList = list;
-    }
-
-
-    private void switchContent(MovieInfo movieInfo) {
-        if (context == null)
-            return;
-        MovieActivity.start(context, movieInfo);
-
     }
 
     public static class GridViewHolder extends RecyclerView.ViewHolder {

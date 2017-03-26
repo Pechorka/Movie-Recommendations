@@ -31,8 +31,16 @@
             android:name=".activities.TvShowActivity"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent" />
         <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.CustomFilterActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".activities.CustomFilterActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".activities.FavoritesActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

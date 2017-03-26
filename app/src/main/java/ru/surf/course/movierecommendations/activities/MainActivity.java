@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -302,6 +301,9 @@ public class MainActivity extends AppCompatActivity {
                 query = Filters.custom.toString();
                 setTitle(R.string.custom);
                 break;
+            case R.id.nav_favorite:
+                start(this, FavoritesActivity.class);
+                return;
             case R.id.nav_settings:
                 start(this, SettingsActivity.class);
                 return;

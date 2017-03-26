@@ -113,4 +113,6 @@
     <string name="sort_avg_votes">Sort by average votes</string>
     <string name="in_descending_order">in descending order</string>
     <string name="in_ascending_order">In ascending order</string>
+    <string name="favorites">Favorites</string>
+    <string name="favorites_activity_msg">There is no favorites yet</string>
 </resources>
