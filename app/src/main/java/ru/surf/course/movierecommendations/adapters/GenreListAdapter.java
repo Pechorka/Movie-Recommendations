@@ -54,6 +54,15 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 checked[holder.getAdapterPosition()]=isChecked;
+
+            }
+        });
+
+        holder.genreName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checked[holder.getAdapterPosition()]=!checked[holder.getAdapterPosition()];
+                holder.checkBox.setChecked(checked[holder.getAdapterPosition()]);
             }
         });
     }
