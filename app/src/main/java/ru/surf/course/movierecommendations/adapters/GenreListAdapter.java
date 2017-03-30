@@ -10,10 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Genre;
@@ -90,19 +87,6 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
         saveChecked(checked,context);
     }
 
-    public static class GenreViewHolder extends RecyclerView.ViewHolder {
-
-        public CheckBox checkBox;
-        public TextView genreName;
-
-        public GenreViewHolder(View itemView) {
-            super(itemView);
-
-            checkBox = (CheckBox)itemView.findViewById(R.id.genre_list_checkbox);
-            genreName = (TextView)itemView.findViewById(R.id.genre_list_name);
-        }
-    }
-
     private boolean saveChecked(boolean[] array, Context context) {
         SharedPreferences prefs = context.getSharedPreferences(GENRES_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -122,5 +106,18 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
         for (int i = 0; i < size; i++)
             array[i] = prefs.getBoolean(CHECKED_ARRAY + "_" + i, false);
         return array;
+    }
+
+    public static class GenreViewHolder extends RecyclerView.ViewHolder {
+
+        public CheckBox checkBox;
+        public TextView genreName;
+
+        public GenreViewHolder(View itemView) {
+            super(itemView);
+
+            checkBox = (CheckBox) itemView.findViewById(R.id.genre_list_checkbox);
+            genreName = (TextView) itemView.findViewById(R.id.genre_list_name);
+        }
     }
 }
