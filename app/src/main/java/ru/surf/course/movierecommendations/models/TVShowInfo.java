@@ -2,6 +2,8 @@ package ru.surf.course.movierecommendations.models;
 
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,13 +18,21 @@ public class TVShowInfo extends Media implements Serializable {
 
     private final String LOG_TAG = getClass().getSimpleName();
 
+    @SerializedName("episode_run_time")
     private List<Double> mEpisodesRuntime;
+    @SerializedName("number_of_episodes")
     private int mNumberOfEpisodes;
+    @SerializedName("number_of_seasons")
     private int mNumberOfSeasons;
+    @SerializedName("type")
     private String mType;
+    @SerializedName("origin_country")
     private List<String> originCountryList;
+    @SerializedName("seasons")
     private List<Season> seasonList;
+    @SerializedName("homepage")
     private String homePage;
+    @SerializedName("networks")
     private List<Network> networks;
 
     public TVShowInfo(int id) {

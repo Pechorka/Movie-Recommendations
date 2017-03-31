@@ -12,16 +12,18 @@ public class SplachActivity extends AppCompatActivity {
     public static final String KEY_RECOMMENDATIONS_SETUP = "rec_setup";
     public static final String KEY_IS_SETUP = "is_setup";
 
+    private final static long startDelay = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splach);
-        delayAndRunActivity(3000, MainActivity.class);
-//        if (checkSetup()) {
-//            delayAndRunActivity(3000, MainActivity.class);
-//        } else {
-//            delayAndRunActivity(3000, RecommendationsSetupActivity.class);
-//        }
+//        delayAndRunActivity(startDelay, MainActivity.class);
+        if (checkSetup()) {
+            delayAndRunActivity(startDelay, MainActivity.class);
+        } else {
+            delayAndRunActivity(startDelay, RecommendationsSetupActivity.class);
+        }
     }
 
     //delay - в миллисекундах

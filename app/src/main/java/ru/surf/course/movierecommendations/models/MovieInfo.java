@@ -1,27 +1,40 @@
 package ru.surf.course.movierecommendations.models;
 
-import android.graphics.Bitmap;
 import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MovieInfo extends Media implements Serializable{
 
     private final String LOG_TAG = getClass().getSimpleName();
 
+    @SerializedName("revenue")
     private String mRevenue;
+    @SerializedName("runtime")
     private int mRuntime;
 
     public MovieInfo(int id) {
         super(id);
+    }
+
+    public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
+        if (imageIDs.length != names.length) {
+            throw new IllegalArgumentException("Length of arrays should be same");
+        }
+        List<MovieInfo> movieInfoList = new ArrayList<>();
+        MovieInfo movieInfo;
+        for (int i = 0; i < imageIDs.length; i++) {
+            movieInfo = new MovieInfo(imageIDs[i]);
+            movieInfo.mTitle = names[i];
+            movieInfoList.add(movieInfo);
+        }
+        return movieInfoList;
     }
 
     public String getRevenue() {
@@ -38,20 +51,6 @@ public class MovieInfo extends Media implements Serializable{
 
     public void setRuntime(int runtime) {
         this.mRuntime = runtime;
-    }
-
-    public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
-        if (imageIDs.length != names.length) {
-            throw new IllegalArgumentException("Length of arrays should be same");
-        }
-        List<MovieInfo> movieInfoList = new ArrayList<>();
-        MovieInfo movieInfo;
-        for (int i = 0; i < imageIDs.length; i++) {
-            movieInfo = new MovieInfo(imageIDs[i]);
-            movieInfo.mTitle = names[i];
-            movieInfoList.add(movieInfo);
-        }
-        return movieInfoList;
     }
 
     public void fillFields(Object from) {

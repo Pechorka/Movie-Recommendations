@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.net.URL;
 
@@ -9,9 +11,13 @@ import java.net.URL;
 
 public class Review implements Serializable{
 
+    @SerializedName("id")
     private String mId;
+    @SerializedName("author")
     private String mAuthor;
+    @SerializedName("content")
     private String mContent;
+    @SerializedName("url")
     private URL mURL;
 
     public Review(String id) {

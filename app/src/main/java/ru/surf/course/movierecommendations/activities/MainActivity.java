@@ -25,12 +25,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
+import ru.surf.course.movierecommendations.models.RecommendedGenres;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -174,11 +177,21 @@ public class MainActivity extends AppCompatActivity {
             tvShowListFragment = MediaListFragment.newInstance(query,
                     language, region, Tasks.SEARCH_BY_GENRE, false);
         } else {
-            query = Filters.popular.toString();
-            movieListFragment = MediaListFragment.newInstance(query,
-                    language, region, Tasks.SEARCH_BY_FILTER, true);
-            tvShowListFragment = MediaListFragment.newInstance(query,
-                    language, region, Tasks.SEARCH_BY_FILTER, false);
+            if (getRecommendedGenreIds(true).length() != 0) {
+                query = getRecommendedGenreIds(false);
+                tvShowListFragment = MediaListFragment.newInstance(query,
+                        language, region, Tasks.SEARCH_RECOMMENDED_MEDIA, false);
+
+                query = getRecommendedGenreIds(true);
+                movieListFragment = MediaListFragment.newInstance(query,
+                        language, region, Tasks.SEARCH_RECOMMENDED_MEDIA, true);
+            } else {
+                query = Filters.popular.toString();
+                movieListFragment = MediaListFragment.newInstance(query,
+                        language, region, Tasks.SEARCH_BY_FILTER, true);
+                tvShowListFragment = MediaListFragment.newInstance(query,
+                        language, region, Tasks.SEARCH_BY_FILTER, false);
+            }
         }
 
     }
@@ -222,7 +235,13 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().hasExtra(KEY_GENRE_NAME)) {
             setTitle(getIntent().getStringExtra(KEY_GENRE_NAME));
         } else {
-            setTitle(R.string.popular);
+            if (query.equals(Filters.popular.toString())) {
+                setTitle(R.string.popular);
+                nvDrawer.getMenu().getItem(1).setChecked(true);
+            } else {
+                nvDrawer.getMenu().getItem(0).setChecked(true);
+                setTitle(R.string.recommend);
+            }
         }
 
         if (!getIntent().getBooleanExtra(KEY_MOVIE, true)) {
@@ -280,6 +299,10 @@ public class MainActivity extends AppCompatActivity {
     private void selectDrawerItem(MenuItem menuItem, boolean movie) {
         previousQuery = query;
         switch (menuItem.getItemId()) {
+            case R.id.nav_recommended:
+                query = getRecommendedGenreIds(movie);
+                setTitle(R.string.recommend);
+                break;
             case R.id.nav_popular:
                 query = Filters.popular.toString();
                 setTitle(R.string.popular);
@@ -318,7 +341,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             tvshowLastDrawerItemId = menuItem.getItemId();
         }
-        loadInformationByFilter(movie);
+        if (Filters.isFilter(query)) {
+            loadInformationByFilter(movie);
+        } else {
+            loadInformationByGenreIds(getRecommendedGenreIds(movie), movie);
+        }
         mDrawer.closeDrawers();
     }
 
@@ -356,13 +383,27 @@ public class MainActivity extends AppCompatActivity {
         loadInformationBySearchQuery(movie);
     }
 
-    public void loadInformationByGenreIds(String genreIds, boolean movie) {
+    private void loadInformationByGenreIds(String genreIds, boolean movie) {
         if (movie) {
             movieListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
         } else {
             tvShowListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
         }
         query = genreIds;
+    }
+
+    private String getRecommendedGenreIds(boolean movie) {
+        List<? extends RecommendedGenres> ids;
+        if (movie) {
+            ids = DBHelper.getHelper(this).getAllRecommendedMovieGenres();
+        } else {
+            ids = DBHelper.getHelper(this).getAllRecommendedTVShowGenres();
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < ids.size(); i++) {
+            builder.append(ids.get(i).getGenre_id()).append(", ");
+        }
+        return builder.toString();
     }
 
     public void switchContent(int id, Fragment fragment) {

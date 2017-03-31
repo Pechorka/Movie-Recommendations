@@ -3,14 +3,13 @@ package ru.surf.course.movierecommendations.models;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import ru.surf.course.movierecommendations.models.Credit;
-import ru.surf.course.movierecommendations.models.TmdbImage;
 
 /**
  * Created by andrew on 08-Feb-17.
@@ -20,25 +19,44 @@ public class Media implements Serializable {
 
     private final String LOG_TAG = getClass().getSimpleName();
 
+    @SerializedName("name")
     protected String mTitle;
+    @SerializedName("original_name")
     protected String mOriginalTitle;
+    @SerializedName("original_language")
     protected Locale mOriginalLanguage;
+    @SerializedName("genres")
     protected List<Genre> mGenres;
+    @SerializedName("genre_ids")
+    protected List<Integer> mGenresIds;
+    @SerializedName("poster_path")
     protected String mPosterPath;
     protected List<TmdbImage> mBackdrops;
     protected Bitmap mPosterBitmap;
+    @SerializedName("overview")
     protected String mOverview;
+    @SerializedName("release_date")
     protected Date mDate;
+    @SerializedName("backdrop_path")
     protected String mBackdropPath;
+    @SerializedName("vote_average")
     protected Double mVoteAverage;
+    @SerializedName("vote_count")
     protected int mVoteCount;
+    @SerializedName("id")
     protected int mId;
+    @SerializedName("budget")
     protected String mBudget;
+    @SerializedName("production_companies")
     protected List<String> mProductionCompaniesNames;
+    @SerializedName("production_countries")
     protected List<String> mProductionCountriesNames;
     protected Locale mInfoLanguage;
+    @SerializedName("status")
     protected String mStatus;
+    @SerializedName("credits")
     protected List<Credit> mCredits;
+    @SerializedName("reviews")
     protected List<Review> mReviews;
 
 
@@ -85,6 +103,14 @@ public class Media implements Serializable {
 
     public void setPosterPath(String posterPath) {
         this.mPosterPath = posterPath;
+    }
+
+    public List<Integer> getmGenresIds() {
+        return mGenresIds;
+    }
+
+    public void setmGenresIds(List<Integer> mGenresIds) {
+        this.mGenresIds = mGenresIds;
     }
 
     public List<TmdbImage> getBackdrops() {

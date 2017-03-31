@@ -1,6 +1,5 @@
 package ru.surf.course.movierecommendations.fragments;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +13,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,8 +21,8 @@ import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.activities.CustomFilterActivity;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
-import ru.surf.course.movierecommendations.custom_views.CustomFilterOptions;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
@@ -40,21 +38,19 @@ import static android.app.Activity.RESULT_OK;
 
 public class MediaListFragment<T extends Media> extends Fragment implements GetMediaTask.TaskCompletedListener<T> {
 
-    private final static String KEY_QUERY = "query";
-    private final static String KEY_GRID_POS = "grid_pos";
-    private final static String KEY_LANGUAGE = "language";
-    private final static String KEY_REGION = "region";
-    private final static String KEY_TASK = "task";
-    private final static String KEY_MOVIE_ID = "id";
-    private static final String KEY_MOVIE = "movie?";
-
     public static final int GET_GENRES_REQUEST = 1;
     public final static String KEY_MAX_YEAR = "maxYear";
     public final static String KEY_MIN_YEAR = "minYear";
     public final static String KEY_GENRES = "genre_ids";
     public final static String KEY_SORT_TYPE = "sort_type";
     public final static String KEY_SORT_DIRECTION = "sort_direction";
-
+    private final static String KEY_QUERY = "query";
+    private final static String KEY_GRID_POS = "grid_pos";
+    private final static String KEY_LANGUAGE = "language";
+    private final static String KEY_REGION = "region";
+    private final static String KEY_TASK = "task";
+    private final static String KEY_MEDIA_ID = "id";
+    private static final String KEY_MOVIE = "movie?";
     private List<T> mediaList;
     private Tasks task;
     private int page;
@@ -93,7 +89,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         MediaListFragment mediaListFragment = new MediaListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_LANGUAGE, language);
-        bundle.putInt(KEY_MOVIE_ID, id);
+        bundle.putInt(KEY_MEDIA_ID, id);
         bundle.putSerializable(KEY_TASK, task);
         bundle.putBoolean(KEY_MOVIE, movie);
         mediaListFragment.setArguments(bundle);
@@ -107,7 +103,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         language = getArguments().getString(KEY_LANGUAGE);
         region = getArguments().getString(KEY_REGION);
         task = (Tasks) getArguments().getSerializable(KEY_TASK);
-        id = getArguments().getInt(KEY_MOVIE_ID);
+        id = getArguments().getInt(KEY_MEDIA_ID);
         ids = query;
         movie = getArguments().getBoolean(KEY_MOVIE);
         page = 1;
@@ -193,6 +189,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 Intent intent = new Intent(getActivity(),CustomFilterActivity.class);
                 intent.putExtra(KEY_SORT_TYPE,sort_type);
                 intent.putExtra(KEY_SORT_DIRECTION,sort_direction);
+                intent.putExtra(MainActivity.KEY_MOVIE, movie);
                 startActivityForResult(intent,GET_GENRES_REQUEST);
             }
         });
@@ -211,6 +208,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
                 loadMediaInfoByCustomFilter(language, String.valueOf(page), region);
                 break;
             case SEARCH_BY_GENRE:
+            case SEARCH_RECOMMENDED_MEDIA:
             case SEARCH_BY_KEYWORD:
                 loadMediaInfoByIds(ids, language, String.valueOf(page), region, task);
                 break;
@@ -256,6 +254,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         }
         getMediaTask.addListener(this);
         switch (task) {
+            case SEARCH_RECOMMENDED_MEDIA:
             case SEARCH_BY_GENRE:
                 getMediaTask.getMediaByGenre(ids, language, page, region);
                 break;

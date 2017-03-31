@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,9 @@ import java.io.Serializable;
 
 public class Credit implements Serializable {
 
+    @SerializedName("id")
     protected String mCreditId;
+    @SerializedName("person")
     protected Person mPerson;
     protected Media mMedia;
 

@@ -64,6 +64,7 @@ public class GetTVShowsTask extends GetMediaTask {
         try {
 
             Uri builtUri;
+            params[0] = prepareForUri(params[0]);
             switch (task) {
                 case SEARCH_BY_FILTER:
                     builtUri = uriByFilter(params[0], languageName, page, region);
@@ -75,7 +76,7 @@ public class GetTVShowsTask extends GetMediaTask {
                     builtUri = uriByName(params[0], languageName, page);
                     break;
                 case SEARCH_BY_GENRE:
-                    builtUri = uriByGenres(params[0], languageName, page, region);
+                    builtUri = uriByGenreIds(params[0], languageName, page, region);
                     break;
                 case SEARCH_SIMILAR:
                     builtUri = uriForSimilar(params[0], languageName, page);
@@ -447,15 +448,15 @@ public class GetTVShowsTask extends GetMediaTask {
         return uri.build();
     }
 
-    private Uri uriByGenres(String genreIDs, String language, String page, String region) {
+    private Uri uriByGenreIds(String genreIDs, String language, String page, String region) {
         final String TMDB_BASE_URL = "https://api.themoviedb.org/3/discover/tv?";
         //TODO add sort
         return Uri.parse(TMDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .appendQueryParameter(PAGE_PARAM, page)
-                .appendQueryParameter(REGION, region)
                 .appendQueryParameter(WITH_GENRES, genreIDs)
+                .appendQueryParameter(REGION, region)
                 .build();
     }
 
@@ -483,6 +484,10 @@ public class GetTVShowsTask extends GetMediaTask {
     private void invokeEvent(List<? extends Media> result) {
         for (TaskCompletedListener listener : listeners)
             listener.mediaLoaded(result, newResult);
+    }
+
+    private String prepareForUri(String filter) {
+        return filter.toLowerCase().replace(' ', '_');
     }
 
 }

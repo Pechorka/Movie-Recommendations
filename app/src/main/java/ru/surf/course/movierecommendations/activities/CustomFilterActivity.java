@@ -1,9 +1,8 @@
 package ru.surf.course.movierecommendations.activities;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,13 +13,11 @@ import android.widget.RadioGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.custom_views.YearsRangeBar;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.models.Genre;
-import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -40,6 +37,7 @@ public class CustomFilterActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
 
     private List<Genre> genres;
+    private boolean movie;
 
 
     @Override
@@ -98,6 +96,9 @@ public class CustomFilterActivity extends AppCompatActivity {
         genres = new ArrayList<>();
         genreListAdapter = new GenreListAdapter(genres,this);
         linearLayoutManager = new LinearLayoutManager(this);
+        if (getIntent().hasExtra(MainActivity.KEY_MOVIE)) {
+            movie = getIntent().getBooleanExtra(MainActivity.KEY_MOVIE, true);
+        }
     }
 
     private void setupView(){
@@ -146,7 +147,12 @@ public class CustomFilterActivity extends AppCompatActivity {
         };
         GetGenresTask getGenresTask = new GetGenresTask();
         getGenresTask.addListener(listener);
-        getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
+        if (movie) {
+            getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
+        } else {
+            getGenresTask.getGenres(Tasks.GET_TV_GENRES);
+        }
+
     }
 
     private String getSortType(){

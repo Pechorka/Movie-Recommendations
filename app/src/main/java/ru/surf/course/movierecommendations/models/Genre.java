@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,9 @@ import java.io.Serializable;
 
 public class Genre implements Serializable {
 
+    @SerializedName("id")
     private int mId;
+    @SerializedName("name")
     private String mName;
 
     public Genre(int id, String name) {

@@ -115,4 +115,5 @@
     <string name="in_ascending_order">In ascending order</string>
     <string name="favorites">Favorites</string>
     <string name="favorites_activity_msg">There is no favorites yet</string>
+    <string name="recommend">Recommendations</string>
 </resources>

@@ -83,7 +83,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.Favo
 
 
     private void loadFavoriteInfo(int id, FavoriteType type) {
-        GetMediaTask getTask = null;
+        GetMediaTask getTask;
         switch (type) {
             case movie:
                 getTask = new GetMoviesTask();
