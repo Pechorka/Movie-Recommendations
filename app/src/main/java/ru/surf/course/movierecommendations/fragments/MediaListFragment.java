@@ -132,8 +132,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements GetM
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==GET_GENRES_REQUEST){
             if(resultCode == RESULT_OK){
-                maxYear = data.getStringExtra(KEY_MAX_YEAR);
-                minYear = data.getStringExtra(KEY_MIN_YEAR);
+                maxYear = String.valueOf(data.getIntExtra(KEY_MAX_YEAR, new GregorianCalendar().get(Calendar.YEAR)));
+                minYear = String.valueOf(data.getIntExtra(KEY_MIN_YEAR, 1930));
                 genre_ids = data.getStringExtra(KEY_GENRES);
                 sort_type = data.getStringExtra(KEY_SORT_TYPE);
                 sort_direction = data.getStringExtra(KEY_SORT_DIRECTION);
