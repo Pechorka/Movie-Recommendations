@@ -14,6 +14,8 @@
     <dimen name="content_top_padding">10dp</dimen>
     <dimen name="content_left_padding">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="toolbarButtonSize">32dp</dimen>
+    <dimen name="toolbarMarginHorizontal">12dp</dimen>
 
     <!-- movie activity dimens-->
     <dimen name="movie_info_release_date_text_size">17sp</dimen>

@@ -25,9 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.MovieInfosPagerAdapter;
+import ru.surf.course.movierecommendations.custom_views.FavoriteButton;
+import ru.surf.course.movierecommendations.models.Favorite;
+import ru.surf.course.movierecommendations.models.FavoriteType;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
@@ -46,6 +50,8 @@ public class MovieActivity extends AppCompatActivity {
     final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
+    private DBHelper dbHelper;
+
     private ProgressBar progressBar;
     private TextView title;
     private TextView releaseDate;
@@ -57,6 +63,7 @@ public class MovieActivity extends AppCompatActivity {
     private ViewPager infosPager;
     private TextView originalTitle;
     private Toolbar toolbar;
+    private FavoriteButton favoriteButton;
 
     private int dataLoaded = 0;
 
@@ -81,8 +88,13 @@ public class MovieActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_movie);
 
+        init();
         initViews();
         setupViews();
+    }
+
+    private void init() {
+        dbHelper = DBHelper.getHelper(this);
     }
 
     private void initViews() {
@@ -100,6 +112,7 @@ public class MovieActivity extends AppCompatActivity {
         infosPager = (ViewPager) findViewById(R.id.movie_info_infos_pager);
         originalTitle = (TextView)findViewById(R.id.movie_original_title);
         toolbar = (Toolbar)findViewById(R.id.movie_toolbar);
+        favoriteButton = (FavoriteButton)findViewById(R.id.movie_favorite_button);
     }
 
     private void setupViews() {
@@ -119,6 +132,20 @@ public class MovieActivity extends AppCompatActivity {
                 if (verticalOffset >= offsetToToolbar) {
                     fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/Utilities.getActionBarHeight(MovieActivity.this));
                 }
+            }
+        });
+
+        if (isInFavorites())
+            favoriteButton.toggle();
+        favoriteButton.setListener(new FavoriteButton.FavoriteButtonListener() {
+            @Override
+            public boolean addedToFavorite() {
+                return true;
+            }
+
+            @Override
+            public boolean removedFromFavorite() {
+                return true;
             }
         });
     }
@@ -219,6 +246,14 @@ public class MovieActivity extends AppCompatActivity {
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }
+    }
+
+    private boolean isInFavorites() {
+        List<Favorite> favorites = dbHelper.getAllFavorites();
+        for (Favorite favorite : favorites)
+            if (favorite.getMediaId() == currentMovie.getId())
+                return true;
+        return false;
     }
 
     public void onGenreClick(Genre genre) {
