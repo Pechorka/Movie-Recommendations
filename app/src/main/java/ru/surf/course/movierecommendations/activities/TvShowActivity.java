@@ -24,12 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.GalleryActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.adapters.TVShowInfosPagerAdapter;
+import ru.surf.course.movierecommendations.custom_views.FavoriteButton;
+import ru.surf.course.movierecommendations.models.Favorite;
+import ru.surf.course.movierecommendations.models.FavoriteType;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
@@ -49,6 +53,8 @@ public class TvShowActivity extends AppCompatActivity {
     final static int DATA_TO_LOAD = 1;
     final String LOG_TAG = getClass().getSimpleName();
 
+    private DBHelper dbHelper;
+
     private ProgressBar progressBar;
     private TextView title;
     private TextView releaseDate;
@@ -60,6 +66,7 @@ public class TvShowActivity extends AppCompatActivity {
     private ViewPager infosPager;
     private TextView originalTitle;
     private Toolbar toolbar;
+    private FavoriteButton favoriteButton;
 
     private int dataLoaded = 0;
 
@@ -84,8 +91,13 @@ public class TvShowActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_tv_show);
 
+        init();
         initViews();
         setupViews();
+    }
+
+    private void init() {
+        dbHelper = DBHelper.getHelper(this);
     }
 
     private void initViews() {
@@ -103,6 +115,7 @@ public class TvShowActivity extends AppCompatActivity {
         infosPager = (ViewPager) findViewById(R.id.tv_show_info_infos_pager);
         originalTitle = (TextView)findViewById(R.id.tv_show_original_title);
         toolbar = (Toolbar)findViewById(R.id.tv_show_toolbar);
+        favoriteButton = (FavoriteButton)findViewById(R.id.tv_show_favorite_button);
     }
 
     private void setupViews() {
@@ -122,6 +135,24 @@ public class TvShowActivity extends AppCompatActivity {
                 if (verticalOffset >= offsetToToolbar) {
                     fakeStatusBar.setAlpha((float)(verticalOffset-offsetToToolbar)/Utilities.getActionBarHeight(TvShowActivity.this));
                 }
+            }
+        });
+
+        favoriteButton.setListener(new FavoriteButton.FavoriteButtonListener() {
+            @Override
+            public boolean addedToFavorite() {
+                Favorite favorite = new Favorite();
+                favorite.setMediaId(currentMovie.getId());
+                favorite.setMediaType(FavoriteType.tvShow);
+                favorite.setTitle(currentMovie.getTitle());
+                favorite.setPosterPath(currentMovie.getPosterPath());
+                dbHelper.addFavorite(favorite);
+                return true;
+            }
+
+            @Override
+            public boolean removedFromFavorite() {
+                return false;
             }
         });
     }
@@ -210,6 +241,8 @@ public class TvShowActivity extends AppCompatActivity {
 
         TVShowInfosPagerAdapter tv_showInfosPagerAdapter = new TVShowInfosPagerAdapter(getSupportFragmentManager(), this, currentMovie);
         infosPager.setAdapter(tv_showInfosPagerAdapter);
+
+        favoriteButton.setInitialState(isInFavorites());
     }
 
     private void dataLoadComplete() {
@@ -222,6 +255,14 @@ public class TvShowActivity extends AppCompatActivity {
             if (progressBarPlaceholder != null)
                 progressBarPlaceholder.setVisibility(View.GONE);
         }
+    }
+
+    private boolean isInFavorites() {
+        List<Favorite> favorites = dbHelper.getAllFavorites();
+        for (Favorite favorite : favorites)
+            if (favorite.getMediaId() == currentMovie.getId())
+                return true;
+        return false;
     }
 
     public void onGenreClick(Genre genre) {

@@ -126,7 +126,16 @@
             android:id="@+id/tv_show_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorTransparent"/>
+            android:background="@color/colorTransparent">
+
+            <ru.surf.course.movierecommendations.custom_views.FavoriteButton
+                android:id="@+id/tv_show_favorite_button"
+                android:layout_width="@dimen/toolbarButtonSize"
+                android:layout_height="@dimen/toolbarButtonSize"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/toolbarMarginHorizontal"/>
+
+        </android.support.v7.widget.Toolbar>
 
     </LinearLayout>
 
