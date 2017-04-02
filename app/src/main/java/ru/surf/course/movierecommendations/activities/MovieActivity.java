@@ -135,17 +135,21 @@ public class MovieActivity extends AppCompatActivity {
             }
         });
 
-        if (isInFavorites())
-            favoriteButton.toggle();
         favoriteButton.setListener(new FavoriteButton.FavoriteButtonListener() {
             @Override
             public boolean addedToFavorite() {
+                Favorite favorite = new Favorite();
+                favorite.setMediaId(currentMovie.getId());
+                favorite.setMediaType(FavoriteType.movie);
+                favorite.setTitle(currentMovie.getTitle());
+                favorite.setPosterPath(currentMovie.getPosterPath());
+                dbHelper.addFavorite(favorite);
                 return true;
             }
 
             @Override
             public boolean removedFromFavorite() {
-                return true;
+                return false;
             }
         });
     }
@@ -234,6 +238,8 @@ public class MovieActivity extends AppCompatActivity {
 
         MovieInfosPagerAdapter movieInfosPagerAdapter = new MovieInfosPagerAdapter(getSupportFragmentManager(), this, currentMovie);
         infosPager.setAdapter(movieInfosPagerAdapter);
+
+        favoriteButton.setInitialState(isInFavorites());
     }
 
     private void dataLoadComplete() {

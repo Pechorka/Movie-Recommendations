@@ -31,6 +31,15 @@ public class FavoriteButton extends AppCompatButton {
         return addedToFavorites;
     }
 
+    public void setInitialState(boolean addedToFavorites) {
+        this.addedToFavorites = addedToFavorites;
+        if (addedToFavorites)
+            this.setBackground(icFavorite);
+        else {
+            this.setBackground(icFavoriteBorder);
+        }
+    }
+
     private void init(Context context) {
         icFavoriteBorder = ContextCompat.getDrawable(context, R.drawable.ic_favorite_border_white);
         icFavorite = ContextCompat.getDrawable(context, R.drawable.ic_favorite_white);
@@ -46,17 +55,19 @@ public class FavoriteButton extends AppCompatButton {
     public void toggle() {
         boolean result = true;
         if (addedToFavorites) {
-            this.setBackground(icFavoriteBorder);
             if (listener != null)
                 result = listener.removedFromFavorite();
-            if (result)
+            if (result) {
                 addedToFavorites = false;
+                this.setBackground(icFavoriteBorder);
+            }
         } else {
-            this.setBackground(icFavorite);
             if (listener != null)
                 result = listener.addedToFavorite();
-            if (result)
+            if (result) {
                 addedToFavorites = true;
+                this.setBackground(icFavorite);
+            }
         }
     }
 
