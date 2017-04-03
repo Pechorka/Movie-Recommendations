@@ -12,12 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import java.util.List;
 import java.util.Locale;
-
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
@@ -33,118 +30,128 @@ import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 
 public class PersonCreditsFragment extends Fragment {
 
-    final static String KEY_PERSON = "person";
-    final static String KEY_PERSON_ID = "person_id";
-    final static int DATA_TO_LOAD = 1;
-    final String LOG_TAG = getClass().getSimpleName();
+  final static String KEY_PERSON = "person";
+  final static String KEY_PERSON_ID = "person_id";
+  final static int DATA_TO_LOAD = 1;
+  final String LOG_TAG = getClass().getSimpleName();
 
-    private ProgressBar progressBar;
-    private Person currentPerson;
-    private RecyclerView mCreditsList;
-    private PersonCreditsListAdapter mPersonCreditsListAdapter;
+  private ProgressBar progressBar;
+  private Person currentPerson;
+  private RecyclerView mCreditsList;
+  private PersonCreditsListAdapter mPersonCreditsListAdapter;
 
-    private int dataLoaded = 0;
+  private int dataLoaded = 0;
 
-    public static PersonCreditsFragment newInstance(Person person) {
-        PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_PERSON, person);
-        personCreditsFragment.setArguments(bundle);
-        return personCreditsFragment;
+  public static PersonCreditsFragment newInstance(Person person) {
+    PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
+    Bundle bundle = new Bundle();
+    bundle.putSerializable(KEY_PERSON, person);
+    personCreditsFragment.setArguments(bundle);
+    return personCreditsFragment;
+  }
+
+  public static PersonCreditsFragment newInstance(int personId) {
+    PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
+    Bundle bundle = new Bundle();
+    bundle.putInt(KEY_PERSON_ID, personId);
+    personCreditsFragment.setArguments(bundle);
+    return personCreditsFragment;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    if (getArguments() == null) {
+      onDestroy();
     }
 
-    public static PersonCreditsFragment newInstance(int personId) {
-        PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(KEY_PERSON_ID, personId);
-        personCreditsFragment.setArguments(bundle);
-        return personCreditsFragment;
+    View root = inflater.inflate(R.layout.fragment_person_credits, container, false);
+    initViews(root);
+    setupViews(root);
+
+    return root;
+  }
+
+  private void initViews(View root) {
+    progressBar = (ProgressBar) root.findViewById(R.id.person_credits_progress_bar);
+    if (progressBar != null) {
+      progressBar.setIndeterminate(true);
+      progressBar.getIndeterminateDrawable()
+          .setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent),
+              PorterDuff.Mode.MULTIPLY);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (getArguments() == null)
-            onDestroy();
+    mCreditsList = (RecyclerView) root.findViewById(R.id.person_credits_credits_list);
+  }
 
-        View root = inflater.inflate(R.layout.fragment_person_credits, container, false);
-        initViews(root);
-        setupViews(root);
+  private void setupViews(View root) {
+    mCreditsList.setLayoutManager(
+        new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+  }
 
-        return root;
+  @Override
+  public void onViewCreated(View view, Bundle savedInstanceState) {
+    dataLoaded = 0;
+    if (getArguments().containsKey(KEY_PERSON)) {
+      currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
+    } else if (getArguments().containsKey(KEY_PERSON_ID)) {
+      currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
     }
+    loadCredits(currentPerson);
+  }
 
-    private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_credits_progress_bar);
-        if (progressBar != null) {
-            progressBar.setIndeterminate(true);
-            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+  private void loadCredits(final Person person) {
+    GetCreditsTask getCreditsTask = new GetCreditsTask();
+    getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
+      @Override
+      public void taskCompleted(List<Credit> result) {
+        person.setCredits(result);
+        dataLoadComplete();
+      }
+    });
+    getCreditsTask.getPersonCredits(currentPerson.getId(), getCurrentLocale());
+  }
+
+  private void fillInformation() {
+    mPersonCreditsListAdapter = new PersonCreditsListAdapter(getActivity(),
+        currentPerson.getCredits());
+    mPersonCreditsListAdapter.setListener(new PersonCreditsListAdapter.OnItemClickListener() {
+      @Override
+      public void onClick(int position) {
+
+        Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
+        if (media instanceof MovieInfo) {
+          MovieActivity.start(getActivity(), (MovieInfo) media);
+        } else if (media instanceof TVShowInfo) {
+          return;
         }
 
-        mCreditsList = (RecyclerView) root.findViewById(R.id.person_credits_credits_list);
-    }
+      }
+    });
+    mCreditsList.setAdapter(mPersonCreditsListAdapter);
+  }
 
-    private void setupViews(View root) {
-        mCreditsList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        dataLoaded = 0;
-        if (getArguments().containsKey(KEY_PERSON)) {
-            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
-        } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
-        }
-        loadCredits(currentPerson);
-    }
-
-    private void loadCredits(final Person person) {
-        GetCreditsTask getCreditsTask = new GetCreditsTask();
-        getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
-            @Override
-            public void taskCompleted(List<Credit> result) {
-                person.setCredits(result);
-                dataLoadComplete();
-            }
-        });
-        getCreditsTask.getPersonCredits(currentPerson.getId(), getCurrentLocale());
-    }
-
-    private void fillInformation() {
-        mPersonCreditsListAdapter = new PersonCreditsListAdapter(getActivity(), currentPerson.getCredits());
-        mPersonCreditsListAdapter.setListener(new PersonCreditsListAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-
-                Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
-                if (media instanceof MovieInfo)
-                    MovieActivity.start(getActivity(), (MovieInfo) media);
-                else if (media instanceof TVShowInfo)
-                    return;
-
-            }
-        });
-        mCreditsList.setAdapter(mPersonCreditsListAdapter);
-    }
-
-    private void dataLoadComplete() {
-        dataLoaded++;
-        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-        if (dataLoaded == DATA_TO_LOAD) {
-            fillInformation();
-            View progressBarPlaceholder = null;
-            if (getView() != null)
-                progressBarPlaceholder = getView().findViewById(R.id.person_credits_progress_bar_placeholder);
-            if (progressBarPlaceholder != null)
-                progressBarPlaceholder.setVisibility(View.GONE);
-
-        }
+  private void dataLoadComplete() {
+    dataLoaded++;
+    Log.v(LOG_TAG, "data loaded:" + dataLoaded);
+    if (dataLoaded == DATA_TO_LOAD) {
+      fillInformation();
+      View progressBarPlaceholder = null;
+      if (getView() != null) {
+        progressBarPlaceholder = getView()
+            .findViewById(R.id.person_credits_progress_bar_placeholder);
+      }
+      if (progressBarPlaceholder != null) {
+        progressBarPlaceholder.setVisibility(View.GONE);
+      }
 
     }
 
-    private Locale getCurrentLocale() {
-        return Locale.getDefault();
-    }
+  }
+
+  private Locale getCurrentLocale() {
+    return Locale.getDefault();
+  }
 
 }

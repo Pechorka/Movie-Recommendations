@@ -1,146 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <TextView
+      android:id="@+id/person_info_facts_hint"
+      style="@style/InfoHintHeader"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/person_info_biography_placeholder"
+      android:layout_alignStart="@+id/person_info_biography_placeholder"
+      android:text="@string/facts" />
+
+    <TextView
+      android:id="@+id/person_info_gender_hint"
+      style="@style/InfoHint"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@id/person_info_facts_hint"
+      android:layout_alignStart="@id/person_info_facts_hint"
+      android:layout_below="@id/person_info_facts_hint"
+      android:text="@string/gender" />
+
+    <TextView
+      android:id="@+id/person_info_gender"
+      style="@style/InfoFact"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/fact_hint_spacing"
+      android:layout_marginLeft="@dimen/fact_hint_spacing"
+      android:layout_alignBottom="@id/person_info_gender_hint"
+      android:layout_toEndOf="@id/person_info_gender_hint"
+      android:layout_toRightOf="@id/person_info_gender_hint"
+      android:text="@string/unknown" />
+
+    <TextView
+      android:id="@+id/person_info_place_of_birth_hint"
+      style="@style/InfoHint"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@id/person_info_facts_hint"
+      android:layout_alignStart="@id/person_info_facts_hint"
+      android:layout_below="@id/person_info_gender_hint"
+      android:text="@string/place_of_birth" />
+
+    <TextView
+      android:id="@+id/person_info_place_of_birth"
+      style="@style/InfoFact"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/fact_hint_spacing"
+      android:layout_marginLeft="@dimen/fact_hint_spacing"
+      android:layout_alignBottom="@id/person_info_place_of_birth_hint"
+      android:layout_toEndOf="@id/person_info_place_of_birth_hint"
+      android:layout_toRightOf="@id/person_info_place_of_birth_hint"
+      android:text="@string/unknown" />
+
+    <TextView
+      android:id="@+id/person_info_popularity_hint"
+      style="@style/InfoHint"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@id/person_info_facts_hint"
+      android:layout_alignStart="@id/person_info_facts_hint"
+      android:layout_below="@id/person_info_place_of_birth_hint"
+      android:text="@string/popularity" />
+
+    <TextView
+      android:id="@+id/person_info_popularity"
+      style="@style/InfoFact"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/fact_hint_spacing"
+      android:layout_marginLeft="@dimen/fact_hint_spacing"
+      android:layout_alignBottom="@id/person_info_popularity_hint"
+      android:layout_toEndOf="@id/person_info_popularity_hint"
+      android:layout_toRightOf="@id/person_info_popularity_hint"
+      android:text="@string/unknown" />
+
+    <TextView
+      android:id="@+id/person_info_biography_hint"
+      style="@style/InfoHintHeader"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/person_info_biography_placeholder"
+      android:layout_alignStart="@+id/person_info_biography_placeholder"
+      android:layout_below="@id/person_info_popularity_hint"
+      android:text="@string/biography" />
+
+    <android.support.v7.widget.CardView
+      android:id="@+id/person_info_biography_placeholder"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/big_text_in_cardview_margin"
+      android:layout_below="@id/person_info_biography_hint"
+      android:background="@color/cardview_dark_background"
+      app:cardCornerRadius="@dimen/big_text_in_cardview_corner_radius"
+      app:cardElevation="@dimen/big_text_in_cardview_elevation"
+      app:contentPadding="@dimen/big_text_in_cardview_padding">
+
+      <at.blogc.android.views.ExpandableTextView
+        android:id="@+id/person_info_biography"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/person_info_facts_hint"
-            style="@style/InfoHintHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/facts"
-            android:layout_alignLeft="@+id/person_info_biography_placeholder"
-            android:layout_alignStart="@+id/person_info_biography_placeholder"
-            />
-
-        <TextView
-            android:id="@+id/person_info_gender_hint"
-            style="@style/InfoHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/person_info_facts_hint"
-            android:layout_alignStart="@id/person_info_facts_hint"
-            android:layout_below="@id/person_info_facts_hint"
-            android:text="@string/gender"/>
-
-        <TextView
-            android:id="@+id/person_info_gender"
-            style="@style/InfoFact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/person_info_gender_hint"
-            android:layout_toEndOf="@id/person_info_gender_hint"
-            android:layout_marginLeft="@dimen/fact_hint_spacing"
-            android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/person_info_gender_hint"
-            android:text="@string/unknown"/>
-
-        <TextView
-            android:id="@+id/person_info_place_of_birth_hint"
-            style="@style/InfoHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/person_info_facts_hint"
-            android:layout_alignStart="@id/person_info_facts_hint"
-            android:layout_below="@id/person_info_gender_hint"
-            android:text="@string/place_of_birth"/>
-
-        <TextView
-            android:id="@+id/person_info_place_of_birth"
-            style="@style/InfoFact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/person_info_place_of_birth_hint"
-            android:layout_toEndOf="@id/person_info_place_of_birth_hint"
-            android:layout_marginLeft="@dimen/fact_hint_spacing"
-            android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/person_info_place_of_birth_hint"
-            android:text="@string/unknown"/>
-
-        <TextView
-            android:id="@+id/person_info_popularity_hint"
-            style="@style/InfoHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/person_info_facts_hint"
-            android:layout_alignStart="@id/person_info_facts_hint"
-            android:layout_below="@id/person_info_place_of_birth_hint"
-            android:text="@string/popularity"/>
-
-        <TextView
-            android:id="@+id/person_info_popularity"
-            style="@style/InfoFact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/person_info_popularity_hint"
-            android:layout_toEndOf="@id/person_info_popularity_hint"
-            android:layout_marginLeft="@dimen/fact_hint_spacing"
-            android:layout_marginStart="@dimen/fact_hint_spacing"
-            android:layout_alignBottom="@id/person_info_popularity_hint"
-            android:text="@string/unknown"/>
-
-        <TextView
-            android:id="@+id/person_info_biography_hint"
-            style="@style/InfoHintHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/biography"
-            android:layout_alignLeft="@+id/person_info_biography_placeholder"
-            android:layout_alignStart="@+id/person_info_biography_placeholder"
-            android:layout_below="@id/person_info_popularity_hint"
-            />
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/person_info_biography_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/person_info_biography_hint"
-            android:layout_margin="@dimen/big_text_in_cardview_margin"
-            android:background="@color/cardview_dark_background"
-            app:cardCornerRadius="@dimen/big_text_in_cardview_corner_radius"
-            app:cardElevation="@dimen/big_text_in_cardview_elevation"
-            app:contentPadding="@dimen/big_text_in_cardview_padding">
-
-            <at.blogc.android.views.ExpandableTextView
-                android:id="@+id/person_info_biography"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="5"
-                android:gravity="start"
-                android:textSize="@dimen/overview_font_size"
-                app:animation_duration="1000" />
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="5"
+        android:textSize="@dimen/overview_font_size"
+        app:animation_duration="1000" />
 
 
-        </android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
 
-        <Button
-            android:id="@+id/person_info_biography_expand_btn"
-            android:layout_width="@dimen/expand_button_width"
-            android:layout_height="@dimen/expand_button_width"
-            android:layout_below="@id/person_info_biography_placeholder"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_arrow_down"
-            android:visibility="gone" />
+    <Button
+      android:id="@+id/person_info_biography_expand_btn"
+      android:layout_width="@dimen/expand_button_width"
+      android:layout_height="@dimen/expand_button_width"
+      android:layout_below="@id/person_info_biography_placeholder"
+      android:layout_centerHorizontal="true"
+      android:background="@drawable/ic_arrow_down"
+      android:visibility="gone" />
 
-        <RelativeLayout
-            android:id="@+id/person_info_progress_bar_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorBackground">
+    <RelativeLayout
+      android:id="@+id/person_info_progress_bar_placeholder"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/colorBackground">
 
-            <ProgressBar
-                android:id="@+id/person_info_progress_bar"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-
+      <ProgressBar
+        android:id="@+id/person_info_progress_bar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true" />
     </RelativeLayout>
+
+
+  </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

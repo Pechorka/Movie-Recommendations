@@ -11,6 +11,8 @@ import ru.surf.course.movierecommendations.activities.RecommendationsSetupActivi
  */
 
 public interface GetListTask {
-    @GET("3/list/{id}")
-    Call<RecommendationsSetupActivity.RetrofitResult> getListById(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language);
+
+  @GET("3/list/{id}")
+  Call<RecommendationsSetupActivity.RetrofitResult> getListById(@Path("id") int id,
+      @Query("api_key") String apiKey, @Query("language") String language);
 }

@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Actor;
 import ru.surf.course.movierecommendations.models.Credit;
@@ -21,80 +19,87 @@ import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
  * Created by andrew on 2/2/17.
  */
 
-public class CreditsOfPeopleListAdapter extends RecyclerView.Adapter<CreditsOfPeopleListAdapter.ViewHolder> {
+public class CreditsOfPeopleListAdapter extends
+    RecyclerView.Adapter<CreditsOfPeopleListAdapter.ViewHolder> {
 
-    private List<Credit> mCreditList;
-    private Context mContext;
-    private static OnItemClickListener listener;
+  private static OnItemClickListener listener;
+  private List<Credit> mCreditList;
+  private Context mContext;
 
-    public CreditsOfPeopleListAdapter(List<Credit> credits, Context context) {
-        mCreditList = credits;
-        mContext = context;
+  public CreditsOfPeopleListAdapter(List<Credit> credits, Context context) {
+    mCreditList = credits;
+    mContext = context;
+  }
+
+  @Override
+  public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    View itemView = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.movie_credits_list_item, parent, false);
+    return new CreditsOfPeopleListAdapter.ViewHolder(itemView);
+  }
+
+  @Override
+  public void onBindViewHolder(ViewHolder holder, int position) {
+    Credit credit = mCreditList.get(position);
+    if (credit.getPerson().getProfilePath() != null && !credit.getPerson().getProfilePath()
+        .equals("null")) {
+      loadImage(credit.getPerson().getProfilePath(), holder.image);
     }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_credits_list_item, parent, false);
-        return new CreditsOfPeopleListAdapter.ViewHolder(itemView);
+    holder.header.setText(credit.getPerson().getName());
+    if (credit instanceof Actor) {
+      holder.subHeader.setText(((Actor) credit).getCharacter());
+    } else if (credit instanceof CrewMember) {
+      holder.subHeader.setText(((CrewMember) credit).getJob());
     }
+  }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Credit credit = mCreditList.get(position);
-        if (credit.getPerson().getProfilePath() != null && !credit.getPerson().getProfilePath().equals("null"))
-            loadImage(credit.getPerson().getProfilePath(), holder.image);
-        holder.header.setText(credit.getPerson().getName());
-        if (credit instanceof Actor)
-            holder.subHeader.setText(((Actor)credit).getCharacter());
-        else if (credit instanceof CrewMember)
-            holder.subHeader.setText(((CrewMember) credit).getJob());
-    }
+  @Override
+  public int getItemCount() {
+    return mCreditList.size();
+  }
 
-    @Override
-    public int getItemCount() {
-        return mCreditList.size();
-    }
+  public List<Credit> getCredits() {
+    return mCreditList;
+  }
 
-    public List<Credit> getCredits() {
-        return mCreditList;
-    }
+  public void setCredits(List<Credit> credits) {
+    mCreditList = credits;
+  }
 
-    public void setCredits(List<Credit> credits) {
-        mCreditList = credits;
-    }
+  private void loadImage(String path, ImageView targetView) {
+    ImageLoader.putPoster(mContext, path, targetView, ImageLoader.sizes.w300);
+  }
 
-    private void loadImage(String path, ImageView targetView) {
-        ImageLoader.putPoster(mContext, path, targetView, ImageLoader.sizes.w300);
-    }
+  public void setOnItemClickListener(OnItemClickListener listener) {
+    CreditsOfPeopleListAdapter.listener = listener;
+  }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+  public interface OnItemClickListener {
 
-        CircleImageView image;
-        TextView header;
-        TextView subHeader;
+    void onClick(int position);
+  }
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+  public static class ViewHolder extends RecyclerView.ViewHolder {
 
-            image = (CircleImageView)itemView.findViewById(R.id.circle_images_list_image);
-            header = (TextView)itemView.findViewById(R.id.circle_images_list_header);
-            subHeader = (TextView)itemView.findViewById(R.id.circle_images_list_sub_header);
+    CircleImageView image;
+    TextView header;
+    TextView subHeader;
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null)
-                        CreditsOfPeopleListAdapter.listener.onClick(getAdapterPosition());
-                }
-            });
+    public ViewHolder(View itemView) {
+      super(itemView);
+
+      image = (CircleImageView) itemView.findViewById(R.id.circle_images_list_image);
+      header = (TextView) itemView.findViewById(R.id.circle_images_list_header);
+      subHeader = (TextView) itemView.findViewById(R.id.circle_images_list_sub_header);
+
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          if (listener != null) {
+            CreditsOfPeopleListAdapter.listener.onClick(getAdapterPosition());
+          }
         }
+      });
     }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        CreditsOfPeopleListAdapter.listener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onClick(int position);
-    }
+  }
 }

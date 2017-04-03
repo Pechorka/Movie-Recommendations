@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Рекомендации фильмов</string>
-    <string name="collapse">Меньше</string>
-    <string name="custom">Свой</string>
-    <string name="expand">Больше</string>
-    <string name="genre">Жанр</string>
-    <string name="movie_poster">Постер</string>
-    <string name="popular">Популярное</string>
-    <string name="popular_movies_btn_hint">Самые популярные фильмы</string>
-    <string name="search">Поиск</string>
-    <string name="top_btn_hint">Лучшие фильмы всех времен</string>
-    <string name="top">Топ</string>
-    <string name="upcoming_btn_hint">Скоро в прокате</string>
-    <string name="upcoming">Скоро</string>
-    <string name="original_title">Оригинальное название</string>
-    <string name="revenue">Сборы</string>
-    <string name="budget">Бюджет</string>
-    <string name="cast">В ролях</string>
-    <string name="keywords">Ключевые слова</string>
-    <string name="original_language">Оригинальный язык</string>
-    <string name="runtime">Продолжительность</string>
-    <string name="status">Статус</string>
-    <string name="hours_short">ч</string>
-    <string name="minutes_short">м</string>
-    <string name="unknown">Неизвестно</string>
-    <string name="info">Инфо</string>
-    <string name="person_credits">Участвовал в</string>
-    <string name="biography">Биография</string>
-    <string name="gender">Пол</string>
-    <string name="facts">Факты</string>
-    <string name="place_of_birth">Место рождения</string>
-    <string name="popularity">Популярность</string>
-    <array name="genders">
-        <item>Неизвестно</item>
-        <item>Женский</item>
-        <item>Мужской</item>
-    </array>
-    <string name="reviews">Отзывы</string>
-    <string name="rating">Рейтинг</string>
-    <string name="overview">Описание</string>
-    <string name="images">Изображения</string>
-    <string name="movie_credits">Участники</string>
-    <string name="production_countries">Производство</string>
-    <string name="genres">Жанры</string>
-    <string name="cancel">Отмена</string>
-    <string name="choose_genres">Выберите жанры</string>
-    <string name="header">Заголовок</string>
-    <string name="on_air">В эфире</string>
-    <string name="reload">Перезагрузка</string>
-    <string name="save">Сохранить</string>
-    <string name="show_filter_setup">Настроить фильтры</string>
-    <string name="tvshows">Телешоу</string>
-    <string name="no_internet_connection_msg">Нет соединения с интернетом</string>
-    <string name="movies">Фиильмы</string>
-    <string name="choose_sort">Выберите сортировку</string>
-    <string name="choose_sort_direction">Выберите направление сортировки</string>
-    <string name="no_internet">Похоже, какие-то проблемы с соединением</string>
-    <string name="retry">Попробовать снова</string>
-    <string name="no_reviews">Пока нет отзывов</string>
-    <string name="created_by">Создатели</string>
-    <string name="episode_runtime">Продолжительность эпизода</string>
-    <string name="number_of_seasons">Сезонов</string>
-    <string name="no_seasons">Пока что нет ни одного сезона</string>
-    <string name="seasons">Сезоны</string>
-    <string name="season">Сезон</string>
-    <plurals name="episodes">
-        <item quantity="zero">%d эпизодов</item>
-        <item quantity="one">%d эпизод</item>
-        <item quantity="two">%d эпизода</item>
-        <item quantity="few">%d эпизода</item>
-        <item quantity="many">%d эпизодов</item>
-        <item quantity="other">%d эпизодов</item>
-    </plurals>
+  <string name="app_name">Рекомендации фильмов</string>
+  <string name="collapse">Меньше</string>
+  <string name="custom">Свой</string>
+  <string name="expand">Больше</string>
+  <string name="genre">Жанр</string>
+  <string name="movie_poster">Постер</string>
+  <string name="popular">Популярное</string>
+  <string name="popular_movies_btn_hint">Самые популярные фильмы</string>
+  <string name="search">Поиск</string>
+  <string name="top_btn_hint">Лучшие фильмы всех времен</string>
+  <string name="top">Топ</string>
+  <string name="upcoming_btn_hint">Скоро в прокате</string>
+  <string name="upcoming">Скоро</string>
+  <string name="original_title">Оригинальное название</string>
+  <string name="revenue">Сборы</string>
+  <string name="budget">Бюджет</string>
+  <string name="cast">В ролях</string>
+  <string name="keywords">Ключевые слова</string>
+  <string name="original_language">Оригинальный язык</string>
+  <string name="runtime">Продолжительность</string>
+  <string name="status">Статус</string>
+  <string name="hours_short">ч</string>
+  <string name="minutes_short">м</string>
+  <string name="unknown">Неизвестно</string>
+  <string name="info">Инфо</string>
+  <string name="person_credits">Участвовал в</string>
+  <string name="biography">Биография</string>
+  <string name="gender">Пол</string>
+  <string name="facts">Факты</string>
+  <string name="place_of_birth">Место рождения</string>
+  <string name="popularity">Популярность</string>
+  <array name="genders">
+    <item>Неизвестно</item>
+    <item>Женский</item>
+    <item>Мужской</item>
+  </array>
+  <string name="reviews">Отзывы</string>
+  <string name="rating">Рейтинг</string>
+  <string name="overview">Описание</string>
+  <string name="images">Изображения</string>
+  <string name="movie_credits">Участники</string>
+  <string name="production_countries">Производство</string>
+  <string name="genres">Жанры</string>
+  <string name="cancel">Отмена</string>
+  <string name="choose_genres">Выберите жанры</string>
+  <string name="header">Заголовок</string>
+  <string name="on_air">В эфире</string>
+  <string name="reload">Перезагрузка</string>
+  <string name="save">Сохранить</string>
+  <string name="show_filter_setup">Настроить фильтры</string>
+  <string name="tvshows">Телешоу</string>
+  <string name="no_internet_connection_msg">Нет соединения с интернетом</string>
+  <string name="movies">Фиильмы</string>
+  <string name="choose_sort">Выберите сортировку</string>
+  <string name="choose_sort_direction">Выберите направление сортировки</string>
+  <string name="no_internet">Похоже, какие-то проблемы с соединением</string>
+  <string name="retry">Попробовать снова</string>
+  <string name="no_reviews">Пока нет отзывов</string>
+  <string name="created_by">Создатели</string>
+  <string name="episode_runtime">Продолжительность эпизода</string>
+  <string name="number_of_seasons">Сезонов</string>
+  <string name="no_seasons">Пока что нет ни одного сезона</string>
+  <string name="seasons">Сезоны</string>
+  <string name="season">Сезон</string>
+  <plurals name="episodes">
+    <item quantity="zero">%d эпизодов</item>
+    <item quantity="one">%d эпизод</item>
+    <item quantity="two">%d эпизода</item>
+    <item quantity="few">%d эпизода</item>
+    <item quantity="many">%d эпизодов</item>
+    <item quantity="other">%d эпизодов</item>
+  </plurals>
 
-    <string name="search_hint_movies">Искать фильмы</string>
-    <string name="search_hint_tvshows">Искать сериалы</string>
+  <string name="search_hint_movies">Искать фильмы</string>
+  <string name="search_hint_tvshows">Искать сериалы</string>
 </resources>

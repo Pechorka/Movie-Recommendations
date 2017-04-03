@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/person_credits_credits_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/credits_list_content_padding" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/person_credits_credits_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/credits_list_content_padding"/>
+  <FrameLayout
+    android:id="@+id/person_credits_progress_bar_placeholder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
-    <FrameLayout
-        android:id="@+id/person_credits_progress_bar_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground">
-
-        <ProgressBar
-            android:id="@+id/person_credits_progress_bar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+    <ProgressBar
+      android:id="@+id/person_credits_progress_bar"
+      android:layout_width="70dp"
+      android:layout_height="70dp"
+      android:layout_gravity="center" />
+  </FrameLayout>
 
 </RelativeLayout>

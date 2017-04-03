@@ -8,5 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = RecommendedMovieGenres.TABLE_NAME_RECOMMENDED_MOVIE_GENRES)
 public class RecommendedMovieGenres extends RecommendedGenres {
-    public static final String TABLE_NAME_RECOMMENDED_MOVIE_GENRES = "recommended_movie_genres";
+
+  public static final String TABLE_NAME_RECOMMENDED_MOVIE_GENRES = "recommended_movie_genres";
 }

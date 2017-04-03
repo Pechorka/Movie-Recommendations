@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground">
-    <TextView
-        android:id="@+id/message_no_internet_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_internet"/>
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/colorBackground">
+  <TextView
+    android:id="@+id/message_no_internet_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:text="@string/no_internet" />
 
-    <Button
-        android:id="@+id/message_no_internet_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/message_no_internet_text"
-        android:layout_centerHorizontal="true"
-        android:text="@string/retry" />
+  <Button
+    android:id="@+id/message_no_internet_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/message_no_internet_text"
+    android:layout_centerHorizontal="true"
+    android:text="@string/retry" />
 </RelativeLayout>

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context="ru.surf.course.movierecommendations.activities.FavoritesActivity">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/activity_favorite_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="ru.surf.course.movierecommendations.activities.FavoritesActivity">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:minHeight="?attr/actionBarSize" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_favorite_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize" />
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_shadow_height"
+    android:background="@drawable/bottom_shadow" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_shadow_height"
-        android:background="@drawable/bottom_shadow" />
+  <TextView
+    android:id="@+id/activity_favorite_msg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="@string/favorites_activity_msg"
+    android:textSize="20sp"
+    android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/activity_favorite_msg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/favorites_activity_msg"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_favorite_list_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/activity_favorite_list_rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
 </LinearLayout>

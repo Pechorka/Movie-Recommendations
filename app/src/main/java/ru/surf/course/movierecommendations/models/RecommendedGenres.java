@@ -8,31 +8,31 @@ import com.j256.ormlite.field.DatabaseField;
 
 public class RecommendedGenres {
 
-    public static final String FIELD_NAME_ID = "id";
-    public static final String FIELD_NAME_GENRE_ID = "genre_id";
+  public static final String FIELD_NAME_ID = "id";
+  public static final String FIELD_NAME_GENRE_ID = "genre_id";
 
-    @DatabaseField(columnName = FIELD_NAME_ID, generatedId = true)
-    private int id;
+  @DatabaseField(columnName = FIELD_NAME_ID, generatedId = true)
+  private int id;
 
-    @DatabaseField(columnName = FIELD_NAME_GENRE_ID)
-    private int genre_id;
+  @DatabaseField(columnName = FIELD_NAME_GENRE_ID)
+  private int genre_id;
 
-    public RecommendedGenres() {
-    }
+  public RecommendedGenres() {
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public int getGenre_id() {
-        return genre_id;
-    }
+  public int getGenre_id() {
+    return genre_id;
+  }
 
-    public void setGenre_id(int genre_id) {
-        this.genre_id = genre_id;
-    }
+  public void setGenre_id(int genre_id) {
+    this.genre_id = genre_id;
+  }
 }

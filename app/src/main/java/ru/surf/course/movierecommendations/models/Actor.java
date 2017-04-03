@@ -8,51 +8,51 @@ import java.io.Serializable;
 
 public class Actor extends Credit implements Serializable {
 
-    private int mCastId;
-    private String mCharacter;
-    private int mOrder;
+  private int mCastId;
+  private String mCharacter;
+  private int mOrder;
 
-    public Actor(String creditId, Person person, int mCastId, String mCharacter, int mOrder) {
-        super(creditId, person);
-        this.mCastId = mCastId;
-        this.mCharacter = mCharacter;
-        this.mOrder = mOrder;
-    }
+  public Actor(String creditId, Person person, int mCastId, String mCharacter, int mOrder) {
+    super(creditId, person);
+    this.mCastId = mCastId;
+    this.mCharacter = mCharacter;
+    this.mOrder = mOrder;
+  }
 
-    public Actor(String creditId, Media media, int castId, String character, int order) {
-        super(creditId, media);
-        mCastId = castId;
-        mCharacter = character;
-        mOrder = order;
-    }
+  public Actor(String creditId, Media media, int castId, String character, int order) {
+    super(creditId, media);
+    mCastId = castId;
+    mCharacter = character;
+    mOrder = order;
+  }
 
-    public Actor(String creditId, Media media, String character) {
-        super(creditId, media);
-        mCharacter = character;
-    }
+  public Actor(String creditId, Media media, String character) {
+    super(creditId, media);
+    mCharacter = character;
+  }
 
-    public int getCast_id() {
-        return mCastId;
-    }
+  public int getCast_id() {
+    return mCastId;
+  }
 
-    public void setCast_id(int mCast_id) {
-        this.mCastId = mCast_id;
-    }
+  public void setCast_id(int mCast_id) {
+    this.mCastId = mCast_id;
+  }
 
-    public String getCharacter() {
-        return mCharacter;
-    }
+  public String getCharacter() {
+    return mCharacter;
+  }
 
-    public void setCharacter(String mCharacter) {
-        this.mCharacter = mCharacter;
-    }
+  public void setCharacter(String mCharacter) {
+    this.mCharacter = mCharacter;
+  }
 
-    public int getOrder() {
-        return mOrder;
-    }
+  public int getOrder() {
+    return mOrder;
+  }
 
-    public void setOrder(int mOrder) {
-        this.mOrder = mOrder;
-    }
+  public void setOrder(int mOrder) {
+    this.mOrder = mOrder;
+  }
 
 }

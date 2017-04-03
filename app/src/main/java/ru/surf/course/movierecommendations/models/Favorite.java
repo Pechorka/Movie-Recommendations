@@ -9,69 +9,70 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = Favorite.TABLE_NAME_FAVORITES)
 public class Favorite {
-    public static final String TABLE_NAME_FAVORITES = "favorites";
 
-    public static final String FIELD_NAME_ID = "id";
-    public static final String FIELD_NAME_TITLE = "title";
-    public static final String FIELD_NAME_MEDIA_ID = "media_id";
-    public static final String FILED_NAME_POSTER_PATH = "poster_path";
-    public static final String FIELD_NAME_MEDIA_TYPE = "media_type";
+  public static final String TABLE_NAME_FAVORITES = "favorites";
 
-    @DatabaseField(columnName = FIELD_NAME_ID, generatedId = true)
-    private int id;
+  public static final String FIELD_NAME_ID = "id";
+  public static final String FIELD_NAME_TITLE = "title";
+  public static final String FIELD_NAME_MEDIA_ID = "media_id";
+  public static final String FILED_NAME_POSTER_PATH = "poster_path";
+  public static final String FIELD_NAME_MEDIA_TYPE = "media_type";
 
-    @DatabaseField(columnName = FIELD_NAME_TITLE)
-    private String title;
+  @DatabaseField(columnName = FIELD_NAME_ID, generatedId = true)
+  private int id;
 
-    @DatabaseField(columnName = FIELD_NAME_MEDIA_ID)
-    private int mediaId;
+  @DatabaseField(columnName = FIELD_NAME_TITLE)
+  private String title;
 
-    @DatabaseField(columnName = FILED_NAME_POSTER_PATH)
-    private String posterPath;
+  @DatabaseField(columnName = FIELD_NAME_MEDIA_ID)
+  private int mediaId;
 
-    @DatabaseField(columnName = FIELD_NAME_MEDIA_TYPE)
-    private FavoriteType mediaType;
+  @DatabaseField(columnName = FILED_NAME_POSTER_PATH)
+  private String posterPath;
 
-    public Favorite() {
-    }
+  @DatabaseField(columnName = FIELD_NAME_MEDIA_TYPE)
+  private MediaType mediaType;
 
-    public int getId() {
-        return id;
-    }
+  public Favorite() {
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public int getMediaId() {
-        return mediaId;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setMediaId(int mediaId) {
-        this.mediaId = mediaId;
-    }
+  public int getMediaId() {
+    return mediaId;
+  }
 
-    public String getPosterPath() {
-        return posterPath;
-    }
+  public void setMediaId(int mediaId) {
+    this.mediaId = mediaId;
+  }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
+  public String getPosterPath() {
+    return posterPath;
+  }
 
-    public FavoriteType getMediaType() {
-        return mediaType;
-    }
+  public void setPosterPath(String posterPath) {
+    this.posterPath = posterPath;
+  }
 
-    public void setMediaType(FavoriteType mediaType) {
-        this.mediaType = mediaType;
-    }
+  public MediaType getMediaType() {
+    return mediaType;
+  }
+
+  public void setMediaType(MediaType mediaType) {
+    this.mediaType = mediaType;
+  }
 }
