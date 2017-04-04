@@ -17,7 +17,8 @@ public class SplachActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splach);
-
+//    getSharedPreferences(KEY_RECOMMENDATIONS_SETUP, MODE_PRIVATE).edit()
+//        .putBoolean(KEY_IS_SETUP, false).apply();
     if (checkSetup()) {
       delayAndRunActivity(startDelay, MainActivity.class);
     } else {

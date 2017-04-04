@@ -263,13 +263,8 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private boolean isInFavorites() {
-    List<Favorite> favorites = dbHelper.getAllFavorites();
-    for (Favorite favorite : favorites) {
-      if (favorite.getMediaId() == currentMovie.getId()) {
-        return true;
-      }
-    }
-    return false;
+    Favorite favorite = dbHelper.getFavoriteByMediaId(currentMovie.getId());
+    return favorite != null;
   }
 
   public void onGenreClick(Genre genre) {

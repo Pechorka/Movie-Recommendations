@@ -82,11 +82,15 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
           MainActivity.start(this, RecommendationsSetupActivity.class);
         } else {
           saveGenresIds();
-          SharedPreferences prefs = getSharedPreferences(SplachActivity.KEY_RECOMMENDATIONS_SETUP,
-              MODE_PRIVATE);
-          prefs.edit().putBoolean(SplachActivity.KEY_IS_SETUP, true).apply();
+          setIsSetup(true);
           MainActivity.start(this, MainActivity.class);
         }
+        break;
+      case R.id.recommendations_setup_menu_skip:
+        setIsSetup(true);
+        MainActivity.start(this, MainActivity.class);
+        break;
+
     }
     return super.onOptionsItemSelected(item);
   }
@@ -153,6 +157,12 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
   private boolean checkTVShowGenresAvailability() {
     List<RecommendedTVShowsGenres> recommendedGenres = helper.getAllRecommendedTVShowGenres();
     return recommendedGenres != null && recommendedGenres.size() != 0;
+  }
+
+  private void setIsSetup(boolean value){
+    SharedPreferences prefs = getSharedPreferences(SplachActivity.KEY_RECOMMENDATIONS_SETUP,
+        MODE_PRIVATE);
+    prefs.edit().putBoolean(SplachActivity.KEY_IS_SETUP, value).apply();
   }
 
   public static class RetrofitResult {

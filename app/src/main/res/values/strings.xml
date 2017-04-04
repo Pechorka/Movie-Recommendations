@@ -118,4 +118,5 @@
   <string name="recommend">Recommendations</string>
   <string name="movie_setup_title">Choose movies you like</string>
   <string name="tvshow_setup_title">Choose TV Shows you like</string>
+  <string name="skip">Skip</string>
 </resources>

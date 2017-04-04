@@ -1,8 +1,6 @@
 package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,17 +41,16 @@ public class RecommendationsSetupListAdapter extends
   @Override
   public void onBindViewHolder(final RecommendationsViewHolder holder, int position) {
     Media media = mediaList.get(position);
-    ImageLoader.putPoster(context, media.getPosterPath(), holder.imageView, ImageLoader.sizes.w500);
+    ImageLoader.putPoster(context, media.getPosterPath(), holder.poster, ImageLoader.sizes.w500);
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         choosen[holder.getAdapterPosition()] = !choosen[holder.getAdapterPosition()];
-        // TODO fix colors
+        // TODO fix
         if (choosen[holder.getAdapterPosition()]) {
-          holder.cardView.setBackgroundColor(Color.BLUE);
+          holder.choosen.setVisibility(View.VISIBLE);
         } else {
-          holder.cardView.setBackgroundColor(
-              ResourcesCompat.getColor(context.getResources(), R.color.colorPrimaryDark, null));
+          holder.choosen.setVisibility(View.INVISIBLE);
         }
       }
     });
@@ -83,13 +80,15 @@ public class RecommendationsSetupListAdapter extends
 
   public static class RecommendationsViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView imageView;
+    public ImageView poster;
     public CardView cardView;
+    public ImageView choosen;
 
     public RecommendationsViewHolder(View itemView) {
       super(itemView);
 
-      imageView = (ImageView) itemView.findViewById(R.id.recommendations_setup_list_element_image);
+      poster = (ImageView) itemView.findViewById(R.id.recommendations_setup_list_element_image);
+      choosen = (ImageView) itemView.findViewById(R.id.recommendations_setup_list_element_chosen);
       cardView = (CardView) itemView.findViewById(R.id.recommendations_setup_list_element_cardview);
     }
   }

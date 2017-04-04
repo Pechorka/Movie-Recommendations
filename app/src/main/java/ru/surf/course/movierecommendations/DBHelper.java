@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
@@ -111,6 +112,18 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  public Favorite getFavoriteByMediaId(int id){
+    Favorite result = null;
+    QueryBuilder<Favorite,Integer> queryBuilder = getFavoriteDao().queryBuilder();
+    try {
+      queryBuilder.where().eq(Favorite.FIELD_NAME_MEDIA_ID,id);
+      result = queryBuilder.queryForFirst();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 
   public List<Favorite> getAllFavorites() {
