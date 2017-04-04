@@ -15,6 +15,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.custom_views.YearsRangeBar;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
+import ru.surf.course.movierecommendations.fragments.SaveCustomFilterDialog;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
@@ -73,6 +74,11 @@ public class CustomFilterActivity extends AppCompatActivity {
         genreListAdapter.save();
         onBackPressed();
         return true;
+      case R.id.custom_filter_menu_save_preset:
+        SaveCustomFilterDialog customFilterDialog = SaveCustomFilterDialog
+            .newInstance(genreListAdapter.getChecked(), getSortType(), getSortDirection(),
+                String.valueOf(yearsRangeBar.getCurMinYear()), String.valueOf(yearsRangeBar.getCurMaxYear()));
+        customFilterDialog.show(getFragmentManager(),"save_filter_dialog");
       default:
         return super.onOptionsItemSelected(item);
     }

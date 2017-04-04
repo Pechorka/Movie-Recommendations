@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import ru.surf.course.movierecommendations.models.Genre;
 
 public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.GenreViewHolder> {
 
-  private static final String GENRES_PREFS = "genres_prefs";
+  public static final String GENRES_PREFS = "genres_prefs";
   private static final String CHECKED_ARRAY = "checked_array";
 
   private List<Genre> genreList;
@@ -76,7 +77,7 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
     StringBuilder stringBuilder = new StringBuilder();
     for (int i = 0; i < checked.length; i++) {
       if (checked[i]) {
-        stringBuilder.append(genreList.get(i).getId()).append(", ");
+        stringBuilder.append(genreList.get(i).getId()).append(",");
       }
     }
     return stringBuilder.toString();
@@ -107,6 +108,16 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
       array[i] = prefs.getBoolean(CHECKED_ARRAY + "_" + i, false);
     }
     return array;
+  }
+
+  public static void clearChecked(Context context){
+    SharedPreferences prefs = context.getSharedPreferences(GENRES_PREFS,Context.MODE_PRIVATE);
+    Editor editor = prefs.edit();
+    int size = prefs.getInt(CHECKED_ARRAY + "_size", 19);
+    for (int i = 0; i < size; i++) {
+      editor.remove(CHECKED_ARRAY + "_" + i);
+    }
+    editor.apply();
   }
 
   public static class GenreViewHolder extends RecyclerView.ViewHolder {

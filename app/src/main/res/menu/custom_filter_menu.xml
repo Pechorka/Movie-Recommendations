@@ -5,4 +5,8 @@
     android:id="@+id/custom_filter_menu_save"
     android:title="@string/save"
     app:showAsAction="always" />
+
+  <item
+    android:id="@+id/custom_filter_menu_save_preset"
+    android:title="@string/save_preset"/>
 </menu>

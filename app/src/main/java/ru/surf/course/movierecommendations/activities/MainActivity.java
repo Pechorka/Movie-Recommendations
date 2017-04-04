@@ -30,6 +30,7 @@ import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
+import ru.surf.course.movierecommendations.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.models.RecommendedGenres;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
@@ -158,6 +159,12 @@ public class MainActivity extends AppCompatActivity {
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     drawerToggle.onConfigurationChanged(newConfig);
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    GenreListAdapter.clearChecked(this);
   }
 
   private void init() {
@@ -312,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
         break;
       case R.id.nav_top:
         query = Filters.top_rated.toString();
+
         setTitle(R.string.top);
         break;
       case R.id.nav_upcoming_or_on_air:

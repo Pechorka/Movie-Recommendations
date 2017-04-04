@@ -1,12 +1,13 @@
 package ru.surf.course.movierecommendations.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /**
  * Created by sergey on 03.04.17.
  */
 
-public class ProductionCompanies {
+public class ProductionCompanies implements Serializable{
 
   @SerializedName("name")
   private String name;

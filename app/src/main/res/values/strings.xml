@@ -85,8 +85,8 @@
   <string name="show_filter_setup">show filter setup</string>
   <string name="hide_filter_setup">hide filter setup</string>
   <string name="header">Header</string>
-  <string name="choose_sort">Choose sort</string>
-  <string name="choose_sort_direction">Choose sort direction</string>
+  <string name="choose_sort">Choose sortType</string>
+  <string name="choose_sort_direction">Choose sortType direction</string>
   <string name="no_internet">Seems like there are some problems with connecting</string>
   <string name="retry">Retry</string>
   <string name="no_reviews">No reviews yet</string>
@@ -119,4 +119,6 @@
   <string name="movie_setup_title">Choose movies you like</string>
   <string name="tvshow_setup_title">Choose TV Shows you like</string>
   <string name="skip">Skip</string>
+  <string name="save_preset">Save preset</string>
+  <string name="save_filter_dialog_title">Enter name for this preset</string>
 </resources>

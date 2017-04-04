@@ -156,11 +156,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements
       } else {
         mediaList = result;
       }
-      if(mediaList.get(0) instanceof MovieInfo){
+//      if(mediaList.get(0) instanceof MovieInfo){
 //        DBHelper.getHelper(getActivity()).addMovieInfo((MovieInfo) mediaList.get(0));
 //        MovieInfo info = DBHelper.getHelper(getActivity()).getMovieInfoByMovieId(mediaList.get(0).getId());
 //        Log.d("tag",info.getTitle());
-      }
+//      }
       dataLoadComplete();
     }
   }

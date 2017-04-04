@@ -169,6 +169,14 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return result;
   }
 
+  public void deleteFavorite(Favorite favorite){
+    try {
+      getFavoriteDao().delete(favorite);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
   public List<Favorite> getAllFavorites() {
     List<Favorite> result = null;
     try {
