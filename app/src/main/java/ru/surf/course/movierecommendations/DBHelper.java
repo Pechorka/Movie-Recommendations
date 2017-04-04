@@ -10,8 +10,10 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.List;
 import ru.surf.course.movierecommendations.models.Favorite;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.models.RecommendedTVShowsGenres;
+import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
  * Created by Sergey on 26.03.2017.
@@ -20,13 +22,15 @@ import ru.surf.course.movierecommendations.models.RecommendedTVShowsGenres;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final String DATABASE_NAME = "data_base";
-  private static final int DATABASE_VERSION = 6;
+  private static final int DATABASE_VERSION = 7;
 
   private static DBHelper sInstance;
 
   private Dao<Favorite, Integer> mFavoriteDao = null;
   private Dao<RecommendedMovieGenres, Integer> mRecommendedMovieGenresDao = null;
   private Dao<RecommendedTVShowsGenres, Integer> mRecommendedTVShowsGenresDao = null;
+  private Dao<MovieInfo, Integer> mMovieInfoDao = null;
+  private Dao<TVShowInfo, Integer> mTVShowInfoDao = null;
 
 
   private DBHelper(Context context) {
@@ -48,6 +52,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.createTableIfNotExists(connectionSource, Favorite.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedMovieGenres.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedTVShowsGenres.class);
+//      TableUtils.createTableIfNotExists(connectionSource, MovieInfo.class);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -60,6 +65,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.dropTable(connectionSource, Favorite.class, true);
       TableUtils.dropTable(connectionSource, RecommendedMovieGenres.class, true);
       TableUtils.dropTable(connectionSource, RecommendedTVShowsGenres.class, true);
+//      TableUtils.dropTable(connectionSource, MovieInfo.class, true);
       onCreate(database, connectionSource);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -106,6 +112,28 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return mRecommendedTVShowsGenresDao;
   }
 
+  private Dao<MovieInfo, Integer> getMovieInfoDao() {
+    if (mMovieInfoDao == null) {
+      try {
+        mMovieInfoDao = getDao(MovieInfo.class);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return mMovieInfoDao;
+  }
+
+  private Dao<TVShowInfo, Integer> getTVShowInfoDao() {
+    if (mTVShowInfoDao == null) {
+      try {
+        mTVShowInfoDao = getDao(TVShowInfo.class);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return mTVShowInfoDao;
+  }
+
   public void addFavorite(Favorite favorite) {
     try {
       getFavoriteDao().create(favorite);
@@ -114,11 +142,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
   }
 
-  public Favorite getFavoriteByMediaId(int id){
+  public Favorite getFavoriteByMediaId(int id) {
     Favorite result = null;
-    QueryBuilder<Favorite,Integer> queryBuilder = getFavoriteDao().queryBuilder();
+    QueryBuilder<Favorite, Integer> queryBuilder = getFavoriteDao().queryBuilder();
     try {
-      queryBuilder.where().eq(Favorite.FIELD_NAME_MEDIA_ID,id);
+      queryBuilder.where().eq(Favorite.FIELD_NAME_MEDIA_ID, id);
       result = queryBuilder.queryForFirst();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -177,6 +205,26 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       e.printStackTrace();
     }
 
+    return result;
+  }
+
+  public void addMovieInfo(MovieInfo movieInfo) {
+    try {
+      getMovieInfoDao().create(movieInfo);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public MovieInfo getMovieInfoByMovieId(int id){
+    MovieInfo result = null;
+    QueryBuilder builder = getMovieInfoDao().queryBuilder();
+    try {
+      builder.where().eq(MovieInfo.FIELD_NAME_MEDIA_ID,id);
+      result = (MovieInfo) builder.queryForFirst();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
     return result;
   }
 }

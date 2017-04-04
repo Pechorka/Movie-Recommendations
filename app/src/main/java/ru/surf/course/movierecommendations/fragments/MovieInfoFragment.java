@@ -30,6 +30,7 @@ import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.ProductionCountries;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
@@ -267,13 +268,13 @@ public class MovieInfoFragment extends Fragment {
 
     status.setText(currentMovieInfo.getStatus());
 
-    if (currentMovieInfo.getProductionCountriesNames() != null
-        && currentMovieInfo.getProductionCountriesNames().size() != 0) {
-      ArrayList<String> productionCountriesList = new ArrayList<>(
-          currentMovieInfo.getProductionCountriesNames());
+    if (currentMovieInfo.getProductionCountries() != null
+        && currentMovieInfo.getProductionCountries().size() != 0) {
+      ArrayList<ProductionCountries> productionCountriesList = new ArrayList<>(
+          currentMovieInfo.getProductionCountries());
       String string = "";
       for (int i = 0; i < productionCountriesList.size(); i++) {
-        string += productionCountriesList.get(i);
+        string += productionCountriesList.get(i).getName();
         if (i < productionCountriesList.size() - 1) {
           string += ",";
         }

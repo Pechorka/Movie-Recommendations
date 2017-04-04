@@ -2,15 +2,19 @@ package ru.surf.course.movierecommendations.models;
 
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@DatabaseTable(tableName = MovieInfo.TABLE_NAME_MOVIE_INFO)
 public class MovieInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
+
+  public static final String TABLE_NAME_MOVIE_INFO = "movie_info";
 
   @SerializedName("revenue")
   private String mRevenue;

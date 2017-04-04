@@ -20,6 +20,8 @@ import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.ProductionCompanies;
+import ru.surf.course.movierecommendations.models.ProductionCountries;
 
 /**
  * Created by andrew on 12/3/16.
@@ -282,22 +284,24 @@ public class GetMoviesTask extends GetMediaTask {
             genres.getJSONObject(k).getString(TMDB_NAME)));
       }
 
-      //get production companies names
+      //get production companies =
       JSONArray productionCompanies;
-      List<String> productionCompaniesNames;
+      List<ProductionCompanies> productionCompaniesResult;
       productionCompanies = movieJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
-      productionCompaniesNames = new ArrayList<>();
+      productionCompaniesResult = new ArrayList<>();
       for (int k = 0; k < productionCompanies.length(); k++) {
-        productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
+        productionCompaniesResult.add(
+            new ProductionCompanies(productionCompanies.getJSONObject(k).getString(TMDB_NAME), 1));
       }
 
       //get production countries
       JSONArray productionCountries;
-      List<String> productionCountriesNames;
+      List<ProductionCountries> productionCountriesResult;
       productionCountries = movieJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
-      productionCountriesNames = new ArrayList<>();
+      productionCountriesResult = new ArrayList<>();
       for (int k = 0; k < productionCountries.length(); k++) {
-        productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+        productionCountriesResult.add(
+            new ProductionCountries(productionCountries.getJSONObject(k).getString(TMDB_NAME), ""));
       }
 
       item = new MovieInfo(movieJson.getInt(TMDB_ID));
@@ -311,8 +315,8 @@ public class GetMoviesTask extends GetMediaTask {
       item.setVoteAverage(movieJson.getDouble(TMDB_RATING));
       item.setVoteCount(movieJson.getInt(TMDB_VOTE_COUNT));
       item.setBudget(movieJson.getString(TMDB_BUDGET));
-      item.setProductionCompaniesNames(productionCompaniesNames);
-      item.setProductionCountriesNames(productionCountriesNames);
+      item.setProductionCompaniesNames(productionCompaniesResult);
+      item.setProductionCountriesNames(productionCountriesResult);
       item.setRevenue(movieJson.getString(TMDB_REVENUE));
       item.setStatus(movieJson.getString(TMDB_STATUS));
       item.setRuntime(movieJson.getInt(TMDB_RUNTIME));

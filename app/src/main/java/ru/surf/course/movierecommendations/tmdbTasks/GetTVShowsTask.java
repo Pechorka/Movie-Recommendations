@@ -20,6 +20,8 @@ import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.Network;
+import ru.surf.course.movierecommendations.models.ProductionCompanies;
+import ru.surf.course.movierecommendations.models.ProductionCountries;
 import ru.surf.course.movierecommendations.models.Season;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
@@ -306,17 +308,17 @@ public class GetTVShowsTask extends GetMediaTask {
 
       //get production companies names
       JSONArray productionCompanies = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
-      List<String> productionCompaniesNames = new ArrayList<>();
+      List<ProductionCompanies> productionCompaniesResult = new ArrayList<>();
       for (int k = 0; k < productionCompanies.length(); k++) {
-        productionCompaniesNames.add(productionCompanies.getJSONObject(k).getString(TMDB_NAME));
+        productionCompaniesResult.add(new ProductionCompanies(productionCompanies.getJSONObject(k).getString(TMDB_NAME),1));
       }
 
       //get production countries
-      List<String> productionCountriesNames = new ArrayList<>();
+      List<ProductionCountries> productionCountriesResult = new ArrayList<>();
       try {
         JSONArray productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
         for (int k = 0; k < productionCountries.length(); k++) {
-          productionCountriesNames.add(productionCountries.getJSONObject(k).getString(TMDB_NAME));
+          productionCountriesResult.add(new ProductionCountries(productionCountries.getJSONObject(k).getString(TMDB_NAME),""));
         }
       } catch (JSONException e) {
         Log.d(LOG_TAG, "No production countries ", e);
@@ -373,8 +375,8 @@ public class GetTVShowsTask extends GetMediaTask {
       item.setNumberOfSeasons(tvShowsJson.getInt(TMDB_NUMBER_OF_SEASONS));
       item.setType(tvShowsJson.getString(TMDB_TYPE));
       item.setStatus(tvShowsJson.getString(TMDB_STATUS));
-      item.setProductionCompaniesNames(productionCompaniesNames);
-      item.setProductionCountriesNames(productionCountriesNames);
+      item.setProductionCompaniesNames(productionCompaniesResult);
+      item.setProductionCountriesNames(productionCountriesResult);
       item.setNetworks(networksList);
       item.setOriginCountryList(originCountryList);
       item.setSeasonList(seasonList);

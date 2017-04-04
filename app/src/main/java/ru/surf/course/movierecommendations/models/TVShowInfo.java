@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.models;
 
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,9 +13,12 @@ import java.util.List;
  * Created by Sergey on 07.02.2017.
  */
 
+@DatabaseTable(tableName = TVShowInfo.TABLE_NAME_TVSHOW_INFO)
 public class TVShowInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
+
+  public static final String TABLE_NAME_TVSHOW_INFO = "tv_show_info";
 
   @SerializedName("episode_run_time")
   private List<Double> mEpisodesRuntime;

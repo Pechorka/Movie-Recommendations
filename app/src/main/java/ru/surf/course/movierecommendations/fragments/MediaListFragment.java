@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.activities.CustomFilterActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
+import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
@@ -152,6 +155,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements
         mediaList.addAll(result);
       } else {
         mediaList = result;
+      }
+      if(mediaList.get(0) instanceof MovieInfo){
+//        DBHelper.getHelper(getActivity()).addMovieInfo((MovieInfo) mediaList.get(0));
+//        MovieInfo info = DBHelper.getHelper(getActivity()).getMovieInfoByMovieId(mediaList.get(0).getId());
+//        Log.d("tag",info.getTitle());
       }
       dataLoadComplete();
     }
