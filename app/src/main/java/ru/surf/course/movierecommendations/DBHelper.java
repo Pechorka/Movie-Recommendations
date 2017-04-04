@@ -9,6 +9,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.List;
+import ru.surf.course.movierecommendations.models.CustomFilter;
 import ru.surf.course.movierecommendations.models.Favorite;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.RecommendedMovieGenres;
@@ -31,6 +32,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private Dao<RecommendedTVShowsGenres, Integer> mRecommendedTVShowsGenresDao = null;
   private Dao<MovieInfo, Integer> mMovieInfoDao = null;
   private Dao<TVShowInfo, Integer> mTVShowInfoDao = null;
+  private Dao<CustomFilter, Integer> mCustomFilterDao = null;
 
 
   private DBHelper(Context context) {
@@ -52,6 +54,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.createTableIfNotExists(connectionSource, Favorite.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedMovieGenres.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedTVShowsGenres.class);
+      TableUtils.createTableIfNotExists(connectionSource, CustomFilter.class);
 //      TableUtils.createTableIfNotExists(connectionSource, MovieInfo.class);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -65,6 +68,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.dropTable(connectionSource, Favorite.class, true);
       TableUtils.dropTable(connectionSource, RecommendedMovieGenres.class, true);
       TableUtils.dropTable(connectionSource, RecommendedTVShowsGenres.class, true);
+      TableUtils.dropTable(connectionSource, CustomFilter.class, true);
 //      TableUtils.dropTable(connectionSource, MovieInfo.class, true);
       onCreate(database, connectionSource);
     } catch (SQLException e) {
@@ -132,6 +136,17 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       }
     }
     return mTVShowInfoDao;
+  }
+
+  private Dao<CustomFilter, Integer> getCustomFilterDao() {
+    if (mCustomFilterDao == null) {
+      try {
+        mCustomFilterDao = getDao(CustomFilter.class);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+    return mCustomFilterDao;
   }
 
   public void addFavorite(Favorite favorite) {
@@ -216,12 +231,30 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
   }
 
-  public MovieInfo getMovieInfoByMovieId(int id){
+  public MovieInfo getMovieInfoByMovieId(int id) {
     MovieInfo result = null;
     QueryBuilder builder = getMovieInfoDao().queryBuilder();
     try {
-      builder.where().eq(MovieInfo.FIELD_NAME_MEDIA_ID,id);
+      builder.where().eq(MovieInfo.FIELD_NAME_MEDIA_ID, id);
       result = (MovieInfo) builder.queryForFirst();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  public void addCustomFilter(CustomFilter customFilter) {
+    try {
+      getCustomFilterDao().create(customFilter);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public List<CustomFilter> getAllCustomFilters() {
+    List<CustomFilter> result = null;
+    try {
+      result = getCustomFilterDao().queryForAll();
     } catch (SQLException e) {
       e.printStackTrace();
     }
