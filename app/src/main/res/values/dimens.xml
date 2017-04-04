@@ -35,6 +35,7 @@
   <dimen name="people_profile_picture_size">70dp</dimen>
   <dimen name="people_list_item_width">85dp</dimen>
   <dimen name="people_list_item_height">120dp</dimen>
+  <dimen name="people_list_height">140dp</dimen>
 
   <!-- person activity dimens-->
   <dimen name="person_appbar_height">400dp</dimen>

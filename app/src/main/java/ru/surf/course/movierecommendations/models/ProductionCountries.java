@@ -3,6 +3,8 @@ package ru.surf.course.movierecommendations.models;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * Created by sergey on 03.04.17.
  */
