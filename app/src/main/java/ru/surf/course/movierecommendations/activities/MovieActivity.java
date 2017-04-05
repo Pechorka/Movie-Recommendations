@@ -141,18 +141,22 @@ public class MovieActivity extends AppCompatActivity {
     favoriteButton.setListener(new FavoriteButton.FavoriteButtonListener() {
       @Override
       public boolean addedToFavorite() {
-        Favorite favorite = new Favorite();
-        favorite.setMediaId(currentMovie.getId());
-        favorite.setMediaType(MediaType.movie);
-        favorite.setTitle(currentMovie.getTitle());
-        favorite.setPosterPath(currentMovie.getPosterPath());
-        dbHelper.addFavorite(favorite);
-        return true;
+        try {
+          Favorite favorite = new Favorite();
+          favorite.setMediaId(currentMovie.getId());
+          favorite.setMediaType(MediaType.movie);
+          favorite.setTitle(currentMovie.getTitle());
+          favorite.setPosterPath(currentMovie.getPosterPath());
+          dbHelper.addFavorite(favorite);
+          return true;
+        } catch (Exception e) {
+          return false;
+        }
       }
 
       @Override
       public boolean removedFromFavorite() {
-        return false;
+          return false;
       }
     });
   }
