@@ -156,7 +156,17 @@ public class MovieActivity extends AppCompatActivity {
 
       @Override
       public boolean removedFromFavorite() {
-          return false;
+          try {
+              List<Favorite> favorites = dbHelper.getAllFavorites();
+              Favorite favoriteToDelete = null;
+              for (Favorite favorite : favorites)
+                  if (favorite.getMediaId() == currentMovie.getId())
+                      favoriteToDelete = favorite;
+              dbHelper.deleteFavorite(favoriteToDelete);
+              return true;
+          } catch (Exception e) {
+              return false;
+          }
       }
     });
   }
