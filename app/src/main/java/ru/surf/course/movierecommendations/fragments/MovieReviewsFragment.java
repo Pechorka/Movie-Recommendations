@@ -106,7 +106,7 @@ public class MovieReviewsFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getReviewsTask.getMovieReviews(currentMovie.getId());
+    getReviewsTask.getMovieReviews(currentMovie.getMediaId());
   }
 
   private void fillInformation() {

@@ -2,6 +2,8 @@ package ru.surf.course.movierecommendations.models;
 
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -19,17 +21,33 @@ public class TVShowInfo extends Media implements Serializable {
   private final String LOG_TAG = getClass().getSimpleName();
 
   public static final String TABLE_NAME_TVSHOW_INFO = "tv_show_info";
+  public static final String FIELD_NAME_ID = "id";
+  public static final String FIELD_NAME_NUMBER_OF_EPISODES = "number_of_episodes";
+  public static final String FIELD_NAME_NUMBER_OF_SEASONS = "number_of_seasons";
+  public static final String FIELD_NAME_SEASONS = "seasons";
+
+  public TVShowInfo(){}
+
+  @DatabaseField(columnName = FIELD_NAME_ID,generatedId = true)
+  private int id;
 
   @SerializedName("episode_run_time")
   private List<Double> mEpisodesRuntime;
+
+  @DatabaseField(columnName = FIELD_NAME_NUMBER_OF_EPISODES)
   @SerializedName("number_of_episodes")
   private int mNumberOfEpisodes;
+
+  @DatabaseField(columnName = FIELD_NAME_NUMBER_OF_SEASONS)
   @SerializedName("number_of_seasons")
   private int mNumberOfSeasons;
   @SerializedName("type")
   private String mType;
   @SerializedName("origin_country")
   private List<String> originCountryList;
+
+//  @ForeignCollectionField(foreignFieldName = Season.FIELD_NAME_TV_SHOW_INFO)
+//  @DatabaseField(columnName = FIELD_NAME_SEASONS)
   @SerializedName("seasons")
   private List<Season> seasonList;
   @SerializedName("homepage")
@@ -103,6 +121,14 @@ public class TVShowInfo extends Media implements Serializable {
 
   public void setNetworks(List<Network> networks) {
     this.networks = networks;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public void fillFields(Object from) {

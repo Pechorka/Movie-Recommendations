@@ -144,7 +144,7 @@ public class TvShowActivity extends AppCompatActivity {
       public boolean addedToFavorite() {
         try {
           Favorite favorite = new Favorite();
-          favorite.setMediaId(currentMovie.getId());
+          favorite.setMediaId(currentMovie.getMediaId());
           favorite.setMediaType(MediaType.tv);
           favorite.setTitle(currentMovie.getTitle());
           favorite.setPosterPath(currentMovie.getPosterPath());
@@ -161,7 +161,7 @@ public class TvShowActivity extends AppCompatActivity {
               List<Favorite> favorites = dbHelper.getAllFavorites();
               Favorite favoriteToDelete = null;
               for (Favorite favorite : favorites)
-                  if (favorite.getMediaId() == currentMovie.getId())
+                  if (favorite.getMediaId() == currentMovie.getMediaId())
                       favoriteToDelete = favorite;
               dbHelper.deleteFavorite(favoriteToDelete);
               return true;
@@ -220,7 +220,7 @@ public class TvShowActivity extends AppCompatActivity {
         dataLoadComplete();
       }
     });
-    getTvShowsTask.getMediaById(tvShow.getId(), language);
+    getTvShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private boolean checkInformation(TVShowInfo tvShow) {
@@ -278,13 +278,13 @@ public class TvShowActivity extends AppCompatActivity {
   }
 
   private boolean isInFavorites() {
-    Favorite favorite = dbHelper.getFavoriteByMediaId(currentMovie.getId());
+    Favorite favorite = dbHelper.getFavoriteByMediaId(currentMovie.getMediaId());
     return favorite != null;
   }
 
   public void onGenreClick(Genre genre) {
     MainActivity
-        .start(this, MainActivity.class, String.valueOf(genre.getId()), genre.getName(), true);
+        .start(this, MainActivity.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
   }
 
   private Locale getCurrentLocale() {

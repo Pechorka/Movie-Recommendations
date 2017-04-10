@@ -169,7 +169,7 @@ public class MovieInfoFragment extends Fragment {
         loadCreditsInto(currentMovieInfo);
       }
     });
-    getMovieInfosTask.getMediaById(movie.getId(), language);
+    getMovieInfosTask.getMediaById(movie.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final MovieInfo movie) {
@@ -181,7 +181,7 @@ public class MovieInfoFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getImagesTask.getMovieImages(movie.getId(), Tasks.GET_BACKDROPS);
+    getImagesTask.getMovieImages(movie.getMediaId(), Tasks.GET_BACKDROPS);
   }
 
   private void loadCreditsInto(final MovieInfo movieInfo) {
@@ -193,7 +193,7 @@ public class MovieInfoFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getCreditsTask.getMovieCredits(movieInfo.getId());
+    getCreditsTask.getMovieCredits(movieInfo.getMediaId());
   }
 
   private boolean checkInformation(MovieInfo movie) {
@@ -309,7 +309,7 @@ public class MovieInfoFragment extends Fragment {
     if (++dataLoaded == DATA_TO_LOAD) {
       if (!checkInformation(currentMovieInfo) && currentMovieInfoEnglish == null) {
         dataLoaded--;
-        currentMovieInfoEnglish = new MovieInfo(currentMovieInfo.getId());
+        currentMovieInfoEnglish = new MovieInfo(currentMovieInfo.getMediaId());
         loadInformationInto(currentMovieInfoEnglish, Locale.ENGLISH.getLanguage());
       } else {
         fillInformation();

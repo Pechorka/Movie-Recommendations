@@ -77,7 +77,7 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
     StringBuilder stringBuilder = new StringBuilder();
     for (int i = 0; i < checked.length; i++) {
       if (checked[i]) {
-        stringBuilder.append(genreList.get(i).getId()).append(",");
+        stringBuilder.append(genreList.get(i).getGenreId()).append(",");
       }
     }
     return stringBuilder.toString();

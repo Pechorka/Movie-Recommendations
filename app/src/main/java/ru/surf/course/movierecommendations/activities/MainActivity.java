@@ -411,8 +411,10 @@ public class MainActivity extends AppCompatActivity {
       ids = DBHelper.getHelper(this).getAllRecommendedTVShowGenres();
     }
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < ids.size(); i++) {
-      builder.append(ids.get(i).getGenre_id()).append(", ");
+    if (ids!= null) {
+      for (int i = 0; i < ids.size(); i++) {
+        builder.append(ids.get(i).getGenre_id()).append(", ");
+      }
     }
     return builder.toString();
   }

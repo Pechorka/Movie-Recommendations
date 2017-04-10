@@ -143,7 +143,7 @@ public class MovieActivity extends AppCompatActivity {
       public boolean addedToFavorite() {
         try {
           Favorite favorite = new Favorite();
-          favorite.setMediaId(currentMovie.getId());
+          favorite.setMediaId(currentMovie.getMediaId());
           favorite.setMediaType(MediaType.movie);
           favorite.setTitle(currentMovie.getTitle());
           favorite.setPosterPath(currentMovie.getPosterPath());
@@ -160,7 +160,7 @@ public class MovieActivity extends AppCompatActivity {
               List<Favorite> favorites = dbHelper.getAllFavorites();
               Favorite favoriteToDelete = null;
               for (Favorite favorite : favorites)
-                  if (favorite.getMediaId() == currentMovie.getId())
+                  if (favorite.getMediaId() == currentMovie.getMediaId())
                       favoriteToDelete = favorite;
               dbHelper.deleteFavorite(favoriteToDelete);
               return true;
@@ -219,7 +219,7 @@ public class MovieActivity extends AppCompatActivity {
         dataLoadComplete();
       }
     });
-    getMoviesTask.getMediaById(movie.getId(), language);
+    getMoviesTask.getMediaById(movie.getMediaId(), language);
   }
 
   private boolean checkInformation(MovieInfo movie) {
@@ -277,13 +277,13 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private boolean isInFavorites() {
-    Favorite favorite = dbHelper.getFavoriteByMediaId(currentMovie.getId());
+    Favorite favorite = dbHelper.getFavoriteByMediaId(currentMovie.getMediaId());
     return favorite != null;
   }
 
   public void onGenreClick(Genre genre) {
     MainActivity
-        .start(this, MainActivity.class, String.valueOf(genre.getId()), genre.getName(), true);
+        .start(this, MainActivity.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
   }
 
   private Locale getCurrentLocale() {

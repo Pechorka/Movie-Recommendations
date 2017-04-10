@@ -13,7 +13,9 @@ import java.util.Locale;
 
 public class Person implements Serializable {
 
+
   public final String LOG_TAG = getClass().getSimpleName();
+
   protected String mName;
   protected int mId;
   protected String mProfilePath;

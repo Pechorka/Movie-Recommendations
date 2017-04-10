@@ -2,10 +2,10 @@ package ru.surf.course.movierecommendations.models;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -30,62 +30,103 @@ public class Media implements Serializable {
   public static final String FIELD_NAME_RELEASE_DATE = "release_date";
   public static final String FIELD_NAME_BACKDROP_PATH = "backdrop_path";
   public static final String FIELD_NAME_VOTE_AVERAGE = "vote_average";
+  public static final String FIELD_NAME_VOTE_COUNT = "vote_count";
   public static final String FIELD_NAME_MEDIA_ID = "media_id";
+  public static final String FIELD_NAME_BUDGET = "budget";
+  public static final String FIELD_NAME_PRODUCTION_COMPANIES = "production_companies";
+  public static final String FIELD_NAME_PRODUCTION_COUNTRIES = "production_countries";
+  public static final String FIELD_NAME_STATUS = "status";
+  public static final String FIELD_NAME_CREDITS = "credits";
+
+
+  public Media(){}
 
   @DatabaseField(columnName = FIELD_NAME_TITLE)
   @SerializedName("title")
   protected String mTitle;
+
   @DatabaseField(columnName = FIELD_NAME_ORIGINAL_TITLE)
   @SerializedName("original_title")
   protected String mOriginalTitle;
-  @DatabaseField(columnName = FIELD_NAME_ORIGINAL_LANGUAGE)
+
+  @DatabaseField(columnName = FIELD_NAME_ORIGINAL_LANGUAGE,dataType = DataType.SERIALIZABLE)
   @SerializedName("original_language")
   protected Locale mOriginalLanguage;
-  @DatabaseField(columnName = FIELD_NAME_GENRES,dataType = DataType.STRING)
+
+//  @ForeignCollectionField(foreignFieldName = Genre.FIELD_NAME_MEDIA)
+//  @DatabaseField(columnName = FIELD_NAME_GENRES)
   @SerializedName("genres")
   protected List<Genre> mGenres;
-  @DatabaseField(columnName = FIELD_NAME_GENRE_IDS)
+
+//  @DatabaseField(columnName = FIELD_NAME_GENRE_IDS)
   @SerializedName("genre_ids")
   protected List<Integer> mGenresIds;
+
   @DatabaseField(columnName = FIELD_NAME_POSTER_PATH)
   @SerializedName("poster_path")
   protected String mPosterPath;
+
   protected List<TmdbImage> mBackdrops;
+
   protected Bitmap mPosterBitmap;
+
   @DatabaseField(columnName = FIELD_NAME_OVERVIEW)
   @SerializedName("overview")
   protected String mOverview;
+
   @DatabaseField(columnName = FIELD_NAME_RELEASE_DATE)
   @SerializedName("release_date")
   protected Date mDate;
+
   @DatabaseField(columnName = FIELD_NAME_BACKDROP_PATH)
   @SerializedName("backdrop_path")
   protected String mBackdropPath;
+
   @DatabaseField(columnName = FIELD_NAME_VOTE_AVERAGE)
   @SerializedName("vote_average")
   protected Double mVoteAverage;
+
+  @DatabaseField(columnName = FIELD_NAME_VOTE_COUNT)
   @SerializedName("vote_count")
   protected int mVoteCount;
+
   @DatabaseField(columnName = FIELD_NAME_MEDIA_ID)
   @SerializedName("id")
-  protected int mId;
+  protected int mMediaId;
+
+  @DatabaseField(columnName = FIELD_NAME_BUDGET)
   @SerializedName("budget")
   protected String mBudget;
+
+//  @ForeignCollectionField(foreignFieldName = ProductionCompanies.FIELD_NAME_MEDIA)
+//  @DatabaseField(columnName = FIELD_NAME_PRODUCTION_COMPANIES)
   @SerializedName("production_companies")
   protected List<ProductionCompanies> mProductionCompanies;
+
+//  @ForeignCollectionField(foreignFieldName = ProductionCountries.FIELD_NAME_MEDIA)
+//  @DatabaseField(columnName = FIELD_NAME_PRODUCTION_COUNTRIES)
   @SerializedName("production_countries")
   protected List<ProductionCountries> mProductionCountries;
+
   protected Locale mInfoLanguage;
+
+  @DatabaseField(columnName = FIELD_NAME_STATUS)
   @SerializedName("status")
   protected String mStatus;
+
+//  @ForeignCollectionField(foreignFieldName = Credit.FIELD_NAME_MEDIA)
+//  @DatabaseField(columnName = FIELD_NAME_CREDITS)
   @SerializedName("credits")
   protected List<Credit> mCredits;
+
+//  @ForeignCollectionField(foreignFieldName = Review.FIELD_NAME_MEDIA)
+//  @DatabaseField(columnName = FIELD_NAME_REVIEWS)
   @SerializedName("reviews")
   protected List<Review> mReviews;
 
 
-  public Media(int mId) {
-    this.mId = mId;
+  public Media(int mMediaId) {
+    this.mMediaId = mMediaId;
   }
 
 
@@ -193,12 +234,12 @@ public class Media implements Serializable {
     this.mVoteCount = voteCount;
   }
 
-  public int getId() {
-    return mId;
+  public int getMediaId() {
+    return mMediaId;
   }
 
-  public void setId(int id) {
-    this.mId = id;
+  public void setMediaId(int id) {
+    this.mMediaId = id;
   }
 
   public String getBudget() {

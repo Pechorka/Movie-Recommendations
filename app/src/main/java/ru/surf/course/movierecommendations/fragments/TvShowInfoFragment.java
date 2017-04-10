@@ -164,7 +164,7 @@ public class TvShowInfoFragment extends Fragment {
         loadCreditsInto(currentTvShowInfo);
       }
     });
-    getTVShowsTask.getMediaById(tvShow.getId(), language);
+    getTVShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final TVShowInfo tvShow) {
@@ -176,7 +176,7 @@ public class TvShowInfoFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getImagesTask.getTvImages(tvShow.getId(), Tasks.GET_TV_BACKDROPS);
+    getImagesTask.getTvImages(tvShow.getMediaId(), Tasks.GET_TV_BACKDROPS);
   }
 
   private void loadCreditsInto(final TVShowInfo tvShowInfo) {
@@ -188,7 +188,7 @@ public class TvShowInfoFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getCreditsTask.getTVShowCredits(tvShowInfo.getId());
+    getCreditsTask.getTVShowCredits(tvShowInfo.getMediaId());
   }
 
   private boolean checkInformation(TVShowInfo tvShow) {
@@ -279,7 +279,7 @@ public class TvShowInfoFragment extends Fragment {
     if (++dataLoaded == DATA_TO_LOAD) {
       if (!checkInformation(currentTvShowInfo) && currentTvShowInfoEnglish == null) {
         dataLoaded--;
-        currentTvShowInfoEnglish = new TVShowInfo(currentTvShowInfo.getId());
+        currentTvShowInfoEnglish = new TVShowInfo(currentTvShowInfo.getMediaId());
         loadInformationInto(currentTvShowInfoEnglish, Locale.ENGLISH.getLanguage());
       } else {
         fillInformation();

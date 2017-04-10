@@ -347,7 +347,7 @@ public class GetTVShowsTask extends GetMediaTask {
       Season season;
       for (int k = 0; k < seasons.length(); k++) {
         season = new Season();
-        season.setId(seasons.getJSONObject(k).getInt(TMDB_ID));
+        season.setSeasonId(seasons.getJSONObject(k).getInt(TMDB_ID));
         season.setEpisodeCount(seasons.getJSONObject(k).getInt(TMDB_EPISODE_COUNT));
         season.setPosterPath(seasons.getJSONObject(k).getString(TMDB_POSTER_PATH));
         season.setSeasonNumber(seasons.getJSONObject(k).getInt(TMDB_SEASON_NUMBER));

@@ -9,11 +9,16 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.List;
+import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.CustomFilter;
 import ru.surf.course.movierecommendations.models.Favorite;
+import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.ProductionCompanies;
+import ru.surf.course.movierecommendations.models.ProductionCountries;
 import ru.surf.course.movierecommendations.models.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.models.RecommendedTVShowsGenres;
+import ru.surf.course.movierecommendations.models.Review;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 
 /**
@@ -23,7 +28,7 @@ import ru.surf.course.movierecommendations.models.TVShowInfo;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final String DATABASE_NAME = "data_base";
-  private static final int DATABASE_VERSION = 7;
+  private static final int DATABASE_VERSION = 10;
 
   private static DBHelper sInstance;
 
@@ -54,8 +59,14 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.createTableIfNotExists(connectionSource, Favorite.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedMovieGenres.class);
       TableUtils.createTableIfNotExists(connectionSource, RecommendedTVShowsGenres.class);
+//      TableUtils.createTableIfNotExists(connectionSource, Genre.class);
+//      TableUtils.createTableIfNotExists(connectionSource, ProductionCountries.class);
+//      TableUtils.createTableIfNotExists(connectionSource, ProductionCompanies.class);
+//      TableUtils.createTableIfNotExists(connectionSource, Credit.class);
+//      TableUtils.createTableIfNotExists(connectionSource, Review.class);
       TableUtils.createTableIfNotExists(connectionSource, CustomFilter.class);
-//      TableUtils.createTableIfNotExists(connectionSource, MovieInfo.class);
+      TableUtils.createTableIfNotExists(connectionSource, MovieInfo.class);
+      TableUtils.createTableIfNotExists(connectionSource, TVShowInfo.class);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -69,7 +80,13 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.dropTable(connectionSource, RecommendedMovieGenres.class, true);
       TableUtils.dropTable(connectionSource, RecommendedTVShowsGenres.class, true);
       TableUtils.dropTable(connectionSource, CustomFilter.class, true);
-//      TableUtils.dropTable(connectionSource, MovieInfo.class, true);
+      TableUtils.dropTable(connectionSource, MovieInfo.class, true);
+      TableUtils.dropTable(connectionSource,TVShowInfo.class,true);
+//      TableUtils.dropTable(connectionSource,Genre.class,true);
+//      TableUtils.dropTable(connectionSource,ProductionCompanies.class,true);
+//      TableUtils.dropTable(connectionSource,ProductionCountries.class,true);
+//      TableUtils.dropTable(connectionSource,Credit.class,true);
+//      TableUtils.dropTable(connectionSource,Review.class,true);
       onCreate(database, connectionSource);
     } catch (SQLException e) {
       e.printStackTrace();
