@@ -1,10 +1,12 @@
 package ru.surf.course.movierecommendations.activities;
 
 
+import static ru.surf.course.movierecommendations.models.MediaType.movie;
 import static ru.surf.course.movierecommendations.models.MediaType.tv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -31,6 +33,8 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
+import ru.surf.course.movierecommendations.fragments.SaveCustomFilterDialog;
+import ru.surf.course.movierecommendations.models.CustomFilter;
 import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.models.RecommendedGenres;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
@@ -38,15 +42,10 @@ import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
 public class MainActivity extends AppCompatActivity {
 
-  public static final String KEY_SEARCH_QUERY = "search_query";
   public static final String KEY_GENRE_IDS = "genre_ids";
   public static final String KEY_MEDIA = "media";
   public static final String KEY_GENRE_NAME = "genre_name";
   private static final String LOG_TAG = MainActivity.class.getSimpleName();
-  private static final int UPCOMING_ID = 2;
-  private static final int ON_AIR_ID = 3;
-  private static final int UPCOMING_POSITION = 3;
-  private static final int ON_AIR_POSITION = 3;
 
   private DrawerLayout mDrawer;
   private NavigationView nvDrawer;
@@ -129,6 +128,17 @@ public class MainActivity extends AppCompatActivity {
     return true;
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+    boolean newPreset = prefs.getBoolean(SaveCustomFilterDialog.KEY_ADDED_NEW_PRESET, false);
+    if (newPreset) {
+      nvDrawer.getMenu().findItem(R.id.nam_custom_presets).getSubMenu().clear();
+      prefs.edit().putBoolean(SaveCustomFilterDialog.KEY_ADDED_NEW_PRESET, false).apply();
+      setupPresetsSubMenu();
+    }
+  }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -179,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (task) {
       case SEARCH_RECOMMENDED_MEDIA:
-        initFragments(task, getRecommendedGenreIds(MediaType.movie),
+        initFragments(task, getRecommendedGenreIds(movie),
             getRecommendedGenreIds(tv));
         break;
       default:
@@ -189,12 +199,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void initFragments(Tasks task) {
-    movieListFragment = MediaListFragment.newInstance(query, region, task, MediaType.movie);
+    movieListFragment = MediaListFragment.newInstance(query, region, task, movie);
     tvShowListFragment = MediaListFragment.newInstance(query, region, task, tv);
   }
 
   private void initFragments(Tasks task, String movieQuery, String tvshowQuery) {
-    movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, MediaType.movie);
+    movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, movie);
     tvShowListFragment = MediaListFragment.newInstance(tvshowQuery, region, task, tv);
   }
 
@@ -219,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
       public void onPageSelected(int position) {
         switch (position) {
           case 0:
-            switchDrawer(MediaType.movie);
+            switchDrawer(movie);
             break;
           case 1:
             switchDrawer(tv);
@@ -248,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     if (getIntent().hasExtra(KEY_MEDIA)) {
       mediaType = (MediaType) getIntent().getSerializableExtra(KEY_MEDIA);
     } else {
-      mediaType = MediaType.movie;
+      mediaType = movie;
     }
     switch (mediaType) {
       case tv:
@@ -260,7 +270,27 @@ public class MainActivity extends AppCompatActivity {
           selectDrawerItem(item);
           return true;
         });
+    setupPresetsSubMenu();
+  }
 
+  private void setupPresetsSubMenu() {
+    List<CustomFilter> customFilters = dbHelper.getAllCustomFilters();
+    if (customFilters != null && customFilters.size() != 0) {
+      MenuItem item = nvDrawer.getMenu().findItem(R.id.nam_custom_presets);
+      item.getSubMenu().clear();
+      Menu menu = item.getSubMenu();
+      for (CustomFilter filter : customFilters) {
+        MenuItem addedItem = menu.add(filter.getFilterName());
+        addedItem.setOnMenuItemClickListener(item1 -> {
+          nvDrawer.getMenu().findItem(R.id.nav_custom).setChecked(true);
+          query = Filters.custom.toString();
+          setTitle(R.string.custom);
+          mDrawer.closeDrawers();
+          byCustomFilter(filter);
+          return true;
+        });
+      }
+    }
   }
 
   public void setDrawerEnabled(boolean enabled) {
@@ -290,13 +320,11 @@ public class MainActivity extends AppCompatActivity {
         }
         break;
     }
-
     nvDrawer
         .setNavigationItemSelectedListener(item -> {
           selectDrawerItem(item);
           return true;
         });
-
   }
 
   private void selectDrawerItem(MenuItem menuItem) {
@@ -306,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.nav_recommended:
         query = Filters.recommendations.toString();
         setTitle(R.string.recommend);
-        loadInformationByGenreIds(getRecommendedGenreIds(MediaType.movie),
+        loadInformationByGenreIds(getRecommendedGenreIds(movie),
             getRecommendedGenreIds(MediaType.tv));
         return;
       case R.id.nav_popular:
@@ -339,26 +367,42 @@ public class MainActivity extends AppCompatActivity {
       Toast.makeText(this, "Filter already selected", Toast.LENGTH_SHORT).show();
       return;
     }
-    menuItem.setChecked(true);
 
     loadInformationByFilter();
   }
 
   private void loadInformationByFilter() {
     if (!query.equals(Filters.custom.toString())) {
-      movieListFragment.setCallOptionsVisibility(View.GONE);
-      movieListFragment
-          .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
-      tvShowListFragment.setCallOptionsVisibility(View.GONE);
-      tvShowListFragment
-          .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+      byStandartFilter();
     } else {
-      movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-      movieListFragment.loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
-      tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
-      tvShowListFragment
-          .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+      byCustomFilter();
     }
+  }
+
+  private void byStandartFilter() {
+    movieListFragment.setCallOptionsVisibility(View.GONE);
+    movieListFragment
+        .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+    tvShowListFragment.setCallOptionsVisibility(View.GONE);
+    tvShowListFragment
+        .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+  }
+
+  private void byCustomFilter() {
+    movieListFragment.setCallOptionsVisibility(View.VISIBLE);
+    movieListFragment.loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+    tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
+    tvShowListFragment
+        .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+  }
+
+  private void byCustomFilter(CustomFilter customFilter) {
+    movieListFragment.setCallOptionsVisibility(View.VISIBLE);
+    movieListFragment
+        .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter);
+    tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
+    tvShowListFragment
+        .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter);
   }
 
   private void loadInformationBySearchQuery() {
@@ -375,8 +419,9 @@ public class MainActivity extends AppCompatActivity {
   private void loadInformationByGenreIds(String movieGenreIds, String tvshowGenreIds) {
     movieListFragment.loadMediaInfoByIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
         Tasks.SEARCH_BY_GENRE);
-    tvShowListFragment.loadMediaInfoByIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
-        Tasks.SEARCH_BY_GENRE);
+    tvShowListFragment
+        .loadMediaInfoByIds(tvshowGenreIds, Utilities.getSystemLanguage(), "1", region,
+            Tasks.SEARCH_BY_GENRE);
     query = movieGenreIds;
   }
 
@@ -386,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
         return tv;
       case 0:
       default:
-        return MediaType.movie;
+        return movie;
 
     }
   }

@@ -2,9 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <ListPreference
     android:defaultValue="1"
-    android:entries="@array/languages"
-    android:entryValues="@array/languagesValues"
+    android:entries="@array/filters"
+    android:entryValues="@array/filtersValues"
     android:key="language"
     android:summary="Choose language of application"
-    android:title="@string/language" />
+    android:title="@string/startup_filter" />
 </PreferenceScreen>

@@ -11,7 +11,6 @@ import com.j256.ormlite.table.DatabaseTable;
 public class CustomFilter {
 
   public static final String TABLE_NAME_CUSTOM_FILTER = "custom_filter";
-
   public static final String FIELD_NAME_ID = "id";
   public static final String FIELD_NAME_FILTER_NAME = "filter_name";
   public static final String FIELD_NAME_GENRES_IDS = "genre_ids";
@@ -19,6 +18,7 @@ public class CustomFilter {
   public static final String FIELD_NAME_SORT_DIRECTION = "sort_direction";
   public static final String FIELD_NAME_MIN_YEAR = "min_year";
   public static final String FIELD_NAME_MAX_YEAR = "max_year";
+  public static final String FIELD_NAME_MEDIA_TYPE = "media_type";
   @DatabaseField(columnName = FIELD_NAME_ID,generatedId = true)
   private int id;
   @DatabaseField(columnName = FIELD_NAME_FILTER_NAME)
@@ -33,19 +33,21 @@ public class CustomFilter {
   private String minYear;
   @DatabaseField(columnName = FIELD_NAME_MAX_YEAR)
   private String maxYear;
+  @DatabaseField(columnName = FIELD_NAME_MEDIA_TYPE)
+  private MediaType mediaType;
 
   public CustomFilter() {
   }
 
   public CustomFilter(String filterName, String genreIds, String sortType, String sortDirection,
-      String minYear,
-      String maxYear) {
+      String minYear, String maxYear, MediaType mediaType) {
     this.filterName = filterName;
     this.genreIds = genreIds;
     this.sortType = sortType;
     this.sortDirection = sortDirection;
     this.minYear = minYear;
     this.maxYear = maxYear;
+    this.mediaType = mediaType;
   }
 
   public int getId() {
@@ -102,5 +104,13 @@ public class CustomFilter {
 
   public void setMaxYear(String maxYear) {
     this.maxYear = maxYear;
+  }
+
+  public MediaType getMediaType() {
+    return mediaType;
+  }
+
+  public void setMediaType(MediaType mediaType) {
+    this.mediaType = mediaType;
   }
 }

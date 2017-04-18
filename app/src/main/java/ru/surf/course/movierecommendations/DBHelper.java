@@ -24,8 +24,9 @@ import ru.surf.course.movierecommendations.models.TVShowGenre;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final String DATABASE_NAME = "data_base";
-  private static final int DATABASE_VERSION = 20;
+  private static final int DATABASE_VERSION = 27;
 
+  private static final int MAX_NUMBER_OF_CUSTOM_FILTER = 5;
   private static DBHelper sInstance;
 
   private Dao<Favorite, Integer> mFavoriteDao = null;
@@ -120,7 +121,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   }
 
 
-  private Dao<CustomFilter, Integer> getCustomFilterDao() {
+  private Dao<CustomFilter, Integer> getMovieCustomFilterDao() {
     if (mCustomFilterDao == null) {
       try {
         mCustomFilterDao = getDao(CustomFilter.class);
@@ -235,9 +236,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return result;
   }
 
-  public void addCustomFilter(CustomFilter customFilter) {
+  public void addMovieCustomFilter(CustomFilter customFilter) {
     try {
-      getCustomFilterDao().create(customFilter);
+      getMovieCustomFilterDao().create(customFilter);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -246,11 +247,15 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   public List<CustomFilter> getAllCustomFilters() {
     List<CustomFilter> result = null;
     try {
-      result = getCustomFilterDao().queryForAll();
+      result = getMovieCustomFilterDao().queryForAll();
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return result;
+  }
+
+  public boolean canAddCustomFilter() {
+    return getAllCustomFilters().size() <= MAX_NUMBER_OF_CUSTOM_FILTER;
   }
 
   public void addMovieGenre(MovieGenre genre) {
@@ -328,9 +333,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return genres;
   }
 
-  public void updateTVShowGenre(TVShowGenre genre) {
+  public <T extends Genre> void updateTVShowGenre(T genre) {
     try {
-      getTVShowGenresDao().update(genre);
+      getTVShowGenresDao().update((TVShowGenre) genre);
     } catch (SQLException e) {
       e.printStackTrace();
     }

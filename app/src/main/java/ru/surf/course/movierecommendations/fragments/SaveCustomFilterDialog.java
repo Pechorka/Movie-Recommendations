@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.models.CustomFilter;
+import ru.surf.course.movierecommendations.models.MediaType;
 
 /**
  * Created by sergey on 04.04.17.
@@ -17,23 +20,28 @@ import ru.surf.course.movierecommendations.models.CustomFilter;
 
 public class SaveCustomFilterDialog extends DialogFragment {
 
+
+  public static final String KEY_ADDED_NEW_PRESET = "new_preset";
+
   private String sortType;
   private String sortDirection;
   private String genreIds;
   private String minYear;
   private String maxYear;
+  private MediaType mediaType;
 
   private EditText filterName;
 
   public static SaveCustomFilterDialog newInstance(String genreIds, String sortType,
       String sortDirection, String minYear,
-      String maxYear) {
+      String maxYear, MediaType mediaType) {
     Bundle bundle = new Bundle();
     bundle.putString(MediaListFragment.KEY_GENRES, genreIds);
     bundle.putString(MediaListFragment.KEY_MAX_YEAR, maxYear);
     bundle.putString(MediaListFragment.KEY_MIN_YEAR, minYear);
     bundle.putString(MediaListFragment.KEY_SORT_TYPE, sortType);
     bundle.putString(MediaListFragment.KEY_SORT_DIRECTION, sortDirection);
+    bundle.putSerializable(MainActivity.KEY_MEDIA, mediaType);
     SaveCustomFilterDialog dialog = new SaveCustomFilterDialog();
     dialog.setArguments(bundle);
     return dialog;
@@ -47,6 +55,7 @@ public class SaveCustomFilterDialog extends DialogFragment {
     genreIds = getArguments().getString(MediaListFragment.KEY_GENRES);
     minYear = getArguments().getString(MediaListFragment.KEY_MIN_YEAR);
     maxYear = getArguments().getString(MediaListFragment.KEY_MAX_YEAR);
+    mediaType = (MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
   }
 
   @Override
@@ -66,7 +75,9 @@ public class SaveCustomFilterDialog extends DialogFragment {
 
   private void saveCustomFilter() {
     CustomFilter customFilter = new CustomFilter(filterName.getText().toString(), genreIds,
-        sortType, sortDirection, minYear, maxYear);
-    DBHelper.getHelper(getActivity()).addCustomFilter(customFilter);
+        sortType, sortDirection, minYear, maxYear, mediaType);
+    getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(KEY_ADDED_NEW_PRESET, true)
+        .commit();
+    DBHelper.getHelper(getActivity()).addMovieCustomFilter(customFilter);
   }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
@@ -92,11 +93,15 @@ public class CustomFilterActivity extends AppCompatActivity {
         onBackPressed();
         return true;
       case R.id.custom_filter_menu_save_preset:
-        SaveCustomFilterDialog customFilterDialog = SaveCustomFilterDialog
-            .newInstance(genreListAdapter.getChecked(), getSortType(), getSortDirection(),
-                String.valueOf(yearsRangeBar.getCurMinYear()),
-                String.valueOf(yearsRangeBar.getCurMaxYear()));
-        customFilterDialog.show(getFragmentManager(), "save_filter_dialog");
+        if (dbHelper.canAddCustomFilter()) {
+          SaveCustomFilterDialog customFilterDialog = SaveCustomFilterDialog
+              .newInstance(genreListAdapter.getChecked(), getSortType(), getSortDirection(),
+                  String.valueOf(yearsRangeBar.getCurMinYear()),
+                  String.valueOf(yearsRangeBar.getCurMaxYear()), mediaType);
+          customFilterDialog.show(getFragmentManager(), "save_filter_dialog");
+        } else {
+          Toast.makeText(this, R.string.to_many_presets, Toast.LENGTH_LONG).show();
+        }
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -121,7 +126,8 @@ public class CustomFilterActivity extends AppCompatActivity {
     genres = new ArrayList<>();
     genreListAdapter = new GenreListAdapter(genres, this, mediaType);
     linearLayoutManager = new LinearLayoutManager(this);
-    gson = new GsonBuilder().create();
+    gson = new GsonBuilder()
+        .create();
     retrofit = new Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(gson))
@@ -138,15 +144,11 @@ public class CustomFilterActivity extends AppCompatActivity {
     if (getIntent().hasExtra(MediaListFragment.KEY_SORT_DIRECTION)) {
       setupSortDirectionRG(getIntent().getStringExtra(MediaListFragment.KEY_SORT_DIRECTION));
     }
-    if (getIntent().hasExtra(MediaListFragment.KEY_MIN_YEAR)) {
-      int minYear = getIntent().getIntExtra(MediaListFragment.KEY_MIN_YEAR, 1930);
-      yearsRangeBar.setStartMinValue(minYear);
-    }
-    if (getIntent().hasExtra(MediaListFragment.KEY_MAX_YEAR)) {
-      int maxYear = getIntent()
-          .getIntExtra(MediaListFragment.KEY_MAX_YEAR, Utilities.getCurrentYear());
-      yearsRangeBar.setStartMaxValue(maxYear);
-    }
+    int maxYear = getIntent()
+        .getIntExtra(MediaListFragment.KEY_MAX_YEAR, Utilities.getCurrentYear());
+    int minYear = getIntent().getIntExtra(MediaListFragment.KEY_MIN_YEAR, 1930);
+    yearsRangeBar.setStartMaxMinValues(maxYear, minYear);
+
   }
 
   private void setupSortRG(String sortType) {

@@ -25,6 +25,7 @@ import ru.surf.course.movierecommendations.activities.CustomFilterActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
+import ru.surf.course.movierecommendations.models.CustomFilter;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
@@ -139,11 +140,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements
       } else {
         mediaList = result;
       }
-//      if(mediaList.get(0) instanceof MovieInfo){
-//        DBHelper.getHelper(getActivity()).addMovieInfo((MovieInfo) mediaList.get(0));
-//        MovieInfo info = DBHelper.getHelper(getActivity()).getMovieInfoByMovieId(mediaList.get(0).getGenreId());
-//        Log.d("tag",info.getTitle());
-//      }
       dataLoadComplete();
     }
   }
@@ -188,8 +184,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     });
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setAdapter(gridMediaAdapter);
-
-
   }
 
   private void loadInformation(Tasks task) {
@@ -309,6 +303,37 @@ public class MediaListFragment<T extends Media> extends Fragment implements
         .getMediaByCustomFilter(language, page, genre_ids, maxYear, minYear, sortBy, region);
     this.page = Integer.parseInt(page);
     task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+  }
+
+
+  public void loadMediaInfoByCustomFilter(String language, String page, String region,
+      CustomFilter customFilter) {
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
+    }
+    getMediaTask.addListener(this);
+    if (mediaType == customFilter.getMediaType()) {
+      applyCustomFilter(customFilter);
+    }
+    String sortBy = sort_type + "." + sort_direction;
+    getMediaTask
+        .getMediaByCustomFilter(language, page, genre_ids, maxYear, minYear, sortBy, region);
+    this.page = Integer.parseInt(page);
+    task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+  }
+
+  private void applyCustomFilter(CustomFilter customFilter) {
+    sort_type = customFilter.getSortType();
+    sort_direction = customFilter.getSortDirection();
+    genre_ids = customFilter.getGenreIds();
+    maxYear = customFilter.getMaxYear();
+    minYear = customFilter.getMinYear();
   }
 
   public void setCallOptionsVisibility(int visibility) {

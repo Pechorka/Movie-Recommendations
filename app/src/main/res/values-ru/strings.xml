@@ -79,7 +79,7 @@
   <string name="favorites_activity_msg">Избранных нет</string>
   <string name="in_ascending_order">В возрастающем порядке</string>
   <string name="in_descending_order">В убывающем порядке</string>
-  <string name="language">Язык</string>
+  <string name="startup_filter">Язык</string>
   <string name="last_air_date">Дата последнего показа</string>
   <string name="movie_setup_title">Выберите фильмы, которые вам нравятся</string>
   <string name="range_of_years_tv">Года</string>
@@ -91,4 +91,6 @@
   <string name="sort_avg_votes">Сортировать по среднему количеству голосов</string>
   <string name="sort_by_popularity">Сортировать по популярности</string>
   <string name="tvshow_setup_title">Выберите сериалы, которые вам нравятся</string>
+  <string name="custom_filter_presets">Свои пресеты</string>
+  <string name="to_many_presets">Нельзя добавить больще пресетов</string>
 </resources>

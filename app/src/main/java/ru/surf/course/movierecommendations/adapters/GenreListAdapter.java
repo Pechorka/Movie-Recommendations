@@ -12,17 +12,12 @@ import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MediaType;
-import ru.surf.course.movierecommendations.models.TVShowGenre;
 
 /**
  * Created by Sergey on 28.02.2017.
  */
 
 public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.GenreViewHolder> {
-
-  public static final String GENRES_PREFS = "genres_prefs";
-  private static final String CHECKED_ARRAY = "checked_array";
-
   private List<? extends Genre> genreList;
   private Context context;
   private MediaType mediaType;
@@ -83,15 +78,15 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
         for (int i = 0; i < genreList.size(); i++) {
           helper.updateMovieGenre(genreList.get(i));
         }
-//        for (Genre g :
-//            genreList) {
-//          helper.updateMovieGenre(g);
-//        }
+        for (Genre g :
+            genreList) {
+          helper.updateMovieGenre(g);
+        }
         break;
       case tv:
         for (Genre g :
             genreList) {
-          helper.updateTVShowGenre((TVShowGenre) g);
+          helper.updateTVShowGenre(g);
         }
         break;
     }

@@ -127,7 +127,8 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
     mediaList = new ArrayList<>();
     adapter = new RecommendationsSetupListAdapter(this, mediaList);
     helper = DBHelper.getHelper(this);
-    gson = new GsonBuilder().create();
+    gson = new GsonBuilder()
+        .create();
     retrofit = new Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(gson))

@@ -43,12 +43,14 @@ public class YearsRangeBar extends RelativeLayout {
     minY.setText(String.valueOf(minYear));
     if (curMinYear < minYear && minYear >= this.minYear) {
       curMinYear = minYear;
-
     }
   }
 
-  public void setStartMinValue(int startMinValue) {
+  public void setStartMaxMinValues(int startMaxValue, int startMinValue) {
     rangeBar.setMinStartValue(startMinValue);
+    rangeBar.setMaxStartValue(startMaxValue);
+    curMaxYear = startMaxValue;
+    curMinYear = startMinValue;
     rangeBar.apply();
   }
 
@@ -58,11 +60,6 @@ public class YearsRangeBar extends RelativeLayout {
     if (curMaxYear > maxYear && maxYear <= this.maxYear) {
       curMaxYear = maxYear;
     }
-  }
-
-  public void setStartMaxValue(int startMaxValue) {
-    rangeBar.setMinStartValue(startMaxValue);
-    rangeBar.apply();
   }
 
   public int getCurMinYear() {
