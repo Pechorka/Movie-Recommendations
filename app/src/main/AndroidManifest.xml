@@ -12,38 +12,38 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activities.MainActivity"/>
+        <activity android:name=".ui.screen.main.MainActivity"/>
         <activity
-            android:name=".ui.activities.GalleryActivity"
+            android:name=".ui.screen.gallery.GalleryActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
-            android:name=".ui.activities.MovieActivity"
+            android:name=".ui.screen.movie.MovieActivity"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.activities.PersonActivity"
+            android:name=".ui.screen.person.PersonActivity"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.activities.TvShowActivity"
+            android:name=".ui.screen.tvShow.TvShowActivity"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
-        <activity android:name=".ui.activities.SettingsActivity"/>
+        <activity android:name=".ui.screen.settings.SettingsActivity"/>
         <activity
-            android:name=".ui.activities.CustomFilterActivity"
+            android:name=".ui.screen.customFilter.CustomFilterActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
-            android:name=".ui.activities.FavoritesActivity"
-            android:parentActivityName=".ui.activities.MainActivity">
+            android:name=".ui.screen.favorites.FavoritesActivity"
+            android:parentActivityName=".ui.screen.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity"/>
+                android:value=".ui.screen.main.MainActivity"/>
         </activity>
-        <activity android:name=".ui.activities.SplachActivity">
+        <activity android:name=".ui.screen.splash.SplachActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.RecommendationsSetupActivity"></activity>
+        <activity android:name=".ui.screen.recommendationsSetup.RecommendationsSetupActivity"></activity>
     </application>
 
 </manifest>

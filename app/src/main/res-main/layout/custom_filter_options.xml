@@ -4,7 +4,7 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
-  <ru.surf.course.movierecommendations.ui.custom_views.YearsRangeBar
+  <ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar
     android:id="@+id/years_rb"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />

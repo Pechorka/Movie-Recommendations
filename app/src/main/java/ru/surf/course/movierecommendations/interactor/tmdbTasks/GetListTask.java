@@ -4,7 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.surf.course.movierecommendations.ui.activities.RecommendationsSetupActivity;
+import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivity;
 
 /**
  * Created by Sergey on 30.03.2017.

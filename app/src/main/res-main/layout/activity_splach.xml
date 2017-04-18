@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:paddingLeft="10dp"
-  tools:context=".ui.activities.SplachActivity">
+  tools:context=".ui.screen.splash.SplachActivity">
 
   <TextView
     android:id="@+id/app_name"
