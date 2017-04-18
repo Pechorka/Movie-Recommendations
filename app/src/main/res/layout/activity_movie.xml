@@ -127,7 +127,7 @@
       android:layout_height="wrap_content"
       android:background="@color/colorTransparent">
 
-      <ru.surf.course.movierecommendations.custom_views.FavoriteButton
+      <ru.surf.course.movierecommendations.ui.custom_views.FavoriteButton
         android:id="@+id/movie_favorite_button"
         android:layout_width="@dimen/toolbarButtonSize"
         android:layout_height="@dimen/toolbarButtonSize"

@@ -6,7 +6,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="ru.surf.course.movierecommendations.activities.MainActivity">
+  tools:context=".ui.activities.MainActivity">
 
   <RelativeLayout
     android:id="@+id/movie_list_progress_bar_placeholder"

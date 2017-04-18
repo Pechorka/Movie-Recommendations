@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="ru.surf.course.movierecommendations.activities.FavoritesActivity">
+  tools:context=".ui.activities.FavoritesActivity">
 
   <android.support.v7.widget.Toolbar
     android:id="@+id/activity_favorite_toolbar"

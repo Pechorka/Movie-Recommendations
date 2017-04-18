@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:paddingLeft="10dp"
-  tools:context="ru.surf.course.movierecommendations.activities.SplachActivity">
+  tools:context=".ui.activities.SplachActivity">
 
   <TextView
     android:id="@+id/app_name"

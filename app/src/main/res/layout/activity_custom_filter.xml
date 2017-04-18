@@ -4,7 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="ru.surf.course.movierecommendations.activities.CustomFilterActivity">
+  tools:context=".ui.activities.CustomFilterActivity">
 
   <android.support.design.widget.AppBarLayout
     android:id="@+id/actionbar_layout"
@@ -39,7 +39,7 @@
           android:text="@string/range_of_years_tv"
           android:textSize="20sp" />
 
-        <ru.surf.course.movierecommendations.custom_views.YearsRangeBar
+        <ru.surf.course.movierecommendations.ui.custom_views.YearsRangeBar
           android:id="@+id/custom_filter_years_range_bar"
           android:layout_width="match_parent"
           android:layout_height="wrap_content" />
