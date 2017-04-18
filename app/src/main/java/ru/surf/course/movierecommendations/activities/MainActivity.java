@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -177,15 +178,19 @@ public class MainActivity extends AppCompatActivity {
         R.string.drawer_close);
     viewPager = (ViewPager) findViewById(R.id.viewpager);
     dbHelper = DBHelper.getHelper(this);
+
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    query = prefs.getString("filter", Filters.popular.toString());
     Tasks task = Tasks.SEARCH_BY_FILTER;
-    query = Filters.popular.toString();
     if (getIntent().hasExtra(KEY_GENRE_IDS)) {
       query = getIntent().getStringExtra(KEY_GENRE_IDS);
       task = Tasks.SEARCH_BY_GENRE;
-    } else {
-      if (recommendedGenresAvailable()) {
-        task = Tasks.SEARCH_RECOMMENDED_MEDIA;
-      }
+    }
+    if (query.equals(Filters.recommendations.toString())) {
+      task = Tasks.SEARCH_RECOMMENDED_MEDIA;
+    }
+    if (query.equals(Filters.custom.toString())) {
+      task = Tasks.SEARCH_BY_CUSTOM_FILTER;
     }
     switch (task) {
       case SEARCH_RECOMMENDED_MEDIA:
@@ -246,13 +251,7 @@ public class MainActivity extends AppCompatActivity {
     if (getIntent().hasExtra(KEY_GENRE_NAME)) {
       setTitle(getIntent().getStringExtra(KEY_GENRE_NAME));
     } else {
-      if (query.equals(Filters.popular.toString())) {
-        setTitle(R.string.popular);
-        nvDrawer.getMenu().getItem(1).setChecked(true);
-      } else {
-        nvDrawer.getMenu().getItem(0).setChecked(true);
-        setTitle(R.string.recommend);
-      }
+      setProperTitle();
     }
     MediaType mediaType;
     if (getIntent().hasExtra(KEY_MEDIA)) {
@@ -271,6 +270,27 @@ public class MainActivity extends AppCompatActivity {
           return true;
         });
     setupPresetsSubMenu();
+  }
+
+  private void setProperTitle() {
+    switch (query) {
+      case "top_rated":
+        setTitle(R.string.top);
+        nvDrawer.getMenu().findItem(R.id.nav_top).setChecked(true);
+        break;
+      case "popular":
+        setTitle(R.string.popular);
+        nvDrawer.getMenu().findItem(R.id.nav_popular).setChecked(true);
+        break;
+      case "recommendations":
+        setTitle(R.string.recommend);
+        nvDrawer.getMenu().findItem(R.id.nav_recommended).setChecked(true);
+        break;
+      case "custom":
+        setTitle(R.string.custom);
+        nvDrawer.getMenu().findItem(R.id.nav_custom).setChecked(true);
+        break;
+    }
   }
 
   private void setupPresetsSubMenu() {

@@ -4,7 +4,7 @@
     android:defaultValue="1"
     android:entries="@array/filters"
     android:entryValues="@array/filtersValues"
-    android:key="language"
-    android:summary="Choose language of application"
+    android:key="filter"
+    android:summary="Choose filter that will load on start of application"
     android:title="@string/startup_filter" />
 </PreferenceScreen>

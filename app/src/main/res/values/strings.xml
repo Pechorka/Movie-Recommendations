@@ -91,7 +91,7 @@
   <string name="no_internet">Seems like there are some problems with connecting</string>
   <string name="retry">Retry</string>
   <string name="no_reviews">No reviews yet</string>
-  <string name="startup_filter">Default filter on start</string>
+  <string name="startup_filter">Default filter</string>
   <string name="created_by">Created by</string>
   <string name="episode_runtime">Episode runtime</string>
   <string name="last_air_date">Last air date</string>

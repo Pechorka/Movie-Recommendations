@@ -77,11 +77,10 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.recommendations_setup_menu_save:
+        saveGenresIds();
         if (movie) {
-          saveGenresIds();
           MainActivity.start(this, RecommendationsSetupActivity.class);
         } else {
-          saveGenresIds();
           setIsSetup(true);
           MainActivity.start(this, MainActivity.class);
         }
