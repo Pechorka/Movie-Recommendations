@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".ui.screen.customFilter.CustomFilterActivity">
+
+  <android.support.design.widget.AppBarLayout
+    android:id="@+id/actionbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/custom_filter_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="5dp"
+          android:text="@string/range_of_years_tv"
+          android:textSize="20sp" />
+
+        <ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar
+          android:id="@+id/custom_filter_years_range_bar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+
+        <include layout="@layout/gray_divider_layout" />
+      </LinearLayout>
+
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="5dp"
+          android:text="@string/choose_sort"
+          android:textSize="20sp" />
+
+        <RadioGroup
+          android:id="@+id/custom_filter_sort_options"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <RadioButton
+            android:id="@+id/sort_by_popularity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_popularity" />
+
+          <RadioButton
+            android:id="@+id/sort_by_average_votes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_avg_votes" />
+        </RadioGroup>
+
+        <include layout="@layout/gray_divider_layout" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="5dp"
+          android:text="@string/choose_sort_direction"
+          android:textSize="20sp" />
+
+        <RadioGroup
+          android:id="@+id/custom_filter_sort_direction_options"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <RadioButton
+            android:id="@+id/descending_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/in_descending_order" />
+
+          <RadioButton
+            android:id="@+id/ascending_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/in_ascending_order" />
+        </RadioGroup>
+
+        <include layout="@layout/gray_divider_layout" />
+      </LinearLayout>
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/choose_genres"
+        android:textSize="20sp" />
+
+      <android.support.v7.widget.RecyclerView
+        android:id="@+id/custom_filter_genres_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

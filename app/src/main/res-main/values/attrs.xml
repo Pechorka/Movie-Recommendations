@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FixedAspectRatioFrameLayout">
+        <attr name="ratio" format="float"/>
+    </declare-styleable>
+    <declare-styleable name="PlaceholderView">
+        <attr name="state" format="enum">
+            <enum name="loading" value="0"/>
+            <enum name="empty" value="1"/>
+            <enum name="error" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>
