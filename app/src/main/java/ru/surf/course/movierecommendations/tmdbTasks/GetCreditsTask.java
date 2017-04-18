@@ -30,7 +30,7 @@ import ru.surf.course.movierecommendations.models.TVShowInfo;
  * Created by andrew on 2/3/17.
  */
 
-public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
+public class GetCreditsTask extends AsyncTask<String, Void, ArrayList<Credit>> {
 
   private final String API_KEY_PARAM = "api_key";
   private final String API_LANGUAGE_PARAM = "language";
@@ -57,7 +57,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
   private final String LOG_TAG = getClass().getSimpleName();
 
   private Tasks task;
-  private Locale language;
+  private String language;
   private boolean isLoadingList;
   private List<CreditsTaskCompleteListener> listeners;
 
@@ -66,7 +66,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
   }
 
   @Override
-  protected List<Credit> doInBackground(String... strings) {
+  protected ArrayList<Credit> doInBackground(String... strings) {
 
     if (strings.length == 0) {
       return null;
@@ -135,8 +135,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     }
 
     try {
-      List<Credit> result = parseJson(creditsJsonStr);
-      return result;
+      return parseJson(creditsJsonStr);
     } catch (JSONException | ParseException e) {
       Log.e(LOG_TAG, e.getMessage(), e);
       e.printStackTrace();
@@ -146,7 +145,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
   }
 
   @Override
-  protected void onPostExecute(List<Credit> credits) {
+  protected void onPostExecute(ArrayList<Credit> credits) {
     invokeCompleteEvent(credits);
   }
 
@@ -155,11 +154,11 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     super.onPreExecute();
   }
 
-  private List<Credit> parseJson(String jsonStr) throws JSONException, ParseException {
+  private ArrayList<Credit> parseJson(String jsonStr) throws JSONException, ParseException {
 
     JSONObject jsonObject = new JSONObject(jsonStr);
 
-    List<Credit> result = new ArrayList<>();
+    ArrayList<Credit> result = new ArrayList<>();
 
     switch (task) {
       case GET_MOVIE_CREDITS:
@@ -187,7 +186,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     execute(String.valueOf(tvShowId));
   }
 
-  public void getPersonCredits(int personId, Locale language) {
+  public void getPersonCredits(int personId, String language) {
     isLoadingList = true;
     task = Tasks.GET_PERSON_CREDITS;
     this.language = language;
@@ -214,21 +213,21 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
         .build();
   }
 
-  private Uri uriByPersonId(int personId, Locale language) {
+  private Uri uriByPersonId(int personId, String language) {
     final String TMDB_BASE_URL = "https://api.themoviedb.org/3/person";
     final String TMDB_CREDITS = "combined_credits";
     return Uri.parse(TMDB_BASE_URL).buildUpon()
         .appendPath(String.valueOf(personId))
         .appendPath(TMDB_CREDITS)
         .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-        .appendQueryParameter(API_LANGUAGE_PARAM, language.getLanguage())
+        .appendQueryParameter(API_LANGUAGE_PARAM, language)
         .build();
   }
 
-  private List<Credit> parseMediaCredits(JSONObject jsonObject) throws JSONException {
+  private ArrayList<Credit> parseMediaCredits(JSONObject jsonObject) throws JSONException {
     JSONArray cast = jsonObject.getJSONArray(TMDB_CAST);
     JSONArray crew = jsonObject.getJSONArray(TMDB_CREW);
-    List<Credit> result = new ArrayList<>();
+    ArrayList<Credit> result = new ArrayList<>();
     Credit credit;
 
     for (int i = 0; i < cast.length(); i++) {
@@ -271,12 +270,12 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     return result;
   }
 
-  private List<Credit> parsePersonCredits(JSONObject jsonObject)
+  private ArrayList<Credit> parsePersonCredits(JSONObject jsonObject)
       throws JSONException, ParseException {
 
     JSONArray cast = jsonObject.getJSONArray(TMDB_CAST);
     JSONArray crew = jsonObject.getJSONArray(TMDB_CREW);
-    List<Credit> result = new ArrayList<>();
+    ArrayList<Credit> result = new ArrayList<>();
     Credit credit;
     for (int i = 0; i < cast.length(); i++) {
 
@@ -336,7 +335,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
     listeners.add(listener);
   }
 
-  private void invokeCompleteEvent(List<Credit> result) {
+  private void invokeCompleteEvent(ArrayList<Credit> result) {
     for (int i = 0; i < listeners.size(); i++) {
       listeners.get(i).taskCompleted(result);
     }
@@ -344,7 +343,7 @@ public class GetCreditsTask extends AsyncTask<String, Void, List<Credit>> {
 
   public interface CreditsTaskCompleteListener {
 
-    void taskCompleted(List<Credit> result);
+    void taskCompleted(ArrayList<Credit> result);
   }
 
 }

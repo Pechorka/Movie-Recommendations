@@ -6,19 +6,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.custom_views.YearsRangeBar;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.fragments.SaveCustomFilterDialog;
 import ru.surf.course.movierecommendations.models.Genre;
-import ru.surf.course.movierecommendations.tmdbTasks.GetGenresTask;
-import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.models.MediaType;
+import ru.surf.course.movierecommendations.models.MovieGenre;
+import ru.surf.course.movierecommendations.models.TVShowGenre;
+import ru.surf.course.movierecommendations.models.TVShowGenre.RetrofitResult;
+import ru.surf.course.movierecommendations.tmdbTasks.GetMovieGenresTask;
+import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowGenresTask;
 
 public class CustomFilterActivity extends AppCompatActivity {
 
@@ -27,6 +42,7 @@ public class CustomFilterActivity extends AppCompatActivity {
   public static final String VOTE_AVERAGE = "vote_average";
   public static final String ASC = "asc";
   public static final String DESC = "desc";
+  private final static String BASE_URL = "https://api.themoviedb.org";
 
   private YearsRangeBar yearsRangeBar;
   private RadioGroup sortRG;
@@ -35,8 +51,11 @@ public class CustomFilterActivity extends AppCompatActivity {
   private GenreListAdapter genreListAdapter;
   private LinearLayoutManager linearLayoutManager;
 
-  private List<Genre> genres;
-  private boolean movie;
+  private List<? extends Genre> genres;
+  private MediaType mediaType;
+  private Retrofit retrofit;
+  private Gson gson;
+  private DBHelper dbHelper;
 
 
   @Override
@@ -44,10 +63,8 @@ public class CustomFilterActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_custom_filter);
     setupToolbar();
-    if (genres == null) {
-      loadGenres();
-    }
     init();
+    loadGenres();
     setupView();
   }
 
@@ -71,14 +88,15 @@ public class CustomFilterActivity extends AppCompatActivity {
         intent.putExtra(MediaListFragment.KEY_SORT_TYPE, getSortType());
         intent.putExtra(MediaListFragment.KEY_SORT_DIRECTION, getSortDirection());
         setResult(RESULT_OK, intent);
-        genreListAdapter.save();
+        genreListAdapter.saveChecked();
         onBackPressed();
         return true;
       case R.id.custom_filter_menu_save_preset:
         SaveCustomFilterDialog customFilterDialog = SaveCustomFilterDialog
             .newInstance(genreListAdapter.getChecked(), getSortType(), getSortDirection(),
-                String.valueOf(yearsRangeBar.getCurMinYear()), String.valueOf(yearsRangeBar.getCurMaxYear()));
-        customFilterDialog.show(getFragmentManager(),"save_filter_dialog");
+                String.valueOf(yearsRangeBar.getCurMinYear()),
+                String.valueOf(yearsRangeBar.getCurMaxYear()));
+        customFilterDialog.show(getFragmentManager(), "save_filter_dialog");
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -93,16 +111,22 @@ public class CustomFilterActivity extends AppCompatActivity {
   }
 
   private void init() {
+    if (getIntent().hasExtra(MainActivity.KEY_MEDIA)) {
+      mediaType = (MediaType) getIntent().getSerializableExtra(MainActivity.KEY_MEDIA);
+    }
     yearsRangeBar = (YearsRangeBar) findViewById(R.id.custom_filter_years_range_bar);
     sortRG = (RadioGroup) findViewById(R.id.custom_filter_sort_options);
     sortDirectionRG = (RadioGroup) findViewById(R.id.custom_filter_sort_direction_options);
     genresRV = (RecyclerView) findViewById(R.id.custom_filter_genres_rv);
     genres = new ArrayList<>();
-    genreListAdapter = new GenreListAdapter(genres, this);
+    genreListAdapter = new GenreListAdapter(genres, this, mediaType);
     linearLayoutManager = new LinearLayoutManager(this);
-    if (getIntent().hasExtra(MainActivity.KEY_MOVIE)) {
-      movie = getIntent().getBooleanExtra(MainActivity.KEY_MOVIE, true);
-    }
+    gson = new GsonBuilder().create();
+    retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build();
+    dbHelper = DBHelper.getHelper(this);
   }
 
   private void setupView() {
@@ -113,6 +137,15 @@ public class CustomFilterActivity extends AppCompatActivity {
     }
     if (getIntent().hasExtra(MediaListFragment.KEY_SORT_DIRECTION)) {
       setupSortDirectionRG(getIntent().getStringExtra(MediaListFragment.KEY_SORT_DIRECTION));
+    }
+    if (getIntent().hasExtra(MediaListFragment.KEY_MIN_YEAR)) {
+      int minYear = getIntent().getIntExtra(MediaListFragment.KEY_MIN_YEAR, 1930);
+      yearsRangeBar.setStartMinValue(minYear);
+    }
+    if (getIntent().hasExtra(MediaListFragment.KEY_MAX_YEAR)) {
+      int maxYear = getIntent()
+          .getIntExtra(MediaListFragment.KEY_MAX_YEAR, Utilities.getCurrentYear());
+      yearsRangeBar.setStartMaxValue(maxYear);
     }
   }
 
@@ -139,24 +172,75 @@ public class CustomFilterActivity extends AppCompatActivity {
   }
 
   private void loadGenres() {
-    GetGenresTask.TaskCompletedListener listener = new GetGenresTask.TaskCompletedListener() {
+    loadGenresFromDB();
+    if (genres == null || genres.size() == 0) {
+      switch (mediaType) {
+        case movie:
+          loadMovieGenresFromTMDB();
+          break;
+        case tv:
+          loadTVShowGenresFromTMDB();
+          break;
+      }
+    }
+  }
+
+  private void loadGenresFromDB() {
+    switch (mediaType) {
+      case movie:
+        genres = dbHelper.getAllMovieGenres();
+        break;
+      case tv:
+        genres = dbHelper.getAllTVShowGenres();
+        break;
+    }
+    genreListAdapter.setGenreList(genres);
+  }
+
+  private void loadMovieGenresFromTMDB() {
+    Callback<MovieGenre.RetrofitResult> callback = new Callback<MovieGenre.RetrofitResult>() {
       @Override
-      public void taskCompleted(List<Genre> result) {
-        if (result != null) {
-          genres = result;
+      public void onResponse(Call<MovieGenre.RetrofitResult> call,
+          Response<MovieGenre.RetrofitResult> response) {
+        if (response.isSuccessful()) {
+          genres = response.body().movieGenres;
           genreListAdapter.setGenreList(genres);
-          genreListAdapter.notifyDataSetChanged();
+          dbHelper.addMovieGenres(response.body().movieGenres);
         }
       }
-    };
-    GetGenresTask getGenresTask = new GetGenresTask();
-    getGenresTask.addListener(listener);
-    if (movie) {
-      getGenresTask.getGenres(Tasks.GET_MOVIE_GENRES);
-    } else {
-      getGenresTask.getGenres(Tasks.GET_TV_GENRES);
-    }
 
+      @Override
+      public void onFailure(Call<MovieGenre.RetrofitResult> call, Throwable t) {
+        Log.d("tag", t.getMessage());
+      }
+    };
+    GetMovieGenresTask task = retrofit.create(GetMovieGenresTask.class);
+    Call<MovieGenre.RetrofitResult> call = task
+        .getGenres(mediaType.toString(), BuildConfig.TMDB_API_KEY);
+    call.enqueue(callback);
+  }
+
+  private void loadTVShowGenresFromTMDB() {
+    Callback<TVShowGenre.RetrofitResult> callback = new Callback<RetrofitResult>() {
+      @Override
+      public void onResponse(Call<TVShowGenre.RetrofitResult> call,
+          Response<TVShowGenre.RetrofitResult> response) {
+        if (response.isSuccessful()) {
+          genres = response.body().tvShowGenres;
+          genreListAdapter.setGenreList(genres);
+          dbHelper.addTVShowGenres(response.body().tvShowGenres);
+        }
+      }
+
+      @Override
+      public void onFailure(Call<TVShowGenre.RetrofitResult> call, Throwable t) {
+
+      }
+    };
+    GetTVShowGenresTask task = retrofit.create(GetTVShowGenresTask.class);
+    Call<TVShowGenre.RetrofitResult> call = task
+        .getGenres(mediaType.toString(), BuildConfig.TMDB_API_KEY);
+    call.enqueue(callback);
   }
 
   private String getSortType() {

@@ -12,7 +12,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +19,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.CustomFilterActivity;
 import ru.surf.course.movierecommendations.activities.MainActivity;
 import ru.surf.course.movierecommendations.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.models.Media;
-import ru.surf.course.movierecommendations.models.MovieInfo;
+import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
@@ -48,20 +47,17 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   public final static String KEY_SORT_DIRECTION = "sort_direction";
   private final static String KEY_QUERY = "query";
   private final static String KEY_GRID_POS = "grid_pos";
-  private final static String KEY_LANGUAGE = "language";
   private final static String KEY_REGION = "region";
   private final static String KEY_TASK = "task";
   private final static String KEY_MEDIA_ID = "id";
-  private static final String KEY_MOVIE = "movie?";
   private List<T> mediaList;
   private Tasks task;
   private int page;
   private String query;
-  private String language;
   private String region;
   private String ids;
   private int id;
-  private boolean movie;
+  private MediaType mediaType;
   private String maxYear;
   private String minYear;
   private String genre_ids;
@@ -75,26 +71,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private EndlessRecyclerViewScrollListener scrollListener;
   private FloatingActionButton showCustomFilterOpt;
 
-  public static MediaListFragment newInstance(String query, String language, String region,
-      Tasks task, boolean movie) {
+  public static MediaListFragment newInstance(String query, String region,
+      Tasks task, MediaType mediaType) {
     MediaListFragment mediaListFragment = new MediaListFragment();
     Bundle bundle = new Bundle();
-    bundle.putString(KEY_LANGUAGE, language);
     bundle.putString(KEY_QUERY, query);
     bundle.putSerializable(KEY_TASK, task);
-    bundle.putBoolean(KEY_MOVIE, movie);
+    bundle.putSerializable(MainActivity.KEY_MEDIA, mediaType);
     bundle.putString(KEY_REGION, region);
-    mediaListFragment.setArguments(bundle);
-    return mediaListFragment;
-  }
-
-  public static MediaListFragment newInstance(int id, String language, Tasks task, boolean movie) {
-    MediaListFragment mediaListFragment = new MediaListFragment();
-    Bundle bundle = new Bundle();
-    bundle.putString(KEY_LANGUAGE, language);
-    bundle.putInt(KEY_MEDIA_ID, id);
-    bundle.putSerializable(KEY_TASK, task);
-    bundle.putBoolean(KEY_MOVIE, movie);
     mediaListFragment.setArguments(bundle);
     return mediaListFragment;
   }
@@ -103,12 +87,11 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     query = getArguments().getString(KEY_QUERY);
-    language = getArguments().getString(KEY_LANGUAGE);
     region = getArguments().getString(KEY_REGION);
     task = (Tasks) getArguments().getSerializable(KEY_TASK);
     id = getArguments().getInt(KEY_MEDIA_ID);
     ids = query;
-    movie = getArguments().getBoolean(KEY_MOVIE);
+    mediaType = (MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
     page = 1;
   }
 
@@ -143,7 +126,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
         sort_type = data.getStringExtra(KEY_SORT_TYPE);
         sort_direction = data.getStringExtra(KEY_SORT_DIRECTION);
         page = 1;
-        loadMediaInfoByCustomFilter(language, String.valueOf(page), region);
+        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region);
       }
     }
   }
@@ -194,15 +177,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements
 
   private void setupViews() {
     recyclerView.addOnScrollListener(scrollListener);
-    showCustomFilterOpt.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), CustomFilterActivity.class);
-        intent.putExtra(KEY_SORT_TYPE, sort_type);
-        intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
-        intent.putExtra(MainActivity.KEY_MOVIE, movie);
-        startActivityForResult(intent, GET_GENRES_REQUEST);
-      }
+    showCustomFilterOpt.setOnClickListener(v -> {
+      Intent intent = new Intent(getActivity(), CustomFilterActivity.class);
+      intent.putExtra(KEY_SORT_TYPE, sort_type);
+      intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
+      intent.putExtra(MainActivity.KEY_MEDIA, mediaType);
+      intent.putExtra(KEY_MAX_YEAR, Integer.parseInt(maxYear));
+      intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
+      startActivityForResult(intent, GET_GENRES_REQUEST);
     });
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setAdapter(gridMediaAdapter);
@@ -213,42 +195,49 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private void loadInformation(Tasks task) {
     switch (task) {
       case SEARCH_BY_FILTER:
-        loadMediaInfoByFilter(query, language, String.valueOf(page), region);
+        loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), String.valueOf(page), region);
         break;
       case SEARCH_BY_CUSTOM_FILTER:
-        loadMediaInfoByCustomFilter(language, String.valueOf(page), region);
+        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region);
         break;
       case SEARCH_BY_GENRE:
       case SEARCH_RECOMMENDED_MEDIA:
       case SEARCH_BY_KEYWORD:
-        loadMediaInfoByIds(ids, language, String.valueOf(page), region, task);
+        loadMediaInfoByIds(ids, Utilities.getSystemLanguage(), String.valueOf(page), region, task);
         break;
       case SEARCH_BY_ID:
       case SEARCH_SIMILAR:
-        loadMediInfoById(id, language, String.valueOf(page), task);
+        loadMediInfoById(id, Utilities.getSystemLanguage(), String.valueOf(page), task);
         break;
       default:
-        loadMediaByName(query, language, String.valueOf(page));
+        loadMediaByName(query, Utilities.getSystemLanguage(), String.valueOf(page));
     }
   }
 
   public void loadMediaByName(String query, String language, String page) {
-    GetMediaTask getMediaTask;
-    if (movie) {
-      getMediaTask = new GetMoviesTask();
-    } else {
-      getMediaTask = new GetTVShowsTask();
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
     }
     getMediaTask.addListener(this);
     getMediaTask.getMediaByName(query, language, page);
+    task = Tasks.SEARCH_BY_NAME;
   }
 
   public void loadMediaInfoByFilter(String query, String language, String page, String region) {
-    GetMediaTask getMediaTask;
-    if (movie) {
-      getMediaTask = new GetMoviesTask();
-    } else {
-      getMediaTask = new GetTVShowsTask();
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
     }
     getMediaTask.addListener(this);
     getMediaTask.getMediaByFilter(query, language, page, region);
@@ -258,11 +247,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements
 
   public void loadMediaInfoByIds(String ids, String language, String page, String region,
       Tasks task) {
-    GetMediaTask getMediaTask;
-    if (movie) {
-      getMediaTask = new GetMoviesTask();
-    } else {
-      getMediaTask = new GetTVShowsTask();
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
     }
     getMediaTask.addListener(this);
     switch (task) {
@@ -279,11 +271,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   }
 
   public void loadMediInfoById(int id, String language, String page, Tasks task) {
-    GetMediaTask getMediaTask;
-    if (movie) {
-      getMediaTask = new GetMoviesTask();
-    } else {
-      getMediaTask = new GetTVShowsTask();
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
     }
     getMediaTask.addListener(this);
     switch (task) {
@@ -299,11 +294,14 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   }
 
   public void loadMediaInfoByCustomFilter(String language, String page, String region) {
-    GetMediaTask getMediaTask;
-    if (movie) {
-      getMediaTask = new GetMoviesTask();
-    } else {
-      getMediaTask = new GetTVShowsTask();
+    GetMediaTask getMediaTask = null;
+    switch (mediaType) {
+      case movie:
+        getMediaTask = new GetMoviesTask();
+        break;
+      case tv:
+        getMediaTask = new GetTVShowsTask();
+        break;
     }
     getMediaTask.addListener(this);
     String sortBy = sort_type + "." + sort_direction;

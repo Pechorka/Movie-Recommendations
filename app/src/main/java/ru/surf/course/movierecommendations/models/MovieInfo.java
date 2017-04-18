@@ -2,34 +2,19 @@ package ru.surf.course.movierecommendations.models;
 
 import android.util.Log;
 import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@DatabaseTable(tableName = MovieInfo.TABLE_NAME_MOVIE_INFO)
 public class MovieInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
 
-  public static final String TABLE_NAME_MOVIE_INFO = "movie_info";
-  public static final String FIELD_NAME_ID = "id";
-  public static final String FIELD_NAME_REVENUE = "revenue";
-  public static final String FIELD_NAME_RUNTIME = "runtime";
-
-  public MovieInfo(){}
-
-  @DatabaseField(columnName = FIELD_NAME_ID,generatedId = true)
-  private int id;
-
-  @DatabaseField(columnName = FIELD_NAME_REVENUE)
   @SerializedName("revenue")
   private String mRevenue;
 
-  @DatabaseField(columnName = FIELD_NAME_RUNTIME)
   @SerializedName("runtime")
   private int mRuntime;
 
@@ -67,13 +52,6 @@ public class MovieInfo extends Media implements Serializable {
     this.mRuntime = runtime;
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
 
   public void fillFields(Object from) {
     ArrayList<Field> fields = new ArrayList<>(Arrays.asList(from.getClass().getDeclaredFields()));

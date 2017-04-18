@@ -23,7 +23,7 @@ import ru.surf.course.movierecommendations.models.Review;
  * Created by andrew on 2/18/17.
  */
 
-public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
+public class GetReviewsTask extends AsyncTask<String, Void, ArrayList<Review>> {
 
   private final String API_KEY_PARAM = "api_key";
   private final String TMDB_RESULTS = "results";
@@ -42,7 +42,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
   }
 
   @Override
-  protected List<Review> doInBackground(String... strings) {
+  protected ArrayList<Review> doInBackground(String... strings) {
 
     if (strings.length == 0) {
       return null;
@@ -105,8 +105,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
     }
 
     try {
-      List<Review> result = parseJson(creditsJsonStr);
-      return result;
+      return parseJson(creditsJsonStr);
     } catch (JSONException | ParseException e) {
       Log.e(LOG_TAG, e.getMessage(), e);
       e.printStackTrace();
@@ -116,7 +115,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
   }
 
   @Override
-  protected void onPostExecute(List<Review> reviews) {
+  protected void onPostExecute(ArrayList<Review> reviews) {
     invokeCompleteEvent(reviews);
   }
 
@@ -125,12 +124,12 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
     super.onPreExecute();
   }
 
-  private List<Review> parseJson(String jsonStr) throws JSONException, ParseException {
+  private ArrayList<Review> parseJson(String jsonStr) throws JSONException, ParseException {
 
     JSONObject jsonObject = new JSONObject(jsonStr);
     JSONArray results = jsonObject.getJSONArray(TMDB_RESULTS);
 
-    List<Review> result = new ArrayList<>();
+    ArrayList<Review> result = new ArrayList<>();
 
     switch (task) {
       case GET_MOVIE_REVIEWS:
@@ -177,7 +176,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
     listeners.add(listener);
   }
 
-  private void invokeCompleteEvent(List<Review> result) {
+  private void invokeCompleteEvent(ArrayList<Review> result) {
     for (int i = 0; i < listeners.size(); i++) {
       listeners.get(i).taskCompleted(result);
     }
@@ -185,7 +184,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, List<Review>> {
 
   public interface ReviewsTaskCompleteListener {
 
-    void taskCompleted(List<Review> result);
+    void taskCompleted(ArrayList<Review> result);
   }
 
 }

@@ -45,11 +45,11 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
   private Tasks task;
   private boolean isLoadingList;
   private List<PersonsTaskCompleteListener> listeners;
-  private Locale language;
+  private String language;
 
   public GetPersonsTask() {
     listeners = new ArrayList<>();
-    language = Locale.getDefault();
+    language = Utilities.getSystemLanguage();
   }
 
   @Override
@@ -60,7 +60,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
     }
 
     if (strings.length > 1) {
-      language = new Locale(strings[1]);
+      language = strings[1];
     }
 
     HttpURLConnection httpURLConnection = null;
@@ -202,19 +202,19 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
 
     result.setPopularity(jsonObject.getDouble(TMDB_POPULARITY));
 
-    result.setInfoLanguage(language);
+    result.setInfoLanguage(new Locale(language));
 
     return result;
   }
 
-  public void getPersonById(int personId, Locale language) {
+  public void getPersonById(int personId, String language) {
     task = Tasks.GET_PERSON_BY_ID;
     isLoadingList = false;
-    execute(String.valueOf(personId), language.getLanguage());
+    execute(String.valueOf(personId), language);
   }
 
   public void getPersonById(int personId) {
-    getPersonById(personId, Locale.getDefault());
+    getPersonById(personId, language);
   }
 
   private Uri uriForPersonDetails(int personId) {
@@ -222,7 +222,7 @@ public class GetPersonsTask extends AsyncTask<String, Void, List<Person>> {
     return Uri.parse(TMDB_BASE_URL).buildUpon()
         .appendPath(String.valueOf(personId))
         .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDB_API_KEY)
-        .appendQueryParameter(LANGUAGE_PARAM, language.getLanguage())
+        .appendQueryParameter(LANGUAGE_PARAM, language)
         .build();
   }
 

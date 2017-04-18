@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import at.blogc.android.views.ExpandableTextView;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import org.apmem.tools.layouts.FlowLayout;
 import ru.surf.course.movierecommendations.R;
@@ -27,13 +26,11 @@ import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
-import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -147,46 +144,37 @@ public class TvShowInfoFragment extends Fragment {
       loadCreditsInto(currentTvShowInfo);
     } else if (getArguments().containsKey(KEY_TV_SHOW_ID)) {
       currentTvShowInfo = new TVShowInfo(getArguments().getInt(KEY_TV_SHOW_ID));
-      loadInformationInto(currentTvShowInfo, getCurrentLocale().getLanguage());
+      loadInformationInto(currentTvShowInfo, Utilities.getSystemLanguage());
     }
   }
 
   private void loadInformationInto(final TVShowInfo tvShow, String language) {
     GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
-    getTVShowsTask.addListener(new GetMediaTask.TaskCompletedListener<TVShowInfo>() {
-      @Override
-      public void mediaLoaded(List<TVShowInfo> result, boolean newResult) {
-        if (tvShow != null) {
-          tvShow.fillFields(result.get(0));
-        }
-        dataLoadComplete();
-        loadBackdropsInto(currentTvShowInfo);
-        loadCreditsInto(currentTvShowInfo);
+    getTVShowsTask.addListener((result, newResult) -> {
+      if (tvShow != null) {
+        tvShow.fillFields(result.get(0));
       }
+      dataLoadComplete();
+      loadBackdropsInto(currentTvShowInfo);
+      loadCreditsInto(currentTvShowInfo);
     });
     getTVShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final TVShowInfo tvShow) {
     GetImagesTask getImagesTask = new GetImagesTask();
-    getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-      @Override
-      public void getImagesTaskCompleted(List<TmdbImage> result) {
-        tvShow.setBackdrops(result);
-        dataLoadComplete();
-      }
+    getImagesTask.addListener(result -> {
+      tvShow.setBackdrops(result);
+      dataLoadComplete();
     });
     getImagesTask.getTvImages(tvShow.getMediaId(), Tasks.GET_TV_BACKDROPS);
   }
 
   private void loadCreditsInto(final TVShowInfo tvShowInfo) {
     GetCreditsTask getCreditsTask = new GetCreditsTask();
-    getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(List<Credit> result) {
-        tvShowInfo.setCredits(result);
-        dataLoadComplete();
-      }
+    getCreditsTask.addListener(result -> {
+      tvShowInfo.setCredits(result);
+      dataLoadComplete();
     });
     getCreditsTask.getTVShowCredits(tvShowInfo.getMediaId());
   }
@@ -227,29 +215,21 @@ public class TvShowInfoFragment extends Fragment {
     numberOfSeasons.setText(String.valueOf(currentTvShowInfo.getNumberOfSeasons()));
 
     mImagesListAdapter = new ImagesListAdapter(currentTvShowInfo.getBackdrops(), getActivity());
-    mImagesListAdapter.setOnItemClickListener(new ImagesListAdapter.OnItemClickListener() {
-      @Override
-      public void onClick(int position) {
-        ArrayList<String> paths = new ArrayList<String>();
-        for (TmdbImage image :
-            mImagesListAdapter.getImages()) {
-          paths.add(image.path);
-        }
-        GalleryActivity.start(getActivity(), paths, position);
+    mImagesListAdapter.setOnItemClickListener(position -> {
+      ArrayList<String> paths = new ArrayList<String>();
+      for (TmdbImage image :
+          mImagesListAdapter.getImages()) {
+        paths.add(image.path);
       }
+      GalleryActivity.start(getActivity(), paths, position);
     });
     backdrops.setAdapter(mImagesListAdapter);
 
     mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentTvShowInfo.getCredits(),
         getActivity());
     mCreditsOfPeopleListAdapter
-        .setOnItemClickListener(new CreditsOfPeopleListAdapter.OnItemClickListener() {
-          @Override
-          public void onClick(int position) {
-            PersonActivity.start(getActivity(),
-                mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson());
-          }
-        });
+        .setOnItemClickListener(position -> PersonActivity.start(getActivity(),
+            mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson()));
     credits.setAdapter(mCreditsOfPeopleListAdapter);
 
     for (final Genre genre : currentTvShowInfo.getGenres()) {
@@ -264,12 +244,9 @@ public class TvShowInfoFragment extends Fragment {
               (int) getResources().getDimension(R.dimen.genre_button_margin_bottom));
       genreButton.setLayoutParams(layoutParams);
 
-      genreButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          if (getActivity() instanceof TvShowActivity) {
-            ((TvShowActivity) getActivity()).onGenreClick(genre);
-          }
+      genreButton.setOnClickListener(view -> {
+        if (getActivity() instanceof TvShowActivity) {
+          ((TvShowActivity) getActivity()).onGenreClick(genre);
         }
       });
     }
@@ -294,10 +271,6 @@ public class TvShowInfoFragment extends Fragment {
       }
     }
     Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

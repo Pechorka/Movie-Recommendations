@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.TypedValue;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,5 +51,9 @@ public class Utilities {
 
   public static String getSystemLanguage() {
     return Locale.getDefault().getCountry();
+  }
+
+  public static int getCurrentYear() {
+    return new GregorianCalendar().get(Calendar.YEAR);
   }
 }

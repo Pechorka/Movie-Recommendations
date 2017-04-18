@@ -28,11 +28,7 @@ public class SplachActivity extends AppCompatActivity {
 
   //delay - в миллисекундах
   private void delayAndRunActivity(long delay, final Class activity) {
-    Runnable runnable = new Runnable() {
-      public void run() {
-        MainActivity.start(SplachActivity.this, activity);
-      }
-    };
+    Runnable runnable = () -> MainActivity.start(SplachActivity.this, activity);
     Handler handler = new Handler();
     handler.postDelayed(runnable, delay);
   }

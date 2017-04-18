@@ -14,14 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
@@ -31,7 +29,6 @@ import ru.surf.course.movierecommendations.models.Favorite;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -118,24 +115,16 @@ public class TvShowActivity extends AppCompatActivity {
 
   private void setupViews() {
     toolbar.setNavigationIcon(R.drawable.ic_action_back);
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        onBackPressed();
-      }
-    });
+    toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-      @Override
-      public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        verticalOffset = Math.abs(verticalOffset);
-        int offsetToToolbar =
-            appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(TvShowActivity.this)
-                - fakeStatusBar.getMeasuredHeight();
-        if (verticalOffset >= offsetToToolbar) {
-          fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
-              .getActionBarHeight(TvShowActivity.this));
-        }
+    appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+      verticalOffset = Math.abs(verticalOffset);
+      int offsetToToolbar =
+          appBarLayout1.getTotalScrollRange() - Utilities.getActionBarHeight(TvShowActivity.this)
+              - fakeStatusBar.getMeasuredHeight();
+      if (verticalOffset >= offsetToToolbar) {
+        fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
+            .getActionBarHeight(TvShowActivity.this));
       }
     });
 
@@ -180,7 +169,7 @@ public class TvShowActivity extends AppCompatActivity {
     } else {
       final View errorPlaceholder = findViewById(R.id.tv_show_no_internet_screen);
       errorPlaceholder.setVisibility(View.VISIBLE);
-      ((Button) findViewById(R.id.message_no_internet_button))
+      findViewById(R.id.message_no_internet_button)
           .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +190,7 @@ public class TvShowActivity extends AppCompatActivity {
       currentMovie = new TVShowInfo(getIntent().getIntExtra(KEY_TV_SHOW_ID, -1));
     }
     if (currentMovie != null) {
-      loadInformationInto(currentMovie, getCurrentLocale().getLanguage());
+      loadInformationInto(currentMovie, Utilities.getSystemLanguage());
     }
 
     if (Build.VERSION.SDK_INT >= 19) {
@@ -211,14 +200,11 @@ public class TvShowActivity extends AppCompatActivity {
 
   private void loadInformationInto(final TVShowInfo tvShow, String language) {
     GetTVShowsTask getTvShowsTask = new GetTVShowsTask();
-    getTvShowsTask.addListener(new GetMediaTask.TaskCompletedListener() {
-      @Override
-      public void mediaLoaded(List result, boolean newResult) {
-        if (tvShow != null) {
-          tvShow.fillFields(result.get(0));
-        }
-        dataLoadComplete();
+    getTvShowsTask.addListener((result, newResult) -> {
+      if (tvShow != null) {
+        tvShow.fillFields(result.get(0));
       }
+      dataLoadComplete();
     });
     getTvShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
@@ -247,13 +233,10 @@ public class TvShowActivity extends AppCompatActivity {
     if (Utilities.checkString(currentMovie.getPosterPath())) {
       ImageLoader
           .putPosterNoResize(this, currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
-      poster.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          ArrayList<String> image = new ArrayList<String>();
-          image.add(currentMovie.getPosterPath());
-          GalleryActivity.start(TvShowActivity.this, image);
-        }
+      poster.setOnClickListener(view -> {
+        ArrayList<String> image = new ArrayList<String>();
+        image.add(currentMovie.getPosterPath());
+        GalleryActivity.start(TvShowActivity.this, image);
       });
     }
 
@@ -285,10 +268,6 @@ public class TvShowActivity extends AppCompatActivity {
   public void onGenreClick(Genre genre) {
     MainActivity
         .start(this, MainActivity.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

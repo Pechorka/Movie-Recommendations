@@ -2,7 +2,6 @@ package ru.surf.course.movierecommendations.fragments;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -57,17 +56,9 @@ public class SaveCustomFilterDialog extends DialogFragment {
     View layout = inflater.inflate(R.layout.dialog_save_custom_filter, null);
     builder.setView(layout)
         .setTitle(R.string.save_filter_dialog_title)
-        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int id) {
-            saveCustomFilter();
-          }
-        })
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            SaveCustomFilterDialog.this.getDialog().cancel();
-          }
-        })
+        .setPositiveButton(R.string.save, (dialog, id) -> saveCustomFilter())
+        .setNegativeButton(R.string.cancel,
+            (dialog, id) -> SaveCustomFilterDialog.this.getDialog().cancel())
         .setCancelable(true);
     filterName = (EditText) layout.findViewById(R.id.custom_filter_name);
     return builder.create();

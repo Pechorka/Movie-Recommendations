@@ -115,7 +115,7 @@ public class PersonInfoFragment extends Fragment {
       dataLoadComplete();
     } else if (getArguments().containsKey(KEY_PERSON_ID)) {
       currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
-      loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
+      loadInformationInto(currentPerson, Utilities.getSystemLanguage());
     }
   }
 
@@ -130,7 +130,7 @@ public class PersonInfoFragment extends Fragment {
         dataLoadComplete();
       }
     });
-    getPersonsTask.getPersonById(person.getId(), new Locale(language));
+    getPersonsTask.getPersonById(person.getId(), language);
   }
 
   private boolean checkInformation(Person person) {
@@ -192,10 +192,6 @@ public class PersonInfoFragment extends Fragment {
       }
     }
     Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

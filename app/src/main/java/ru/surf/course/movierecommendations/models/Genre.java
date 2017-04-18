@@ -1,23 +1,24 @@
 package ru.surf.course.movierecommendations.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 
 /**
  * Created by andrew on 2/18/17.
  */
 
-@DatabaseTable(tableName = Genre.TABLE_NAME_GENRES)
+
 public class Genre implements Serializable {
 
-
-  public static final String TABLE_NAME_GENRES = "genres";
   public static final String FIELD_NAME_ID = "id";
   public static final String FIELD_NAME_GENRE_ID = "genre_id";
   public static final String FIELD_NAME_GENRE_NAME = "genre_name";
-  public static final String FIELD_NAME_MEDIA = "media";
+  public static final String FIELD_NAME_CHECKED = "checked";
+
+  @DatabaseField(columnName = FIELD_NAME_ID)
+  private int dbId;
 
   @DatabaseField(columnName = FIELD_NAME_GENRE_ID)
   @SerializedName("id")
@@ -27,11 +28,12 @@ public class Genre implements Serializable {
   @SerializedName("name")
   private String mName;
 
-  @DatabaseField(columnName = FIELD_NAME_MEDIA,foreign = true)
-  private Media mMedia;
+  @DatabaseField(columnName = FIELD_NAME_CHECKED, dataType = DataType.BOOLEAN)
+  private boolean checked;
 
-  @DatabaseField(columnName = FIELD_NAME_ID)
-  private int mId;
+  public Genre() {
+  }
+
 
   public Genre(int id, String name) {
     mGenreId = id;
@@ -58,19 +60,23 @@ public class Genre implements Serializable {
     mName = name;
   }
 
-  public Media getmMedia() {
-    return mMedia;
+  public int getId() {
+    return dbId;
   }
 
-  public void setmMedia(Media mMedia) {
-    this.mMedia = mMedia;
+  public void setId(int id) {
+    this.dbId = id;
   }
 
-  public int getmId() {
-    return mId;
+  public boolean isChecked() {
+    return checked;
   }
 
-  public void setmId(int mId) {
-    this.mId = mId;
+  public void setChecked(boolean checked) {
+    this.checked = checked;
+  }
+
+  public void reverseChecked() {
+    checked = !checked;
   }
 }

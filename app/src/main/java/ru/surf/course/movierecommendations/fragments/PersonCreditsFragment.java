@@ -12,12 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import java.util.List;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.adapters.PersonCreditsListAdapter;
-import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Media;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.Person;
@@ -103,31 +101,25 @@ public class PersonCreditsFragment extends Fragment {
 
   private void loadCredits(final Person person) {
     GetCreditsTask getCreditsTask = new GetCreditsTask();
-    getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(List<Credit> result) {
-        person.setCredits(result);
-        dataLoadComplete();
-      }
+    getCreditsTask.addListener(result -> {
+      person.setCredits(result);
+      dataLoadComplete();
     });
-    getCreditsTask.getPersonCredits(currentPerson.getId(), getCurrentLocale());
+    getCreditsTask.getPersonCredits(currentPerson.getId(), Utilities.getSystemLanguage());
   }
 
   private void fillInformation() {
     mPersonCreditsListAdapter = new PersonCreditsListAdapter(getActivity(),
         currentPerson.getCredits());
-    mPersonCreditsListAdapter.setListener(new PersonCreditsListAdapter.OnItemClickListener() {
-      @Override
-      public void onClick(int position) {
+    mPersonCreditsListAdapter.setListener(position -> {
 
-        Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
-        if (media instanceof MovieInfo) {
-          MovieActivity.start(getActivity(), (MovieInfo) media);
-        } else if (media instanceof TVShowInfo) {
-          return;
-        }
-
+      Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
+      if (media instanceof MovieInfo) {
+        MovieActivity.start(getActivity(), (MovieInfo) media);
+      } else if (media instanceof TVShowInfo) {
+        return;
       }
+
     });
     mCreditsList.setAdapter(mPersonCreditsListAdapter);
   }
@@ -149,9 +141,4 @@ public class PersonCreditsFragment extends Fragment {
     }
 
   }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
-  }
-
 }

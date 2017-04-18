@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import at.blogc.android.views.ExpandableTextView;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import org.apmem.tools.layouts.FlowLayout;
 import ru.surf.course.movierecommendations.R;
@@ -27,14 +26,12 @@ import ru.surf.course.movierecommendations.activities.MovieActivity;
 import ru.surf.course.movierecommendations.activities.PersonActivity;
 import ru.surf.course.movierecommendations.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.adapters.ImagesListAdapter;
-import ru.surf.course.movierecommendations.models.Credit;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MovieInfo;
 import ru.surf.course.movierecommendations.models.ProductionCountries;
 import ru.surf.course.movierecommendations.models.TmdbImage;
 import ru.surf.course.movierecommendations.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
 
@@ -152,46 +149,37 @@ public class MovieInfoFragment extends Fragment {
       loadCreditsInto(currentMovieInfo);
     } else if (getArguments().containsKey(KEY_MOVIE_ID)) {
       currentMovieInfo = new MovieInfo(getArguments().getInt(KEY_MOVIE_ID));
-      loadInformationInto(currentMovieInfo, getCurrentLocale().getLanguage());
+      loadInformationInto(currentMovieInfo, Utilities.getSystemLanguage());
     }
   }
 
   private void loadInformationInto(final MovieInfo movie, String language) {
     GetMoviesTask getMovieInfosTask = new GetMoviesTask();
-    getMovieInfosTask.addListener(new GetMediaTask.TaskCompletedListener<MovieInfo>() {
-      @Override
-      public void mediaLoaded(List<MovieInfo> result, boolean newResult) {
-        if (movie != null) {
-          movie.fillFields(result.get(0));
-        }
-        dataLoadComplete();
-        loadBackdropsInto(currentMovieInfo);
-        loadCreditsInto(currentMovieInfo);
+    getMovieInfosTask.addListener((result, newResult) -> {
+      if (movie != null) {
+        movie.fillFields(result.get(0));
       }
+      dataLoadComplete();
+      loadBackdropsInto(currentMovieInfo);
+      loadCreditsInto(currentMovieInfo);
     });
     getMovieInfosTask.getMediaById(movie.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final MovieInfo movie) {
     GetImagesTask getImagesTask = new GetImagesTask();
-    getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-      @Override
-      public void getImagesTaskCompleted(List<TmdbImage> result) {
-        movie.setBackdrops(result);
-        dataLoadComplete();
-      }
+    getImagesTask.addListener(result -> {
+      movie.setBackdrops(result);
+      dataLoadComplete();
     });
     getImagesTask.getMovieImages(movie.getMediaId(), Tasks.GET_BACKDROPS);
   }
 
   private void loadCreditsInto(final MovieInfo movieInfo) {
     GetCreditsTask getCreditsTask = new GetCreditsTask();
-    getCreditsTask.addListener(new GetCreditsTask.CreditsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(List<Credit> result) {
-        movieInfo.setCredits(result);
-        dataLoadComplete();
-      }
+    getCreditsTask.addListener(result -> {
+      movieInfo.setCredits(result);
+      dataLoadComplete();
     });
     getCreditsTask.getMovieCredits(movieInfo.getMediaId());
   }
@@ -214,41 +202,30 @@ public class MovieInfoFragment extends Fragment {
       overview.setText(currentMovieInfoEnglish.getOverview());
     }
 
-    overview.post(new Runnable() {
-      @Override
-      public void run() {
-        if (overview.getLineCount() >= overview.getMaxLines()) {
-          expandCollapseBiographyButton.setVisibility(View.VISIBLE);
-        }
+    overview.post(() -> {
+      if (overview.getLineCount() >= overview.getMaxLines()) {
+        expandCollapseBiographyButton.setVisibility(View.VISIBLE);
       }
     });
 
     voteAverage.setText(String.valueOf(currentMovieInfo.getVoteAverage()));
 
     mImagesListAdapter = new ImagesListAdapter(currentMovieInfo.getBackdrops(), getActivity());
-    mImagesListAdapter.setOnItemClickListener(new ImagesListAdapter.OnItemClickListener() {
-      @Override
-      public void onClick(int position) {
-        ArrayList<String> paths = new ArrayList<String>();
-        for (TmdbImage image :
-            mImagesListAdapter.getImages()) {
-          paths.add(image.path);
-        }
-        GalleryActivity.start(getActivity(), paths, position);
+    mImagesListAdapter.setOnItemClickListener(position -> {
+      ArrayList<String> paths = new ArrayList<String>();
+      for (TmdbImage image :
+          mImagesListAdapter.getImages()) {
+        paths.add(image.path);
       }
+      GalleryActivity.start(getActivity(), paths, position);
     });
     backdrops.setAdapter(mImagesListAdapter);
 
     mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentMovieInfo.getCredits(),
         getActivity());
     mCreditsOfPeopleListAdapter
-        .setOnItemClickListener(new CreditsOfPeopleListAdapter.OnItemClickListener() {
-          @Override
-          public void onClick(int position) {
-            PersonActivity.start(getActivity(),
-                mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson());
-          }
-        });
+        .setOnItemClickListener(position -> PersonActivity.start(getActivity(),
+            mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson()));
     credits.setAdapter(mCreditsOfPeopleListAdapter);
 
     if (!currentMovieInfo.getBudget().equals("0")) {
@@ -294,12 +271,9 @@ public class MovieInfoFragment extends Fragment {
               (int) getResources().getDimension(R.dimen.genre_button_margin_bottom));
       genreButton.setLayoutParams(layoutParams);
 
-      genreButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          if (getActivity() instanceof MovieActivity) {
-            ((MovieActivity) getActivity()).onGenreClick(genre);
-          }
+      genreButton.setOnClickListener(view -> {
+        if (getActivity() instanceof MovieActivity) {
+          ((MovieActivity) getActivity()).onGenreClick(genre);
         }
       });
     }
@@ -323,10 +297,6 @@ public class MovieInfoFragment extends Fragment {
       }
     }
     Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

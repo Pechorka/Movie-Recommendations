@@ -1,11 +1,13 @@
 package ru.surf.course.movierecommendations.models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by sergey on 04.04.17.
  */
 
+@DatabaseTable(tableName = CustomFilter.TABLE_NAME_CUSTOM_FILTER)
 public class CustomFilter {
 
   public static final String TABLE_NAME_CUSTOM_FILTER = "custom_filter";
@@ -17,10 +19,26 @@ public class CustomFilter {
   public static final String FIELD_NAME_SORT_DIRECTION = "sort_direction";
   public static final String FIELD_NAME_MIN_YEAR = "min_year";
   public static final String FIELD_NAME_MAX_YEAR = "max_year";
+  @DatabaseField(columnName = FIELD_NAME_ID,generatedId = true)
+  private int id;
+  @DatabaseField(columnName = FIELD_NAME_FILTER_NAME)
+  private String filterName;
+  @DatabaseField(columnName = FIELD_NAME_GENRES_IDS)
+  private String genreIds;
+  @DatabaseField(columnName = FIELD_NAME_SORT_TYPE)
+  private String sortType;
+  @DatabaseField(columnName = FIELD_NAME_SORT_DIRECTION)
+  private String sortDirection;
+  @DatabaseField(columnName = FIELD_NAME_MIN_YEAR)
+  private String minYear;
+  @DatabaseField(columnName = FIELD_NAME_MAX_YEAR)
+  private String maxYear;
 
-  public CustomFilter(){}
+  public CustomFilter() {
+  }
 
-  public CustomFilter(String filterName, String genreIds, String sortType,String sortDirection, String minYear,
+  public CustomFilter(String filterName, String genreIds, String sortType, String sortDirection,
+      String minYear,
       String maxYear) {
     this.filterName = filterName;
     this.genreIds = genreIds;
@@ -29,27 +47,6 @@ public class CustomFilter {
     this.minYear = minYear;
     this.maxYear = maxYear;
   }
-
-  @DatabaseField(columnName = FIELD_NAME_ID,generatedId = true)
-  private int id;
-
-  @DatabaseField(columnName = FIELD_NAME_FILTER_NAME)
-  private String filterName;
-
-  @DatabaseField(columnName = FIELD_NAME_GENRES_IDS)
-  private String genreIds;
-
-  @DatabaseField(columnName = FIELD_NAME_SORT_TYPE)
-  private String sortType;
-
-  @DatabaseField(columnName = FIELD_NAME_SORT_DIRECTION)
-  private String sortDirection;
-
-  @DatabaseField(columnName = FIELD_NAME_MIN_YEAR)
-  private String minYear;
-
-  @DatabaseField(columnName = FIELD_NAME_MAX_YEAR)
-  private String maxYear;
 
   public int getId() {
     return id;

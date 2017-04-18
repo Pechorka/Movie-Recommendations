@@ -14,14 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
@@ -31,7 +29,6 @@ import ru.surf.course.movierecommendations.models.Favorite;
 import ru.surf.course.movierecommendations.models.Genre;
 import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.models.MovieInfo;
-import ru.surf.course.movierecommendations.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.tmdbTasks.ImageLoader;
 
@@ -117,24 +114,16 @@ public class MovieActivity extends AppCompatActivity {
 
   private void setupViews() {
     toolbar.setNavigationIcon(R.drawable.ic_action_back);
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        onBackPressed();
-      }
-    });
+    toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-      @Override
-      public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        verticalOffset = Math.abs(verticalOffset);
-        int offsetToToolbar =
-            appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(MovieActivity.this)
-                - fakeStatusBar.getMeasuredHeight();
-        if (verticalOffset >= offsetToToolbar) {
-          fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
-              .getActionBarHeight(MovieActivity.this));
-        }
+    appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+      verticalOffset = Math.abs(verticalOffset);
+      int offsetToToolbar =
+          appBarLayout1.getTotalScrollRange() - Utilities.getActionBarHeight(MovieActivity.this)
+              - fakeStatusBar.getMeasuredHeight();
+      if (verticalOffset >= offsetToToolbar) {
+        fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
+            .getActionBarHeight(MovieActivity.this));
       }
     });
 
@@ -179,14 +168,11 @@ public class MovieActivity extends AppCompatActivity {
     } else {
       final View errorPlaceholder = findViewById(R.id.movie_no_internet_screen);
       errorPlaceholder.setVisibility(View.VISIBLE);
-      ((Button) findViewById(R.id.message_no_internet_button))
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (Utilities.isConnectionAvailable(MovieActivity.this)) {
-                errorPlaceholder.setVisibility(View.GONE);
-                startLoading();
-              }
+      findViewById(R.id.message_no_internet_button)
+          .setOnClickListener(view -> {
+            if (Utilities.isConnectionAvailable(MovieActivity.this)) {
+              errorPlaceholder.setVisibility(View.GONE);
+              startLoading();
             }
           });
     }
@@ -200,7 +186,7 @@ public class MovieActivity extends AppCompatActivity {
       currentMovie = new MovieInfo(getIntent().getIntExtra(KEY_MOVIE_ID, -1));
     }
     if (currentMovie != null) {
-      loadInformationInto(currentMovie, getCurrentLocale().getLanguage());
+      loadInformationInto(currentMovie, Utilities.getSystemLanguage());
     }
 
     if (Build.VERSION.SDK_INT >= 19) {
@@ -210,14 +196,11 @@ public class MovieActivity extends AppCompatActivity {
 
   private void loadInformationInto(final MovieInfo movie, String language) {
     GetMoviesTask getMoviesTask = new GetMoviesTask();
-    getMoviesTask.addListener(new GetMediaTask.TaskCompletedListener() {
-      @Override
-      public void mediaLoaded(List result, boolean newResult) {
-        if (movie != null) {
-          movie.fillFields(result.get(0));
-        }
-        dataLoadComplete();
+    getMoviesTask.addListener((result, newResult) -> {
+      if (movie != null) {
+        movie.fillFields(result.get(0));
       }
+      dataLoadComplete();
     });
     getMoviesTask.getMediaById(movie.getMediaId(), language);
   }
@@ -246,13 +229,10 @@ public class MovieActivity extends AppCompatActivity {
     if (Utilities.checkString(currentMovie.getPosterPath())) {
       ImageLoader
           .putPosterNoResize(this, currentMovie.getPosterPath(), poster, ImageLoader.sizes.w500);
-      poster.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          ArrayList<String> image = new ArrayList<String>();
-          image.add(currentMovie.getPosterPath());
-          GalleryActivity.start(MovieActivity.this, image);
-        }
+      poster.setOnClickListener(view -> {
+        ArrayList<String> image = new ArrayList<String>();
+        image.add(currentMovie.getPosterPath());
+        GalleryActivity.start(MovieActivity.this, image);
       });
     }
 
@@ -284,10 +264,6 @@ public class MovieActivity extends AppCompatActivity {
   public void onGenreClick(Genre genre) {
     MainActivity
         .start(this, MainActivity.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

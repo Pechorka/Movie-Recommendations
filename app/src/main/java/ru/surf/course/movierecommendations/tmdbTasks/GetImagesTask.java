@@ -209,6 +209,6 @@ public class GetImagesTask extends AsyncTask<String, Void, List<TmdbImage>> {
 
   public interface TaskCompletedListener {
 
-    public void getImagesTaskCompleted(List<TmdbImage> result);
+    void getImagesTaskCompleted(List<TmdbImage> result);
   }
 }

@@ -12,8 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import java.util.List;
-import java.util.Locale;
+import java.util.ArrayList;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.MovieReviewsAdapter;
 import ru.surf.course.movierecommendations.models.MovieInfo;
@@ -101,7 +100,7 @@ public class MovieReviewsFragment extends Fragment {
     GetReviewsTask getReviewsTask = new GetReviewsTask();
     getReviewsTask.addListener(new GetReviewsTask.ReviewsTaskCompleteListener() {
       @Override
-      public void taskCompleted(List<Review> result) {
+      public void taskCompleted(ArrayList<Review> result) {
         movie.setReviews(result);
         dataLoadComplete();
       }
@@ -135,10 +134,6 @@ public class MovieReviewsFragment extends Fragment {
 
     }
 
-  }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
   }
 
 }

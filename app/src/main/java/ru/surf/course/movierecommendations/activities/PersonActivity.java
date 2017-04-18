@@ -14,14 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.PersonInfosPagerAdapter;
@@ -105,24 +103,16 @@ public class PersonActivity extends AppCompatActivity {
 
   private void setupViews() {
     toolbar.setNavigationIcon(R.drawable.ic_action_back);
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        onBackPressed();
-      }
-    });
+    toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-      @Override
-      public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        verticalOffset = Math.abs(verticalOffset);
-        int offsetToToolbar =
-            appBarLayout.getTotalScrollRange() - Utilities.getActionBarHeight(PersonActivity.this)
-                - fakeStatusBar.getMeasuredHeight();
-        if (verticalOffset >= offsetToToolbar) {
-          fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
-              .getActionBarHeight(PersonActivity.this));
-        }
+    appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+      verticalOffset = Math.abs(verticalOffset);
+      int offsetToToolbar =
+          appBarLayout1.getTotalScrollRange() - Utilities.getActionBarHeight(PersonActivity.this)
+              - fakeStatusBar.getMeasuredHeight();
+      if (verticalOffset >= offsetToToolbar) {
+        fakeStatusBar.setAlpha((float) (verticalOffset - offsetToToolbar) / Utilities
+            .getActionBarHeight(PersonActivity.this));
       }
     });
   }
@@ -135,14 +125,11 @@ public class PersonActivity extends AppCompatActivity {
     } else {
       final View errorPlaceholder = findViewById(R.id.person_no_internet_screen);
       errorPlaceholder.setVisibility(View.VISIBLE);
-      ((Button) findViewById(R.id.message_no_internet_button))
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (Utilities.isConnectionAvailable(PersonActivity.this)) {
-                errorPlaceholder.setVisibility(View.GONE);
-                startLoading();
-              }
+      findViewById(R.id.message_no_internet_button)
+          .setOnClickListener(view -> {
+            if (Utilities.isConnectionAvailable(PersonActivity.this)) {
+              errorPlaceholder.setVisibility(View.GONE);
+              startLoading();
             }
           });
     }
@@ -156,7 +143,7 @@ public class PersonActivity extends AppCompatActivity {
       currentPerson = new Person(getIntent().getIntExtra(KEY_PERSON_ID, -1));
     }
     if (currentPerson != null) {
-      loadInformationInto(currentPerson, getCurrentLocale().getLanguage());
+      loadInformationInto(currentPerson, Utilities.getSystemLanguage());
       loadProfilePicturesInto(currentPerson);
     }
 
@@ -167,16 +154,13 @@ public class PersonActivity extends AppCompatActivity {
 
   private void loadInformationInto(final Person person, String language) {
     GetPersonsTask getPersonsTask = new GetPersonsTask();
-    getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(List<Person> result) {
-        if (person != null) {
-          person.fillFields(result.get(0));
-        }
-        dataLoadComplete();
+    getPersonsTask.addListener(result -> {
+      if (person != null) {
+        person.fillFields(result.get(0));
       }
+      dataLoadComplete();
     });
-    getPersonsTask.getPersonById(person.getId(), new Locale(language));
+    getPersonsTask.getPersonById(person.getId(), language);
   }
 
   private void loadProfilePicturesInto(final Person person) {
@@ -245,9 +229,6 @@ public class PersonActivity extends AppCompatActivity {
     }
   }
 
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
-  }
 
 
 }

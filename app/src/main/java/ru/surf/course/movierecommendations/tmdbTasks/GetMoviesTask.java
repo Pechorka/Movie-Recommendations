@@ -247,7 +247,7 @@ public class GetMoviesTask extends GetMediaTask {
       JSONArray movieArray = movieJson.getJSONArray(TMDB_RESULTS);
       JSONArray genres;
 
-      List<Genre> genresList;
+      ArrayList<Genre> genresList;
       for (int i = 0; i < movieArray.length(); i++) {
         //get genres
         genres = movieArray.getJSONObject(i).getJSONArray(TMDB_GENRE_IDS);
@@ -276,7 +276,7 @@ public class GetMoviesTask extends GetMediaTask {
     } else {
       //get genres
       JSONArray genres;
-      List<Genre> genreList = new ArrayList<>();
+      ArrayList<Genre> genreList = new ArrayList<>();
       genres = movieJson.getJSONArray(TMDB_GENRES);
       for (int k = 0; k < genres.length(); k++) {
         genreList.add(new Genre(
@@ -286,7 +286,7 @@ public class GetMoviesTask extends GetMediaTask {
 
       //get production companies =
       JSONArray productionCompanies;
-      List<ProductionCompanies> productionCompaniesResult;
+      ArrayList<ProductionCompanies> productionCompaniesResult;
       productionCompanies = movieJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
       productionCompaniesResult = new ArrayList<>();
       for (int k = 0; k < productionCompanies.length(); k++) {
@@ -296,7 +296,7 @@ public class GetMoviesTask extends GetMediaTask {
 
       //get production countries
       JSONArray productionCountries;
-      List<ProductionCountries> productionCountriesResult;
+      ArrayList<ProductionCountries> productionCountriesResult;
       productionCountries = movieJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
       productionCountriesResult = new ArrayList<>();
       for (int k = 0; k < productionCountries.length(); k++) {
@@ -319,7 +319,11 @@ public class GetMoviesTask extends GetMediaTask {
       item.setProductionCountriesNames(productionCountriesResult);
       item.setRevenue(movieJson.getString(TMDB_REVENUE));
       item.setStatus(movieJson.getString(TMDB_STATUS));
-      item.setRuntime(movieJson.getInt(TMDB_RUNTIME));
+      try {
+        item.setRuntime(movieJson.getInt(TMDB_RUNTIME));
+      } catch (JSONException e) {
+        Log.d(LOG_TAG, "Empty runtime, most likely");
+      }
       try {
         item.setDate(formatter.parse(movieJson.getString(TMDB_DATE)));
       } catch (ParseException e) {

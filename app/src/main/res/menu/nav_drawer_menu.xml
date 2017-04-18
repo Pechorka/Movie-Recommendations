@@ -18,8 +18,10 @@
 
     <item
       android:id="@+id/nav_custom"
+      android:checkable="true"
       android:icon="@drawable/custom_filter_icon"
       android:title="@string/custom" />
+
     <item
       android:id="@+id/nav_upcoming_or_on_air"
       android:icon="@drawable/upcoming_icon"

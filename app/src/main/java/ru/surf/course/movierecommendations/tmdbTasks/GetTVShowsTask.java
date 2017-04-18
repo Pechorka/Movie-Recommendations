@@ -251,7 +251,7 @@ public class GetTVShowsTask extends GetMediaTask {
       JSONArray genres;
       JSONArray originCountries;
 
-      List<Genre> genresList;
+      ArrayList<Genre> genresList;
       List<String> originCountryList;
 
       for (int i = 0; i < tvShowArray.length(); i++) {
@@ -291,7 +291,7 @@ public class GetTVShowsTask extends GetMediaTask {
     } else {
       //get genres
       JSONArray genres = tvShowsJson.getJSONArray(TMDB_GENRES);
-      List<Genre> genreList = new ArrayList<>();
+      ArrayList<Genre> genreList = new ArrayList<>();
       for (int k = 0; k < genres.length(); k++) {
         genreList.add(new Genre(
             genres.getJSONObject(k).getInt(TMDB_ID),
@@ -308,13 +308,13 @@ public class GetTVShowsTask extends GetMediaTask {
 
       //get production companies names
       JSONArray productionCompanies = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COMPANIES);
-      List<ProductionCompanies> productionCompaniesResult = new ArrayList<>();
+      ArrayList<ProductionCompanies> productionCompaniesResult = new ArrayList<>();
       for (int k = 0; k < productionCompanies.length(); k++) {
         productionCompaniesResult.add(new ProductionCompanies(productionCompanies.getJSONObject(k).getString(TMDB_NAME),1));
       }
 
       //get production countries
-      List<ProductionCountries> productionCountriesResult = new ArrayList<>();
+      ArrayList<ProductionCountries> productionCountriesResult = new ArrayList<>();
       try {
         JSONArray productionCountries = tvShowsJson.getJSONArray(TMDB_PRODUCTION_COUNTRIES);
         for (int k = 0; k < productionCountries.length(); k++) {

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.adapters.TvShowSeasonsListAdapter;
 import ru.surf.course.movierecommendations.models.TVShowInfo;
@@ -128,9 +127,4 @@ public class TvShowSeasonsFragment extends Fragment {
     }
 
   }
-
-  private Locale getCurrentLocale() {
-    return Locale.getDefault();
-  }
-
 }

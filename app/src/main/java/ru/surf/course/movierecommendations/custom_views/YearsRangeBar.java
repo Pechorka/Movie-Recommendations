@@ -8,9 +8,8 @@ import android.widget.TextView;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.Utilities;
 
 /**
  * Created by Sergey on 12.01.2017.
@@ -42,17 +41,28 @@ public class YearsRangeBar extends RelativeLayout {
   public void setMinYear(int minYear) {
     this.minYear = minYear;
     minY.setText(String.valueOf(minYear));
-    if (curMinYear < minYear) {
+    if (curMinYear < minYear && minYear >= this.minYear) {
       curMinYear = minYear;
+
     }
+  }
+
+  public void setStartMinValue(int startMinValue) {
+    rangeBar.setMinStartValue(startMinValue);
+    rangeBar.apply();
   }
 
   public void setMaxYear(int maxYear) {
     this.maxYear = maxYear;
     maxY.setText(String.valueOf(maxYear));
-    if (curMaxYear > maxYear) {
+    if (curMaxYear > maxYear && maxYear <= this.maxYear) {
       curMaxYear = maxYear;
     }
+  }
+
+  public void setStartMaxValue(int startMaxValue) {
+    rangeBar.setMinStartValue(startMaxValue);
+    rangeBar.apply();
   }
 
   public int getCurMinYear() {
@@ -69,7 +79,7 @@ public class YearsRangeBar extends RelativeLayout {
     minY = (TextView) rootView.findViewById(R.id.rb_min_year);
     maxY = (TextView) rootView.findViewById(R.id.rb_max_year);
     rangeBar = (CrystalRangeSeekbar) rootView.findViewById(R.id.rb);
-    maxYear = new GregorianCalendar().get(Calendar.YEAR);
+    maxYear = Utilities.getCurrentYear();
     minYear = 1930;
     curMaxYear = maxYear;
     curMinYear = minYear;
@@ -81,19 +91,15 @@ public class YearsRangeBar extends RelativeLayout {
     maxY.setText(String.valueOf(maxYear));
     rangeBar.setMaxValue(maxYear);
     rangeBar.setMinValue(minYear);
-    rangeBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
-      @Override
-      public void valueChanged(Number minValue, Number maxValue) {
-        minY.setText(String.valueOf(minValue));
-        maxY.setText(String.valueOf(maxValue));
-        if (curMinYear != minValue.intValue()) {
-          curMinYear = minValue.intValue();
-        }
-        if (curMaxYear != maxValue.intValue()) {
-          curMaxYear = maxValue.intValue();
-        }
+    rangeBar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+      minY.setText(String.valueOf(minValue));
+      maxY.setText(String.valueOf(maxValue));
+      if (curMinYear != minValue.intValue()) {
+        curMinYear = minValue.intValue();
       }
-
+      if (curMaxYear != maxValue.intValue()) {
+        curMaxYear = maxValue.intValue();
+      }
     });
 
   }

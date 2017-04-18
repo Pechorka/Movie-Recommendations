@@ -1,12 +1,13 @@
 package ru.surf.course.movierecommendations.activities;
 
 
+import static ru.surf.course.movierecommendations.models.MediaType.tv;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,13 +26,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import java.util.List;
-import java.util.Locale;
 import ru.surf.course.movierecommendations.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.Utilities;
 import ru.surf.course.movierecommendations.adapters.ContentFragmentPagerAdapter;
-import ru.surf.course.movierecommendations.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.fragments.MediaListFragment;
+import ru.surf.course.movierecommendations.models.MediaType;
 import ru.surf.course.movierecommendations.models.RecommendedGenres;
 import ru.surf.course.movierecommendations.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.tmdbTasks.Tasks;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
   public static final String KEY_SEARCH_QUERY = "search_query";
   public static final String KEY_GENRE_IDS = "genre_ids";
-  public static final String KEY_MOVIE = "movie";
+  public static final String KEY_MEDIA = "media";
   public static final String KEY_GENRE_NAME = "genre_name";
   private static final String LOG_TAG = MainActivity.class.getSimpleName();
   private static final int UPCOMING_ID = 2;
@@ -54,14 +54,13 @@ public class MainActivity extends AppCompatActivity {
   private ViewPager viewPager;
   private TabLayout tabLayout;
 
-  private String language;
   private String region;
   private String query;
   private String previousQuery;
-  private int movieLastDrawerItemId;
-  private int tvshowLastDrawerItemId;
+
   private MediaListFragment movieListFragment;
   private MediaListFragment tvShowListFragment;
+  private DBHelper dbHelper;
 
   public static void start(Context context, Class c) {
     Intent intent = new Intent(context, c);
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
   public static void start(Context context, Class c, String ids, String genreName, boolean movie) {
     Intent intent = new Intent(context, c);
     intent.putExtra(KEY_GENRE_IDS, ids);
-    intent.putExtra(KEY_MOVIE, movie);
+    intent.putExtra(KEY_MEDIA, movie);
     intent.putExtra(KEY_GENRE_NAME, genreName);
     context.startActivity(intent);
   }
@@ -87,14 +86,11 @@ public class MainActivity extends AppCompatActivity {
       final View errorPlaceholder = findViewById(R.id.main_no_internet_screen);
       errorPlaceholder.setVisibility(View.VISIBLE);
       (findViewById(R.id.message_no_internet_button))
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (Utilities.isConnectionAvailable(MainActivity.this)) {
-                errorPlaceholder.setVisibility(View.GONE);
-                init();
-                setup();
-              }
+          .setOnClickListener(view -> {
+            if (Utilities.isConnectionAvailable(MainActivity.this)) {
+              errorPlaceholder.setVisibility(View.GONE);
+              init();
+              setup();
             }
           });
     }
@@ -114,18 +110,11 @@ public class MainActivity extends AppCompatActivity {
     MenuItem searchItem = menu.findItem(R.id.action_search);
     final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
     searchView.setInputType(InputType.TYPE_CLASS_TEXT);
-    if (tabLayout.getSelectedTabPosition() == 0) {
-      searchView.setQueryHint(getString(R.string.search_hint_movies));
-    } else {
-      searchView.setQueryHint(getString(R.string.search_hint_tvshows));
-    }
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
       public boolean onQueryTextSubmit(String query) {
         if (Utilities.isConnectionAvailable(MainActivity.this)) {
-          //0 - movie tab
-          searchByName(query.replace(' ', '+'), tabLayout.getSelectedTabPosition() == 0);
-
+          searchByName(query.replace(' ', '+'));
         }
         searchView.clearFocus();
         return true;
@@ -164,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    GenreListAdapter.clearChecked(this);
+    dbHelper.clearMoiveGenres();
+    dbHelper.clearTVShowGenres();
   }
 
   private void init() {
@@ -172,35 +162,40 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     nvDrawer = (NavigationView) findViewById(R.id.nvView);
-    language = Locale.getDefault().getLanguage();
     region = Utilities.getSystemLanguage();
     drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,
         R.string.drawer_close);
     viewPager = (ViewPager) findViewById(R.id.viewpager);
+    dbHelper = DBHelper.getHelper(this);
+    Tasks task = Tasks.SEARCH_BY_FILTER;
+    query = Filters.popular.toString();
     if (getIntent().hasExtra(KEY_GENRE_IDS)) {
       query = getIntent().getStringExtra(KEY_GENRE_IDS);
-      movieListFragment = MediaListFragment.newInstance(query,
-          language, region, Tasks.SEARCH_BY_GENRE, true);
-      tvShowListFragment = MediaListFragment.newInstance(query,
-          language, region, Tasks.SEARCH_BY_GENRE, false);
+      task = Tasks.SEARCH_BY_GENRE;
     } else {
-      if (getRecommendedGenreIds(true).length() != 0) {
-        query = getRecommendedGenreIds(false);
-        tvShowListFragment = MediaListFragment.newInstance(query,
-            language, region, Tasks.SEARCH_RECOMMENDED_MEDIA, false);
-
-        query = getRecommendedGenreIds(true);
-        movieListFragment = MediaListFragment.newInstance(query,
-            language, region, Tasks.SEARCH_RECOMMENDED_MEDIA, true);
-      } else {
-        query = Filters.popular.toString();
-        movieListFragment = MediaListFragment.newInstance(query,
-            language, region, Tasks.SEARCH_BY_FILTER, true);
-        tvShowListFragment = MediaListFragment.newInstance(query,
-            language, region, Tasks.SEARCH_BY_FILTER, false);
+      if (recommendedGenresAvailable()) {
+        task = Tasks.SEARCH_RECOMMENDED_MEDIA;
       }
     }
+    switch (task) {
+      case SEARCH_RECOMMENDED_MEDIA:
+        initFragments(task, getRecommendedGenreIds(MediaType.movie),
+            getRecommendedGenreIds(tv));
+        break;
+      default:
+        initFragments(task);
+    }
 
+  }
+
+  private void initFragments(Tasks task) {
+    movieListFragment = MediaListFragment.newInstance(query, region, task, MediaType.movie);
+    tvShowListFragment = MediaListFragment.newInstance(query, region, task, tv);
+  }
+
+  private void initFragments(Tasks task, String movieQuery, String tvshowQuery) {
+    movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, MediaType.movie);
+    tvShowListFragment = MediaListFragment.newInstance(tvshowQuery, region, task, tv);
   }
 
   private void setup() {
@@ -214,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
     tabLayout.setupWithViewPager(viewPager);
-    movieLastDrawerItemId = tvshowLastDrawerItemId = R.id.nav_popular;
     viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
       public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -225,10 +219,10 @@ public class MainActivity extends AppCompatActivity {
       public void onPageSelected(int position) {
         switch (position) {
           case 0:
-            switchDrawer(true);
+            switchDrawer(MediaType.movie);
             break;
           case 1:
-            switchDrawer(false);
+            switchDrawer(tv);
             break;
         }
       }
@@ -250,28 +244,22 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.recommend);
       }
     }
-
-    if (!getIntent().getBooleanExtra(KEY_MOVIE, true)) {
-      switchDrawer(false);
-      viewPager.setCurrentItem(1);
-      nvDrawer
-          .setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-              selectDrawerItem(item, false);
-              return true;
-            }
-          });
+    MediaType mediaType;
+    if (getIntent().hasExtra(KEY_MEDIA)) {
+      mediaType = (MediaType) getIntent().getSerializableExtra(KEY_MEDIA);
     } else {
-      nvDrawer
-          .setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-              selectDrawerItem(item, true);
-              return true;
-            }
-          });
+      mediaType = MediaType.movie;
     }
+    switch (mediaType) {
+      case tv:
+        switchDrawer(mediaType);
+        break;
+    }
+    nvDrawer
+        .setNavigationItemSelectedListener(item -> {
+          selectDrawerItem(item);
+          return true;
+        });
 
   }
 
@@ -284,53 +272,58 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void switchDrawer(final boolean movie) {
+  private void switchDrawer(final MediaType mediaType) {
     MenuItem menuItem = nvDrawer.getMenu().findItem(R.id.nav_upcoming_or_on_air);
-    if (movie) {
-      menuItem.setIcon(R.drawable.upcoming_icon);
-      menuItem.setTitle(R.string.upcoming);
-      nvDrawer.getMenu().findItem(movieLastDrawerItemId).setChecked(true);
-    } else {
-      menuItem.setIcon(R.drawable.on_air_icon);
-      menuItem.setTitle(R.string.on_air);
-      nvDrawer.getMenu().findItem(tvshowLastDrawerItemId).setChecked(true);
+    switch (mediaType) {
+      case movie:
+        menuItem.setIcon(R.drawable.upcoming_icon);
+        menuItem.setTitle(R.string.upcoming);
+        if (query.equals(Filters.on_the_air.toString())) {
+          setTitle(R.string.upcoming);
+        }
+        break;
+      case tv:
+        menuItem.setIcon(R.drawable.on_air_icon);
+        menuItem.setTitle(R.string.on_air);
+        if (query.equals(Filters.on_the_air.toString())) {
+          setTitle(R.string.on_air);
+        }
+        break;
     }
+
     nvDrawer
-        .setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-          @Override
-          public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            selectDrawerItem(item, movie);
-            return true;
-          }
+        .setNavigationItemSelectedListener(item -> {
+          selectDrawerItem(item);
+          return true;
         });
 
   }
 
-  private void selectDrawerItem(MenuItem menuItem, boolean movie) {
+  private void selectDrawerItem(MenuItem menuItem) {
     previousQuery = query;
+    mDrawer.closeDrawers();
     switch (menuItem.getItemId()) {
       case R.id.nav_recommended:
-        query = getRecommendedGenreIds(movie);
+        query = Filters.recommendations.toString();
         setTitle(R.string.recommend);
-        break;
+        loadInformationByGenreIds(getRecommendedGenreIds(MediaType.movie),
+            getRecommendedGenreIds(MediaType.tv));
+        return;
       case R.id.nav_popular:
         query = Filters.popular.toString();
         setTitle(R.string.popular);
         break;
       case R.id.nav_top:
         query = Filters.top_rated.toString();
-
         setTitle(R.string.top);
         break;
       case R.id.nav_upcoming_or_on_air:
-        if (tabLayout.getSelectedTabPosition() == 0) {
-          query = Filters.upcoming.toString();
-          setTitle(R.string.upcoming);
-        } else {
-          query = Filters.on_the_air.toString();
-          setTitle(R.string.on_air);
-        }
-        break;
+        query = Filters.upcoming.toString();
+        setTitle(R.string.upcoming);
+        movieListFragment.loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+        query = Filters.on_the_air.toString();
+        tvShowListFragment.loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+        return;
       case R.id.nav_custom:
         query = Filters.custom.toString();
         setTitle(R.string.custom);
@@ -347,76 +340,79 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
     menuItem.setChecked(true);
-    if (movie) {
-      movieLastDrawerItemId = menuItem.getItemId();
-    } else {
-      tvshowLastDrawerItemId = menuItem.getItemId();
-    }
-    if (Filters.isFilter(query)) {
-      loadInformationByFilter(movie);
-    } else {
-      loadInformationByGenreIds(getRecommendedGenreIds(movie), movie);
-    }
-    mDrawer.closeDrawers();
+
+    loadInformationByFilter();
   }
 
-  private void loadInformationByFilter(boolean movie) {
-    if (movie) {
-      if (!query.equals(Filters.custom.toString())) {
-        movieListFragment.setCallOptionsVisibility(View.GONE);
-        movieListFragment.loadMediaInfoByFilter(query, language, "1", region);
-      } else {
-        movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-        movieListFragment.loadMediaInfoByCustomFilter(language, "1", region);
-      }
+  private void loadInformationByFilter() {
+    if (!query.equals(Filters.custom.toString())) {
+      movieListFragment.setCallOptionsVisibility(View.GONE);
+      movieListFragment
+          .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+      tvShowListFragment.setCallOptionsVisibility(View.GONE);
+      tvShowListFragment
+          .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
     } else {
-      if (!query.equals(Filters.custom.toString())) {
-        tvShowListFragment.setCallOptionsVisibility(View.GONE);
-        tvShowListFragment.loadMediaInfoByFilter(query, language, "1", region);
-      } else {
-        tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
-        tvShowListFragment.loadMediaInfoByCustomFilter(language, "1", region);
-      }
+      movieListFragment.setCallOptionsVisibility(View.VISIBLE);
+      movieListFragment.loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+      tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
+      tvShowListFragment
+          .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
     }
   }
 
-  private void loadInformationBySearchQuery(boolean movie) {
-    if (movie) {
-      movieListFragment.loadMediaByName(query, language, "1");
-    } else {
-      tvShowListFragment.loadMediaByName(query, language, "1");
-    }
+  private void loadInformationBySearchQuery() {
+    movieListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1");
+    tvShowListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1");
   }
 
-  private void searchByName(String name, boolean movie) {
+  private void searchByName(String name) {
     query = name;
     setTitle("Search results");
-    loadInformationBySearchQuery(movie);
+    loadInformationBySearchQuery();
   }
 
-  private void loadInformationByGenreIds(String genreIds, boolean movie) {
-    if (movie) {
-      movieListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
-    } else {
-      tvShowListFragment.loadMediaInfoByIds(genreIds, language, "1", region, Tasks.SEARCH_BY_GENRE);
+  private void loadInformationByGenreIds(String movieGenreIds, String tvshowGenreIds) {
+    movieListFragment.loadMediaInfoByIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
+        Tasks.SEARCH_BY_GENRE);
+    tvShowListFragment.loadMediaInfoByIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
+        Tasks.SEARCH_BY_GENRE);
+    query = movieGenreIds;
+  }
+
+  private MediaType getCurrentTab() {
+    switch (tabLayout.getSelectedTabPosition()) {
+      case 1:
+        return tv;
+      case 0:
+      default:
+        return MediaType.movie;
+
     }
-    query = genreIds;
   }
 
-  private String getRecommendedGenreIds(boolean movie) {
-    List<? extends RecommendedGenres> ids;
-    if (movie) {
-      ids = DBHelper.getHelper(this).getAllRecommendedMovieGenres();
-    } else {
-      ids = DBHelper.getHelper(this).getAllRecommendedTVShowGenres();
+  private String getRecommendedGenreIds(MediaType mediaType) {
+    List<? extends RecommendedGenres> ids = null;
+    switch (mediaType) {
+      case movie:
+        ids = dbHelper.getAllRecommendedMovieGenres();
+        break;
+      case tv:
+        ids = dbHelper.getAllRecommendedTVShowGenres();
+        break;
     }
     StringBuilder builder = new StringBuilder();
-    if (ids!= null) {
+    if (ids != null) {
       for (int i = 0; i < ids.size(); i++) {
         builder.append(ids.get(i).getGenre_id()).append(", ");
       }
     }
     return builder.toString();
+  }
+
+  private boolean recommendedGenresAvailable() {
+    return dbHelper.getAllRecommendedTVShowGenres() != null
+        && dbHelper.getAllRecommendedTVShowGenres().size() != 0;
   }
 
   public void switchContent(int id, Fragment fragment) {
