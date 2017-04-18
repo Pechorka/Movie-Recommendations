@@ -42,6 +42,10 @@ public class RecommendationsSetupListAdapter extends
   public void onBindViewHolder(final RecommendationsViewHolder holder, int position) {
     Media media = mediaList.get(position);
     ImageLoader.putPoster(context, media.getPosterPath(), holder.poster, ImageLoader.sizes.w500);
+    if (choosen[position])
+      holder.choosen.setVisibility(View.VISIBLE);
+    else
+      holder.choosen.setVisibility(View.INVISIBLE);
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
