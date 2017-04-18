@@ -4,7 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.surf.course.movierecommendations.domain.MovieGenre;
+import ru.surf.course.movierecommendations.interactor.MovieGenre;
 
 /**
  * Created by sergey on 14.04.17.

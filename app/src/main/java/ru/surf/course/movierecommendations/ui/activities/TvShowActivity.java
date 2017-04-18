@@ -25,10 +25,10 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.adapters.TVShowInfosPagerAdapter;
 import ru.surf.course.movierecommendations.ui.custom_views.FavoriteButton;
-import ru.surf.course.movierecommendations.domain.Favorite;
-import ru.surf.course.movierecommendations.domain.Genre;
+import ru.surf.course.movierecommendations.interactor.Favorite;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.MediaType;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 

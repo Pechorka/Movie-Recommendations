@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.domain.Season;
+import ru.surf.course.movierecommendations.domain.tvShow.Season;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
 /**

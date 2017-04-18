@@ -9,13 +9,10 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.List;
-import ru.surf.course.movierecommendations.domain.CustomFilter;
-import ru.surf.course.movierecommendations.domain.Favorite;
-import ru.surf.course.movierecommendations.domain.Genre;
-import ru.surf.course.movierecommendations.domain.MovieGenre;
+
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
-import ru.surf.course.movierecommendations.domain.TVShowGenre;
 
 /**
  * Created by Sergey on 26.03.2017.

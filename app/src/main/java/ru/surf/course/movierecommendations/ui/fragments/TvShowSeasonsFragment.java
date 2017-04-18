@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.adapters.TvShowSeasonsListAdapter;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 
 
 /**

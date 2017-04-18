@@ -35,7 +35,7 @@ import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.ui.fragments.SaveCustomFilterDialog;
-import ru.surf.course.movierecommendations.domain.CustomFilter;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.MediaType;
 import ru.surf.course.movierecommendations.domain.RecommendedGenres;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;

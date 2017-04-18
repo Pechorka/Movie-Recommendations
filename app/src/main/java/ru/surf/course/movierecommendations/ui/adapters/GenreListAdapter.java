@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.domain.Genre;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.MediaType;
 
 /**

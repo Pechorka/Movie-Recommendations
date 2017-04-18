@@ -17,9 +17,9 @@ import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.activities.MovieActivity;
 import ru.surf.course.movierecommendations.ui.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.MovieInfo;
-import ru.surf.course.movierecommendations.domain.Person;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.domain.people.Person;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 
 /**

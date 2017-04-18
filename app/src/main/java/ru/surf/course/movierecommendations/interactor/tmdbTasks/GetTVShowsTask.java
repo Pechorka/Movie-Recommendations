@@ -17,13 +17,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.domain.Genre;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.Network;
 import ru.surf.course.movierecommendations.domain.ProductionCompanies;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
-import ru.surf.course.movierecommendations.domain.Season;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.Season;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 
 /**
  * Created by Sergey on 07.02.2017.

@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.adapters.MovieReviewsAdapter;
-import ru.surf.course.movierecommendations.domain.MovieInfo;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.Review;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTask;
 

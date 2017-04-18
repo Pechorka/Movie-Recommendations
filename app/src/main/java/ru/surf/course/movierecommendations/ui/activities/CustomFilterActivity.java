@@ -28,11 +28,11 @@ import ru.surf.course.movierecommendations.ui.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.ui.custom_views.YearsRangeBar;
 import ru.surf.course.movierecommendations.ui.fragments.MediaListFragment;
 import ru.surf.course.movierecommendations.ui.fragments.SaveCustomFilterDialog;
-import ru.surf.course.movierecommendations.domain.Genre;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.MediaType;
-import ru.surf.course.movierecommendations.domain.MovieGenre;
-import ru.surf.course.movierecommendations.domain.TVShowGenre;
-import ru.surf.course.movierecommendations.domain.TVShowGenre.RetrofitResult;
+import ru.surf.course.movierecommendations.interactor.MovieGenre;
+import ru.surf.course.movierecommendations.interactor.TVShowGenre;
+import ru.surf.course.movierecommendations.interactor.TVShowGenre.RetrofitResult;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
 

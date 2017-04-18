@@ -18,13 +18,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.domain.Actor;
-import ru.surf.course.movierecommendations.domain.Credit;
-import ru.surf.course.movierecommendations.domain.CrewMember;
+import ru.surf.course.movierecommendations.domain.people.Actor;
+import ru.surf.course.movierecommendations.domain.people.Credit;
+import ru.surf.course.movierecommendations.domain.people.CrewMember;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.MovieInfo;
-import ru.surf.course.movierecommendations.domain.Person;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.domain.people.Person;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 
 /**
  * Created by andrew on 2/3/17.

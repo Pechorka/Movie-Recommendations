@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.fragments.TvShowInfoFragment;
 import ru.surf.course.movierecommendations.ui.fragments.TvShowSeasonsFragment;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 
 /**
  * Created by andrew on 2/19/17.

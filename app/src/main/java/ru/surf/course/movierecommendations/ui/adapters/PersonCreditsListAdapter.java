@@ -11,9 +11,9 @@ import android.widget.TextView;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.domain.Actor;
-import ru.surf.course.movierecommendations.domain.Credit;
-import ru.surf.course.movierecommendations.domain.CrewMember;
+import ru.surf.course.movierecommendations.domain.people.Actor;
+import ru.surf.course.movierecommendations.domain.people.Credit;
+import ru.surf.course.movierecommendations.domain.people.CrewMember;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
 /**

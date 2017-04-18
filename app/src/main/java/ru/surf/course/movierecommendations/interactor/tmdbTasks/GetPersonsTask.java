@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.domain.Person;
+import ru.surf.course.movierecommendations.domain.people.Person;
 
 /**
  * Created by andrew on 1/29/17.

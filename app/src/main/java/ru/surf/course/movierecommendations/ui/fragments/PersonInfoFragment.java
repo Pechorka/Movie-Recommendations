@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.domain.Person;
+import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonsTask;
 
 /**

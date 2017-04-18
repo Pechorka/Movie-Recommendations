@@ -12,7 +12,7 @@ import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.activities.MovieActivity;
 import ru.surf.course.movierecommendations.ui.activities.TvShowActivity;
-import ru.surf.course.movierecommendations.domain.Favorite;
+import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;

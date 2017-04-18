@@ -11,7 +11,7 @@ import java.util.List;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.adapters.FavoritesAdapter;
-import ru.surf.course.movierecommendations.domain.Favorite;
+import ru.surf.course.movierecommendations.interactor.Favorite;
 
 public class FavoritesActivity extends AppCompatActivity {
 

@@ -11,7 +11,7 @@ import android.widget.EditText;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.activities.MainActivity;
-import ru.surf.course.movierecommendations.domain.CustomFilter;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.MediaType;
 
 /**

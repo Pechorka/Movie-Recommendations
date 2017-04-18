@@ -25,7 +25,7 @@ import ru.surf.course.movierecommendations.ui.activities.CustomFilterActivity;
 import ru.surf.course.movierecommendations.ui.activities.MainActivity;
 import ru.surf.course.movierecommendations.ui.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.ui.listeners.EndlessRecyclerViewScrollListener;
-import ru.surf.course.movierecommendations.domain.CustomFilter;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.MediaType;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;

@@ -12,8 +12,8 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.activities.MovieActivity;
 import ru.surf.course.movierecommendations.ui.activities.TvShowActivity;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.MovieInfo;
-import ru.surf.course.movierecommendations.domain.TVShowInfo;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
 /**

@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ru.surf.course.movierecommendations.domain.genre.Genre;
+import ru.surf.course.movierecommendations.domain.people.Credit;
+
 /**
  * Created by andrew on 08-Feb-17.
  */

@@ -23,7 +23,7 @@ import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.adapters.PersonInfosPagerAdapter;
-import ru.surf.course.movierecommendations.domain.Person;
+import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonsTask;
