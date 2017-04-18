@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,12 @@ public class SplachActivity extends AppCompatActivity {
 
   private final static long startDelay = 1000;
 
+  public static void startWithClearBackStack(Context context, Class c) {
+    Intent intent = new Intent(context, c);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    context.startActivity(intent);
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -24,9 +32,8 @@ public class SplachActivity extends AppCompatActivity {
     }
   }
 
-  //delay - в миллисекундах
   private void delayAndRunActivity(long delay, final Class activity) {
-    Runnable runnable = () -> MainActivity.start(SplachActivity.this, activity);
+    Runnable runnable = () -> startWithClearBackStack(SplachActivity.this, activity);
     Handler handler = new Handler();
     handler.postDelayed(runnable, delay);
   }

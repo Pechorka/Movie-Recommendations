@@ -14,7 +14,6 @@ public class MovieGenre extends Genre {
   public static final String TABLE_NAME_MOVIE_GENRES = "movie_genres";
 
   public static class RetrofitResult {
-
     @SerializedName("genres")
     public List<MovieGenre> movieGenres;
   }

@@ -17,7 +17,7 @@ public class Genre implements Serializable {
   public static final String FIELD_NAME_GENRE_NAME = "genre_name";
   public static final String FIELD_NAME_CHECKED = "checked";
 
-  @DatabaseField(columnName = FIELD_NAME_ID)
+  @DatabaseField(id = true, columnName = FIELD_NAME_ID)
   private int dbId;
 
   @DatabaseField(columnName = FIELD_NAME_GENRE_ID)

@@ -24,7 +24,7 @@ import ru.surf.course.movierecommendations.models.TVShowGenre;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final String DATABASE_NAME = "data_base";
-  private static final int DATABASE_VERSION = 27;
+  private static final int DATABASE_VERSION = 28;
 
   private static final int MAX_NUMBER_OF_CUSTOM_FILTER = 5;
   private static DBHelper sInstance;

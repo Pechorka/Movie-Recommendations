@@ -73,23 +73,20 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
 
   public void saveChecked() {
     DBHelper helper = DBHelper.getHelper(context);
-    switch (mediaType) {
-      case movie:
-        for (int i = 0; i < genreList.size(); i++) {
-          helper.updateMovieGenre(genreList.get(i));
-        }
-        for (Genre g :
-            genreList) {
-          helper.updateMovieGenre(g);
-        }
-        break;
-      case tv:
-        for (Genre g :
-            genreList) {
-          helper.updateTVShowGenre(g);
-        }
-        break;
-    }
+//    switch (mediaType) {
+//      case movie:
+//        for (Genre g :
+//            genreList) {
+//          helper.updateMovieGenre(g);
+//        }
+//        break;
+//      case tv:
+//        for (Genre g :
+//            genreList) {
+//          helper.updateTVShowGenre(g);
+//        }
+//        break;
+//    }
   }
 
   public static class GenreViewHolder extends RecyclerView.ViewHolder {

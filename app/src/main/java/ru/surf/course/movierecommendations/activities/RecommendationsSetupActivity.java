@@ -79,10 +79,10 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
       case R.id.recommendations_setup_menu_save:
         saveGenresIds();
         if (movie) {
-          MainActivity.start(this, RecommendationsSetupActivity.class);
+          SplachActivity.startWithClearBackStack(this, RecommendationsSetupActivity.class);
         } else {
           setIsSetup(true);
-          MainActivity.start(this, MainActivity.class);
+          SplachActivity.startWithClearBackStack(this, MainActivity.class);
         }
         break;
       case R.id.recommendations_setup_menu_skip:
