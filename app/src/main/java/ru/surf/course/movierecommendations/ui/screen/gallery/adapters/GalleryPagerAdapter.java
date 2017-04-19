@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryImageFragment;
 
-/**
- * Created by andrew on 1/10/17.
- */
 
 public class GalleryPagerAdapter extends FragmentStatePagerAdapter {
 

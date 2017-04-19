@@ -29,7 +29,7 @@ import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
@@ -234,7 +234,7 @@ public class MovieActivity extends AppCompatActivity {
       poster.setOnClickListener(view -> {
         ArrayList<String> image = new ArrayList<String>();
         image.add(currentMovie.getPosterPath());
-        GalleryActivity.start(MovieActivity.this, image);
+        GalleryActivityView.start(MovieActivity.this, image);
       });
     }
 

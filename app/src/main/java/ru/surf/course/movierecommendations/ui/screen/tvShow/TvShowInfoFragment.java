@@ -27,7 +27,7 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
@@ -214,7 +214,7 @@ public class TvShowInfoFragment extends Fragment {
           mImagesListAdapter.getImages()) {
         paths.add(image.path);
       }
-      GalleryActivity.start(getActivity(), paths, position);
+      GalleryActivityView.start(getActivity(), paths, position);
     });
     backdrops.setAdapter(mImagesListAdapter);
 

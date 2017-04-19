@@ -21,7 +21,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.domain.people.Person;
@@ -208,7 +208,7 @@ public class PersonActivity extends AppCompatActivity {
               currentPerson.getProfilePictures()) {
             paths.add(image.path);
           }
-          GalleryActivity.start(PersonActivity.this, paths);
+          GalleryActivityView.start(PersonActivity.this, paths);
         }
       });
     }

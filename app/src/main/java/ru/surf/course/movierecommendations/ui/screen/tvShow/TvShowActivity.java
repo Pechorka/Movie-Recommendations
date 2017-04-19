@@ -29,7 +29,7 @@ import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.adapters.TVShowInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
@@ -235,7 +235,7 @@ public class TvShowActivity extends AppCompatActivity {
       poster.setOnClickListener(view -> {
         ArrayList<String> image = new ArrayList<String>();
         image.add(currentMovie.getPosterPath());
-        GalleryActivity.start(TvShowActivity.this, image);
+        GalleryActivityView.start(TvShowActivity.this, image);
       });
     }
 

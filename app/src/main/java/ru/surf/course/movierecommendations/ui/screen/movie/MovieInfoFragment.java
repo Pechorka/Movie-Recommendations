@@ -23,7 +23,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
@@ -216,7 +216,7 @@ public class MovieInfoFragment extends Fragment {
           mImagesListAdapter.getImages()) {
         paths.add(image.path);
       }
-      GalleryActivity.start(getActivity(), paths, position);
+      GalleryActivityView.start(getActivity(), paths, position);
     });
     backdrops.setAdapter(mImagesListAdapter);
 

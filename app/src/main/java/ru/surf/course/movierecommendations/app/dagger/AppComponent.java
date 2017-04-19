@@ -11,6 +11,7 @@ import ru.surf.course.movierecommendations.interactor.common.network.OkHttpModul
 import ru.surf.course.movierecommendations.interactor.common.network.cache.CacheModule;
 import ru.surf.course.movierecommendations.interactor.network.connection.NetworkConnectionChecker;
 import ru.surf.course.movierecommendations.ui.base.activity.ActivityModule;
+import ru.surf.course.movierecommendations.ui.base.fragment.FragmentModule;
 
 @PerApplication
 @Component(modules = {
@@ -18,6 +19,7 @@ import ru.surf.course.movierecommendations.ui.base.activity.ActivityModule;
         OkHttpModule.class,
         NetworkModule.class,
         CacheModule.class,
+        FragmentModule.class,
         ActivityModule.class
 })
 public interface AppComponent {
