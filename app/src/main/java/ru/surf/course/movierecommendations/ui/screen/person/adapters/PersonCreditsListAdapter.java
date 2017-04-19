@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.domain.people.Actor;
 import ru.surf.course.movierecommendations.domain.people.Credit;
 import ru.surf.course.movierecommendations.domain.people.CrewMember;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 /**
  * Created by andrew on 2/9/17.
@@ -97,12 +97,8 @@ public class PersonCreditsListAdapter extends
       mHeader = (TextView) itemView.findViewById(R.id.credits_movies_list_item_header);
       mSubHeader = (TextView) itemView.findViewById(R.id.credits_movies_list_item_sub_header);
 
-      mCardView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          PersonCreditsListAdapter.mListener.onClick(getAdapterPosition());
-        }
-      });
+      mCardView.setOnClickListener(
+          view -> PersonCreditsListAdapter.mListener.onClick(getAdapterPosition()));
     }
   }
 

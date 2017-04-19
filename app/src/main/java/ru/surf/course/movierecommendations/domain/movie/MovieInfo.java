@@ -6,54 +6,23 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
+import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 
+@Data
 public class MovieInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
 
   @SerializedName("revenue")
-  private String mRevenue;
+  private String revenue;
 
   @SerializedName("runtime")
-  private int mRuntime;
+  private int runtime;
 
   public MovieInfo(int id) {
     super(id);
   }
-
-  public static List<MovieInfo> createMovieInfoList(int[] imageIDs, String[] names) {
-    if (imageIDs.length != names.length) {
-      throw new IllegalArgumentException("Length of arrays should be same");
-    }
-    List<MovieInfo> movieInfoList = new ArrayList<>();
-    MovieInfo movieInfo;
-    for (int i = 0; i < imageIDs.length; i++) {
-      movieInfo = new MovieInfo(imageIDs[i]);
-      movieInfo.mTitle = names[i];
-      movieInfoList.add(movieInfo);
-    }
-    return movieInfoList;
-  }
-
-  public String getRevenue() {
-    return mRevenue;
-  }
-
-  public void setRevenue(String revenue) {
-    this.mRevenue = revenue;
-  }
-
-  public int getRuntime() {
-    return mRuntime;
-  }
-
-  public void setRuntime(int runtime) {
-    this.mRuntime = runtime;
-  }
-
 
   public void fillFields(Object from) {
     ArrayList<Field> fields = new ArrayList<>(Arrays.asList(from.getClass().getDeclaredFields()));

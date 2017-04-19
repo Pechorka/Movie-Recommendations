@@ -3,11 +3,12 @@ package ru.surf.course.movierecommendations.domain.tvShow;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * Created by Sergey on 16.02.2017.
  */
-
+@Data
 public class Season implements Serializable {
 
   @SerializedName("air_date")
@@ -25,45 +26,5 @@ public class Season implements Serializable {
   @SerializedName("season_number")
   private int seasonNumber;
 
-
-  public Date getAirDate() {
-    return airDate;
-  }
-
-  public void setAirDate(Date airDate) {
-    this.airDate = airDate;
-  }
-
-  public int getEpisodeCount() {
-    return episodeCount;
-  }
-
-  public void setEpisodeCount(int episodeCount) {
-    this.episodeCount = episodeCount;
-  }
-
-  public int getSeasonId() {
-    return seasonId;
-  }
-
-  public void setSeasonId(int seasonId) {
-    this.seasonId = seasonId;
-  }
-
-  public String getPosterPath() {
-    return posterPath;
-  }
-
-  public void setPosterPath(String posterPath) {
-    this.posterPath = posterPath;
-  }
-
-  public int getSeasonNumber() {
-    return seasonNumber;
-  }
-
-  public void setSeasonNumber(int seasonNumber) {
-    this.seasonNumber = seasonNumber;
-  }
 
 }

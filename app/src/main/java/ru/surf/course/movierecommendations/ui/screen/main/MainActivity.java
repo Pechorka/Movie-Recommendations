@@ -32,6 +32,14 @@ import java.util.List;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
+import ru.surf.course.movierecommendations.domain.RecommendedGenres;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
+import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivity;
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
@@ -195,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
     }
     switch (task) {
       case SEARCH_RECOMMENDED_MEDIA:
-        initFragments(task, getRecommendedGenreIds(movie),
-            getRecommendedGenreIds(tv));
+        initFragments(task, getRecommendedGenreIds(MediaType.movie),
+            getRecommendedGenreIds(MediaType.tv));
         break;
       default:
         initFragments(task);
@@ -205,13 +213,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void initFragments(Tasks task) {
-    movieListFragment = MediaListFragment.newInstance(query, region, task, movie);
-    tvShowListFragment = MediaListFragment.newInstance(query, region, task, tv);
+    movieListFragment = MediaListFragment.newInstance(query, region, task, MediaType.movie);
+    tvShowListFragment = MediaListFragment.newInstance(query, region, task, MediaType.tv);
   }
 
   private void initFragments(Tasks task, String movieQuery, String tvshowQuery) {
-    movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, movie);
-    tvShowListFragment = MediaListFragment.newInstance(tvshowQuery, region, task, tv);
+    movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, MediaType.movie);
+    tvShowListFragment = MediaListFragment.newInstance(tvshowQuery, region, task, MediaType.tv);
   }
 
   private void setup() {
@@ -235,10 +243,10 @@ public class MainActivity extends AppCompatActivity {
       public void onPageSelected(int position) {
         switch (position) {
           case 0:
-            switchDrawer(movie);
+            switchDrawer(MediaType.movie);
             break;
           case 1:
-            switchDrawer(tv);
+            switchDrawer(MediaType.tv);
             break;
         }
       }
@@ -258,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     if (getIntent().hasExtra(KEY_MEDIA)) {
       mediaType = (MediaType) getIntent().getSerializableExtra(KEY_MEDIA);
     } else {
-      mediaType = movie;
+      mediaType = MediaType.movie;
     }
     switch (mediaType) {
       case tv:
@@ -355,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.nav_recommended:
         query = Filters.recommendations.toString();
         setTitle(R.string.recommend);
-        loadInformationByGenreIds(getRecommendedGenreIds(movie),
+        loadInformationByGenreIds(getRecommendedGenreIds(MediaType.movie),
             getRecommendedGenreIds(MediaType.tv));
         return;
       case R.id.nav_popular:
@@ -449,10 +457,10 @@ public class MainActivity extends AppCompatActivity {
   private MediaType getCurrentTab() {
     switch (tabLayout.getSelectedTabPosition()) {
       case 1:
-        return tv;
+        return MediaType.tv;
       case 0:
       default:
-        return movie;
+        return MediaType.movie;
 
     }
   }
@@ -470,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
     StringBuilder builder = new StringBuilder();
     if (ids != null) {
       for (int i = 0; i < ids.size(); i++) {
-        builder.append(ids.get(i).getGenre_id()).append(", ");
+        builder.append(ids.get(i).getGenreId()).append(", ");
       }
     }
     return builder.toString();

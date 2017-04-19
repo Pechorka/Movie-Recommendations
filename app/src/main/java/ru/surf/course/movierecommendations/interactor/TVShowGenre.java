@@ -3,7 +3,6 @@ package ru.surf.course.movierecommendations.interactor;
 import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.table.DatabaseTable;
 import java.util.List;
-
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 
 /**

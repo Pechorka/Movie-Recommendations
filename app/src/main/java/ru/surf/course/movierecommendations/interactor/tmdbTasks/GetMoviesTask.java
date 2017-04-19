@@ -17,11 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.ProductionCompanies;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 
 /**
  * Created by andrew on 12/3/16.
@@ -315,8 +315,8 @@ public class GetMoviesTask extends GetMediaTask {
       item.setVoteAverage(movieJson.getDouble(TMDB_RATING));
       item.setVoteCount(movieJson.getInt(TMDB_VOTE_COUNT));
       item.setBudget(movieJson.getString(TMDB_BUDGET));
-      item.setProductionCompaniesNames(productionCompaniesResult);
-      item.setProductionCountriesNames(productionCountriesResult);
+      item.setProductionCompanies(productionCompaniesResult);
+      item.setProductionCountries(productionCountriesResult);
       item.setRevenue(movieJson.getString(TMDB_REVENUE));
       item.setStatus(movieJson.getString(TMDB_STATUS));
       try {

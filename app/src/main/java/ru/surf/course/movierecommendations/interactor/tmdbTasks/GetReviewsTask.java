@@ -148,7 +148,7 @@ public class GetReviewsTask extends AsyncTask<String, Void, ArrayList<Review>> {
     review.setAuthor(jsonObject.getString(TMDB_AUTHOR));
     review.setContent(jsonObject.getString(TMDB_CONTENT));
     try {
-      review.setURL(new URL(jsonObject.getString(TMDB_URL)));
+      review.setUrl(new URL(jsonObject.getString(TMDB_URL)));
     } catch (MalformedURLException e) {
       Log.d(LOG_TAG, "Url error", e);
     }

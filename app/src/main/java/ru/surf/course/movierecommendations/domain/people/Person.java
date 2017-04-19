@@ -6,174 +6,61 @@ import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+import lombok.Data;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
-import ru.surf.course.movierecommendations.domain.people.Credit;
 
 /**
  * Created by andrew on 1/29/17.
  */
-
+@Data
 public class Person implements Serializable {
 
 
   public final String LOG_TAG = getClass().getSimpleName();
 
-  protected String mName;
-  protected int mId;
-  protected String mProfilePath;
-  protected boolean mAdult;
-  protected String mBiography;
-  protected Date mBirthday;
-  protected Date mDeathday;
-  protected Gender mGender;
-  protected String mImdbId;
-  protected String mPlaceOfBirth;
-  protected Double mPopularity;
-  protected Locale mInfoLanguage;
-  protected List<TmdbImage> mProfilePictures;
-  protected List<Credit> mCredits;
+  protected String name;
+  protected int id;
+  protected String profilePath;
+  protected boolean adult;
+  protected String biography;
+  protected Date birthday;
+  protected Date deathday;
+  protected Gender gender;
+  protected String imdbId;
+  protected String placeOfBirth;
+  protected Double popularity;
+  protected Locale infoLanguage;
+  protected List<TmdbImage> profilePictures;
+  protected List<Credit> credits;
   public Person(int id) {
-    mId = id;
+    this.id = id;
   }
 
   public Person(String name, int id, String profilePath) {
-    mName = name;
-    mId = id;
-    mProfilePath = profilePath;
+    this.name = name;
+    this.id = id;
+    this.profilePath = profilePath;
   }
 
-  public Person(String mName, int mId, String mProfilePath, boolean mAdult, String mBiography,
-      Date mBirthday, Date mDeathday, Gender mGender, String mImdbId, String mPlaceOfBirth,
-      Double mPopularity) {
-    this.mName = mName;
-    this.mId = mId;
-    this.mProfilePath = mProfilePath;
-    this.mAdult = mAdult;
-    this.mBiography = mBiography;
-    this.mBirthday = mBirthday;
-    this.mDeathday = mDeathday;
-    this.mGender = mGender;
-    this.mImdbId = mImdbId;
-    this.mPlaceOfBirth = mPlaceOfBirth;
-    this.mPopularity = mPopularity;
+  public Person(String name, int id, String profilePath, boolean adult, String biography,
+      Date birthday, Date deathday, Gender gender, String imdbId, String placeOfBirth,
+      Double popularity) {
+    this.name = name;
+    this.id = id;
+    this.profilePath = profilePath;
+    this.adult = adult;
+    this.biography = biography;
+    this.birthday = birthday;
+    this.deathday = deathday;
+    this.gender = gender;
+    this.imdbId = imdbId;
+    this.placeOfBirth = placeOfBirth;
+    this.popularity = popularity;
   }
 
-  public Person(String mName, int mId) {
-    this.mName = mName;
-    this.mId = mId;
-  }
-
-  public String getName() {
-    return mName;
-  }
-
-  public void setName(String name) {
-    this.mName = name;
-  }
-
-  public String getProfilePath() {
-    return mProfilePath;
-  }
-
-  public void setProfilePath(String profilePath) {
-    this.mProfilePath = profilePath;
-  }
-
-  public int getId() {
-    return mId;
-  }
-
-  public void setId(int id) {
-    this.mId = id;
-  }
-
-  public boolean isAdult() {
-    return mAdult;
-  }
-
-  public void setAdult(boolean adult) {
-    this.mAdult = adult;
-  }
-
-  public String getBiography() {
-    return mBiography;
-  }
-
-  public void setBiography(String biography) {
-    this.mBiography = biography;
-  }
-
-  public Date getBirthday() {
-    return mBirthday;
-  }
-
-  public void setBirthday(Date birthday) {
-    this.mBirthday = birthday;
-  }
-
-  public Date getDeathday() {
-    return mDeathday;
-  }
-
-  public void setDeathday(Date deathday) {
-    this.mDeathday = deathday;
-  }
-
-  public Gender getGender() {
-    return mGender;
-  }
-
-  public void setGender(Gender gender) {
-    this.mGender = gender;
-  }
-
-  public String getImdbId() {
-    return mImdbId;
-  }
-
-  public void setImdbId(String imdbId) {
-    this.mImdbId = imdbId;
-  }
-
-  public String getPlaceOfBirth() {
-    return mPlaceOfBirth;
-  }
-
-  public void setPlaceOfBirth(String placeOfBirth) {
-    this.mPlaceOfBirth = placeOfBirth;
-  }
-
-  public Double getPopularity() {
-    return mPopularity;
-  }
-
-  public void setPopularity(Double popularity) {
-    this.mPopularity = popularity;
-  }
-
-  public Locale getInfoLanguage() {
-    return mInfoLanguage;
-  }
-
-  public void setInfoLanguage(Locale infoLanguage) {
-    mInfoLanguage = infoLanguage;
-  }
-
-  public List<TmdbImage> getProfilePictures() {
-    return mProfilePictures;
-  }
-
-  public void setProfilePictures(List<TmdbImage> profilePictures) {
-    mProfilePictures = profilePictures;
-  }
-
-  public List<Credit> getCredits() {
-    return mCredits;
-  }
-
-  public void setCredits(List<Credit> credits) {
-    mCredits = credits;
+  public Person(String name, int id) {
+    this.name = name;
+    this.id = id;
   }
 
   public void fillFields(Object from) {
