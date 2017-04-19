@@ -31,7 +31,7 @@ import android.widget.Toast;
 import java.util.List;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivity;
+import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.custom);
         break;
       case R.id.nav_favorite:
-        start(this, FavoritesActivity.class);
+        start(this, FavoritesActivityView.class);
         return;
       case R.id.nav_settings:
         start(this, SettingsActivity.class);

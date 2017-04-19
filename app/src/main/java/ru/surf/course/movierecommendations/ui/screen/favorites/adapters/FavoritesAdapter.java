@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.ui.base.listeners.OnListItemClickListener;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 import ru.surf.course.movierecommendations.interactor.Favorite;
@@ -24,6 +25,8 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 public class FavoritesAdapter extends
     RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder> implements
     GetMediaTask.TaskCompletedListener<Media> {
+
+  private OnListItemClickListener listener;
 
   private List<Favorite> favoriteList;
   private Context context;
@@ -49,7 +52,7 @@ public class FavoritesAdapter extends
     holder.cardView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        fragmentToSwitch(favorite);
+        invokeOnListItemClick(position, view);
       }
     });
   }
@@ -59,6 +62,14 @@ public class FavoritesAdapter extends
     return favoriteList.size();
   }
 
+  public List<Favorite> getFavoriteList() {
+    return favoriteList;
+  }
+
+  public void setFavoriteList(List<Favorite> favoriteList) {
+    this.favoriteList = favoriteList;
+  }
+
   @Override
   public void mediaLoaded(List<Media> result, boolean newResult) {
     if (result != null) {
@@ -66,20 +77,14 @@ public class FavoritesAdapter extends
     }
   }
 
-
-  private void fragmentToSwitch(Favorite favorite) {
-    switch (favorite.getMediaType()) {
-      case movie:
-        MovieActivity.start(context, favorite.getMediaId());
-        break;
-      case tv:
-        TvShowActivity.start(context, favorite.getMediaId());
-        break;
-      default:
-        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
-    }
+  public void setListener(OnListItemClickListener listener) {
+    this.listener = listener;
   }
 
+  private void invokeOnListItemClick(int position, View view) {
+    if (listener != null)
+      listener.click(position, view);
+  }
 
   public static class FavoriteViewHolder extends RecyclerView.ViewHolder {
 

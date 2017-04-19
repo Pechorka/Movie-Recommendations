@@ -30,7 +30,7 @@
             android:name=".ui.screen.customFilter.CustomFilterActivityView"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
-            android:name=".ui.screen.favorites.FavoritesActivity"
+            android:name=".ui.screen.favorites.FavoritesActivityView"
             android:parentActivityName=".ui.screen.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
