@@ -1,8 +1,9 @@
-package ru.surf.course.movierecommendations.ui.screen.main;
+package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
 import static android.app.Activity.RESULT_OK;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +23,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.main.adapters.GridMediaAdapter;
-import ru.surf.course.movierecommendations.ui.screen.main.listeners.EndlessRecyclerViewScrollListener;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.adapters.GridMediaAdapter;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
@@ -79,7 +81,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     Bundle bundle = new Bundle();
     bundle.putString(KEY_QUERY, query);
     bundle.putSerializable(KEY_TASK, task);
-    bundle.putSerializable(MainActivity.KEY_MEDIA, mediaType);
+    bundle.putSerializable(KEY_MEDIA, mediaType);
     bundle.putString(KEY_REGION, region);
     mediaListFragment.setArguments(bundle);
     return mediaListFragment;
@@ -93,7 +95,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     task = (Tasks) getArguments().getSerializable(KEY_TASK);
     id = getArguments().getInt(KEY_MEDIA_ID);
     ids = query;
-    mediaType = (Media.MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
+    mediaType = (Media.MediaType) getArguments().getSerializable(KEY_MEDIA);
     page = 1;
   }
 
@@ -178,7 +180,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
       Intent intent = new Intent(getActivity(), CustomFilterActivityView.class);
       intent.putExtra(KEY_SORT_TYPE, sort_type);
       intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
-      intent.putExtra(MainActivity.KEY_MEDIA, mediaType);
+      intent.putExtra(KEY_MEDIA, mediaType);
       intent.putExtra(KEY_MAX_YEAR, Integer.parseInt(maxYear));
       intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
       startActivityForResult(intent, GET_GENRES_REQUEST);

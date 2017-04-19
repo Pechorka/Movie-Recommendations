@@ -12,8 +12,10 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
-import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 /**
  * Created by sergey on 04.04.17.
@@ -42,7 +44,7 @@ public class SaveCustomFilterDialog extends DialogFragment {
     bundle.putString(MediaListFragment.KEY_MIN_YEAR, minYear);
     bundle.putString(MediaListFragment.KEY_SORT_TYPE, sortType);
     bundle.putString(MediaListFragment.KEY_SORT_DIRECTION, sortDirection);
-    bundle.putSerializable(MainActivity.KEY_MEDIA, mediaType);
+    bundle.putSerializable(KEY_MEDIA, mediaType);
     SaveCustomFilterDialog dialog = new SaveCustomFilterDialog();
     dialog.setArguments(bundle);
     return dialog;
@@ -56,7 +58,7 @@ public class SaveCustomFilterDialog extends DialogFragment {
     genreIds = getArguments().getString(MediaListFragment.KEY_GENRES);
     minYear = getArguments().getString(MediaListFragment.KEY_MIN_YEAR);
     maxYear = getArguments().getString(MediaListFragment.KEY_MAX_YEAR);
-    mediaType = (MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
+    mediaType = (MediaType) getArguments().getSerializable(KEY_MEDIA);
   }
 
   @Override

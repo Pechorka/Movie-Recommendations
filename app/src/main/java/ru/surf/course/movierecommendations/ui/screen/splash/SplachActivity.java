@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivity;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 
 public class SplachActivity extends AppCompatActivity {
 
@@ -28,7 +28,7 @@ public class SplachActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splach);
     if (checkSetup()) {
-      delayAndRunActivity(startDelay, MainActivity.class);
+      delayAndRunActivity(startDelay, MainActivityView.class);
     } else {
       delayAndRunActivity(startDelay, RecommendationsSetupActivity.class);
     }

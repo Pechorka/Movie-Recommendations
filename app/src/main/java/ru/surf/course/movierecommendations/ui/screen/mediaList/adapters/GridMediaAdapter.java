@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.main.adapters;
+package ru.surf.course.movierecommendations.ui.screen.mediaList.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -16,9 +16,6 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 
-/**
- * Created by Sergey on 12.02.2017.
- */
 
 public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.GridViewHolder> {
 

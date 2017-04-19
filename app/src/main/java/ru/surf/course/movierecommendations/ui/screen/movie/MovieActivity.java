@@ -30,7 +30,7 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
 
@@ -264,8 +264,8 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   public void onGenreClick(Genre genre) {
-    MainActivity
-        .start(this, MainActivity.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
+    MainActivityView
+        .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
   }
 
 }

@@ -29,9 +29,11 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTa
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
-import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
 import ru.surf.course.movierecommendations.util.Utilities;
+
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 
 @PerScreen
@@ -63,8 +65,8 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
     public void onLoad(boolean viewRecreated) {
         super.onLoad(viewRecreated);
 
-        if (getView().getIntent().hasExtra(MainActivity.KEY_MEDIA)) {
-            mediaType = (MediaType) getView().getIntent().getSerializableExtra(MainActivity.KEY_MEDIA);
+        if (getView().getIntent().hasExtra(KEY_MEDIA)) {
+            mediaType = (MediaType) getView().getIntent().getSerializableExtra(KEY_MEDIA);
         }
         if (getView().getIntent().hasExtra(MediaListFragment.KEY_SORT_TYPE)) {
             getView().setupSortRG(getView().getIntent().getStringExtra(MediaListFragment.KEY_SORT_TYPE));

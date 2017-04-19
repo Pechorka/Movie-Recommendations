@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.main.listeners;
+package ru.surf.course.movierecommendations.ui.screen.mediaList.listeners;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

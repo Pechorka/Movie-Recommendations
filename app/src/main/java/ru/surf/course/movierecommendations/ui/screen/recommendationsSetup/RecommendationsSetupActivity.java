@@ -26,7 +26,7 @@ import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetListTask;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.adapters.RecommendationsSetupListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.splash.SplachActivity;
 
@@ -63,7 +63,7 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
       call = task.getListById(TVSHOW_LIST_ID, BuildConfig.TMDB_API_KEY, "en");
       movie = false;
     } else {
-      MainActivity.start(this, MainActivity.class);
+      MainActivityView.start(this, MainActivityView.class);
     }
     setupToolbar();
     call.enqueue(this);
@@ -84,12 +84,12 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
           SplachActivity.startWithClearBackStack(this, RecommendationsSetupActivity.class);
         } else {
           setIsSetup(true);
-          SplachActivity.startWithClearBackStack(this, MainActivity.class);
+          SplachActivity.startWithClearBackStack(this, MainActivityView.class);
         }
         break;
       case R.id.recommendations_setup_menu_skip:
         setIsSetup(true);
-        MainActivity.start(this, MainActivity.class);
+        MainActivityView.start(this, MainActivityView.class);
         break;
 
     }

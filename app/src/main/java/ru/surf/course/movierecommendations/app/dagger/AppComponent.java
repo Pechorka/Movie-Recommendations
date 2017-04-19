@@ -6,6 +6,7 @@ import com.agna.ferro.mvp.component.scope.PerApplication;
 
 import dagger.Component;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
+import ru.surf.course.movierecommendations.interactor.SharedPreferencesModule;
 import ru.surf.course.movierecommendations.interactor.common.network.NetworkModule;
 import ru.surf.course.movierecommendations.interactor.common.network.OkHttpModule;
 import ru.surf.course.movierecommendations.interactor.common.network.cache.CacheModule;

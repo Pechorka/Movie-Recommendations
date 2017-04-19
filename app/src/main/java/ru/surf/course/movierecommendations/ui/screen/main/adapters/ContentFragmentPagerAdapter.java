@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
 
 /**
  * Created by Sergey on 09.02.2017.
