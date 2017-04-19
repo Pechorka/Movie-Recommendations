@@ -19,12 +19,12 @@ import javax.inject.Inject;
 
 
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
-import ru.surf.course.movierecommendations.domain.MediaType;
 
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.ASC;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
@@ -122,7 +122,7 @@ public class CustomFilterActivityView extends BaseActivityView {
         onBackPressed();
     }
 
-    public void showCustomFilterDialog(String title, MediaType mediaType) {
+    public void showCustomFilterDialog(String title, Media.MediaType mediaType) {
         SaveCustomFilterDialog customFilterDialog = SaveCustomFilterDialog
                 .newInstance(getCheckedGenres(), getSortType(), getSortDirection(),
                         String.valueOf(getYearsRangeBarMinYear()),

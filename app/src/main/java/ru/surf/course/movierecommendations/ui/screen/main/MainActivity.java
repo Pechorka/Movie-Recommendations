@@ -1,8 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 
-import static ru.surf.course.movierecommendations.domain.MediaType.movie;
-import static ru.surf.course.movierecommendations.domain.MediaType.tv;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,20 +33,14 @@ import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivity
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.RecommendedGenres;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
+
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
-import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivity;
+
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.domain.MediaType;
-import ru.surf.course.movierecommendations.domain.RecommendedGenres;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -197,7 +197,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         RecommendedMovieGenres recommendedMovieGenres;
         try {
             recommendedMovieGenres = new RecommendedMovieGenres();
-            recommendedMovieGenres.setGenre_id(id);
+            recommendedMovieGenres.setGenreId(id);
             getRecommendedMovieGenresDao().create(recommendedMovieGenres);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -208,7 +208,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         RecommendedTVShowsGenres recommendedTVShowsGenres;
         try {
             recommendedTVShowsGenres = new RecommendedTVShowsGenres();
-            recommendedTVShowsGenres.setGenre_id(id);
+            recommendedTVShowsGenres.setGenreId(id);
             getRecommendedTVShowsGenresDao().create(recommendedTVShowsGenres);
         } catch (SQLException e) {
             e.printStackTrace();

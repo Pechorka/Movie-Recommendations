@@ -28,7 +28,7 @@ import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.MediaType;
+
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
@@ -59,7 +59,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private String region;
   private String ids;
   private int id;
-  private MediaType mediaType;
+  private Media.MediaType mediaType;
   private String maxYear;
   private String minYear;
   private String genre_ids;
@@ -74,7 +74,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private FloatingActionButton showCustomFilterOpt;
 
   public static MediaListFragment newInstance(String query, String region,
-      Tasks task, MediaType mediaType) {
+      Tasks task, Media.MediaType mediaType) {
     MediaListFragment mediaListFragment = new MediaListFragment();
     Bundle bundle = new Bundle();
     bundle.putString(KEY_QUERY, query);
@@ -93,7 +93,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     task = (Tasks) getArguments().getSerializable(KEY_TASK);
     id = getArguments().getInt(KEY_MEDIA_ID);
     ids = query;
-    mediaType = (MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
+    mediaType = (Media.MediaType) getArguments().getSerializable(MainActivity.KEY_MEDIA);
     page = 1;
   }
 

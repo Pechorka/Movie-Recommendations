@@ -20,7 +20,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.domain.MediaType;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.MovieGenre;
