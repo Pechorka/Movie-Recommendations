@@ -5,9 +5,11 @@ import android.content.Context;
 import com.agna.ferro.mvp.component.scope.PerApplication;
 
 import dagger.Component;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.common.network.NetworkModule;
 import ru.surf.course.movierecommendations.interactor.common.network.OkHttpModule;
 import ru.surf.course.movierecommendations.interactor.common.network.cache.CacheModule;
+import ru.surf.course.movierecommendations.interactor.network.connection.NetworkConnectionChecker;
 import ru.surf.course.movierecommendations.ui.base.activity.ActivityModule;
 
 @PerApplication
@@ -20,4 +22,6 @@ import ru.surf.course.movierecommendations.ui.base.activity.ActivityModule;
 })
 public interface AppComponent {
     Context context();
+    NetworkConnectionChecker networkConnectionChecker();
+    DBHelper dbHelper();
 }

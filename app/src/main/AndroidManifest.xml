@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity android:name=".ui.screen.settings.SettingsActivity"/>
         <activity
-            android:name=".ui.screen.customFilter.CustomFilterActivity"
+            android:name=".ui.screen.customFilter.CustomFilterActivityView"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.screen.favorites.FavoritesActivity"

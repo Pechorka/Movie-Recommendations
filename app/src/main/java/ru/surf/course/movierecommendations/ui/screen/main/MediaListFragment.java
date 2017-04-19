@@ -1,6 +1,8 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 import static android.app.Activity.RESULT_OK;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +25,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.ui.screen.main.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivity;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.MediaType;
@@ -147,8 +149,8 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     maxYear = String.valueOf(new GregorianCalendar().get(Calendar.YEAR));
     minYear = "1930";
     genre_ids = "";
-    sort_type = CustomFilterActivity.POPULARITY;
-    sort_direction = CustomFilterActivity.DESC;
+    sort_type = POPULARITY;
+    sort_direction = DESC;
   }
 
   private void initViews(View root) {
@@ -173,7 +175,7 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private void setupViews() {
     recyclerView.addOnScrollListener(scrollListener);
     showCustomFilterOpt.setOnClickListener(v -> {
-      Intent intent = new Intent(getActivity(), CustomFilterActivity.class);
+      Intent intent = new Intent(getActivity(), CustomFilterActivityView.class);
       intent.putExtra(KEY_SORT_TYPE, sort_type);
       intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
       intent.putExtra(MainActivity.KEY_MEDIA, mediaType);
