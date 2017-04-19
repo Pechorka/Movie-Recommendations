@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 
 /**
  * Created by Sergey on 12.02.2017.
@@ -41,12 +41,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
   public void onBindViewHolder(final GridViewHolder holder, int position) {
     Media media = mediaList.get(position);
     ImageLoader.putPoster(context, media.getPosterPath(), holder.image, ImageLoader.sizes.w500);
-    holder.cardView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        fragmentToSwitch(holder.getAdapterPosition());
-      }
-    });
+    holder.cardView.setOnClickListener(view -> fragmentToSwitch(holder.getAdapterPosition()));
   }
 
 

@@ -2,13 +2,13 @@ package ru.surf.course.movierecommendations.interactor;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import ru.surf.course.movierecommendations.domain.MediaType;
+import lombok.Data;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 
 /**
  * Created by sergey on 04.04.17.
  */
-
+@Data
 @DatabaseTable(tableName = CustomFilter.TABLE_NAME_CUSTOM_FILTER)
 public class CustomFilter {
 
@@ -49,70 +49,6 @@ public class CustomFilter {
     this.sortDirection = sortDirection;
     this.minYear = minYear;
     this.maxYear = maxYear;
-    this.mediaType = mediaType;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getFilterName() {
-    return filterName;
-  }
-
-  public void setFilterName(String filterName) {
-    this.filterName = filterName;
-  }
-
-  public String getGenreIds() {
-    return genreIds;
-  }
-
-  public void setGenreIds(String genreIds) {
-    this.genreIds = genreIds;
-  }
-
-  public String getSortType() {
-    return sortType;
-  }
-
-  public void setSortType(String sortType) {
-    this.sortType = sortType;
-  }
-
-  public String getSortDirection() {
-    return sortDirection;
-  }
-
-  public void setSortDirection(String sortDirection) {
-    this.sortDirection = sortDirection;
-  }
-
-  public String getMinYear() {
-    return minYear;
-  }
-
-  public void setMinYear(String minYear) {
-    this.minYear = minYear;
-  }
-
-  public String getMaxYear() {
-    return maxYear;
-  }
-
-  public void setMaxYear(String maxYear) {
-    this.maxYear = maxYear;
-  }
-
-  public MediaType getMediaType() {
-    return mediaType;
-  }
-
-  public void setMediaType(MediaType mediaType) {
     this.mediaType = mediaType;
   }
 }

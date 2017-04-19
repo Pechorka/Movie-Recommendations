@@ -17,11 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.Network;
 import ru.surf.course.movierecommendations.domain.ProductionCompanies;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.Season;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 
@@ -270,8 +270,10 @@ public class GetTVShowsTask extends GetMediaTask {
 
         item = new TVShowInfo(tvShowArray.getJSONObject(i).getInt(TMDB_ID));
         item.setTitle(tvShowArray.getJSONObject(i).getString(TMDB_NAME));
-        item.setOriginalTitle(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME));
+        item.setOriginalLanguage(
+            new Locale(tvShowArray.getJSONObject(i).getString(TMDB_ORIGINAL_NAME)));
         item.setGenres(genresList);
+
         item.setOriginCountryList(originCountryList);
         item.setPosterPath(tvShowArray.getJSONObject(i).getString(TMDB_POSTER_PATH));
         item.setOverview(tvShowArray.getJSONObject(i).getString(TMDB_OVERVIEW));
@@ -375,8 +377,8 @@ public class GetTVShowsTask extends GetMediaTask {
       item.setNumberOfSeasons(tvShowsJson.getInt(TMDB_NUMBER_OF_SEASONS));
       item.setType(tvShowsJson.getString(TMDB_TYPE));
       item.setStatus(tvShowsJson.getString(TMDB_STATUS));
-      item.setProductionCompaniesNames(productionCompaniesResult);
-      item.setProductionCountriesNames(productionCountriesResult);
+      item.setProductionCompanies(productionCompaniesResult);
+      item.setProductionCountries(productionCountriesResult);
       item.setNetworks(networksList);
       item.setOriginCountryList(originCountryList);
       item.setSeasonList(seasonList);

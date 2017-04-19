@@ -21,20 +21,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.adapters.GenreListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
-import ru.surf.course.movierecommendations.domain.MediaType;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.MovieGenre;
 import ru.surf.course.movierecommendations.interactor.TVShowGenre;
 import ru.surf.course.movierecommendations.interactor.TVShowGenre.RetrofitResult;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.adapters.GenreListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
+import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 public class CustomFilterActivity extends AppCompatActivity {
 

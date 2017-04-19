@@ -12,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import java.util.ArrayList;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.domain.Review;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTask;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieReviewsAdapter;
 
@@ -98,12 +96,9 @@ public class MovieReviewsFragment extends Fragment {
 
   private void loadReviews(final MovieInfo movie) {
     GetReviewsTask getReviewsTask = new GetReviewsTask();
-    getReviewsTask.addListener(new GetReviewsTask.ReviewsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(ArrayList<Review> result) {
-        movie.setReviews(result);
-        dataLoadComplete();
-      }
+    getReviewsTask.addListener(result -> {
+      movie.setReviews(result);
+      dataLoadComplete();
     });
     getReviewsTask.getMovieReviews(currentMovie.getMediaId());
   }

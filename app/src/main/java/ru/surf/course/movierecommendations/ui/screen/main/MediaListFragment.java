@@ -20,17 +20,17 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.main.adapters.GridMediaAdapter;
-import ru.surf.course.movierecommendations.ui.screen.main.listeners.EndlessRecyclerViewScrollListener;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivity;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.MediaType;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivity;
+import ru.surf.course.movierecommendations.ui.screen.main.adapters.GridMediaAdapter;
+import ru.surf.course.movierecommendations.ui.screen.main.listeners.EndlessRecyclerViewScrollListener;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 /**
  * Created by Sergey on 12.02.2017.

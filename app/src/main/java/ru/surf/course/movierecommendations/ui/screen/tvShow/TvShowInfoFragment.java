@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.Locale;
 import org.apmem.tools.layouts.FlowLayout;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
+import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
+import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 /**
  * Created by andrew on 2/19/17.
@@ -193,12 +193,9 @@ public class TvShowInfoFragment extends Fragment {
       overview.setText(currentTvShowInfoEnglish.getOverview());
     }
 
-    overview.post(new Runnable() {
-      @Override
-      public void run() {
-        if (overview.getLineCount() >= overview.getMaxLines()) {
-          expandCollapseOverviewButton.setVisibility(View.VISIBLE);
-        }
+    overview.post(() -> {
+      if (overview.getLineCount() >= overview.getMaxLines()) {
+        expandCollapseOverviewButton.setVisibility(View.VISIBLE);
       }
     });
 

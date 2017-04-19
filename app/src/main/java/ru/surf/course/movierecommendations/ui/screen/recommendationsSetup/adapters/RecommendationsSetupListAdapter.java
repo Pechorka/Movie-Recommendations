@@ -46,16 +46,13 @@ public class RecommendationsSetupListAdapter extends
       holder.choosen.setVisibility(View.VISIBLE);
     else
       holder.choosen.setVisibility(View.INVISIBLE);
-    holder.cardView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        choosen[holder.getAdapterPosition()] = !choosen[holder.getAdapterPosition()];
-        // TODO fix
-        if (choosen[holder.getAdapterPosition()]) {
-          holder.choosen.setVisibility(View.VISIBLE);
-        } else {
-          holder.choosen.setVisibility(View.INVISIBLE);
-        }
+    holder.cardView.setOnClickListener(v -> {
+      choosen[holder.getAdapterPosition()] = !choosen[holder.getAdapterPosition()];
+      // TODO fix
+      if (choosen[holder.getAdapterPosition()]) {
+        holder.choosen.setVisibility(View.VISIBLE);
+      } else {
+        holder.choosen.setVisibility(View.INVISIBLE);
       }
     });
   }
@@ -76,7 +73,7 @@ public class RecommendationsSetupListAdapter extends
     Set<Integer> result = new HashSet<>();
     for (int i = 0; i < mediaList.size(); i++) {
       if (choosen[i]) {
-        result.addAll(mediaList.get(i).getmGenresIds());
+        result.addAll(mediaList.get(i).getGenresIds());
       }
     }
     return result;

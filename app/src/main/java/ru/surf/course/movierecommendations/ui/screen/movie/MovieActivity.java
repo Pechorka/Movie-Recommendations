@@ -20,19 +20,19 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
+import ru.surf.course.movierecommendations.interactor.Favorite;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
-import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.domain.genre.Genre;
-import ru.surf.course.movierecommendations.domain.MediaType;
-import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
 /**
  * Created by andrew on 2/15/17.

@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.Network;
 
@@ -15,20 +15,21 @@ import ru.surf.course.movierecommendations.domain.Network;
  * Created by Sergey on 07.02.2017.
  */
 
+@Data
 public class TVShowInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
 
   @SerializedName("episode_run_time")
-  private List<Double> mEpisodesRuntime;
+  private List<Double> episodesRuntime;
 
   @SerializedName("number_of_episodes")
-  private int mNumberOfEpisodes;
+  private int numberOfEpisodes;
 
   @SerializedName("number_of_seasons")
-  private int mNumberOfSeasons;
+  private int numberOfSeasons;
   @SerializedName("type")
-  private String mType;
+  private String type;
   @SerializedName("origin_country")
   private List<String> originCountryList;
 
@@ -41,70 +42,6 @@ public class TVShowInfo extends Media implements Serializable {
 
   public TVShowInfo(int id) {
     super(id);
-  }
-
-  public List<Double> getEpisodesRuntime() {
-    return mEpisodesRuntime;
-  }
-
-  public void setEpisodesRuntime(List<Double> episodesRuntime) {
-    this.mEpisodesRuntime = episodesRuntime;
-  }
-
-  public int getNumberOfEpisodes() {
-    return mNumberOfEpisodes;
-  }
-
-  public void setNumberOfEpisodes(int numberOfEpisodes) {
-    this.mNumberOfEpisodes = numberOfEpisodes;
-  }
-
-  public int getNumberOfSeasons() {
-    return mNumberOfSeasons;
-  }
-
-  public void setNumberOfSeasons(int numberOfSeasons) {
-    this.mNumberOfSeasons = numberOfSeasons;
-  }
-
-  public String getType() {
-    return mType;
-  }
-
-  public void setType(String type) {
-    this.mType = type;
-  }
-
-  public List<String> getOriginCountryList() {
-    return originCountryList;
-  }
-
-  public void setOriginCountryList(List<String> originCountryList) {
-    this.originCountryList = originCountryList;
-  }
-
-  public List<Season> getSeasonList() {
-    return seasonList;
-  }
-
-  public void setSeasonList(List<Season> seasonList) {
-    this.seasonList = seasonList;
-  }
-
-  public String getHomePage() {
-    return homePage;
-  }
-
-  public void setHomePage(String homePage) {
-    this.homePage = homePage;
-  }
-
-  public List<Network> getNetworks() {
-    return networks;
-  }
-
-  public void setNetworks(List<Network> networks) {
-    this.networks = networks;
   }
 
   public void fillFields(Object from) {

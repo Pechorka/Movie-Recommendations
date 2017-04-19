@@ -2,11 +2,12 @@ package ru.surf.course.movierecommendations.domain;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * Created by Sergey on 17.02.2017.
  */
-
+@Data
 public class Network implements Serializable {
 
   @SerializedName("id")
@@ -14,19 +15,4 @@ public class Network implements Serializable {
   @SerializedName("name")
   private String name;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 }

@@ -20,19 +20,19 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
+import ru.surf.course.movierecommendations.interactor.Favorite;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivity;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.adapters.TVShowInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
-import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.domain.genre.Genre;
-import ru.surf.course.movierecommendations.domain.MediaType;
-import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
 
 /**
@@ -172,13 +172,10 @@ public class TvShowActivity extends AppCompatActivity {
       final View errorPlaceholder = findViewById(R.id.tv_show_no_internet_screen);
       errorPlaceholder.setVisibility(View.VISIBLE);
       findViewById(R.id.message_no_internet_button)
-          .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              if (Utilities.isConnectionAvailable(TvShowActivity.this)) {
-                errorPlaceholder.setVisibility(View.GONE);
-                startLoading();
-              }
+          .setOnClickListener(view -> {
+            if (Utilities.isConnectionAvailable(TvShowActivity.this)) {
+              errorPlaceholder.setVisibility(View.GONE);
+              startLoading();
             }
           });
     }

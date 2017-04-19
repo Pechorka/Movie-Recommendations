@@ -3,60 +3,28 @@ package ru.surf.course.movierecommendations.domain;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.net.URL;
+import lombok.Data;
 
 /**
  * Created by andrew on 2/18/17.
  */
+@Data
 public class Review implements Serializable {
 
   @SerializedName("id")
-  private String mReviewId;
+  private String reviewId;
 
   @SerializedName("author")
-  private String mAuthor;
+  private String author;
 
   @SerializedName("content")
-  private String mContent;
+  private String content;
 
   @SerializedName("url")
-  private URL mURL;
-
-
+  private URL url;
 
   public Review(String id) {
-    mReviewId = id;
-  }
-
-  public String getReviewId() {
-    return mReviewId;
-  }
-
-  public void setReviewId(String id) {
-    mReviewId = id;
-  }
-
-  public String getAuthor() {
-    return mAuthor;
-  }
-
-  public void setAuthor(String author) {
-    mAuthor = author;
-  }
-
-  public String getContent() {
-    return mContent;
-  }
-
-  public void setContent(String content) {
-    mContent = content;
-  }
-
-  public URL getURL() {
-    return mURL;
-  }
-
-  public void setURL(URL URL) {
-    mURL = URL;
+    reviewId = id;
   }
 
 }

@@ -2,13 +2,13 @@ package ru.surf.course.movierecommendations.interactor;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import ru.surf.course.movierecommendations.domain.MediaType;
+import lombok.Data;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 
 /**
  * Created by Sergey on 26.03.2017.
  */
-
+@Data
 @DatabaseTable(tableName = Favorite.TABLE_NAME_FAVORITES)
 public class Favorite {
 
@@ -38,43 +38,4 @@ public class Favorite {
   public Favorite() {
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public int getMediaId() {
-    return mediaId;
-  }
-
-  public void setMediaId(int mediaId) {
-    this.mediaId = mediaId;
-  }
-
-  public String getPosterPath() {
-    return posterPath;
-  }
-
-  public void setPosterPath(String posterPath) {
-    this.posterPath = posterPath;
-  }
-
-  public MediaType getMediaType() {
-    return mediaType;
-  }
-
-  public void setMediaType(MediaType mediaType) {
-    this.mediaType = mediaType;
-  }
 }

@@ -8,11 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.domain.MediaType;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
+import ru.surf.course.movierecommendations.ui.screen.main.MainActivity;
 import ru.surf.course.movierecommendations.ui.screen.main.MediaListFragment;
 
 /**

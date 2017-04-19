@@ -9,10 +9,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.List;
-
-import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 
 /**
  * Created by Sergey on 26.03.2017.
@@ -193,7 +192,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     RecommendedMovieGenres recommendedMovieGenres;
     try {
       recommendedMovieGenres = new RecommendedMovieGenres();
-      recommendedMovieGenres.setGenre_id(id);
+      recommendedMovieGenres.setGenreId(id);
       getRecommendedMovieGenresDao().create(recommendedMovieGenres);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -204,7 +203,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     RecommendedTVShowsGenres recommendedTVShowsGenres;
     try {
       recommendedTVShowsGenres = new RecommendedTVShowsGenres();
-      recommendedTVShowsGenres.setGenre_id(id);
+      recommendedTVShowsGenres.setGenreId(id);
       getRecommendedTVShowsGenresDao().create(recommendedTVShowsGenres);
     } catch (SQLException e) {
       e.printStackTrace();

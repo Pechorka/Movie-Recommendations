@@ -1,11 +1,12 @@
 package ru.surf.course.movierecommendations.domain;
 
 import com.j256.ormlite.field.DatabaseField;
+import lombok.Data;
 
 /**
  * Created by Sergey on 30.03.2017.
  */
-
+@Data
 public class RecommendedGenres {
 
   public static final String FIELD_NAME_ID = "id";
@@ -15,24 +16,9 @@ public class RecommendedGenres {
   private int id;
 
   @DatabaseField(columnName = FIELD_NAME_GENRE_ID)
-  private int genre_id;
+  private int genreId;
 
   public RecommendedGenres() {
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public int getGenre_id() {
-    return genre_id;
-  }
-
-  public void setGenre_id(int genre_id) {
-    this.genre_id = genre_id;
-  }
 }
