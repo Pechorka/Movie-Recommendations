@@ -20,12 +20,10 @@ import ru.surf.course.movierecommendations.interactor.DBHelper;
 public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.GenreViewHolder> {
   private List<? extends Genre> genreList;
   private Context context;
-  private MediaType mediaType;
 
-  public GenreListAdapter(List<? extends Genre> genreList, Context context, MediaType mediaType) {
+  public GenreListAdapter(List<? extends Genre> genreList, Context context) {
     this.genreList = genreList;
     this.context = context;
-    this.mediaType = mediaType;
   }
 
   @Override
@@ -71,23 +69,6 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
     return stringBuilder.toString();
   }
 
-  public void saveChecked() {
-    DBHelper helper = DBHelper.getHelper(context);
-//    switch (mediaType) {
-//      case movie:
-//        for (Genre g :
-//            genreList) {
-//          helper.updateMovieGenre(g);
-//        }
-//        break;
-//      case tv:
-//        for (Genre g :
-//            genreList) {
-//          helper.updateTVShowGenre(g);
-//        }
-//        break;
-//    }
-  }
 
   public static class GenreViewHolder extends RecyclerView.ViewHolder {
 
