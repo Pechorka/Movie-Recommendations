@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.movie;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,10 +14,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Review;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTaskRetrofit;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieReviewsAdapter;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/18/17.
@@ -95,12 +107,23 @@ public class MovieReviewsFragment extends Fragment {
   }
 
   private void loadReviews(final MovieInfo movie) {
-    GetReviewsTask getReviewsTask = new GetReviewsTask();
-    getReviewsTask.addListener(result -> {
-      movie.setReviews(result);
-      dataLoadComplete();
-    });
-    getReviewsTask.getMovieReviews(currentMovie.getMediaId());
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetReviewsTaskRetrofit getReviewsTaskRetrofit = retrofit.create(GetReviewsTaskRetrofit.class);
+    Observable<Review.RetrofitResult> call = getReviewsTaskRetrofit
+        .getMovieReviews(movie.getMediaId(),
+            BuildConfig.TMDB_API_KEY);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(retrofitResult -> {
+          movie.setReviews(retrofitResult.reviews);
+          dataLoadComplete();
+        });
   }
 
   private void fillInformation() {

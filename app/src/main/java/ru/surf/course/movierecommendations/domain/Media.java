@@ -80,7 +80,7 @@ public class Media implements Serializable {
   protected ArrayList<Credit> credits;
 
   @SerializedName("reviews")
-  protected ArrayList<Review> reviews;
+  protected List<Review> reviews;
 
   public Media(int mediaId) {
     this.mediaId = mediaId;
