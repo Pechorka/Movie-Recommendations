@@ -21,8 +21,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -32,7 +40,7 @@ import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.TmdbImage.RetrofitResultProfiles;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonsTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
@@ -116,7 +124,21 @@ public class PersonActivity extends AppCompatActivity {
 
     RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
         .createWithScheduler(Schedulers.io());
-    Gson gson = new GsonBuilder().create();
+    Gson gson = new GsonBuilder()
+        .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+          @Override
+          public Date deserialize(final JsonElement json, final Type typeOfT,
+              final JsonDeserializationContext context)
+              throws JsonParseException {
+            try {
+              return df.parse(json.getAsString());
+            } catch (ParseException e) {
+              return null;
+            }
+          }
+        }).create();
     retrofit = new Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(gson))
@@ -177,14 +199,13 @@ public class PersonActivity extends AppCompatActivity {
   }
 
   private void loadInformationInto(final Person person, String language) {
-    GetPersonsTask getPersonsTask = new GetPersonsTask();
-    getPersonsTask.addListener(result -> {
-      if (person != null) {
-        person.fillFields(result.get(0));
-      }
+    GetPersonTaskRetrofit getPersonTaskRetrofit = retrofit.create(GetPersonTaskRetrofit.class);
+    Observable<Person> call = getPersonTaskRetrofit.getPersonById(person.getId(), apiKey, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(person1 -> {
+          person.fillFields(person1);
       dataLoadComplete();
     });
-    getPersonsTask.getPersonById(person.getId(), language);
   }
 
   private void loadProfilePicturesInto(final Person person) {
@@ -251,7 +272,6 @@ public class PersonActivity extends AppCompatActivity {
       }
     }
   }
-
 
 
 }

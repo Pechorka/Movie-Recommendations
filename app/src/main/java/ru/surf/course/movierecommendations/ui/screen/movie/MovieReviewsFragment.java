@@ -23,7 +23,7 @@ import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Review;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTask;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieReviewsAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -115,8 +115,8 @@ public class MovieReviewsFragment extends Fragment {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    GetReviewsTaskRetrofit getReviewsTaskRetrofit = retrofit.create(GetReviewsTaskRetrofit.class);
-    Observable<Review.RetrofitResult> call = getReviewsTaskRetrofit
+    GetReviewsTask getReviewsTask = retrofit.create(GetReviewsTask.class);
+    Observable<Review.RetrofitResult> call = getReviewsTask
         .getMovieReviews(movie.getMediaId(),
             BuildConfig.TMDB_API_KEY);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

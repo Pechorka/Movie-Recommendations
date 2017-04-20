@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.person;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,12 +16,29 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import at.blogc.android.views.ExpandableTextView;
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.domain.people.Person;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonsTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
+import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/9/17.
@@ -120,17 +139,36 @@ public class PersonInfoFragment extends Fragment {
   }
 
   private void loadInformationInto(final Person person, String language) {
-    GetPersonsTask getPersonsTask = new GetPersonsTask();
-    getPersonsTask.addListener(new GetPersonsTask.PersonsTaskCompleteListener() {
-      @Override
-      public void taskCompleted(List<Person> result) {
-        if (person != null) {
-          person.fillFields(result.get(0));
-        }
-        dataLoadComplete();
-      }
-    });
-    getPersonsTask.getPersonById(person.getId(), language);
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder()
+        .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+          @Override
+          public Date deserialize(final JsonElement json, final Type typeOfT,
+              final JsonDeserializationContext context)
+              throws JsonParseException {
+            try {
+              return df.parse(json.getAsString());
+            } catch (ParseException e) {
+              return null;
+            }
+          }
+        }).create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetPersonTaskRetrofit getPersonTaskRetrofit = retrofit.create(GetPersonTaskRetrofit.class);
+    Observable<Person> call = getPersonTaskRetrofit
+        .getPersonById(person.getId(), BuildConfig.TMDB_API_KEY, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(person1 -> {
+          person.fillFields(person1);
+          dataLoadComplete();
+        });
   }
 
   private boolean checkInformation(Person person) {
@@ -152,18 +190,16 @@ public class PersonInfoFragment extends Fragment {
       biography.setText(currentPersonEnglish.getBiography());
     }
 
-    biography.post(new Runnable() {
-      @Override
-      public void run() {
-        if (biography.getLineCount() >= biography.getMaxLines()) {
-          expandCollapseBiographyButton.setVisibility(View.VISIBLE);
-        }
+    biography.post(() -> {
+      if (biography.getLineCount() >= biography.getMaxLines()) {
+        expandCollapseBiographyButton.setVisibility(View.VISIBLE);
       }
     });
 
-    gender.setText(
-        getResources().getStringArray(R.array.genders)[currentPerson.getGender().ordinal()]);
-
+    if (currentPerson.getGender() != null) {
+      gender.setText(
+          getResources().getStringArray(R.array.genders)[currentPerson.getGender().ordinal()]);
+    }
     if (Utilities.checkString(currentPerson.getPlaceOfBirth())) {
       placeOfBirth.setText(currentPerson.getPlaceOfBirth());
     } else if (Utilities.checkString(currentPersonEnglish.getPlaceOfBirth())) {
