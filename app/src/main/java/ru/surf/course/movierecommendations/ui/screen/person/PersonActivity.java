@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.person;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -17,19 +19,27 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
-import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
+import ru.surf.course.movierecommendations.domain.TmdbImage.RetrofitResultProfiles;
+import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
+import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
+import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/15/17.
@@ -52,6 +62,9 @@ public class PersonActivity extends AppCompatActivity {
   private ViewPager infosPager;
   private View fakeStatusBar;
   private Toolbar toolbar;
+
+  private Retrofit retrofit;
+  private String apiKey;
 
   private int dataLoaded = 0;
 
@@ -100,6 +113,16 @@ public class PersonActivity extends AppCompatActivity {
     infosPager = (ViewPager) findViewById(R.id.person_infos_pager);
     fakeStatusBar = findViewById(R.id.person_fake_status_bar);
     toolbar = (Toolbar) findViewById(R.id.person_toolbar);
+
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    apiKey = BuildConfig.TMDB_API_KEY;
   }
 
   private void setupViews() {
@@ -165,15 +188,14 @@ public class PersonActivity extends AppCompatActivity {
   }
 
   private void loadProfilePicturesInto(final Person person) {
-    GetImagesTask getImagesTask = new GetImagesTask();
-    getImagesTask.addListener(new GetImagesTask.TaskCompletedListener() {
-      @Override
-      public void getImagesTaskCompleted(List<TmdbImage> result) {
-        person.setProfilePictures(result);
-        dataLoadComplete();
-      }
-    });
-    getImagesTask.getPersonImages(person.getId(), Tasks.GET_PROFILE_PICTURES);
+    GetImagesTask getImagesTask = retrofit.create(GetImagesTask.class);
+    Observable<RetrofitResultProfiles> call = getImagesTask
+        .getProfilePictures(person.getId(), apiKey);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(tmdbImages -> {
+          person.setProfilePictures(tmdbImages.profilePictures);
+          dataLoadComplete();
+        });
   }
 
   private boolean checkInformation(Person person) {

@@ -28,6 +28,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
@@ -35,7 +36,6 @@ import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
@@ -72,6 +72,9 @@ public class MovieInfoFragment extends Fragment {
   private TextView budget;
   private TextView revenue;
   private TextView productionCountries;
+
+  private Retrofit retrofit;
+  private String apiKey;
 
   private int dataLoaded = 0;
 
@@ -127,6 +130,16 @@ public class MovieInfoFragment extends Fragment {
     status = (TextView) root.findViewById(R.id.movie_info_status);
     productionCountries = (TextView) root.findViewById(R.id.movie_info_production);
     genres = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
+
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    apiKey = BuildConfig.TMDB_API_KEY;
   }
 
   private void setupViews(View root) {
@@ -164,33 +177,32 @@ public class MovieInfoFragment extends Fragment {
   }
 
   private void loadInformationInto(final MovieInfo movie, String language) {
-    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-        .createWithScheduler(Schedulers.io());
-    Gson gson = new GsonBuilder().create();
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(rxAdapter)
-        .build();
     GetMovieTask getMovieTask = retrofit.create(GetMovieTask.class);
-    Observable<MovieInfo> call = getMovieTask.getMovieById(movie.getMediaId(),
-        BuildConfig.TMDB_API_KEY, language);
+    Observable<MovieInfo> call = getMovieTask.getMovieById(movie.getMediaId(), apiKey, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(movieInfo -> {
           movie.fillFields(movieInfo);
-      dataLoadComplete();
-      loadBackdropsInto(currentMovieInfo);
-      loadCreditsInto(currentMovieInfo);
-    });
+          dataLoadComplete();
+          loadBackdropsInto(currentMovieInfo);
+          loadCreditsInto(currentMovieInfo);
+        });
   }
 
   private void loadBackdropsInto(final MovieInfo movie) {
-    GetImagesTask getImagesTask = new GetImagesTask();
-    getImagesTask.addListener(result -> {
-      movie.setBackdrops(result);
-      dataLoadComplete();
-    });
-    getImagesTask.getMovieImages(movie.getMediaId(), Tasks.GET_BACKDROPS);
+    GetImagesTask getImagesTask = retrofit.create(GetImagesTask.class);
+    Observable<TmdbImage.RetrofitResultPosters> call = getImagesTask
+        .getPostersBackdrops(MediaType.movie.toString(), movie.getMediaId(), apiKey);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(tmdbImages -> {
+          movie.setBackdrops(tmdbImages.backdrops);
+          dataLoadComplete();
+        });
+//    GetImagesTask getImagesTask = new GetImagesTask();
+//    getImagesTask.addListener(result -> {
+//      movie.setBackdrops(result);
+//      dataLoadComplete();
+//    });
+//    getImagesTask.getMovieImages(movie.getMediaId(), Tasks.GET_BACKDROPS);
   }
 
   private void loadCreditsInto(final MovieInfo movieInfo) {

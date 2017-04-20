@@ -1,7 +1,9 @@
 package ru.surf.course.movierecommendations.domain;
 
 import android.graphics.Bitmap;
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by andrew on 12/30/16.
@@ -9,9 +11,12 @@ import java.io.Serializable;
 
 public class TmdbImage implements Serializable {
 
+  @SerializedName("file_path")
   public String path;
   public Bitmap bitmap;
+  @SerializedName("height")
   public int height;
+  @SerializedName("width")
   public int width;
 
   public TmdbImage(String path) {
@@ -28,5 +33,20 @@ public class TmdbImage implements Serializable {
     this.path = path;
     this.width = width;
     this.height = height;
+  }
+
+  public static class RetrofitResultPosters {
+
+    @SerializedName("posters")
+    public List<TmdbImage> posters;
+
+    @SerializedName("backdrops")
+    public List<TmdbImage> backdrops;
+  }
+
+  public static class RetrofitResultProfiles {
+
+    @SerializedName("profilePictures")
+    public List<TmdbImage> profilePictures;
   }
 }

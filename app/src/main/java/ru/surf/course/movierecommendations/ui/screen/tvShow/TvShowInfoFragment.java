@@ -28,13 +28,13 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
@@ -69,6 +69,9 @@ public class TvShowInfoFragment extends Fragment {
   private TextView episodeRuntime;
   private TextView status;
   private TextView numberOfSeasons;
+
+  private Retrofit retrofit;
+  private String apiKey;
 
   private int dataLoaded = 0;
 
@@ -122,6 +125,17 @@ public class TvShowInfoFragment extends Fragment {
     status = (TextView) root.findViewById(R.id.tv_show_info_status);
     numberOfSeasons = (TextView) root.findViewById(R.id.tv_show_info_number_of_seasons);
     genres = (FlowLayout) root.findViewById(R.id.tv_show_info_genres_placeholder);
+
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+
+    apiKey = BuildConfig.TMDB_API_KEY;
   }
 
   private void setupViews(View root) {
@@ -156,17 +170,10 @@ public class TvShowInfoFragment extends Fragment {
   }
 
   private void loadInformationInto(final TVShowInfo tvShow, String language) {
-    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-        .createWithScheduler(Schedulers.io());
-    Gson gson = new GsonBuilder().create();
-    Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(rxAdapter)
-        .build();
+
     GetTVShowTask getTVShowTask = retrofit.create(GetTVShowTask.class);
-    Observable<TVShowInfo> call = getTVShowTask.getTVShowById(tvShow.getMediaId(),
-        BuildConfig.TMDB_API_KEY, language);
+    Observable<TVShowInfo> call = getTVShowTask
+        .getTVShowById(tvShow.getMediaId(), apiKey, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(tvShowInfo -> {
           tvShow.fillFields(tvShowInfo);
@@ -177,12 +184,14 @@ public class TvShowInfoFragment extends Fragment {
   }
 
   private void loadBackdropsInto(final TVShowInfo tvShow) {
-    GetImagesTask getImagesTask = new GetImagesTask();
-    getImagesTask.addListener(result -> {
-      tvShow.setBackdrops(result);
-      dataLoadComplete();
-    });
-    getImagesTask.getTvImages(tvShow.getMediaId(), Tasks.GET_TV_BACKDROPS);
+    GetImagesTask getImagesTask = retrofit.create(GetImagesTask.class);
+    Observable<TmdbImage.RetrofitResultPosters> call = getImagesTask
+        .getPostersBackdrops(MediaType.movie.toString(), tvShow.getMediaId(), apiKey);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(tmdbImages -> {
+          tvShow.setBackdrops(tmdbImages.backdrops);
+          dataLoadComplete();
+        });
   }
 
   private void loadCreditsInto(final TVShowInfo tvShowInfo) {
