@@ -159,17 +159,19 @@ public class TvShowActivity extends AppCompatActivity {
 
       @Override
       public boolean removedFromFavorite() {
-          try {
-              List<Favorite> favorites = dbHelper.getAllFavorites();
-              Favorite favoriteToDelete = null;
-              for (Favorite favorite : favorites)
-                  if (favorite.getMediaId() == currentMovie.getMediaId())
-                      favoriteToDelete = favorite;
-              dbHelper.deleteFavorite(favoriteToDelete);
-              return true;
-          } catch (Exception e) {
-              return false;
+        try {
+          List<Favorite> favorites = dbHelper.getAllFavorites();
+          Favorite favoriteToDelete = null;
+          for (Favorite favorite : favorites) {
+            if (favorite.getMediaId() == currentMovie.getMediaId()) {
+              favoriteToDelete = favorite;
+            }
           }
+          dbHelper.deleteFavorite(favoriteToDelete);
+          return true;
+        } catch (Exception e) {
+          return false;
+        }
       }
     });
   }
@@ -220,16 +222,11 @@ public class TvShowActivity extends AppCompatActivity {
     GetTVShowTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
     Observable<TVShowInfo> call = getTVShowTaskRetrofit.getTVShowById(tvShow.getMediaId(),
         BuildConfig.TMDB_API_KEY, language);
-    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-        tvShow::fillFields);
-//    GetTVShowsTask getTvShowsTask = new GetTVShowsTask();
-//    getTvShowsTask.addListener((result, newResult) -> {
-//      if (tvShow != null) {
-//        tvShow.fillFields(result.get(0));
-//      }
-//      dataLoadComplete();
-//    });
-//    getTvShowsTask.getMediaById(tvShow.getMediaId(), language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(tvShowInfo -> {
+          tvShow.fillFields(tvShowInfo);
+          dataLoadComplete();
+        });
   }
 
   private boolean checkInformation(TVShowInfo tvShow) {
@@ -290,7 +287,8 @@ public class TvShowActivity extends AppCompatActivity {
 
   public void onGenreClick(Genre genre) {
     MainActivityView
-        .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
+        .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(),
+            true);
   }
 
 }

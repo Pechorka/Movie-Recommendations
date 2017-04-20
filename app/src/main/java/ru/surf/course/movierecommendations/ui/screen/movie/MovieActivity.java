@@ -219,16 +219,11 @@ public class MovieActivity extends AppCompatActivity {
     GetMovieTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
     Observable<MovieInfo> call = getTVShowTaskRetrofit.getMovieById(movie.getMediaId(),
         BuildConfig.TMDB_API_KEY, language);
-    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
-        movie::fillFields);
-//    GetMoviesTask getMoviesTask = new GetMoviesTask();
-//    getMoviesTask.addListener((result, newResult) -> {
-//      if (movie != null) {
-//        movie.fillFields(result.get(0));
-//      }
-//      dataLoadComplete();
-//    });
-//    getMoviesTask.getMediaById(movie.getMediaId(), language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(movieInfo -> {
+          movie.fillFields(movieInfo);
+          dataLoadComplete();
+        });
   }
 
   private boolean checkInformation(MovieInfo movie) {
