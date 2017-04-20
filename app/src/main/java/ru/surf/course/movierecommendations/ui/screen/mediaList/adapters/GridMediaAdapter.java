@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
@@ -22,12 +21,10 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
 
   private List<Media> mediaList;
   private Context context;
-  private MediaType mediaType;
 
-  public GridMediaAdapter(Context context, List<Media> mediaList, MediaType mediaType) {
+  public GridMediaAdapter(Context context, List<Media> mediaList) {
     this.context = context;
     this.mediaList = mediaList;
-    this.mediaType = mediaType;
   }
 
   @Override

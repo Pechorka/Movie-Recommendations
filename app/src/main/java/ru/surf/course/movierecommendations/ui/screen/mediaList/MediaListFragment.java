@@ -179,7 +179,7 @@ public class MediaListFragment<T extends Media> extends Fragment {
   }
 
   private void setupViews() {
-    gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1), mediaType);
+    gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setAdapter(gridMediaAdapter);
     recyclerView
