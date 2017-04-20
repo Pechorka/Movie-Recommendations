@@ -10,7 +10,6 @@ import java.util.List;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.Network;
-import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 
 /**
  * Created by Sergey on 07.02.2017.
@@ -20,6 +19,9 @@ import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 public class TVShowInfo extends Media implements Serializable {
 
   private final String LOG_TAG = getClass().getSimpleName();
+
+  @SerializedName("name")
+  private String title;
 
   @SerializedName("episode_run_time")
   private List<Double> episodesRuntime;
@@ -82,6 +84,6 @@ public class TVShowInfo extends Media implements Serializable {
   public static class RetrofitResult {
 
     @SerializedName("results")
-    public List<MovieInfo> results;
+    public List<TVShowInfo> results;
   }
 }
