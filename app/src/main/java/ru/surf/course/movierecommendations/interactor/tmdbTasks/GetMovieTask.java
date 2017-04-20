@@ -1,26 +1,27 @@
-package ru.surf.course.movierecommendations.interactor;
+package ru.surf.course.movierecommendations.interactor.tmdbTasks;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo.RetrofitResult;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo.RetrofitResult;
 import rx.Observable;
 
 /**
  * Created by sergey on 19.04.17.
  */
 
-public interface GetTVShowTaskRetrofit {
+public interface GetMovieTask {
 
   @GET("3/{mediaType}/{filter}")
-  Observable<RetrofitResult> getMediaByFilter(@Path("mediaType") String mediaType,
+  Observable<RetrofitResult> getMediaByFilter(
+      @Path("mediaType") String mediaType,
       @Path("filter") String filter,
       @Query("api_key") String apiKey, @Query("language") String language,
       @Query("page") String page, @Query("region") String region);
 
-  @GET("3/tv/{tvId}")
-  Observable<TVShowInfo> getTVShowById(@Path("tvId") int id,
+  @GET("3/movie/{movieId}")
+  Observable<MovieInfo> getMovieById(@Path("movieId") int id,
       @Query("api_key") String apiKey, @Query("language") String language);
 
   @GET("3/search/{mediaType}")

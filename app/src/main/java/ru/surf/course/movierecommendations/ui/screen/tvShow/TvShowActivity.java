@@ -34,7 +34,7 @@ import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
@@ -219,8 +219,8 @@ public class TvShowActivity extends AppCompatActivity {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    GetTVShowTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
-    Observable<TVShowInfo> call = getTVShowTaskRetrofit.getTVShowById(tvShow.getMediaId(),
+    GetTVShowTask getTVShowTask = retrofit.create(GetTVShowTask.class);
+    Observable<TVShowInfo> call = getTVShowTask.getTVShowById(tvShow.getMediaId(),
         BuildConfig.TMDB_API_KEY, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(tvShowInfo -> {

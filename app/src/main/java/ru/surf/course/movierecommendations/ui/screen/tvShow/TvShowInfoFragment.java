@@ -31,9 +31,9 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
@@ -164,8 +164,8 @@ public class TvShowInfoFragment extends Fragment {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    GetTVShowTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
-    Observable<TVShowInfo> call = getTVShowTaskRetrofit.getTVShowById(tvShow.getMediaId(),
+    GetTVShowTask getTVShowTask = retrofit.create(GetTVShowTask.class);
+    Observable<TVShowInfo> call = getTVShowTask.getTVShowById(tvShow.getMediaId(),
         BuildConfig.TMDB_API_KEY, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(tvShowInfo -> {
@@ -174,16 +174,6 @@ public class TvShowInfoFragment extends Fragment {
           loadBackdropsInto(currentTvShowInfo);
           loadCreditsInto(currentTvShowInfo);
         });
-//    GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
-//    getTVShowsTask.addListener((result, newResult) -> {
-//      if (tvShow != null) {
-//        tvShow.fillFields(result.get(0));
-//      }
-//      dataLoadComplete();
-//      loadBackdropsInto(currentTvShowInfo);
-//      loadCreditsInto(currentTvShowInfo);
-//    });
-//    getTVShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final TVShowInfo tvShow) {

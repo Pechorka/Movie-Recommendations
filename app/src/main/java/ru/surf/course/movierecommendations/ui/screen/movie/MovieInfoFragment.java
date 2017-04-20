@@ -32,9 +32,9 @@ import ru.surf.course.movierecommendations.domain.ProductionCountries;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.interactor.GetMovieTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
@@ -172,8 +172,8 @@ public class MovieInfoFragment extends Fragment {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    GetMovieTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
-    Observable<MovieInfo> call = getTVShowTaskRetrofit.getMovieById(movie.getMediaId(),
+    GetMovieTask getMovieTask = retrofit.create(GetMovieTask.class);
+    Observable<MovieInfo> call = getMovieTask.getMovieById(movie.getMediaId(),
         BuildConfig.TMDB_API_KEY, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(movieInfo -> {
@@ -182,16 +182,6 @@ public class MovieInfoFragment extends Fragment {
       loadBackdropsInto(currentMovieInfo);
       loadCreditsInto(currentMovieInfo);
     });
-//    GetMoviesTask getMovieInfosTask = new GetMoviesTask();
-//    getMovieInfosTask.addListener((result, newResult) -> {
-//      if (movie != null) {
-//        movie.fillFields(result.get(0));
-//      }
-//      dataLoadComplete();
-//      loadBackdropsInto(currentMovieInfo);
-//      loadCreditsInto(currentMovieInfo);
-//    });
-//    getMovieInfosTask.getMediaById(movie.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final MovieInfo movie) {

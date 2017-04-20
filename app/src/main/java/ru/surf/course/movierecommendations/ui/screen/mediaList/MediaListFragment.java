@@ -6,9 +6,7 @@ import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomF
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,8 +32,8 @@ import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.interactor.GetMovieTaskRetrofit;
-import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.adapters.GridMediaAdapter;
@@ -78,8 +76,8 @@ public class MediaListFragment<T extends Media> extends Fragment {
 
   private boolean newResult;
 
-  private GetMovieTaskRetrofit getMovieTaskRetrofit;
-  private GetTVShowTaskRetrofit getTVShowTaskRetrofit;
+  private GetMovieTask getMovieTask;
+  private GetTVShowTask getTVShowTask;
 
 
   private RecyclerView recyclerView;
@@ -126,8 +124,8 @@ public class MediaListFragment<T extends Media> extends Fragment {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    getMovieTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
-    getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
+    getMovieTask = retrofit.create(GetMovieTask.class);
+    getTVShowTask = retrofit.create(GetTVShowTask.class);
   }
 
   @Nullable
@@ -140,12 +138,6 @@ public class MediaListFragment<T extends Media> extends Fragment {
     loadInformation(task);
     setHasOptionsMenu(true);
     return root;
-  }
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
   }
 
   @Override
@@ -237,13 +229,13 @@ public class MediaListFragment<T extends Media> extends Fragment {
     //TODO fix
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getMediaByName(mediaType.toString(), query, apiKey, language, page);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getMediaByName(mediaType.toString(), query, apiKey, language, page);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
@@ -257,13 +249,13 @@ public class MediaListFragment<T extends Media> extends Fragment {
       boolean newResult) {
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getMediaByFilter(mediaType.toString(), query, apiKey, language, page, region);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getMediaByFilter(mediaType.toString(), query, apiKey, language, page, region);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
@@ -279,13 +271,13 @@ public class MediaListFragment<T extends Media> extends Fragment {
     if (task == Tasks.SEARCH_BY_GENRE || task == Tasks.SEARCH_BY_KEYWORD) {
       switch (mediaType) {
         case movie:
-          Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+          Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
               .getMediaByGenreIds(mediaType.toString(), apiKey, language, page, region, ids);
           movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
               .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
           break;
         case tv:
-          Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+          Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
               .getMediaByGenreIds(mediaType.toString(), apiKey, language, page, region, ids);
           tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
               .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
@@ -302,13 +294,13 @@ public class MediaListFragment<T extends Media> extends Fragment {
       boolean newResult) {
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getMediaByKeywords(mediaType.toString(), apiKey, language, page, region, keywords);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getMediaByKeywords(mediaType.toString(), apiKey, language, page, region, keywords);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
@@ -323,13 +315,13 @@ public class MediaListFragment<T extends Media> extends Fragment {
       boolean newResult) {
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getSimilarMedia(mediaType.toString(), id, apiKey, language, page);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getSimilarMedia(mediaType.toString(), id, apiKey, language, page);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
@@ -345,14 +337,14 @@ public class MediaListFragment<T extends Media> extends Fragment {
     String sortBy = sort_type + "." + sort_direction;
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
                 minYear, maxYear, sortBy);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
                 minYear, maxYear, sortBy);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -373,14 +365,14 @@ public class MediaListFragment<T extends Media> extends Fragment {
     String sortBy = sort_type + "." + sort_direction;
     switch (mediaType) {
       case movie:
-        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
             .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
                 minYear, maxYear, sortBy);
         movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTask
             .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
                 minYear, maxYear, sortBy);
         tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
