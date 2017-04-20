@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.Network;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 
 /**
  * Created by Sergey on 07.02.2017.
@@ -76,5 +77,11 @@ public class TVShowInfo extends Media implements Serializable {
         Log.d(LOG_TAG, "Copy error " + e.getMessage());
       }
     }
+  }
+
+  public static class RetrofitResult {
+
+    @SerializedName("results")
+    public List<MovieInfo> results;
   }
 }

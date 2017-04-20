@@ -7,24 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.base.listeners.OnListItemClickListener;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
-import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;
+import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.ui.base.listeners.OnListItemClickListener;
 
 /**
  * Created by Sergey on 26.03.2017.
  */
 
 public class FavoritesAdapter extends
-    RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder> implements
-    GetMediaTask.TaskCompletedListener<Media> {
+    RecyclerView.Adapter<FavoritesAdapter.FavoriteViewHolder> {
 
   private OnListItemClickListener listener;
 
@@ -68,13 +63,6 @@ public class FavoritesAdapter extends
 
   public void setFavoriteList(List<Favorite> favoriteList) {
     this.favoriteList = favoriteList;
-  }
-
-  @Override
-  public void mediaLoaded(List<Media> result, boolean newResult) {
-    if (result != null) {
-      loadedInfo = result.get(0);
-    }
   }
 
   public void setListener(OnListItemClickListener listener) {

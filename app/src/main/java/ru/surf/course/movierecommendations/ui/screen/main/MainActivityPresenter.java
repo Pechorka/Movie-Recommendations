@@ -1,20 +1,11 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.RecommendedGenres;
@@ -27,7 +18,6 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
 import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
-import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
 import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
@@ -219,9 +209,11 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
             case R.id.nav_upcoming_or_on_air:
                 query = Filters.upcoming.toString();
                 getView().setTitle(R.string.upcoming);
-                movieListFragment.loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+                movieListFragment
+                    .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
                 query = Filters.on_the_air.toString();
-                tvShowListFragment.loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+                tvShowListFragment
+                    .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
                 return;
             case R.id.nav_custom:
                 query = Filters.custom.toString();
@@ -295,32 +287,35 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     private void byStandartFilter() {
         movieListFragment.setCallOptionsVisibility(View.GONE);
         movieListFragment
-                .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+            .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
         tvShowListFragment.setCallOptionsVisibility(View.GONE);
         tvShowListFragment
-                .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region);
+            .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
     }
 
     private void byCustomFilter() {
         movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-        movieListFragment.loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+        movieListFragment
+            .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, true);
         tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
         tvShowListFragment
-                .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region);
+            .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, true);
     }
 
     private void byCustomFilter(CustomFilter customFilter) {
         movieListFragment.setCallOptionsVisibility(View.VISIBLE);
         movieListFragment
-                .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter);
+            .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter,
+                true);
         tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
         tvShowListFragment
-                .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter);
+            .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter,
+                true);
     }
 
     private void loadInformationBySearchQuery() {
-        movieListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1");
-        tvShowListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1");
+        movieListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
+        tvShowListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
     }
 
     private void searchByName(String name) {
@@ -330,11 +325,12 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     }
 
     private void loadInformationByGenreIds(String movieGenreIds, String tvshowGenreIds) {
-        movieListFragment.loadMediaInfoByIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
-                Tasks.SEARCH_BY_GENRE);
+        movieListFragment
+            .loadMediaInfoByGenreIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
+                Tasks.SEARCH_BY_GENRE, true);
         tvShowListFragment
-                .loadMediaInfoByIds(tvshowGenreIds, Utilities.getSystemLanguage(), "1", region,
-                        Tasks.SEARCH_BY_GENRE);
+            .loadMediaInfoByGenreIds(tvshowGenreIds, Utilities.getSystemLanguage(), "1", region,
+                Tasks.SEARCH_BY_GENRE, true);
         query = movieGenreIds;
     }
 

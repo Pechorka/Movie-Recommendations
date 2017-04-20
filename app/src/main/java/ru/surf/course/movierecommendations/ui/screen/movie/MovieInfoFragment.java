@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.movie;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,23 +18,32 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import at.blogc.android.views.ExpandableTextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Locale;
 import org.apmem.tools.layouts.FlowLayout;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
-import ru.surf.course.movierecommendations.domain.genre.Genre;
-import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.interactor.GetMovieTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
+import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
+import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/11/17.
@@ -153,16 +164,34 @@ public class MovieInfoFragment extends Fragment {
   }
 
   private void loadInformationInto(final MovieInfo movie, String language) {
-    GetMoviesTask getMovieInfosTask = new GetMoviesTask();
-    getMovieInfosTask.addListener((result, newResult) -> {
-      if (movie != null) {
-        movie.fillFields(result.get(0));
-      }
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetMovieTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
+    Observable<MovieInfo> call = getTVShowTaskRetrofit.getMovieById(movie.getMediaId(),
+        BuildConfig.TMDB_API_KEY, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(movieInfo -> {
+          movie.fillFields(movieInfo);
       dataLoadComplete();
       loadBackdropsInto(currentMovieInfo);
       loadCreditsInto(currentMovieInfo);
     });
-    getMovieInfosTask.getMediaById(movie.getMediaId(), language);
+//    GetMoviesTask getMovieInfosTask = new GetMoviesTask();
+//    getMovieInfosTask.addListener((result, newResult) -> {
+//      if (movie != null) {
+//        movie.fillFields(result.get(0));
+//      }
+//      dataLoadComplete();
+//      loadBackdropsInto(currentMovieInfo);
+//      loadCreditsInto(currentMovieInfo);
+//    });
+//    getMovieInfosTask.getMediaById(movie.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final MovieInfo movie) {

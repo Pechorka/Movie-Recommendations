@@ -20,11 +20,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetListTask;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.adapters.RecommendationsSetupListAdapter;
@@ -171,6 +171,9 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
 
     @SerializedName("items")
     public List<Media> items;
+
+    @SerializedName("results")
+    public List<Media> results;
   }
 
 

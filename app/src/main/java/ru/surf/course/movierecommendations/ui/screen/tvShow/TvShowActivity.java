@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.tvShow;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -17,22 +19,31 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
+import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.adapters.TVShowInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -198,14 +209,27 @@ public class TvShowActivity extends AppCompatActivity {
   }
 
   private void loadInformationInto(final TVShowInfo tvShow, String language) {
-    GetTVShowsTask getTvShowsTask = new GetTVShowsTask();
-    getTvShowsTask.addListener((result, newResult) -> {
-      if (tvShow != null) {
-        tvShow.fillFields(result.get(0));
-      }
-      dataLoadComplete();
-    });
-    getTvShowsTask.getMediaById(tvShow.getMediaId(), language);
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetTVShowTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
+    Observable<TVShowInfo> call = getTVShowTaskRetrofit.getTVShowById(tvShow.getMediaId(),
+        BuildConfig.TMDB_API_KEY, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        tvShow::fillFields);
+//    GetTVShowsTask getTvShowsTask = new GetTVShowsTask();
+//    getTvShowsTask.addListener((result, newResult) -> {
+//      if (tvShow != null) {
+//        tvShow.fillFields(result.get(0));
+//      }
+//      dataLoadComplete();
+//    });
+//    getTvShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private boolean checkInformation(TVShowInfo tvShow) {

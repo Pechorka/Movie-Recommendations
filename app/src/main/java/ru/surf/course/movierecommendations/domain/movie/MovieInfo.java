@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 
@@ -56,5 +57,11 @@ public class MovieInfo extends Media implements Serializable {
         Log.d(LOG_TAG, "Copy error " + e.getMessage());
       }
     }
+  }
+
+  public static class RetrofitResult {
+
+    @SerializedName("results")
+    public List<MovieInfo> results;
   }
 }

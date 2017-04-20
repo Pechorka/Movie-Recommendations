@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.movie;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -17,22 +19,31 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
+import ru.surf.course.movierecommendations.interactor.GetMovieTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.widgets.FavoriteButton;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/15/17.
@@ -197,14 +208,27 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private void loadInformationInto(final MovieInfo movie, String language) {
-    GetMoviesTask getMoviesTask = new GetMoviesTask();
-    getMoviesTask.addListener((result, newResult) -> {
-      if (movie != null) {
-        movie.fillFields(result.get(0));
-      }
-      dataLoadComplete();
-    });
-    getMoviesTask.getMediaById(movie.getMediaId(), language);
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetMovieTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
+    Observable<MovieInfo> call = getTVShowTaskRetrofit.getMovieById(movie.getMediaId(),
+        BuildConfig.TMDB_API_KEY, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+        movie::fillFields);
+//    GetMoviesTask getMoviesTask = new GetMoviesTask();
+//    getMoviesTask.addListener((result, newResult) -> {
+//      if (movie != null) {
+//        movie.fillFields(result.get(0));
+//      }
+//      dataLoadComplete();
+//    });
+//    getMoviesTask.getMediaById(movie.getMediaId(), language);
   }
 
   private boolean checkInformation(MovieInfo movie) {

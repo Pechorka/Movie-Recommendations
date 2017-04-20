@@ -20,7 +20,7 @@ import ru.surf.course.movierecommendations.domain.people.Credit;
 @Data
 public class Media implements Serializable {
 
-  private final String LOG_TAG = getClass().getSimpleName();
+  private final String TAG = getClass().getSimpleName();
 
   @SerializedName("title")
   protected String title;
@@ -94,9 +94,9 @@ public class Media implements Serializable {
         Object value = fieldFrom.get(from);
         this.getClass().getDeclaredField(field.getName()).set(this, value);
       } catch (IllegalAccessException e) {
-        Log.d(LOG_TAG, "Copy error" + e.getMessage());
+        Log.d(TAG, "Copy error" + e.getMessage());
       } catch (NoSuchFieldException e) {
-        Log.d(LOG_TAG, "Copy error" + e.getMessage());
+        Log.d(TAG, "Copy error" + e.getMessage());
       }
     }
   }

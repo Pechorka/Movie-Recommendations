@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
 import static android.app.Activity.RESULT_OK;
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
@@ -18,43 +19,49 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
+import ru.surf.course.movierecommendations.domain.Media;
+import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
+import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
+import ru.surf.course.movierecommendations.interactor.GetMovieTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.listeners.EndlessRecyclerViewScrollListener;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.domain.Media;
-
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMediaTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMoviesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Sergey on 12.02.2017.
  */
 
-public class MediaListFragment<T extends Media> extends Fragment implements
-    GetMediaTask.TaskCompletedListener<T> {
+public class MediaListFragment<T extends Media> extends Fragment {
 
   public static final int GET_GENRES_REQUEST = 1;
   public final static String KEY_MAX_YEAR = "maxYear";
   public final static String KEY_MIN_YEAR = "minYear";
-  public final static String KEY_GENRES = "genre_ids";
+  public final static String KEY_GENRES = "genreIds";
   public final static String KEY_SORT_TYPE = "sort_type";
   public final static String KEY_SORT_DIRECTION = "sort_direction";
   private final static String KEY_QUERY = "query";
-  private final static String KEY_GRID_POS = "grid_pos";
   private final static String KEY_REGION = "region";
   private final static String KEY_TASK = "task";
   private final static String KEY_MEDIA_ID = "id";
-  private List<T> mediaList;
+  private List<Media> mediaList;
   private Tasks task;
   private int page;
   private String query;
@@ -64,16 +71,22 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   private Media.MediaType mediaType;
   private String maxYear;
   private String minYear;
-  private String genre_ids;
+  private String genreIds;
   private String sort_type;
   private String sort_direction;
+  private String apiKey;
+
+  private boolean newResult;
+
+  private GetMovieTaskRetrofit getMovieTaskRetrofit;
+  private GetTVShowTaskRetrofit getTVShowTaskRetrofit;
 
 
   private RecyclerView recyclerView;
   private GridMediaAdapter gridMediaAdapter;
   private StaggeredGridLayoutManager staggeredGridLayoutManager;
-  private EndlessRecyclerViewScrollListener scrollListener;
   private FloatingActionButton showCustomFilterOpt;
+
 
   public static MediaListFragment newInstance(String query, String region,
       Tasks task, Media.MediaType mediaType) {
@@ -97,6 +110,24 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     ids = query;
     mediaType = (Media.MediaType) getArguments().getSerializable(KEY_MEDIA);
     page = 1;
+    apiKey = BuildConfig.TMDB_API_KEY;
+    maxYear = String.valueOf(new GregorianCalendar().get(Calendar.YEAR));
+    minYear = "1930";
+    genreIds = "";
+    sort_type = POPULARITY;
+    sort_direction = DESC;
+    mediaList = new ArrayList<>();
+    newResult = true;
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    getMovieTaskRetrofit = retrofit.create(GetMovieTaskRetrofit.class);
+    getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
   }
 
   @Nullable
@@ -104,7 +135,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View root = inflater.inflate(R.layout.fragment_media_list, container, false);
-    initFields();
     initViews(root);
     setupViews();
     loadInformation(task);
@@ -126,33 +156,15 @@ public class MediaListFragment<T extends Media> extends Fragment implements
         maxYear = String
             .valueOf(data.getIntExtra(KEY_MAX_YEAR, new GregorianCalendar().get(Calendar.YEAR)));
         minYear = String.valueOf(data.getIntExtra(KEY_MIN_YEAR, 1930));
-        genre_ids = data.getStringExtra(KEY_GENRES);
+        genreIds = data.getStringExtra(KEY_GENRES);
         sort_type = data.getStringExtra(KEY_SORT_TYPE);
         sort_direction = data.getStringExtra(KEY_SORT_DIRECTION);
         page = 1;
-        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region);
+        newResult = true;
+        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region,
+            newResult);
       }
     }
-  }
-
-  @Override
-  public void mediaLoaded(List<T> result, boolean newResult) {
-    if (result != null) {
-      if (mediaList != null && !newResult) {
-        mediaList.addAll(result);
-      } else {
-        mediaList = result;
-      }
-      dataLoadComplete();
-    }
-  }
-
-  private void initFields() {
-    maxYear = String.valueOf(new GregorianCalendar().get(Calendar.YEAR));
-    minYear = "1930";
-    genre_ids = "";
-    sort_type = POPULARITY;
-    sort_direction = DESC;
   }
 
   private void initViews(View root) {
@@ -164,177 +176,226 @@ public class MediaListFragment<T extends Media> extends Fragment implements
       staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
     }
     showCustomFilterOpt = (FloatingActionButton) root.findViewById(R.id.media_list_fab);
-    gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
-    scrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
-      @Override
-      public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-        MediaListFragment.this.page++;
-        loadInformation(task);
-      }
-    };
   }
 
   private void setupViews() {
-    recyclerView.addOnScrollListener(scrollListener);
-    showCustomFilterOpt.setOnClickListener(v -> {
-      Intent intent = new Intent(getActivity(), CustomFilterActivityView.class);
-      intent.putExtra(KEY_SORT_TYPE, sort_type);
-      intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
-      intent.putExtra(KEY_MEDIA, mediaType);
-      intent.putExtra(KEY_MAX_YEAR, Integer.parseInt(maxYear));
-      intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
-      startActivityForResult(intent, GET_GENRES_REQUEST);
-    });
+    gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1), mediaType);
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setAdapter(gridMediaAdapter);
+    recyclerView
+        .addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+          @Override
+          public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            MediaListFragment.this.page++;
+            loadInformation(task);
+          }
+        });
+    showCustomFilterOpt.setOnClickListener(v -> startCustomFilterActivity());
+  }
+
+  private void startCustomFilterActivity() {
+    Intent intent = new Intent(getActivity(), CustomFilterActivityView.class);
+    intent.putExtra(KEY_SORT_TYPE, sort_type);
+    intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
+    intent.putExtra(KEY_MEDIA, mediaType);
+    intent.putExtra(KEY_MAX_YEAR, Integer.parseInt(maxYear));
+    intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
+    startActivityForResult(intent, GET_GENRES_REQUEST);
   }
 
   private void loadInformation(Tasks task) {
     switch (task) {
       case SEARCH_BY_FILTER:
-        loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), String.valueOf(page), region);
+        loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), String.valueOf(page), region,
+            newResult);
         break;
       case SEARCH_BY_CUSTOM_FILTER:
-        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region);
+        loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), String.valueOf(page), region,
+            newResult);
         break;
       case SEARCH_BY_GENRE:
       case SEARCH_RECOMMENDED_MEDIA:
+        loadMediaInfoByGenreIds(ids, Utilities.getSystemLanguage(), String.valueOf(page), region,
+            task,
+            newResult);
+        break;
       case SEARCH_BY_KEYWORD:
-        loadMediaInfoByIds(ids, Utilities.getSystemLanguage(), String.valueOf(page), region, task);
+        loadMediaInfoByKeywords(ids, Utilities.getSystemLanguage(), String.valueOf(page), region,
+            newResult);
         break;
-      case SEARCH_BY_ID:
       case SEARCH_SIMILAR:
-        loadMediInfoById(id, Utilities.getSystemLanguage(), String.valueOf(page), task);
+        loadMediaInfoById(id, Utilities.getSystemLanguage(), String.valueOf(page), task, newResult);
         break;
+      case SEARCH_BY_NAME:
+        loadMediaByName(query, Utilities.getSystemLanguage(), String.valueOf(page), newResult);
       default:
-        loadMediaByName(query, Utilities.getSystemLanguage(), String.valueOf(page));
+        loadMediaByName(query, Utilities.getSystemLanguage(), String.valueOf(page), newResult);
     }
   }
 
-  public void loadMediaByName(String query, String language, String page) {
-    GetMediaTask getMediaTask = null;
+  public void loadMediaByName(String query, String language, String page, boolean newResult) {
+    //TODO fix
     switch (mediaType) {
       case movie:
-        getMediaTask = new GetMoviesTask();
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getMediaByName(mediaType.toString(), query, apiKey, language, page);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        getMediaTask = new GetTVShowsTask();
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getMediaByName(mediaType.toString(), query, apiKey, language, page);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
     }
-    getMediaTask.addListener(this);
-    getMediaTask.getMediaByName(query, language, page);
     task = Tasks.SEARCH_BY_NAME;
+    this.newResult = newResult;
   }
 
-  public void loadMediaInfoByFilter(String query, String language, String page, String region) {
-    GetMediaTask getMediaTask = null;
+  public void loadMediaInfoByFilter(String query, String language, String page, String region,
+      boolean newResult) {
     switch (mediaType) {
       case movie:
-        getMediaTask = new GetMoviesTask();
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getMediaByFilter(mediaType.toString(), query, apiKey, language, page, region);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        getMediaTask = new GetTVShowsTask();
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getMediaByFilter(mediaType.toString(), query, apiKey, language, page, region);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
     }
-    getMediaTask.addListener(this);
-    getMediaTask.getMediaByFilter(query, language, page, region);
     this.page = Integer.parseInt(page);
     task = Tasks.SEARCH_BY_FILTER;
+    this.newResult = newResult;
   }
 
-  public void loadMediaInfoByIds(String ids, String language, String page, String region,
-      Tasks task) {
-    GetMediaTask getMediaTask = null;
+  public void loadMediaInfoByGenreIds(String ids, String language, String page, String region,
+      Tasks task, boolean newResult) {
+    if (task == Tasks.SEARCH_BY_GENRE || task == Tasks.SEARCH_BY_KEYWORD) {
+      switch (mediaType) {
+        case movie:
+          Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+              .getMediaByGenreIds(mediaType.toString(), apiKey, language, page, region, ids);
+          movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+              .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+          break;
+        case tv:
+          Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+              .getMediaByGenreIds(mediaType.toString(), apiKey, language, page, region, ids);
+          tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+              .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+          break;
+      }
+      this.page = Integer.parseInt(page);
+      this.task = task;
+      this.newResult = newResult;
+    }
+  }
+
+
+  private void loadMediaInfoByKeywords(String keywords, String language, String page, String region,
+      boolean newResult) {
     switch (mediaType) {
       case movie:
-        getMediaTask = new GetMoviesTask();
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getMediaByKeywords(mediaType.toString(), apiKey, language, page, region, keywords);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
       case tv:
-        getMediaTask = new GetTVShowsTask();
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getMediaByKeywords(mediaType.toString(), apiKey, language, page, region, keywords);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
     }
-    getMediaTask.addListener(this);
-    switch (task) {
-      case SEARCH_RECOMMENDED_MEDIA:
-      case SEARCH_BY_GENRE:
-        getMediaTask.getMediaByGenre(ids, language, page, region);
+    this.page = Integer.parseInt(page);
+    this.newResult = newResult;
+
+  }
+
+  public void loadMediaInfoById(int id, String language, String page, Tasks task,
+      boolean newResult) {
+    switch (mediaType) {
+      case movie:
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getSimilarMedia(mediaType.toString(), id, apiKey, language, page);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
-      case SEARCH_BY_KEYWORD:
-        getMediaTask.getMediaByKeywords(ids, language, page, region);
+      case tv:
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getSimilarMedia(mediaType.toString(), id, apiKey, language, page);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
         break;
     }
     this.page = Integer.parseInt(page);
     this.task = task;
+    this.newResult = newResult;
   }
 
-  public void loadMediInfoById(int id, String language, String page, Tasks task) {
-    GetMediaTask getMediaTask = null;
-    switch (mediaType) {
-      case movie:
-        getMediaTask = new GetMoviesTask();
-        break;
-      case tv:
-        getMediaTask = new GetTVShowsTask();
-        break;
-    }
-    getMediaTask.addListener(this);
-    switch (task) {
-      case SEARCH_BY_ID:
-        getMediaTask.getMediaById(id, language);
-        break;
-      case SEARCH_SIMILAR:
-        getMediaTask.getSimilarMedia(id, language, page);
-        break;
-    }
-    this.page = Integer.parseInt(page);
-    this.task = task;
-  }
-
-  public void loadMediaInfoByCustomFilter(String language, String page, String region) {
-    GetMediaTask getMediaTask = null;
-    switch (mediaType) {
-      case movie:
-        getMediaTask = new GetMoviesTask();
-        break;
-      case tv:
-        getMediaTask = new GetTVShowsTask();
-        break;
-    }
-    getMediaTask.addListener(this);
+  public void loadMediaInfoByCustomFilter(String language, String page, String region,
+      boolean newResult) {
     String sortBy = sort_type + "." + sort_direction;
-    getMediaTask
-        .getMediaByCustomFilter(language, page, genre_ids, maxYear, minYear, sortBy, region);
+    switch (mediaType) {
+      case movie:
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
+                minYear, maxYear, sortBy);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+        break;
+      case tv:
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
+                minYear, maxYear, sortBy);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+        break;
+    }
     this.page = Integer.parseInt(page);
     task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+    this.newResult = newResult;
   }
 
 
   public void loadMediaInfoByCustomFilter(String language, String page, String region,
-      CustomFilter customFilter) {
-    GetMediaTask getMediaTask = null;
-    switch (mediaType) {
-      case movie:
-        getMediaTask = new GetMoviesTask();
-        break;
-      case tv:
-        getMediaTask = new GetTVShowsTask();
-        break;
-    }
-    getMediaTask.addListener(this);
+      CustomFilter customFilter, boolean newResult) {
     if (mediaType == customFilter.getMediaType()) {
       applyCustomFilter(customFilter);
     }
     String sortBy = sort_type + "." + sort_direction;
-    getMediaTask
-        .getMediaByCustomFilter(language, page, genre_ids, maxYear, minYear, sortBy, region);
+    switch (mediaType) {
+      case movie:
+        Observable<MovieInfo.RetrofitResult> movieCall = getMovieTaskRetrofit
+            .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
+                minYear, maxYear, sortBy);
+        movieCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+        break;
+      case tv:
+        Observable<TVShowInfo.RetrofitResult> tvshowCall = getTVShowTaskRetrofit
+            .getMediaByCustomFilter(mediaType.toString(), apiKey, language, page, region, genreIds,
+                minYear, maxYear, sortBy);
+        tvshowCall.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe((retrofitResult) -> dataLoadComplete(retrofitResult.results));
+        break;
+    }
     this.page = Integer.parseInt(page);
     task = Tasks.SEARCH_BY_CUSTOM_FILTER;
+    this.newResult = newResult;
   }
 
   private void applyCustomFilter(CustomFilter customFilter) {
     sort_type = customFilter.getSortType();
     sort_direction = customFilter.getSortDirection();
-    genre_ids = customFilter.getGenreIds();
+    genreIds = customFilter.getGenreIds();
     maxYear = customFilter.getMaxYear();
     minYear = customFilter.getMinYear();
   }
@@ -343,7 +404,12 @@ public class MediaListFragment<T extends Media> extends Fragment implements
     showCustomFilterOpt.setVisibility(visibility);
   }
 
-  public void dataLoadComplete() {
+  public void dataLoadComplete(List<? extends Media> result) {
+    if (newResult) {
+      newResult = false;
+      mediaList.clear();
+    }
+    mediaList.addAll(result);
     fillInformation();
     View progressBarPlaceholder = null;
     if (getView() != null) {
@@ -356,8 +422,6 @@ public class MediaListFragment<T extends Media> extends Fragment implements
 
   public void fillInformation() {
     gridMediaAdapter.setMediaList(mediaList);
-    gridMediaAdapter.notifyDataSetChanged();
-
   }
 
 

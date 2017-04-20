@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.tvShow;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,22 +18,31 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import at.blogc.android.views.ExpandableTextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Locale;
 import org.apmem.tools.layouts.FlowLayout;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
+import ru.surf.course.movierecommendations.interactor.GetTVShowTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by andrew on 2/19/17.
@@ -145,16 +156,34 @@ public class TvShowInfoFragment extends Fragment {
   }
 
   private void loadInformationInto(final TVShowInfo tvShow, String language) {
-    GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
-    getTVShowsTask.addListener((result, newResult) -> {
-      if (tvShow != null) {
-        tvShow.fillFields(result.get(0));
-      }
-      dataLoadComplete();
-      loadBackdropsInto(currentTvShowInfo);
-      loadCreditsInto(currentTvShowInfo);
-    });
-    getTVShowsTask.getMediaById(tvShow.getMediaId(), language);
+    RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
+        .createWithScheduler(Schedulers.io());
+    Gson gson = new GsonBuilder().create();
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(rxAdapter)
+        .build();
+    GetTVShowTaskRetrofit getTVShowTaskRetrofit = retrofit.create(GetTVShowTaskRetrofit.class);
+    Observable<TVShowInfo> call = getTVShowTaskRetrofit.getTVShowById(tvShow.getMediaId(),
+        BuildConfig.TMDB_API_KEY, language);
+    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(tvShowInfo -> {
+          tvShow.fillFields(tvShowInfo);
+          dataLoadComplete();
+          loadBackdropsInto(currentTvShowInfo);
+          loadCreditsInto(currentTvShowInfo);
+        });
+//    GetTVShowsTask getTVShowsTask = new GetTVShowsTask();
+//    getTVShowsTask.addListener((result, newResult) -> {
+//      if (tvShow != null) {
+//        tvShow.fillFields(result.get(0));
+//      }
+//      dataLoadComplete();
+//      loadBackdropsInto(currentTvShowInfo);
+//      loadCreditsInto(currentTvShowInfo);
+//    });
+//    getTVShowsTask.getMediaById(tvShow.getMediaId(), language);
   }
 
   private void loadBackdropsInto(final TVShowInfo tvShow) {

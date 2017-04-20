@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import java.util.List;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
+import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
@@ -19,12 +20,14 @@ import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 
 public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.GridViewHolder> {
 
-  private List<? extends Media> mediaList;
+  private List<Media> mediaList;
   private Context context;
+  private MediaType mediaType;
 
-  public GridMediaAdapter(Context context, List<? extends Media> mediaList) {
+  public GridMediaAdapter(Context context, List<Media> mediaList, MediaType mediaType) {
     this.context = context;
     this.mediaList = mediaList;
+    this.mediaType = mediaType;
   }
 
   @Override
@@ -38,7 +41,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
   public void onBindViewHolder(final GridViewHolder holder, int position) {
     Media media = mediaList.get(position);
     ImageLoader.putPoster(context, media.getPosterPath(), holder.image, ImageLoader.sizes.w500);
-    holder.cardView.setOnClickListener(view -> fragmentToSwitch(holder.getAdapterPosition()));
+    holder.cardView.setOnClickListener(view -> fragmentToSwitch(media));
   }
 
 
@@ -47,16 +50,18 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
     return mediaList.size();
   }
 
-  private void fragmentToSwitch(int position) {
-    if (mediaList.get(position) instanceof MovieInfo) {
-      MovieActivity.start(context, (MovieInfo) mediaList.get(position));
-    } else if (mediaList.get(position) instanceof TVShowInfo) {
-      TvShowActivity.start(context, (TVShowInfo) mediaList.get(position));
+  private void fragmentToSwitch(Media media) {
+    if (media instanceof MovieInfo) {
+      MovieActivity.start(context, (MovieInfo) media);
+    } else if (media instanceof TVShowInfo) {
+      TvShowActivity.start(context, (TVShowInfo) media);
     }
+
   }
 
-  public void setMediaList(List<? extends Media> list) {
+  public void setMediaList(List<Media> list) {
     mediaList = list;
+    notifyDataSetChanged();
   }
 
   public static class GridViewHolder extends RecyclerView.ViewHolder {
