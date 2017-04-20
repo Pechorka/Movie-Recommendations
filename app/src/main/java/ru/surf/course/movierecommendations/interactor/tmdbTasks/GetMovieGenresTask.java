@@ -12,7 +12,7 @@ import ru.surf.course.movierecommendations.interactor.MovieGenre;
 
 public interface GetMovieGenresTask {
 
-  @GET("3/genre/{whose}/list")
+  @GET("genre/{whose}/list")
   Call<MovieGenre.RetrofitResult> getGenres(@Path("whose") String mediaType,
       @Query("api_key") String apiKey);
 }

@@ -12,7 +12,7 @@ import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.Recomm
 
 public interface GetListTask {
 
-  @GET("3/list/{id}")
+  @GET("list/{id}")
   Call<RecommendationsSetupActivity.RetrofitResult> getListById(@Path("id") int id,
       @Query("api_key") String apiKey, @Query("language") String language);
 }

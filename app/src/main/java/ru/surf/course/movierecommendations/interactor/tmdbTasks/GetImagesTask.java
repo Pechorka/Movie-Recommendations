@@ -12,11 +12,11 @@ import rx.Observable;
 
 public interface GetImagesTask {
 
-  @GET("3/{whose}/{id}/images")
+  @GET("{whose}/{id}/images")
   Observable<TmdbImage.RetrofitResultPosters> getPostersBackdrops(@Path("whose") String mediaType,
       @Path("id") int id, @Query("api_key") String apiKey);
 
-  @GET("3/person/{id}/images")
+  @GET("person/{id}/images")
   Observable<TmdbImage.RetrofitResultProfiles> getProfilePictures(@Path("id") int id,
       @Query("api_key") String apiKey);
 }

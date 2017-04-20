@@ -3,7 +3,7 @@ package ru.surf.course.movierecommendations.interactor.common.network;
 
 public class ServerUrls {
 
-  public static final String BASE_URL = "https://api.themoviedb.org";
+  public static final String BASE_URL = "https://api.themoviedb.org/3/";
 
     public static final String IMAGE_BASE_URL = "https://images.igdb.com/igdb/image/upload/";
 

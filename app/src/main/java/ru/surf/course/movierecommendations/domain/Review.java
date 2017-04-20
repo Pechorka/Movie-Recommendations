@@ -3,6 +3,7 @@ package ru.surf.course.movierecommendations.domain;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -25,6 +26,12 @@ public class Review implements Serializable {
 
   public Review(String id) {
     reviewId = id;
+  }
+
+  public static class RetrofitResult {
+
+    @SerializedName("results")
+    public List<Review> reviews;
   }
 
 }
