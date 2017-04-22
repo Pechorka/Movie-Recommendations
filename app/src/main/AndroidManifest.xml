@@ -23,7 +23,7 @@
             android:name=".ui.screen.person.PersonActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.screen.tvShow.TvShowActivity"
+            android:name=".ui.screen.tvShow.TvShowActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity android:name=".ui.screen.settings.SettingsActivity"/>
         <activity

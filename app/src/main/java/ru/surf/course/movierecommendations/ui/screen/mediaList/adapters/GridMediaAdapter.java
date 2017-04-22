@@ -14,7 +14,7 @@ import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 
 
 public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.GridViewHolder> {
@@ -51,7 +51,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
     if (media instanceof MovieInfo) {
       MovieActivityView.start(context, (MovieInfo) media);
     } else if (media instanceof TVShowInfo) {
-      TvShowActivity.start(context, (TVShowInfo) media);
+      TvShowActivityView.start(context, (TVShowInfo) media);
     }
 
   }

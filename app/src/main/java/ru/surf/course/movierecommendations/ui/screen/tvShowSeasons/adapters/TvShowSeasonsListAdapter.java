@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.tvShow.adapters;
+package ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -15,9 +15,7 @@ import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.domain.tvShow.Season;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 
-/**
- * Created by andrew on 2/20/17.
- */
+
 
 public class TvShowSeasonsListAdapter extends
     RecyclerView.Adapter<TvShowSeasonsListAdapter.MyViewHolder> {

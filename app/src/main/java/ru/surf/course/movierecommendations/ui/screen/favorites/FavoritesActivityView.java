@@ -18,7 +18,7 @@ import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.favorites.adapters.FavoritesAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 
 public class FavoritesActivityView extends BaseActivityView {
 
@@ -97,7 +97,7 @@ public class FavoritesActivityView extends BaseActivityView {
                 MovieActivityView.start(this, favorite.getMediaId());
                 break;
             case tv:
-                TvShowActivity.start(this, favorite.getMediaId());
+                TvShowActivityView.start(this, favorite.getMediaId());
                 break;
             default:
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();

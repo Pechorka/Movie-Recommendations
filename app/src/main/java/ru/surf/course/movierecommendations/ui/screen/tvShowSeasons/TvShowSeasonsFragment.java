@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.tvShow;
+package ru.surf.course.movierecommendations.ui.screen.tvShowSeasons;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -14,12 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.adapters.TvShowSeasonsListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.adapters.TvShowSeasonsListAdapter;
 
 
-/**
- * Created by andrew on 2/20/17.
- */
+
 
 public class TvShowSeasonsFragment extends Fragment {
 

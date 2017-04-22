@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.tvShow;
+package ru.surf.course.movierecommendations.ui.screen.tvShowInfo;
 
 import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 
@@ -39,14 +39,12 @@ import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by andrew on 2/19/17.
- */
 
 public class TvShowInfoFragment extends Fragment {
 
@@ -266,8 +264,8 @@ public class TvShowInfoFragment extends Fragment {
       genreButton.setLayoutParams(layoutParams);
 
       genreButton.setOnClickListener(view -> {
-        if (getActivity() instanceof TvShowActivity) {
-          ((TvShowActivity) getActivity()).onGenreClick(genre);
+        if (getActivity() instanceof TvShowActivityView) {
+          ((TvShowActivityView) getActivity()).onGenreClick(genre);
         }
       });
     }
