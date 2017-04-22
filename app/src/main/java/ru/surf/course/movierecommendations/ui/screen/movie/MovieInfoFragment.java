@@ -145,14 +145,11 @@ public class MovieInfoFragment extends Fragment {
   private void setupViews(View root) {
     overview.setInterpolator(new AccelerateDecelerateInterpolator());
 
-    View.OnClickListener expandCollapse = new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        overview.toggle();
-        expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat
-            .getDrawable(getActivity(), R.drawable.ic_arrow_down)
-            : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
-      }
+    View.OnClickListener expandCollapse = view -> {
+      overview.toggle();
+      expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat
+          .getDrawable(getActivity(), R.drawable.ic_arrow_down)
+          : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
     };
     expandCollapseBiographyButton.setOnClickListener(expandCollapse);
     overview.setOnClickListener(expandCollapse);
@@ -197,15 +194,19 @@ public class MovieInfoFragment extends Fragment {
           movie.setBackdrops(tmdbImages.backdrops);
           dataLoadComplete();
         });
-//    GetImagesTask getImagesTask = new GetImagesTask();
-//    getImagesTask.addListener(result -> {
-//      movie.setBackdrops(result);
-//      dataLoadComplete();
-//    });
-//    getImagesTask.getMovieImages(movie.getMediaId(), Tasks.GET_BACKDROPS);
   }
 
   private void loadCreditsInto(final MovieInfo movieInfo) {
+//    GetCreditsTaskRetrofit getCreditsTaskRetrofit = retrofit.create(GetCreditsTaskRetrofit.class);
+//    Observable<Credit.RetrofitResult> call = getCreditsTaskRetrofit
+//        .getMediaCreditsById(movieInfo.getMediaId(), MediaType.movie.toString(), apiKey);
+//    call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(retrofitResult -> {
+//      List<Credit> credits = new ArrayList<>();
+//      credits.addAll(retrofitResult.cast);
+//      credits.addAll(retrofitResult.crew);
+//      movieInfo.setCredits(credits);
+//      dataLoadComplete();
+//    });
     GetCreditsTask getCreditsTask = new GetCreditsTask();
     getCreditsTask.addListener(result -> {
       movieInfo.setCredits(result);

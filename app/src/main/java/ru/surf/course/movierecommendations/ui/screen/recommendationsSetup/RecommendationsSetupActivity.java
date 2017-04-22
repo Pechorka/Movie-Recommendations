@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +34,6 @@ import ru.surf.course.movierecommendations.ui.screen.splash.SplachActivity;
 
 public class RecommendationsSetupActivity extends AppCompatActivity implements
     Callback<RecommendationsSetupActivity.RetrofitResult> {
-
-  private final static String BASE_URL = "https://api.themoviedb.org";
 
   private final static int MOVIE_LIST_ID = 18623;
   private final static int TVSHOW_LIST_ID = 18624;
@@ -171,9 +171,6 @@ public class RecommendationsSetupActivity extends AppCompatActivity implements
 
     @SerializedName("items")
     public List<Media> items;
-
-    @SerializedName("results")
-    public List<Media> results;
   }
 
 

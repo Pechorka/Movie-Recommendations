@@ -48,7 +48,7 @@
   <string name="header">Заголовок</string>
   <string name="on_air">В эфире</string>
   <string name="reload">Перезагрузка</string>
-  <string name="save">Сохранить</string>
+  <string name="apply">Применить</string>
   <string name="tvshows">Телешоу</string>
   <string name="no_internet_connection_msg">Нет соединения с интернетом</string>
   <string name="movies">Фиильмы</string>

@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivity;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
+import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivity;
 
 public class SplachActivity extends AppCompatActivity {
 
@@ -32,6 +32,7 @@ public class SplachActivity extends AppCompatActivity {
     } else {
       delayAndRunActivity(startDelay, RecommendationsSetupActivity.class);
     }
+
   }
 
   private void delayAndRunActivity(long delay, final Class activity) {

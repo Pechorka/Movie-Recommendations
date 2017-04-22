@@ -10,7 +10,7 @@ import rx.Observable;
  * Created by sergey on 20.04.17.
  */
 
-public interface GetPersonTaskRetrofit {
+public interface GetPersonTask {
 
   @GET("person/{id}")
   Observable<Person> getPersonById(@Path("id") int id,

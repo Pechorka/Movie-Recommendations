@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.people.Person;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTask;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -161,8 +161,8 @@ public class PersonInfoFragment extends Fragment {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(rxAdapter)
         .build();
-    GetPersonTaskRetrofit getPersonTaskRetrofit = retrofit.create(GetPersonTaskRetrofit.class);
-    Observable<Person> call = getPersonTaskRetrofit
+    GetPersonTask getPersonTask = retrofit.create(GetPersonTask.class);
+    Observable<Person> call = getPersonTask
         .getPersonById(person.getId(), BuildConfig.TMDB_API_KEY, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(person1 -> {

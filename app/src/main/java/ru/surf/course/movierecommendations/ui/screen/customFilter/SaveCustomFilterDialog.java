@@ -1,5 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -12,10 +14,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
-
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 /**
  * Created by sergey on 04.04.17.
@@ -68,7 +67,7 @@ public class SaveCustomFilterDialog extends DialogFragment {
     View layout = inflater.inflate(R.layout.dialog_save_custom_filter, null);
     builder.setView(layout)
         .setTitle(R.string.save_filter_dialog_title)
-        .setPositiveButton(R.string.save, (dialog, id) -> saveCustomFilter())
+        .setPositiveButton(R.string.apply, (dialog, id) -> saveCustomFilter())
         .setNegativeButton(R.string.cancel,
             (dialog, id) -> SaveCustomFilterDialog.this.getDialog().cancel())
         .setCancelable(true);

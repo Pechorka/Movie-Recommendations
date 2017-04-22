@@ -1,18 +1,17 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
 
+import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+
 import android.content.Intent;
 import android.util.Log;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,11 +28,8 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTa
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
 import ru.surf.course.movierecommendations.util.Utilities;
-
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 
 @PerScreen
@@ -43,7 +39,6 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
     public static final String VOTE_AVERAGE = "vote_average";
     public static final String ASC = "asc";
     public static final String DESC = "desc";
-    private final static String BASE_URL = "https://api.themoviedb.org";
 
 
     private DBHelper dbHelper;
@@ -99,7 +94,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
             case android.R.id.home:
                 getView().onBackPressed();
                 return true;
-            case R.id.custom_filter_menu_save:
+            case R.id.custom_filter_menu_apply:
                 Intent intent = new Intent();
                 intent.putExtra(MediaListFragment.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
                 intent.putExtra(MediaListFragment.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());

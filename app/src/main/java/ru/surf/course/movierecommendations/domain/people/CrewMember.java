@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.domain.people;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
@@ -10,7 +11,9 @@ import ru.surf.course.movierecommendations.domain.Media;
 @Data
 public class CrewMember extends Credit implements Serializable {
 
+  @SerializedName("department")
   private String department;
+  @SerializedName("job")
   private String job;
 
   public CrewMember(String creditId, Person person, String department, String job) {

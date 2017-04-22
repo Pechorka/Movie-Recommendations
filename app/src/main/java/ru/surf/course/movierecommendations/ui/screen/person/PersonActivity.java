@@ -40,7 +40,7 @@ import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.TmdbImage.RetrofitResultProfiles;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
@@ -199,8 +199,8 @@ public class PersonActivity extends AppCompatActivity {
   }
 
   private void loadInformationInto(final Person person, String language) {
-    GetPersonTaskRetrofit getPersonTaskRetrofit = retrofit.create(GetPersonTaskRetrofit.class);
-    Observable<Person> call = getPersonTaskRetrofit.getPersonById(person.getId(), apiKey, language);
+    GetPersonTask getPersonTask = retrofit.create(GetPersonTask.class);
+    Observable<Person> call = getPersonTask.getPersonById(person.getId(), apiKey, language);
     call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(person1 -> {
           person.fillFields(person1);

@@ -21,7 +21,7 @@
   <string name="budget">Budget</string>
   <string name="cast">Cast</string>
   <string name="keywords">Keywords</string>
-  <string name="save">Save</string>
+  <string name="apply">Apply</string>
   <string name="cancel">Cancel</string>
   <array name="genres">
     <item>Comedy</item>

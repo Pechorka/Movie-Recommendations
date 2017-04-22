@@ -77,7 +77,7 @@ public class Media implements Serializable {
   protected String status;
 
   @SerializedName("credits")
-  protected ArrayList<Credit> credits;
+  protected List<Credit> credits;
 
   @SerializedName("reviews")
   protected List<Review> reviews;

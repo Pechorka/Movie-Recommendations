@@ -4,9 +4,9 @@
   <item
     android:id="@+id/recommendations_setup_menu_skip"
     android:title="@string/skip"
-    app:showAsAction="always"/>
+    app:showAsAction="ifRoom" />
   <item
     android:id="@+id/recommendations_setup_menu_save"
-    android:title="@string/save"
-    app:showAsAction="always" />
+    android:title="@string/apply"
+    app:showAsAction="ifRoom" />
 </menu>

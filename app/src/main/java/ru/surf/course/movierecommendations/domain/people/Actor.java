@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.domain.people;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
@@ -10,8 +11,11 @@ import ru.surf.course.movierecommendations.domain.Media;
 @Data
 public class Actor extends Credit implements Serializable {
 
+  @SerializedName("id")
   private int castId;
+  @SerializedName("character;")
   private String character;
+  @SerializedName("order")
   private int order;
 
   public Actor(String creditId, Person person, int castId, String character, int order) {

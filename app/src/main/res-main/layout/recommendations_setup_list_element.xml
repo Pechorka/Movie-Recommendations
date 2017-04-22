@@ -22,7 +22,7 @@
       android:layout_alignLeft="@+id/recommendations_setup_list_element_image"
       android:layout_alignRight="@+id/recommendations_setup_list_element_image"
       android:layout_alignTop="@+id/recommendations_setup_list_element_image"
-      android:src="@drawable/choosen"
+      android:src="@drawable/ic_check_black_48dp"
       android:visibility="invisible" />
   </RelativeLayout>
 

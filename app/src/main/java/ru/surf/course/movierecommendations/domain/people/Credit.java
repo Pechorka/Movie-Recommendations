@@ -2,6 +2,7 @@ package ru.surf.course.movierecommendations.domain.people;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.List;
 import lombok.Data;
 import ru.surf.course.movierecommendations.domain.Media;
 
@@ -15,7 +16,7 @@ public class Credit implements Serializable {
   @SerializedName("id")
   protected String creditId;
 
-  @SerializedName("person")
+  //  @Expose(serialize = false,deserialize = false)
   protected Person person;
 
   protected Media media;
@@ -34,6 +35,15 @@ public class Credit implements Serializable {
     this.creditId = creditId;
     this.person = person;
     this.media = media;
+  }
+
+  public static class RetrofitResult {
+
+    @SerializedName("crew")
+    public List<CrewMember> crew;
+
+    @SerializedName("cast")
+    public List<Actor> cast;
   }
 
 }
