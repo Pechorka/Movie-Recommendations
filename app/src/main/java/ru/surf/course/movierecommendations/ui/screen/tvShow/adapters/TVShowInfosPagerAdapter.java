@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.ui.screen.tvShowInfo.TvShowInfoFragmentView;
-import ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.TvShowSeasonsFragment;
+import ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.TvShowSeasonsFragmentView;
 
 /**
  * Created by andrew on 2/19/17.
@@ -30,7 +30,7 @@ public class TVShowInfosPagerAdapter extends FragmentStatePagerAdapter {
       case 0:
         return TvShowInfoFragmentView.newInstance(mTVShowInfo);
       case 1:
-        return TvShowSeasonsFragment.newInstance(mTVShowInfo);
+        return TvShowSeasonsFragmentView.newInstance(mTVShowInfo);
     }
     return null;
   }
