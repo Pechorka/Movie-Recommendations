@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.MovieInfoFragmentView;
-import ru.surf.course.movierecommendations.ui.screen.movieReviews.MovieReviewsFragment;
+import ru.surf.course.movierecommendations.ui.screen.movieReviews.MovieReviewsFragmentView;
 
 /**
  * Created by andrew on 2/11/17.
@@ -31,7 +31,7 @@ public class MovieInfosPagerAdapter extends FragmentStatePagerAdapter {
       case 0:
         return MovieInfoFragmentView.newInstance(mMovieInfo);
       case 1:
-        return MovieReviewsFragment.newInstance(mMovieInfo);
+        return MovieReviewsFragmentView.newInstance(mMovieInfo);
     }
     return null;
   }
