@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.ui.screen.movieInfo.MovieInfoFragment;
+import ru.surf.course.movierecommendations.ui.screen.movieInfo.MovieInfoFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.movieReviews.MovieReviewsFragment;
 
 /**
@@ -29,7 +29,7 @@ public class MovieInfosPagerAdapter extends FragmentStatePagerAdapter {
   public Fragment getItem(int position) {
     switch (position) {
       case 0:
-        return MovieInfoFragment.newInstance(mMovieInfo);
+        return MovieInfoFragmentView.newInstance(mMovieInfo);
       case 1:
         return MovieReviewsFragment.newInstance(mMovieInfo);
     }
