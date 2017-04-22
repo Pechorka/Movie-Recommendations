@@ -3,6 +3,8 @@ package ru.surf.course.movierecommendations.ui.screen.person;
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
@@ -73,7 +75,7 @@ public class PersonActivityPresenter extends BasePresenter<PersonActivityView> {
             currentPerson = new Person(getView().getIntent().getIntExtra(KEY_PERSON_ID, -1));
         }
         if (currentPerson != null) {
-            loadInformationInto(currentPerson, Utilities.getSystemLanguage());
+            loadInformationInto(currentPerson, Locale.getDefault().getLanguage());
             loadProfilePicturesInto(currentPerson);
         }
 

@@ -69,8 +69,10 @@ public class Person implements Serializable {
         for (Field field : fields) {
             try {
                 Field fieldFrom = from.getClass().getDeclaredField(field.getName());
-                Object value = fieldFrom.get(from);
-                this.getClass().getDeclaredField(field.getName()).set(this, value);
+                if (this.getClass().getDeclaredField(field.getName()).get(this) == null) {
+                    Object value = fieldFrom.get(from);
+                    this.getClass().getDeclaredField(field.getName()).set(this, value);
+                }
             } catch (IllegalAccessException e) {
                 Log.d(LOG_TAG, "Copy error" + e.getMessage());
             } catch (NoSuchFieldException e) {
