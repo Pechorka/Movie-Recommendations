@@ -18,7 +18,8 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
 import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentPresenter;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
 
@@ -35,8 +36,8 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     private String query;
     private String previousQuery;
 
-    private MediaListFragment movieListFragment;
-    private MediaListFragment tvShowListFragment;
+    private MediaListFragmentView movieListFragment;
+    private MediaListFragmentView tvShowListFragment;
     private DBHelper dbHelper;
 
     @Inject
@@ -209,10 +210,10 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
             case R.id.nav_upcoming_or_on_air:
                 query = Filters.upcoming.toString();
                 getView().setTitle(R.string.upcoming);
-                movieListFragment
+                ((MediaListFragmentPresenter)movieListFragment.getPresenter())
                     .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
                 query = Filters.on_the_air.toString();
-                tvShowListFragment
+                ((MediaListFragmentPresenter)tvShowListFragment.getPresenter())
                     .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
                 return;
             case R.id.nav_custom:
@@ -275,47 +276,47 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     }
 
     private void initFragments(Tasks task) {
-        movieListFragment = MediaListFragment.newInstance(query, region, task, Media.MediaType.movie);
-        tvShowListFragment = MediaListFragment.newInstance(query, region, task, Media.MediaType.tv);
+        movieListFragment = MediaListFragmentView.newInstance(query, region, task, Media.MediaType.movie);
+        tvShowListFragment = MediaListFragmentView.newInstance(query, region, task, Media.MediaType.tv);
     }
 
     private void initFragments(Tasks task, String movieQuery, String tvshowQuery) {
-        movieListFragment = MediaListFragment.newInstance(movieQuery, region, task, Media.MediaType.movie);
-        tvShowListFragment = MediaListFragment.newInstance(tvshowQuery, region, task, Media.MediaType.tv);
+        movieListFragment = MediaListFragmentView.newInstance(movieQuery, region, task, Media.MediaType.movie);
+        tvShowListFragment = MediaListFragmentView.newInstance(tvshowQuery, region, task, Media.MediaType.tv);
     }
 
     private void byStandartFilter() {
         movieListFragment.setCallOptionsVisibility(View.GONE);
-        movieListFragment
+        ((MediaListFragmentPresenter)movieListFragment.getPresenter())
             .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
         tvShowListFragment.setCallOptionsVisibility(View.GONE);
-        tvShowListFragment
+        ((MediaListFragmentPresenter)tvShowListFragment.getPresenter())
             .loadMediaInfoByFilter(query, Utilities.getSystemLanguage(), "1", region, true);
     }
 
     private void byCustomFilter() {
         movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-        movieListFragment
+        ((MediaListFragmentPresenter)movieListFragment.getPresenter())
             .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, true);
         tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
-        tvShowListFragment
+        ((MediaListFragmentPresenter)tvShowListFragment.getPresenter())
             .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, true);
     }
 
     private void byCustomFilter(CustomFilter customFilter) {
         movieListFragment.setCallOptionsVisibility(View.VISIBLE);
-        movieListFragment
+        ((MediaListFragmentPresenter)movieListFragment.getPresenter())
             .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter,
                 true);
         tvShowListFragment.setCallOptionsVisibility(View.VISIBLE);
-        tvShowListFragment
+        ((MediaListFragmentPresenter)tvShowListFragment.getPresenter())
             .loadMediaInfoByCustomFilter(Utilities.getSystemLanguage(), "1", region, customFilter,
                 true);
     }
 
     private void loadInformationBySearchQuery() {
-        movieListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
-        tvShowListFragment.loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
+        ((MediaListFragmentPresenter)movieListFragment.getPresenter()).loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
+        ((MediaListFragmentPresenter)tvShowListFragment.getPresenter()).loadMediaByName(query, Utilities.getSystemLanguage(), "1", true);
     }
 
     private void searchByName(String name) {
@@ -325,10 +326,10 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     }
 
     private void loadInformationByGenreIds(String movieGenreIds, String tvshowGenreIds) {
-        movieListFragment
+        ((MediaListFragmentPresenter)movieListFragment.getPresenter())
             .loadMediaInfoByGenreIds(movieGenreIds, Utilities.getSystemLanguage(), "1", region,
                 Tasks.SEARCH_BY_GENRE, true);
-        tvShowListFragment
+        ((MediaListFragmentPresenter)tvShowListFragment.getPresenter())
             .loadMediaInfoByGenreIds(tvshowGenreIds, Utilities.getSystemLanguage(), "1", region,
                 Tasks.SEARCH_BY_GENRE, true);
         query = movieGenreIds;

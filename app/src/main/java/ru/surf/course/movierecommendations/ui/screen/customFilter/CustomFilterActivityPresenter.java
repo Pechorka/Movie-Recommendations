@@ -29,8 +29,7 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTa
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 import ru.surf.course.movierecommendations.util.Utilities;
 
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
@@ -68,15 +67,15 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
         if (getView().getIntent().hasExtra(KEY_MEDIA)) {
             mediaType = (MediaType) getView().getIntent().getSerializableExtra(KEY_MEDIA);
         }
-        if (getView().getIntent().hasExtra(MediaListFragment.KEY_SORT_TYPE)) {
-            getView().setupSortRG(getView().getIntent().getStringExtra(MediaListFragment.KEY_SORT_TYPE));
+        if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_SORT_TYPE)) {
+            getView().setupSortRG(getView().getIntent().getStringExtra(MediaListFragmentView.KEY_SORT_TYPE));
         }
-        if (getView().getIntent().hasExtra(MediaListFragment.KEY_SORT_DIRECTION)) {
-            getView().setupSortDirectionRG(getView().getIntent().getStringExtra(MediaListFragment.KEY_SORT_DIRECTION));
+        if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_SORT_DIRECTION)) {
+            getView().setupSortDirectionRG(getView().getIntent().getStringExtra(MediaListFragmentView.KEY_SORT_DIRECTION));
         }
         int maxYear = getView().getIntent()
-                .getIntExtra(MediaListFragment.KEY_MAX_YEAR, Utilities.getCurrentYear());
-        int minYear = getView().getIntent().getIntExtra(MediaListFragment.KEY_MIN_YEAR, 1930);
+                .getIntExtra(MediaListFragmentView.KEY_MAX_YEAR, Utilities.getCurrentYear());
+        int minYear = getView().getIntent().getIntExtra(MediaListFragmentView.KEY_MIN_YEAR, 1930);
         getView().setYearsRangeBarMinValue(minYear);
         getView().setYearsRangeBarMaxValue(maxYear);
 
@@ -101,11 +100,11 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
                 return true;
             case R.id.custom_filter_menu_save:
                 Intent intent = new Intent();
-                intent.putExtra(MediaListFragment.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
-                intent.putExtra(MediaListFragment.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());
-                intent.putExtra(MediaListFragment.KEY_GENRES, getView().getCheckedGenres());
-                intent.putExtra(MediaListFragment.KEY_SORT_TYPE, getView().getSortType());
-                intent.putExtra(MediaListFragment.KEY_SORT_DIRECTION, getView().getSortDirection());
+                intent.putExtra(MediaListFragmentView.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
+                intent.putExtra(MediaListFragmentView.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());
+                intent.putExtra(MediaListFragmentView.KEY_GENRES, getView().getCheckedGenres());
+                intent.putExtra(MediaListFragmentView.KEY_SORT_TYPE, getView().getSortType());
+                intent.putExtra(MediaListFragmentView.KEY_SORT_DIRECTION, getView().getSortDirection());
                 getView().returnWithResults(intent);
                 return true;
             case R.id.custom_filter_menu_save_preset:

@@ -12,8 +12,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
@@ -39,11 +38,11 @@ public class SaveCustomFilterDialog extends DialogFragment {
       String sortDirection, String minYear,
       String maxYear, MediaType mediaType) {
     Bundle bundle = new Bundle();
-    bundle.putString(MediaListFragment.KEY_GENRES, genreIds);
-    bundle.putString(MediaListFragment.KEY_MAX_YEAR, maxYear);
-    bundle.putString(MediaListFragment.KEY_MIN_YEAR, minYear);
-    bundle.putString(MediaListFragment.KEY_SORT_TYPE, sortType);
-    bundle.putString(MediaListFragment.KEY_SORT_DIRECTION, sortDirection);
+    bundle.putString(MediaListFragmentView.KEY_GENRES, genreIds);
+    bundle.putString(MediaListFragmentView.KEY_MAX_YEAR, maxYear);
+    bundle.putString(MediaListFragmentView.KEY_MIN_YEAR, minYear);
+    bundle.putString(MediaListFragmentView.KEY_SORT_TYPE, sortType);
+    bundle.putString(MediaListFragmentView.KEY_SORT_DIRECTION, sortDirection);
     bundle.putSerializable(KEY_MEDIA, mediaType);
     SaveCustomFilterDialog dialog = new SaveCustomFilterDialog();
     dialog.setArguments(bundle);
@@ -53,11 +52,11 @@ public class SaveCustomFilterDialog extends DialogFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sortType = getArguments().getString(MediaListFragment.KEY_SORT_TYPE);
-    sortDirection = getArguments().getString(MediaListFragment.KEY_SORT_DIRECTION);
-    genreIds = getArguments().getString(MediaListFragment.KEY_GENRES);
-    minYear = getArguments().getString(MediaListFragment.KEY_MIN_YEAR);
-    maxYear = getArguments().getString(MediaListFragment.KEY_MAX_YEAR);
+    sortType = getArguments().getString(MediaListFragmentView.KEY_SORT_TYPE);
+    sortDirection = getArguments().getString(MediaListFragmentView.KEY_SORT_DIRECTION);
+    genreIds = getArguments().getString(MediaListFragmentView.KEY_GENRES);
+    minYear = getArguments().getString(MediaListFragmentView.KEY_MIN_YEAR);
+    maxYear = getArguments().getString(MediaListFragmentView.KEY_MAX_YEAR);
     mediaType = (MediaType) getArguments().getSerializable(KEY_MEDIA);
   }
 

@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
 /**
  * Created by Sergey on 09.02.2017.
@@ -16,11 +16,11 @@ public class ContentFragmentPagerAdapter extends FragmentPagerAdapter {
   final int PAGE_COUNT = 2;
   private Context context;
   private String filter;
-  private MediaListFragment movieListFragment;
-  private MediaListFragment tvShowListFragment;
+  private MediaListFragmentView movieListFragment;
+  private MediaListFragmentView tvShowListFragment;
 
   public ContentFragmentPagerAdapter(FragmentManager fm, Context context, String filter
-      , MediaListFragment movieListFragment, MediaListFragment tvShowListFragment) {
+      , MediaListFragmentView movieListFragment, MediaListFragmentView tvShowListFragment) {
     super(fm);
     this.context = context;
     this.filter = filter;
