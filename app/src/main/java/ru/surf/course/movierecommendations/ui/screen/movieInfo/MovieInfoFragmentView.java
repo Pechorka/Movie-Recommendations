@@ -1,14 +1,11 @@
 package ru.surf.course.movierecommendations.ui.screen.movieInfo;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,40 +18,25 @@ import at.blogc.android.views.ExpandableTextView;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apmem.tools.layouts.FlowLayout;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
 import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.ImagesListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
+import ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView;
 import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 
 
 public class MovieInfoFragmentView extends BaseFragmentView {
@@ -203,7 +185,7 @@ public class MovieInfoFragmentView extends BaseFragmentView {
         mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(data.getCredits(),
                 getActivity());
         mCreditsOfPeopleListAdapter
-                .setOnItemClickListener(position -> PersonActivity.start(getActivity(),
+                .setOnItemClickListener(position -> PersonActivityView.start(getActivity(),
                         mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson()));
         credits.setAdapter(mCreditsOfPeopleListAdapter);
 

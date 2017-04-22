@@ -38,7 +38,7 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.CreditsOfPeopleListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.ImagesListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
+import ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -249,7 +249,7 @@ public class TvShowInfoFragment extends Fragment {
     mCreditsOfPeopleListAdapter = new CreditsOfPeopleListAdapter(currentTvShowInfo.getCredits(),
         getActivity());
     mCreditsOfPeopleListAdapter
-        .setOnItemClickListener(position -> PersonActivity.start(getActivity(),
+        .setOnItemClickListener(position -> PersonActivityView.start(getActivity(),
             mCreditsOfPeopleListAdapter.getCredits().get(position).getPerson()));
     credits.setAdapter(mCreditsOfPeopleListAdapter);
 

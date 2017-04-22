@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.people.Person;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonCreditsFragment;
-import ru.surf.course.movierecommendations.ui.screen.person.PersonInfoFragment;
+import ru.surf.course.movierecommendations.ui.screen.personCredits.PersonCreditsFragment;
+import ru.surf.course.movierecommendations.ui.screen.personInfo.PersonInfoFragment;
 
 /**
  * Created by andrew on 2/9/17.

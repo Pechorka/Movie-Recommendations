@@ -20,7 +20,7 @@
             android:name=".ui.screen.movie.MovieActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.screen.person.PersonActivity"
+            android:name=".ui.screen.person.PersonActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
             android:name=".ui.screen.tvShow.TvShowActivity"

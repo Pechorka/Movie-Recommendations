@@ -7,6 +7,7 @@ import lombok.Data;
 import ru.surf.course.movierecommendations.app.dagger.AppComponent;
 import ru.surf.course.movierecommendations.app.dagger.AppModule;
 import ru.surf.course.movierecommendations.app.dagger.DaggerAppComponent;
+import ru.surf.course.movierecommendations.app.log.Logger;
 
 @Data
 public class App extends Application{
@@ -17,6 +18,11 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         initInjector();
+        initLog();
+    }
+
+    private void initLog() {
+        Logger.init();
     }
 
     private void initInjector() {

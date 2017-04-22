@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.person.adapters;
+package ru.surf.course.movierecommendations.ui.screen.personCredits.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;

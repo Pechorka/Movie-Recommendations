@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.person;
+package ru.surf.course.movierecommendations.ui.screen.personCredits;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonCreditsListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.personCredits.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.domain.Media;

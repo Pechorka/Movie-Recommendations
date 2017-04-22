@@ -46,7 +46,7 @@ public class TmdbImage implements Serializable {
 
   public static class RetrofitResultProfiles {
 
-    @SerializedName("profilePictures")
+    @SerializedName("profiles")
     public List<TmdbImage> profilePictures;
   }
 }

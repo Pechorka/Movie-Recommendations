@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.person;
+package ru.surf.course.movierecommendations.ui.screen.personInfo;
 
 import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 
