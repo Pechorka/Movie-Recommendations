@@ -13,7 +13,7 @@ import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 
 
@@ -49,7 +49,7 @@ public class GridMediaAdapter extends RecyclerView.Adapter<GridMediaAdapter.Grid
 
   private void fragmentToSwitch(Media media) {
     if (media instanceof MovieInfo) {
-      MovieActivity.start(context, (MovieInfo) media);
+      MovieActivityView.start(context, (MovieInfo) media);
     } else if (media instanceof TVShowInfo) {
       TvShowActivity.start(context, (TVShowInfo) media);
     }

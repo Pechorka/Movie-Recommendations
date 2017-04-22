@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.people.Person;
@@ -115,7 +115,7 @@ public class PersonCreditsFragment extends Fragment {
 
       Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
       if (media instanceof MovieInfo) {
-        MovieActivity.start(getActivity(), (MovieInfo) media);
+        MovieActivityView.start(getActivity(), (MovieInfo) media);
       } else if (media instanceof TVShowInfo) {
         return;
       }

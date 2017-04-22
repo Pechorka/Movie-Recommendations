@@ -17,7 +17,7 @@ import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.favorites.adapters.FavoritesAdapter;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
 
 public class FavoritesActivityView extends BaseActivityView {
@@ -94,7 +94,7 @@ public class FavoritesActivityView extends BaseActivityView {
     private void activityToSwitch(Favorite favorite) {
         switch (favorite.getMediaType()) {
             case movie:
-                MovieActivity.start(this, favorite.getMediaId());
+                MovieActivityView.start(this, favorite.getMediaId());
                 break;
             case tv:
                 TvShowActivity.start(this, favorite.getMediaId());

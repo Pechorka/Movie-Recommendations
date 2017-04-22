@@ -17,7 +17,7 @@
             android:name=".ui.screen.gallery.GalleryActivityView"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
-            android:name=".ui.screen.movie.MovieActivity"
+            android:name=".ui.screen.movie.MovieActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
             android:name=".ui.screen.person.PersonActivity"

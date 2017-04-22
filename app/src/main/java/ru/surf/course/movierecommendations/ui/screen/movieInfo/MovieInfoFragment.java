@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.movie;
+package ru.surf.course.movierecommendations.ui.screen.movieInfo;
 
 import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 
@@ -37,8 +37,9 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.CreditsOfPeopleListAdapter;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.ImagesListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
+import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.CreditsOfPeopleListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.ImagesListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivity;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
@@ -302,8 +303,8 @@ public class MovieInfoFragment extends Fragment {
       genreButton.setLayoutParams(layoutParams);
 
       genreButton.setOnClickListener(view -> {
-        if (getActivity() instanceof MovieActivity) {
-          ((MovieActivity) getActivity()).onGenreClick(genre);
+        if (getActivity() instanceof MovieActivityView) {
+          ((MovieActivityView) getActivity()).onGenreClick(genre);
         }
       });
     }

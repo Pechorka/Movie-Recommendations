@@ -2,9 +2,8 @@ package ru.surf.course.movierecommendations.domain;
 
 import com.j256.ormlite.table.DatabaseTable;
 
-/**
- * Created by Sergey on 30.03.2017.
- */
+import lombok.Data;
+
 
 @DatabaseTable(tableName = RecommendedTVShowsGenres.TABLE_NAME_RECOMMENDED_TVSHOWS_GENRES)
 public class RecommendedTVShowsGenres extends RecommendedGenres {

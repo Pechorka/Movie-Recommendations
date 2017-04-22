@@ -1,4 +1,4 @@
-package ru.surf.course.movierecommendations.ui.screen.movie;
+package ru.surf.course.movierecommendations.ui.screen.movieReviews;
 
 import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 
@@ -24,7 +24,7 @@ import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Review;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetReviewsTask;
-import ru.surf.course.movierecommendations.ui.screen.movie.adapters.MovieReviewsAdapter;
+import ru.surf.course.movierecommendations.ui.screen.movieReviews.adapters.MovieReviewsAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
