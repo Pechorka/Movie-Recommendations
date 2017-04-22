@@ -13,7 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.agna.ferro.mvp.component.ScreenComponent;
+import com.agna.ferro.mvp.presenter.MvpPresenter;
+
+import javax.inject.Inject;
+
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.personCredits.adapters.PersonCreditsListAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
@@ -23,38 +29,52 @@ import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
 
-/**
- * Created by andrew on 2/9/17.
- */
 
-public class PersonCreditsFragment extends Fragment {
+public class PersonCreditsFragmentView extends BaseFragmentView {
 
     final static String KEY_PERSON = "person";
     final static String KEY_PERSON_ID = "person_id";
-    final static int DATA_TO_LOAD = 1;
-    final String LOG_TAG = getClass().getSimpleName();
+
+    @Inject
+    PersonCreditsFragmentPresenter presenter;
 
     private ProgressBar progressBar;
-    private Person currentPerson;
     private RecyclerView mCreditsList;
     private PersonCreditsListAdapter mPersonCreditsListAdapter;
 
-    private int dataLoaded = 0;
 
-    public static PersonCreditsFragment newInstance(Person person) {
-        PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
+    public static PersonCreditsFragmentView newInstance(Person person) {
+        PersonCreditsFragmentView personCreditsFragmentView = new PersonCreditsFragmentView();
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_PERSON, person);
-        personCreditsFragment.setArguments(bundle);
-        return personCreditsFragment;
+        personCreditsFragmentView.setArguments(bundle);
+        return personCreditsFragmentView;
     }
 
-    public static PersonCreditsFragment newInstance(int personId) {
-        PersonCreditsFragment personCreditsFragment = new PersonCreditsFragment();
+    public static PersonCreditsFragmentView newInstance(int personId) {
+        PersonCreditsFragmentView personCreditsFragmentView = new PersonCreditsFragmentView();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_PERSON_ID, personId);
-        personCreditsFragment.setArguments(bundle);
-        return personCreditsFragment;
+        personCreditsFragmentView.setArguments(bundle);
+        return personCreditsFragmentView;
+    }
+
+    @Override
+    public MvpPresenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    protected ScreenComponent createScreenComponent() {
+        return DaggerPersonCreditsFragmentComponent.builder()
+                .fragmentModule(getFragmentModule())
+                .appComponent(getAppComponent())
+                .build();
     }
 
     @Nullable
@@ -89,29 +109,9 @@ public class PersonCreditsFragment extends Fragment {
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        dataLoaded = 0;
-        if (getArguments().containsKey(KEY_PERSON)) {
-            currentPerson = (Person) getArguments().getSerializable(KEY_PERSON);
-        } else if (getArguments().containsKey(KEY_PERSON_ID)) {
-            currentPerson = new Person(getArguments().getInt(KEY_PERSON_ID));
-        }
-        loadCredits(currentPerson);
-    }
-
-    private void loadCredits(final Person person) {
-        GetCreditsTask getCreditsTask = new GetCreditsTask();
-        getCreditsTask.addListener(result -> {
-            person.setCredits(result);
-            dataLoadComplete();
-        });
-        getCreditsTask.getPersonCredits(currentPerson.getId(), Utilities.getSystemLanguage());
-    }
-
-    private void fillInformation() {
+    void fillInformation(Person data) {
         mPersonCreditsListAdapter = new PersonCreditsListAdapter(getActivity(),
-                currentPerson.getCredits());
+                data.getCredits());
         mPersonCreditsListAdapter.setListener(position -> {
 
             Media media = mPersonCreditsListAdapter.getCredits().get(position).getMedia();
@@ -125,21 +125,14 @@ public class PersonCreditsFragment extends Fragment {
         mCreditsList.setAdapter(mPersonCreditsListAdapter);
     }
 
-    private void dataLoadComplete() {
-        dataLoaded++;
-        Log.v(LOG_TAG, "data loaded:" + dataLoaded);
-        if (dataLoaded == DATA_TO_LOAD) {
-            fillInformation();
-            View progressBarPlaceholder = null;
-            if (getView() != null) {
-                progressBarPlaceholder = getView()
-                        .findViewById(R.id.person_credits_progress_bar_placeholder);
-            }
-            if (progressBarPlaceholder != null) {
-                progressBarPlaceholder.setVisibility(View.GONE);
-            }
-
+    void hideProgressBar() {
+        View progressBarPlaceholder = null;
+        if (getView() != null) {
+            progressBarPlaceholder = getView()
+                    .findViewById(R.id.person_credits_progress_bar_placeholder);
         }
-
+        if (progressBarPlaceholder != null) {
+            progressBarPlaceholder.setVisibility(View.GONE);
+        }
     }
 }

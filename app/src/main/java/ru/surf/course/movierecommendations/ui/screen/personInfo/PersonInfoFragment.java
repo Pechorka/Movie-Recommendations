@@ -40,10 +40,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by andrew on 2/9/17.
- */
-
 public class PersonInfoFragment extends Fragment {
 
   final static String KEY_PERSON = "person";
