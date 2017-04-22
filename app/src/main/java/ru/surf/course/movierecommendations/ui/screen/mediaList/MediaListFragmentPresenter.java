@@ -68,12 +68,15 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
 
     private boolean newResult;
 
+    private Retrofit retrofit;
     private GetMovieTask getMovieTask;
     private GetTVShowTask getTVShowTask;
 
     @Inject
-    public MediaListFragmentPresenter(ErrorHandler errorHandler) {
+    public MediaListFragmentPresenter(ErrorHandler errorHandler,
+                                      Retrofit retrofit) {
         super(errorHandler);
+        this.retrofit = retrofit;
     }
 
     @Override
@@ -91,14 +94,6 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
     }
 
     private void init() {
-        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-                .createWithScheduler(Schedulers.io());
-        Gson gson = new GsonBuilder().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(rxAdapter)
-                .build();
         query = getView().getArguments().getString(KEY_QUERY);
         region = getView().getArguments().getString(KEY_REGION);
         task = (Tasks) getView().getArguments().getSerializable(KEY_TASK);

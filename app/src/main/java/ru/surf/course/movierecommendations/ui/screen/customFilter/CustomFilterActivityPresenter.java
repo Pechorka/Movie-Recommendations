@@ -54,9 +54,11 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
 
     @Inject
     public CustomFilterActivityPresenter(ErrorHandler errorHandler,
-                                         DBHelper dbHelper) {
+                                         DBHelper dbHelper,
+                                         Retrofit retrofit) {
         super(errorHandler);
         this.dbHelper = dbHelper;
+        this.retrofit = retrofit;
     }
 
 
@@ -84,12 +86,6 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
 
     public void init() {
         genres = new ArrayList<>();
-        gson = new GsonBuilder()
-                .create();
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
         loadGenres();
     }
 

@@ -38,6 +38,7 @@ public class MovieActivityPresenter extends BasePresenter<MovieActivityView> {
     final static int DATA_TO_LOAD = 1;
 
     private DBHelper dbHelper;
+    private Retrofit retrofit;
     private NetworkConnectionChecker connectionChecker;
     private int dataLoaded = 0;
     private MovieInfo currentMovie;
@@ -45,10 +46,12 @@ public class MovieActivityPresenter extends BasePresenter<MovieActivityView> {
     @Inject
     public MovieActivityPresenter(ErrorHandler errorHandler,
                                   DBHelper dbHelper,
-                                  NetworkConnectionChecker networkConnectionChecker) {
+                                  NetworkConnectionChecker networkConnectionChecker,
+                                  Retrofit retrofit) {
         super(errorHandler);
         this.dbHelper = dbHelper;
         this.connectionChecker = networkConnectionChecker;
+        this.retrofit = retrofit;
     }
 
     @Override
@@ -81,14 +84,6 @@ public class MovieActivityPresenter extends BasePresenter<MovieActivityView> {
     }
 
     private void loadInformationInto(final MovieInfo movie, String language) {
-        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-                .createWithScheduler(Schedulers.io());
-        Gson gson = new GsonBuilder().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(rxAdapter)
-                .build();
         GetMovieTask getMovieTask = retrofit.create(GetMovieTask.class);
         Observable<MovieInfo> call = getMovieTask.getMovieById(movie.getMediaId(),
                 BuildConfig.TMDB_API_KEY, language);

@@ -34,12 +34,15 @@ public class MovieReviewsFragmentPresenter extends BasePresenter<MovieReviewsFra
 
     final static int DATA_TO_LOAD = 1;
 
+    private Retrofit retrofit;
     private MovieInfo currentMovie;
     private int dataLoaded = 0;
 
     @Inject
-    public MovieReviewsFragmentPresenter(ErrorHandler errorHandler) {
+    public MovieReviewsFragmentPresenter(ErrorHandler errorHandler,
+                                         Retrofit retrofit) {
         super(errorHandler);
+        this.retrofit = retrofit;
     }
 
     @Override
@@ -56,14 +59,6 @@ public class MovieReviewsFragmentPresenter extends BasePresenter<MovieReviewsFra
     }
 
     private void loadReviews(final MovieInfo movie) {
-        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-                .createWithScheduler(Schedulers.io());
-        Gson gson = new GsonBuilder().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(rxAdapter)
-                .build();
         GetReviewsTask getReviewsTask = retrofit.create(GetReviewsTask.class);
         Observable<Review.RetrofitResult> call = getReviewsTask
                 .getMovieReviews(movie.getMediaId(),

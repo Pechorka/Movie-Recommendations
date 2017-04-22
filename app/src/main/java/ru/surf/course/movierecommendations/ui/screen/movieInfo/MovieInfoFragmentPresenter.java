@@ -48,8 +48,10 @@ public class MovieInfoFragmentPresenter extends BasePresenter<MovieInfoFragmentV
     private int dataLoaded = 0;
 
     @Inject
-    public MovieInfoFragmentPresenter(ErrorHandler errorHandler) {
+    public MovieInfoFragmentPresenter(ErrorHandler errorHandler,
+                                      Retrofit retrofit) {
         super(errorHandler);
+        this.retrofit = retrofit;
     }
 
     @Override
@@ -60,14 +62,6 @@ public class MovieInfoFragmentPresenter extends BasePresenter<MovieInfoFragmentV
     }
 
     private void init() {
-        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory
-                .createWithScheduler(Schedulers.io());
-        Gson gson = new GsonBuilder().create();
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(rxAdapter)
-                .build();
         apiKey = BuildConfig.TMDB_API_KEY;
 
         dataLoaded = 0;
