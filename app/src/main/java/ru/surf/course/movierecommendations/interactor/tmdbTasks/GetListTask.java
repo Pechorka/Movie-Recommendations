@@ -4,7 +4,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivity;
+import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivityPresenter;
+import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivityView;
 
 /**
  * Created by Sergey on 30.03.2017.
@@ -13,6 +14,6 @@ import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.Recomm
 public interface GetListTask {
 
   @GET("list/{id}")
-  Call<RecommendationsSetupActivity.RetrofitResult> getListById(@Path("id") int id,
-      @Query("api_key") String apiKey, @Query("language") String language);
+  Call<RecommendationsSetupActivityPresenter.RetrofitResult> getListById(@Path("id") int id,
+                                                                         @Query("api_key") String apiKey, @Query("language") String language);
 }
