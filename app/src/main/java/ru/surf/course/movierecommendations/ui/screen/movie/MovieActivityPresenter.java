@@ -1,8 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.movie;
 
 
-import android.os.Build;
-import android.util.Log;
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
 import com.google.gson.Gson;
@@ -16,7 +14,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
@@ -32,7 +29,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityView.LOG_TAG;
 import static ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView.KEY_MOVIE;
 import static ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView.KEY_MOVIE_ID;
 
@@ -58,14 +54,14 @@ public class MovieActivityPresenter extends BasePresenter<MovieActivityView> {
     @Override
     public void onLoadFinished() {
         super.onLoadFinished();
-        getView().showPlaceholder();
         if (connectionChecker.hasInternetConnection())
             startLoading();
+        else getView().showErrorPlaceholder();
     }
 
     void onRetryBtnClick() {
         if (connectionChecker.hasInternetConnection()) {
-            getView().hidePlaceholder();
+            getView().hideErrorPlaceholder();
             startLoading();
         }
     }
@@ -96,11 +92,10 @@ public class MovieActivityPresenter extends BasePresenter<MovieActivityView> {
         GetMovieTask getMovieTask = retrofit.create(GetMovieTask.class);
         Observable<MovieInfo> call = getMovieTask.getMovieById(movie.getMediaId(),
                 BuildConfig.TMDB_API_KEY, language);
-        call.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movieInfo -> {
-                    movie.fillFields(movieInfo);
-                    dataLoadComplete();
-                });
+        subscribeNetworkQuery(call, movieInfo -> {
+            movie.fillFields(movieInfo);
+            dataLoadComplete();
+        });
     }
 
     private void dataLoadComplete() {
