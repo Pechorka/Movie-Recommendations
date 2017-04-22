@@ -14,17 +14,17 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import at.blogc.android.views.ExpandableTextView;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
 
-import java.util.ArrayList;
-
 import org.apmem.tools.layouts.FlowLayout;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
+import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.ProductionCountries;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
@@ -48,7 +48,6 @@ public class MovieInfoFragmentView extends BaseFragmentView {
     @Inject
     MovieInfoFragmentPresenter presenter;
 
-    private ProgressBar progressBar;
     private ExpandableTextView overview;
     private Button expandCollapseBiographyButton;
     private TextView voteAverage;
@@ -62,7 +61,7 @@ public class MovieInfoFragmentView extends BaseFragmentView {
     private TextView budget;
     private TextView revenue;
     private TextView productionCountries;
-    
+
 
     public static MovieInfoFragmentView newInstance(
             MovieInfo movie) {  //considering this object already has all info
@@ -115,7 +114,7 @@ public class MovieInfoFragmentView extends BaseFragmentView {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
+        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.movie_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -134,18 +133,18 @@ public class MovieInfoFragmentView extends BaseFragmentView {
         status = (TextView) root.findViewById(R.id.movie_info_status);
         productionCountries = (TextView) root.findViewById(R.id.movie_info_production);
         genres = (FlowLayout) root.findViewById(R.id.movie_info_genres_placeholder);
-        
+
     }
 
     private void setupViews(View root) {
         overview.setInterpolator(new AccelerateDecelerateInterpolator());
 
         View.OnClickListener expandCollapse = v -> {
-                overview.toggle();
-                expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat
-                        .getDrawable(getActivity(), R.drawable.ic_arrow_down)
-                        : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
-            };
+            overview.toggle();
+            expandCollapseBiographyButton.setBackground(overview.isExpanded() ? ContextCompat
+                    .getDrawable(getActivity(), R.drawable.ic_arrow_down)
+                    : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
+        };
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         overview.setOnClickListener(expandCollapse);
         backdrops.setLayoutManager(
@@ -173,7 +172,7 @@ public class MovieInfoFragmentView extends BaseFragmentView {
 
         mImagesListAdapter = new ImagesListAdapter(data.getBackdrops(), getActivity());
         mImagesListAdapter.setOnItemClickListener(position -> {
-            ArrayList<String> paths = new ArrayList<String>();
+            ArrayList<String> paths = new ArrayList<>();
             for (TmdbImage image :
                     mImagesListAdapter.getImages()) {
                 paths.add(image.path);
@@ -190,11 +189,11 @@ public class MovieInfoFragmentView extends BaseFragmentView {
         credits.setAdapter(mCreditsOfPeopleListAdapter);
 
         if (!data.getBudget().equals("0")) {
-            budget.setText(data.getBudget() + "$");
+            budget.setText(String.format(Locale.getDefault(), "%s$", data.getBudget()));
         }
 
         if (!data.getRevenue().equals("0")) {
-            revenue.setText(data.getRevenue() + "$");
+            revenue.setText(String.format(Locale.getDefault(), "%s$", data.getRevenue()));
         }
 
         if (data.getRuntime() != 0) {

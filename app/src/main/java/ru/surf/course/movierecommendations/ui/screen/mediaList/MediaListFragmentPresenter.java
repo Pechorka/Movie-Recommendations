@@ -2,11 +2,8 @@ package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
 
 import android.content.Intent;
-import android.view.View;
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,10 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
@@ -31,10 +25,7 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
 import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
@@ -229,8 +220,8 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
 
     }
 
-    public void loadMediaInfoById(int id, String language, String page, Tasks task,
-                                  boolean newResult) {
+    private void loadMediaInfoById(int id, String language, String page, Tasks task,
+                                   boolean newResult) {
         switch (mediaType) {
             case movie:
                 Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask
@@ -332,7 +323,7 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
         minYear = customFilter.getMinYear();
     }
 
-    public void dataLoadComplete(List<? extends Media> result) {
+    private void dataLoadComplete(List<? extends Media> result) {
         if (newResult) {
             newResult = false;
             mediaList.clear();

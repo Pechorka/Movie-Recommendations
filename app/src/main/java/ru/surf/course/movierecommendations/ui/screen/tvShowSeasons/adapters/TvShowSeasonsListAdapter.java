@@ -13,9 +13,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.util.Utilities;
 import ru.surf.course.movierecommendations.domain.tvShow.Season;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 
 public class TvShowSeasonsListAdapter extends
@@ -104,12 +104,9 @@ public class TvShowSeasonsListAdapter extends
                     .findViewById(R.id.recycler_item_seasons_number_of_episodes);
             mSeparator = (TextView) itemView.findViewById(R.id.recycler_item_seasons_separator);
 
-            mCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (TvShowSeasonsListAdapter.mListener != null)
-                        TvShowSeasonsListAdapter.mListener.onClick(getAdapterPosition());
-                }
+            mCardView.setOnClickListener(view -> {
+                if (TvShowSeasonsListAdapter.mListener != null)
+                    TvShowSeasonsListAdapter.mListener.onClick(getAdapterPosition());
             });
         }
     }

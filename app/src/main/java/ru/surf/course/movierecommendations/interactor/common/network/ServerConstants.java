@@ -1,10 +1,7 @@
 package ru.surf.course.movierecommendations.interactor.common.network;
 
-/**
- * Created by andrew on 2/21/17.
- */
 
-public class ServerConstants {
+class ServerConstants {
 
     public static final String API_KEY = "Coc5NUlrh2mshvKtvaBt8nWYeQZzp1lGJRNjsn9vQnbvlhq8yO";
     public static final String ACCEPT = "application/json";

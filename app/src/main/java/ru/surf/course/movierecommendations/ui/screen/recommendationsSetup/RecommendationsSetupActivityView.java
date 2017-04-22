@@ -2,7 +2,6 @@ package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,28 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
-import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetListTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;

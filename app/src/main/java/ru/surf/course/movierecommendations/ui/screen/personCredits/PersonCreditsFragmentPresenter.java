@@ -1,14 +1,10 @@
 package ru.surf.course.movierecommendations.ui.screen.personCredits;
 
-import android.util.Log;
-import android.view.View;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
 
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
-import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
@@ -22,17 +18,15 @@ import static ru.surf.course.movierecommendations.ui.screen.personCredits.Person
 @PerScreen
 public class PersonCreditsFragmentPresenter extends BasePresenter<PersonCreditsFragmentView> {
 
-    final static int DATA_TO_LOAD = 1;
+    private final static int DATA_TO_LOAD = 1;
     private int dataLoaded = 0;
-
-    private Retrofit retrofit;
 
     private Person currentPerson;
 
     @Inject
     public PersonCreditsFragmentPresenter(ErrorHandler errorHandler, Retrofit retrofit) {
         super(errorHandler);
-        this.retrofit = retrofit;
+        Retrofit retrofit1 = retrofit;
     }
 
     @Override

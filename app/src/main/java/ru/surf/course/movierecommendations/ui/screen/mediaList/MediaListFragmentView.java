@@ -1,11 +1,5 @@
 package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
-import static android.app.Activity.RESULT_OK;
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,41 +13,27 @@ import android.view.ViewGroup;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
-import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.listeners.EndlessRecyclerViewScrollListener;
-import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+
+import static android.app.Activity.RESULT_OK;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 
 public class MediaListFragmentView extends BaseFragmentView {
 
-    public static final int GET_GENRES_REQUEST = 1;
+    private static final int GET_GENRES_REQUEST = 1;
     public final static String KEY_MAX_YEAR = "maxYear";
     public final static String KEY_MIN_YEAR = "minYear";
     public final static String KEY_GENRES = "genreIds";
@@ -145,7 +125,7 @@ public class MediaListFragmentView extends BaseFragmentView {
     }
 
     private void setupViews() {
-        gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<Media>(1));
+        gridMediaAdapter = new GridMediaAdapter(getActivity(), new ArrayList<>(1));
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(gridMediaAdapter);
         recyclerView
@@ -167,7 +147,6 @@ public class MediaListFragmentView extends BaseFragmentView {
         intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
         startActivityForResult(intent, GET_GENRES_REQUEST);
     }
-
 
 
     public void setCallOptionsVisibility(int visibility) {

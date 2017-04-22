@@ -11,11 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by andrew on 2/21/17.
- */
 
-public class RequestBodyTypeAdapter extends TypeAdapter<RequestBodyMap> {
+class RequestBodyTypeAdapter extends TypeAdapter<RequestBodyMap> {
 
     @Override
     public void write(JsonWriter out, RequestBodyMap value) throws IOException {

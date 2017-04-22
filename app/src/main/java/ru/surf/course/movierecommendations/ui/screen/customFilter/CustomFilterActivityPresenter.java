@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
@@ -84,7 +82,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
         init();
     }
 
-    public void init() {
+    private void init() {
         genres = new ArrayList<>();
         loadGenres();
     }

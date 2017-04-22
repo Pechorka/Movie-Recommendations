@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="backdrop">backdrop</string>
+    <string name="galleryimage">GalleryImage</string>
+    <string name="personprofile">PersonProfile</string>
+    <string name="error">Error</string>
+    <string name="movieposter">MoviePoster</string>
+    <string name="chosen">Chosen</string>
+    <string name="seasonposter">SeasonPoster</string>
+</resources>

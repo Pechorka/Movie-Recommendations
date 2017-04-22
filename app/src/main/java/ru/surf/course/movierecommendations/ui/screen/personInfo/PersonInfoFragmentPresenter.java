@@ -1,30 +1,13 @@
 package ru.surf.course.movierecommendations.ui.screen.personInfo;
 
-import android.util.Log;
-import android.view.View;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
@@ -32,17 +15,14 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
 import static ru.surf.course.movierecommendations.ui.screen.personInfo.PersonInfoFragmentView.KEY_PERSON;
 import static ru.surf.course.movierecommendations.ui.screen.personInfo.PersonInfoFragmentView.KEY_PERSON_ID;
 
 @PerScreen
 public class PersonInfoFragmentPresenter extends BasePresenter<PersonInfoFragmentView> {
 
-    final static int DATA_TO_LOAD = 1;
+    private final static int DATA_TO_LOAD = 1;
     private int dataLoaded = 0;
 
     private Retrofit retrofit;

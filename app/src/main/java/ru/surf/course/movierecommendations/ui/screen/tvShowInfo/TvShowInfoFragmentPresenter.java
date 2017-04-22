@@ -1,9 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.tvShowInfo;
 
 
-import android.util.Log;
-import android.view.View;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
 
 import java.util.Locale;
@@ -12,7 +9,6 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import ru.surf.course.movierecommendations.BuildConfig;
-import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
@@ -24,8 +20,6 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static ru.surf.course.movierecommendations.ui.screen.tvShowInfo.TvShowInfoFragmentView.KEY_TV_SHOW;
 import static ru.surf.course.movierecommendations.ui.screen.tvShowInfo.TvShowInfoFragmentView.KEY_TV_SHOW_ID;
@@ -33,7 +27,7 @@ import static ru.surf.course.movierecommendations.ui.screen.tvShowInfo.TvShowInf
 @PerScreen
 public class TvShowInfoFragmentPresenter extends BasePresenter<TvShowInfoFragmentView> {
 
-    final static int DATA_TO_LOAD = 3;
+    private final static int DATA_TO_LOAD = 3;
 
     private int dataLoaded = 0;
 

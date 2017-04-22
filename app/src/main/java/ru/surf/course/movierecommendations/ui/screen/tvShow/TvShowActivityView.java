@@ -1,7 +1,5 @@
 package ru.surf.course.movierecommendations.ui.screen.tvShow;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -12,35 +10,23 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.domain.Media.MediaType;
+import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.interactor.Favorite;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
@@ -49,24 +35,19 @@ import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.adapters.TVShowInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class TvShowActivityView extends BaseActivityView {
 
     final static String KEY_TV_SHOW = "tv_show";
     final static String KEY_TV_SHOW_ID = "tv_show_id";
-    
+
     @Inject
     TvShowActivityPresenter presenter;
 
-    private ProgressBar progressBar;
     private TextView title;
     private TextView releaseDate;
     private ImageView poster;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private View fakeStatusBar;
     private ViewPager infosPager;
@@ -124,11 +105,11 @@ public class TvShowActivityView extends BaseActivityView {
     }
 
     private void init() {
-        
+
     }
 
     private void initViews() {
-        progressBar = (ProgressBar) findViewById(R.id.tv_show_progress_bar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.tv_show_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -138,7 +119,7 @@ public class TvShowActivityView extends BaseActivityView {
         title = (TextView) findViewById(R.id.tv_show_title);
         releaseDate = (TextView) findViewById(R.id.tv_show_release_date);
         poster = (ImageView) findViewById(R.id.tv_show_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
                 R.id.tv_show_collapsing_toolbar_layout);
         appBarLayout = (AppBarLayout) findViewById(R.id.tv_show_appbar_layout);
         fakeStatusBar = findViewById(R.id.tv_show_fake_status_bar);
@@ -187,9 +168,7 @@ public class TvShowActivityView extends BaseActivityView {
         });
 
         findViewById(R.id.message_no_internet_button)
-                .setOnClickListener(view -> {
-                    presenter.onRetryBtnClick();
-                });
+                .setOnClickListener(view -> presenter.onRetryBtnClick());
     }
 
 
@@ -208,7 +187,7 @@ public class TvShowActivityView extends BaseActivityView {
             ImageLoader
                     .putPosterNoResize(this, data.getPosterPath(), poster, ImageLoader.sizes.w500);
             poster.setOnClickListener(view -> {
-                ArrayList<String> image = new ArrayList<String>();
+                ArrayList<String> image = new ArrayList<>();
                 image.add(data.getPosterPath());
                 GalleryActivityView.start(TvShowActivityView.this, image);
             });
@@ -224,7 +203,7 @@ public class TvShowActivityView extends BaseActivityView {
     public void onGenreClick(Genre genre) {
         MainActivityView
                 .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(),
-                        true);
+                        Media.MediaType.tv);
     }
 
     void showErrorPlaceholder() {

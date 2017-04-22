@@ -1,10 +1,7 @@
 package ru.surf.course.movierecommendations.app.log;
 
-/**
- * Created by andrew on 2/20/17.
- */
 
-public class LogConstants {
+class LogConstants {
 
     public static final String LOG_SCREEN_RESUME_FORMAT = "Screen %s onResume";
     public static final String LOG_SCREEN_PAUSE_FORMAT = "Screen %s onPause";

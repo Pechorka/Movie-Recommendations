@@ -16,7 +16,7 @@ import static ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.TvShow
 @PerScreen
 public class TvShowSeasonsFragmentPresenter extends BasePresenter<TvShowSeasonsFragmentView> {
 
-    final static int DATA_TO_LOAD = 1;
+    private final static int DATA_TO_LOAD = 1;
 
     private int dataLoaded = 0;
 

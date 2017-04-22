@@ -3,11 +3,9 @@ package ru.surf.course.movierecommendations.ui.screen.tvShowSeasons;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.agna.ferro.mvp.presenter.MvpPresenter;
 import javax.inject.Inject;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
 import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.tvShowSeasons.adapters.TvShowSeasonsListAdapter;
@@ -29,13 +26,11 @@ public class TvShowSeasonsFragmentView extends BaseFragmentView {
 
     final static String KEY_TV = "tv";
     final static String KEY_TV_ID = "tv_id";
-    
+
     @Inject
     TvShowSeasonsFragmentPresenter presenter;
 
-    private ProgressBar progressBar;
     private RecyclerView seasonsList;
-    private TvShowSeasonsListAdapter tvShowSeasonsListAdapter;
 
     public static TvShowSeasonsFragmentView newInstance(TVShowInfo tv) {
         TvShowSeasonsFragmentView tvShowSeasonsFragmentView = new TvShowSeasonsFragmentView();
@@ -87,7 +82,7 @@ public class TvShowSeasonsFragmentView extends BaseFragmentView {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.fragment_tv_show_seasons_progress_bar);
+        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.fragment_tv_show_seasons_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -105,7 +100,7 @@ public class TvShowSeasonsFragmentView extends BaseFragmentView {
 
     void fillInformation(TVShowInfo data) {
         if (data.getSeasonList() != null && data.getSeasonList().size() != 0) {
-            tvShowSeasonsListAdapter = new TvShowSeasonsListAdapter(getActivity(),
+            TvShowSeasonsListAdapter tvShowSeasonsListAdapter = new TvShowSeasonsListAdapter(getActivity(),
                     data.getSeasonList());
             seasonsList.setAdapter(tvShowSeasonsListAdapter);
         } else {
@@ -113,7 +108,7 @@ public class TvShowSeasonsFragmentView extends BaseFragmentView {
                     .setVisibility(View.VISIBLE);
         }
     }
-    
+
     void hideProgressBar() {
         View progressBarPlaceholder = null;
         if (getView() != null) {

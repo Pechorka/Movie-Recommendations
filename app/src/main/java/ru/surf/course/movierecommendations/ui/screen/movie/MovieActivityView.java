@@ -1,10 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.movie;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +24,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
@@ -47,11 +45,9 @@ public class MovieActivityView extends BaseActivityView {
     @Inject
     MovieActivityPresenter presenter;
 
-    private ProgressBar progressBar;
     private TextView title;
     private TextView releaseDate;
     private ImageView poster;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private View fakeStatusBar;
     private ViewPager infosPager;
@@ -115,7 +111,7 @@ public class MovieActivityView extends BaseActivityView {
     }
 
     private void initViews() {
-        progressBar = (ProgressBar) findViewById(R.id.movie_info_progress_bar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.movie_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -125,7 +121,7 @@ public class MovieActivityView extends BaseActivityView {
         title = (TextView) findViewById(R.id.movie_title);
         releaseDate = (TextView) findViewById(R.id.movie_release_date);
         poster = (ImageView) findViewById(R.id.movie_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
                 R.id.movie_collapsing_toolbar_layout);
         appBarLayout = (AppBarLayout) findViewById(R.id.movie_appbar_layout);
         fakeStatusBar = findViewById(R.id.movie_fake_status_bar);
@@ -172,14 +168,9 @@ public class MovieActivityView extends BaseActivityView {
                 }
             }
         });
-        
+
         findViewById(R.id.message_no_internet_button).setOnClickListener(v -> presenter.onRetryBtnClick());
     }
-
-
-
-
-    
 
 
     void fillInformation(MovieInfo data, boolean isFavorite) {
@@ -197,7 +188,7 @@ public class MovieActivityView extends BaseActivityView {
             ImageLoader
                     .putPosterNoResize(this, data.getPosterPath(), poster, ImageLoader.sizes.w500);
             poster.setOnClickListener(view -> {
-                ArrayList<String> image = new ArrayList<String>();
+                ArrayList<String> image = new ArrayList<>();
                 image.add(data.getPosterPath());
                 GalleryActivityView.start(MovieActivityView.this, image);
             });
@@ -210,21 +201,18 @@ public class MovieActivityView extends BaseActivityView {
         favoriteButton.setInitialState(isFavorite);
     }
 
-    
-
-    
 
     public void onGenreClick(Genre genre) {
         MainActivityView
-                .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(), true);
+                .start(this, MainActivityView.class, String.valueOf(genre.getGenreId()), genre.getName(), Media.MediaType.movie);
     }
-    
+
     void showFakeStatusBar() {
         if (Build.VERSION.SDK_INT >= 19) {
             fakeStatusBar.setVisibility(View.VISIBLE);
         }
     }
-    
+
     void hideProgressBar() {
         View progressBarPlaceholder = null;
         progressBarPlaceholder = findViewById(R.id.movie_progress_bar_placeholder);

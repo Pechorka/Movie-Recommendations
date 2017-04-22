@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import timber.log.Timber;
 
-/**
- * Created by andrew on 2/20/17.
- */
 
 public class Logger {
 
@@ -49,7 +46,7 @@ public class Logger {
     /**
      * Log an info message with optional format args.
      */
-    public static void i(@NonNull String message, Object... args) {
+    private static void i(@NonNull String message, Object... args) {
         setClickableLink();
         Timber.i(message, args);
     }

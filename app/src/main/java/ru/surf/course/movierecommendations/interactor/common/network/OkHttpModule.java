@@ -16,7 +16,7 @@ import ru.surf.course.movierecommendations.interactor.common.network.response.Re
 @Module
 public class OkHttpModule {
 
-    public static final int NETWORK_TIMEOUT = 10; //seconds
+    private static final int NETWORK_TIMEOUT = 10; //seconds
 
     @Provides
     @PerApplication

@@ -1,7 +1,5 @@
 package ru.surf.course.movierecommendations.ui.screen.person;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -12,50 +10,28 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
-import ru.surf.course.movierecommendations.domain.TmdbImage.RetrofitResultProfiles;
 import ru.surf.course.movierecommendations.domain.people.Person;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.person.adapters.PersonInfosPagerAdapter;
 import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class PersonActivityView extends BaseActivityView {
@@ -66,11 +42,9 @@ public class PersonActivityView extends BaseActivityView {
     @Inject
     PersonActivityPresenter presenter;
 
-    private ProgressBar progressBar;
     private TextView name;
     private TextView birthDate;
     private ImageView pictureProfile;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private ViewPager infosPager;
     private View fakeStatusBar;
@@ -127,7 +101,7 @@ public class PersonActivityView extends BaseActivityView {
     }
 
     private void initViews() {
-        progressBar = (ProgressBar) findViewById(R.id.person_progress_bar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.person_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -137,7 +111,7 @@ public class PersonActivityView extends BaseActivityView {
         name = (TextView) findViewById(R.id.person_name);
         birthDate = (TextView) findViewById(R.id.person_birth_date);
         pictureProfile = (ImageView) findViewById(R.id.person_backdrop);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(
                 R.id.person_collapsing_toolbar_layout);
         appBarLayout = (AppBarLayout) findViewById(R.id.person_appbar_layout);
         infosPager = (ViewPager) findViewById(R.id.person_infos_pager);
@@ -162,9 +136,7 @@ public class PersonActivityView extends BaseActivityView {
         });
 
         findViewById(R.id.message_no_internet_button)
-                .setOnClickListener(view -> {
-                    presenter.onRetryBtnClick();
-                });
+                .setOnClickListener(view -> presenter.onRetryBtnClick());
     }
 
 
@@ -182,16 +154,13 @@ public class PersonActivityView extends BaseActivityView {
             ImageLoader
                     .putPosterNoResize(this, data.getProfilePictures().get(0).path, pictureProfile,
                             ImageLoader.sizes.w500);
-            pictureProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ArrayList<String> paths = new ArrayList<String>();
-                    for (TmdbImage image :
-                            data.getProfilePictures()) {
-                        paths.add(image.path);
-                    }
-                    GalleryActivityView.start(PersonActivityView.this, paths);
+            pictureProfile.setOnClickListener(view -> {
+                ArrayList<String> paths = new ArrayList<String>();
+                for (TmdbImage image :
+                        data.getProfilePictures()) {
+                    paths.add(image.path);
                 }
+                GalleryActivityView.start(PersonActivityView.this, paths);
             });
         }
         PersonInfosPagerAdapter personInfosPagerAdapter = new PersonInfosPagerAdapter(

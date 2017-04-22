@@ -14,7 +14,11 @@ import java.util.Date;
 
 public class DateTypeAdapter implements JsonDeserializer<Date> {
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private DateFormat df;
+
+    public DateTypeAdapter() {
+        df = new SimpleDateFormat("yyyy-MM-dd");
+    }
 
     @Override
     public Date deserialize(final JsonElement json, final Type typeOfT,

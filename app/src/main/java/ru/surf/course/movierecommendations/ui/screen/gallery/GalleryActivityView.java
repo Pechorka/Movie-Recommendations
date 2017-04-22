@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
 
@@ -25,7 +24,7 @@ public class GalleryActivityView extends BaseActivityView {
 
     public static final String IMAGES_TAG = "images";
     public static final String INIT_POSITION_TAG = "init_position";
-    ViewPager viewPager;
+    private ViewPager viewPager;
 
     public static void start(Context context, ArrayList<String> paths) {
         Intent intent = new Intent(context, GalleryActivityView.class);

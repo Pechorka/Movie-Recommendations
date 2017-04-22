@@ -6,17 +6,14 @@ import retrofit2.http.Query;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import rx.Observable;
 
-/**
- * Created by sergey on 20.04.17.
- */
 
 public interface GetImagesTask {
 
-  @GET("{whose}/{id}/images")
-  Observable<TmdbImage.RetrofitResultPosters> getPostersBackdrops(@Path("whose") String mediaType,
-      @Path("id") int id, @Query("api_key") String apiKey);
+    @GET("{whose}/{id}/images")
+    Observable<TmdbImage.RetrofitResultPosters> getPostersBackdrops(@Path("whose") String mediaType,
+                                                                    @Path("id") int id, @Query("api_key") String apiKey);
 
-  @GET("person/{id}/images")
-  Observable<TmdbImage.RetrofitResultProfiles> getProfilePictures(@Path("id") int id,
-      @Query("api_key") String apiKey);
+    @GET("person/{id}/images")
+    Observable<TmdbImage.RetrofitResultProfiles> getProfilePictures(@Path("id") int id,
+                                                                    @Query("api_key") String apiKey);
 }

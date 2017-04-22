@@ -1,9 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
-import android.content.SharedPreferences;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -24,8 +21,6 @@ import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetListTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
-import ru.surf.course.movierecommendations.ui.screen.splash.SplachActivity;
 
 @PerScreen
 public class RecommendationsSetupActivityPresenter extends BasePresenter<RecommendationsSetupActivityView> {
@@ -109,6 +104,7 @@ public class RecommendationsSetupActivityPresenter extends BasePresenter<Recomme
             }
         }
     }
+
     private boolean checkMovieGenresAvailability() {
         List<RecommendedMovieGenres> recommendedGenres = helper.getAllRecommendedMovieGenres();
         return recommendedGenres != null && recommendedGenres.size() != 0;
@@ -118,7 +114,6 @@ public class RecommendationsSetupActivityPresenter extends BasePresenter<Recomme
         List<RecommendedTVShowsGenres> recommendedGenres = helper.getAllRecommendedTVShowGenres();
         return recommendedGenres != null && recommendedGenres.size() != 0;
     }
-
 
 
     public static class RetrofitResult {

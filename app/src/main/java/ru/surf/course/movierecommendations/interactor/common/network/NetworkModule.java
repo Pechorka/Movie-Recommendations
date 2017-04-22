@@ -25,7 +25,7 @@ import timber.log.Timber;
 @Module
 public class NetworkModule {
 
-    public static final String HTTP_LOG_TAG = "OkHttp";
+    private static final String HTTP_LOG_TAG = "OkHttp";
 
     @Provides
     @PerApplication

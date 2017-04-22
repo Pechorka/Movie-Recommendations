@@ -9,9 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.agna.ferro.mvp.component.ScreenComponent;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;

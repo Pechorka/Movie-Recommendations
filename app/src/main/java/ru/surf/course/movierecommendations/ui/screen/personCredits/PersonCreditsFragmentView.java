@@ -3,11 +3,9 @@ package ru.surf.course.movierecommendations.ui.screen.personCredits;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +17,14 @@ import com.agna.ferro.mvp.presenter.MvpPresenter;
 import javax.inject.Inject;
 
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
-import ru.surf.course.movierecommendations.ui.screen.personCredits.adapters.PersonCreditsListAdapter;
-import ru.surf.course.movierecommendations.util.Utilities;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.movie.MovieInfo;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
+import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
+import ru.surf.course.movierecommendations.ui.screen.personCredits.adapters.PersonCreditsListAdapter;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 
 
 public class PersonCreditsFragmentView extends BaseFragmentView {
@@ -38,7 +35,6 @@ public class PersonCreditsFragmentView extends BaseFragmentView {
     @Inject
     PersonCreditsFragmentPresenter presenter;
 
-    private ProgressBar progressBar;
     private RecyclerView mCreditsList;
     private PersonCreditsListAdapter mPersonCreditsListAdapter;
 
@@ -93,7 +89,7 @@ public class PersonCreditsFragmentView extends BaseFragmentView {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_credits_progress_bar);
+        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.person_credits_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -118,7 +114,7 @@ public class PersonCreditsFragmentView extends BaseFragmentView {
             if (media instanceof MovieInfo) {
                 MovieActivityView.start(getActivity(), (MovieInfo) media);
             } else if (media instanceof TVShowInfo) {
-                return;
+                TvShowActivityView.start(getActivity(), (TVShowInfo) media);
             }
 
         });

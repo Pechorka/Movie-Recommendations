@@ -6,13 +6,10 @@ import retrofit2.http.Query;
 import ru.surf.course.movierecommendations.domain.Review;
 import rx.Observable;
 
-/**
- * Created by sergey on 20.04.17.
- */
 
 public interface GetReviewsTask {
 
-  @GET("movie/{id}/reviews")
-  Observable<Review.RetrofitResult> getMovieReviews(@Path("id") int id,
-      @Query("api_key") String apiKey);
+    @GET("movie/{id}/reviews")
+    Observable<Review.RetrofitResult> getMovieReviews(@Path("id") int id,
+                                                      @Query("api_key") String apiKey);
 }

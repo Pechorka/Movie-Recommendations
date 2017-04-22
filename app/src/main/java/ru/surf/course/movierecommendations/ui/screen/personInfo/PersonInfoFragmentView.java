@@ -1,13 +1,9 @@
 package ru.surf.course.movierecommendations.ui.screen.personInfo;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,38 +12,16 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import at.blogc.android.views.ExpandableTextView;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
+import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.people.Person;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
 import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class PersonInfoFragmentView extends BaseFragmentView {
 
@@ -57,7 +31,6 @@ public class PersonInfoFragmentView extends BaseFragmentView {
     @Inject
     PersonInfoFragmentPresenter presenter;
 
-    private ProgressBar progressBar;
     private ExpandableTextView biography;
     private Button expandCollapseBiographyButton;
     private TextView gender;
@@ -115,7 +88,7 @@ public class PersonInfoFragmentView extends BaseFragmentView {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.person_info_progress_bar);
+        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.person_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -133,14 +106,11 @@ public class PersonInfoFragmentView extends BaseFragmentView {
     private void setupViews(View root) {
         biography.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        View.OnClickListener expandCollapse = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                biography.toggle();
-                expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat
-                        .getDrawable(getActivity(), R.drawable.ic_arrow_down)
-                        : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
-            }
+        View.OnClickListener expandCollapse = view -> {
+            biography.toggle();
+            expandCollapseBiographyButton.setBackground(biography.isExpanded() ? ContextCompat
+                    .getDrawable(getActivity(), R.drawable.ic_arrow_down)
+                    : ContextCompat.getDrawable(getActivity(), R.drawable.ic_arrow_up));
         };
         expandCollapseBiographyButton.setOnClickListener(expandCollapse);
         biography.setOnClickListener(expandCollapse);

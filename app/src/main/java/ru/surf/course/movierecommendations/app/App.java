@@ -10,7 +10,7 @@ import ru.surf.course.movierecommendations.app.dagger.DaggerAppComponent;
 import ru.surf.course.movierecommendations.app.log.Logger;
 
 @Data
-public class App extends Application{
+public class App extends Application {
 
     private AppComponent appComponent;
 

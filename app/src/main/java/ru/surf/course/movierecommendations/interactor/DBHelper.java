@@ -14,11 +14,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
+import ru.surf.course.movierecommendations.domain.genre.Genre;
 
 @PerApplication
 public class DBHelper extends OrmLiteSqliteOpenHelper {

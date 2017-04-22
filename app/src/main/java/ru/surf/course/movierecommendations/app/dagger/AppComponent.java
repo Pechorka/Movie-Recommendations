@@ -7,7 +7,6 @@ import com.agna.ferro.mvp.component.scope.PerApplication;
 import dagger.Component;
 import retrofit2.Retrofit;
 import ru.surf.course.movierecommendations.interactor.DBHelper;
-import ru.surf.course.movierecommendations.interactor.SharedPreferencesModule;
 import ru.surf.course.movierecommendations.interactor.common.network.NetworkModule;
 import ru.surf.course.movierecommendations.interactor.common.network.OkHttpModule;
 import ru.surf.course.movierecommendations.interactor.common.network.cache.CacheModule;
@@ -26,7 +25,10 @@ import ru.surf.course.movierecommendations.ui.base.fragment.FragmentModule;
 })
 public interface AppComponent {
     Context context();
+
     NetworkConnectionChecker networkConnectionChecker();
+
     DBHelper dbHelper();
+
     Retrofit retrofit();
 }

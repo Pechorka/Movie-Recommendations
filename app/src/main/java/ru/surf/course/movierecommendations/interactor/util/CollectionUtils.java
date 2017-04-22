@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.interactor.util;
 
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,12 +11,12 @@ import ru.surf.course.movierecommendations.util.Mapper;
 /**
  * Обработка коллекций
  */
-public class CollectionUtils {
+class CollectionUtils {
 
     /**
      * Фильтрует коллекцию по предикату
      */
-    public static <T> Collection<T> filter(Collection<T> collection, Predicate<T> predicate) {
+    private static <T> Collection<T> filter(Collection<T> collection, Predicate<T> predicate) {
         List<T> result = new ArrayList<>();
         if (collection != null && predicate != null) {
             for (T object : collection) {
@@ -39,7 +38,7 @@ public class CollectionUtils {
     /**
      * Трансформирует коллекцию
      */
-    public static <T, V> ArrayList<V> map(Collection<T> collection, Mapper<T, V> mapper) {
+    private static <T, V> ArrayList<V> map(Collection<T> collection, Mapper<T, V> mapper) {
         ArrayList<V> result = new ArrayList<>(collection.size());
         for (T origin : collection) {
             result.add(mapper.map(origin));
@@ -83,6 +82,6 @@ public class CollectionUtils {
      * Типизированный предикат
      */
     public interface Predicate<T> {
-        public boolean test(T t);
+        boolean test(T t);
     }
 }

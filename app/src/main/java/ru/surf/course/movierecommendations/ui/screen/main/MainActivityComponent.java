@@ -9,6 +9,6 @@ import ru.surf.course.movierecommendations.interactor.SharedPreferencesModule;
 import ru.surf.course.movierecommendations.ui.common.dagger.ActivityViewModule;
 
 @PerScreen
-@Component(dependencies = AppComponent.class, modules = {ActivityViewModule.class,SharedPreferencesModule.class})
+@Component(dependencies = AppComponent.class, modules = {ActivityViewModule.class, SharedPreferencesModule.class})
 interface MainActivityComponent extends ScreenComponent<MainActivityView> {
 }

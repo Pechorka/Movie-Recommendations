@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:card_view="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/recommendations_setup_list_element_cardview"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:layout_margin="3dp"
-  android:orientation="vertical"
-  card_view:cardCornerRadius="0dp"
-  card_view:cardUseCompatPadding="true">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:id="@+id/recommendations_setup_list_element_cardview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="3dp"
+                                    android:orientation="vertical"
+                                    card_view:cardCornerRadius="0dp"
+                                    card_view:cardUseCompatPadding="true">
 
-  <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-      android:id="@+id/recommendations_setup_list_element_image"
-      style="@style/GridListElementImage" />
-    <ImageView
-      android:id="@+id/recommendations_setup_list_element_chosen"
-      style="@style/GridListElementImage"
-      android:layout_alignBottom="@+id/recommendations_setup_list_element_image"
-      android:layout_alignLeft="@+id/recommendations_setup_list_element_image"
-      android:layout_alignRight="@+id/recommendations_setup_list_element_image"
-      android:layout_alignTop="@+id/recommendations_setup_list_element_image"
-      android:src="@drawable/choosen"
-      android:visibility="invisible" />
-  </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/recommendations_setup_list_element_image"
+            style="@style/GridListElementImage"
+            android:contentDescription="@string/movieposter"/>
+
+        <ImageView
+            android:id="@+id/recommendations_setup_list_element_chosen"
+            style="@style/GridListElementImage"
+            android:layout_alignBottom="@+id/recommendations_setup_list_element_image"
+            android:layout_alignLeft="@+id/recommendations_setup_list_element_image"
+            android:layout_alignRight="@+id/recommendations_setup_list_element_image"
+            android:layout_alignStart="@+id/recommendations_setup_list_element_image"
+            android:layout_alignEnd="@+id/recommendations_setup_list_element_image"
+            android:layout_alignTop="@+id/recommendations_setup_list_element_image"
+            android:src="@drawable/choosen"
+            android:visibility="invisible"
+            android:contentDescription="@string/chosen"/>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

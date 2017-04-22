@@ -1,15 +1,11 @@
 package ru.surf.course.movierecommendations.ui.screen.tvShowInfo;
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,32 +14,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import at.blogc.android.views.ExpandableTextView;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apmem.tools.layouts.FlowLayout;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.surf.course.movierecommendations.BuildConfig;
+import at.blogc.android.views.ExpandableTextView;
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.domain.Media.MediaType;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 import ru.surf.course.movierecommendations.domain.tvShow.TVShowInfo;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetCreditsTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowTask;
 import ru.surf.course.movierecommendations.ui.base.fragment.BaseFragmentView;
 import ru.surf.course.movierecommendations.ui.screen.gallery.GalleryActivityView;
 import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.CreditsOfPeopleListAdapter;
@@ -51,20 +35,16 @@ import ru.surf.course.movierecommendations.ui.screen.movieInfo.adapters.ImagesLi
 import ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView;
 import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 import ru.surf.course.movierecommendations.util.Utilities;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class TvShowInfoFragmentView extends BaseFragmentView {
 
     final static String KEY_TV_SHOW = "tv";
     final static String KEY_TV_SHOW_ID = "movie_id";
-    
+
     @Inject
     TvShowInfoFragmentPresenter presenter;
 
-    private ProgressBar progressBar;
     private ExpandableTextView overview;
     private Button expandCollapseOverviewButton;
     private TextView voteAverage;
@@ -128,7 +108,7 @@ public class TvShowInfoFragmentView extends BaseFragmentView {
     }
 
     private void initViews(View root) {
-        progressBar = (ProgressBar) root.findViewById(R.id.tv_show_info_progress_bar);
+        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.tv_show_info_progress_bar);
         if (progressBar != null) {
             progressBar.setIndeterminate(true);
             progressBar.getIndeterminateDrawable()
@@ -165,7 +145,6 @@ public class TvShowInfoFragmentView extends BaseFragmentView {
     }
 
 
-
     void fillInformation(TVShowInfo data, TVShowInfo fallbackData) {
 
         if (Utilities.checkString(data.getOverview())) {
@@ -190,7 +169,7 @@ public class TvShowInfoFragmentView extends BaseFragmentView {
 
         mImagesListAdapter = new ImagesListAdapter(data.getBackdrops(), getActivity());
         mImagesListAdapter.setOnItemClickListener(position -> {
-            ArrayList<String> paths = new ArrayList<String>();
+            ArrayList<String> paths = new ArrayList<>();
             for (TmdbImage image :
                     mImagesListAdapter.getImages()) {
                 paths.add(image.path);

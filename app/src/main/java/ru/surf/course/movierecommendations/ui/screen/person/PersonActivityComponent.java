@@ -5,7 +5,6 @@ import com.agna.ferro.mvp.component.scope.PerScreen;
 
 import dagger.Component;
 import ru.surf.course.movierecommendations.app.dagger.AppComponent;
-import ru.surf.course.movierecommendations.interactor.common.network.NetworkModule;
 import ru.surf.course.movierecommendations.ui.common.dagger.ActivityViewModule;
 
 @PerScreen

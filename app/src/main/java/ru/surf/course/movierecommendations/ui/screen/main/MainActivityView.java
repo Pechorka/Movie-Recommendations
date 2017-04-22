@@ -29,12 +29,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
-
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
@@ -63,10 +62,10 @@ public class MainActivityView extends BaseActivityView {
         context.startActivity(intent);
     }
 
-    public static void start(Context context, Class c, String ids, String genreName, boolean movie) {
+    public static void start(Context context, Class c, String ids, String genreName, Media.MediaType mediaType) {
         Intent intent = new Intent(context, c);
         intent.putExtra(KEY_GENRE_IDS, ids);
-        intent.putExtra(KEY_MEDIA, movie);
+        intent.putExtra(KEY_MEDIA, mediaType);
         intent.putExtra(KEY_GENRE_NAME, genreName);
         context.startActivity(intent);
     }
@@ -131,7 +130,6 @@ public class MainActivityView extends BaseActivityView {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -160,9 +158,7 @@ public class MainActivityView extends BaseActivityView {
         errorPlaceholder = findViewById(R.id.main_no_internet_screen);
         errorPlaceholder.setVisibility(View.VISIBLE);
         (findViewById(R.id.message_no_internet_button))
-                .setOnClickListener(view -> {
-                    presenter.onRetryClick();
-                });
+                .setOnClickListener(view -> presenter.onRetryClick());
     }
 
     public void hideNoInternetMessage() {
@@ -236,7 +232,7 @@ public class MainActivityView extends BaseActivityView {
         for (CustomFilter filter : customFilters) {
             MenuItem addedItem = menu.add(filter.getFilterName());
             addedItem.setOnMenuItemClickListener(item1 ->
-                presenter.onPresetItemSelected(item1, filter));
+                    presenter.onPresetItemSelected(item1, filter));
         }
     }
 
