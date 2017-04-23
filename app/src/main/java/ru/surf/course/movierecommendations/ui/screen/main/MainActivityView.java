@@ -1,6 +1,10 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_IDS;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_NAME;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,13 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.interactor.CustomFilter;
@@ -37,18 +37,11 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_IDS;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_NAME;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-
 public class MainActivityView extends BaseActivityView {
 
+    private static final String LOG_TAG = MainActivityView.class.getSimpleName();
     @Inject
     MainActivityPresenter presenter;
-
-
-    private static final String LOG_TAG = MainActivityView.class.getSimpleName();
-
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
@@ -231,6 +224,7 @@ public class MainActivityView extends BaseActivityView {
         Menu menu = item.getSubMenu();
         for (CustomFilter filter : customFilters) {
             MenuItem addedItem = menu.add(filter.getFilterName());
+            addedItem.setIcon(R.drawable.ic_preset_icon);
             addedItem.setOnMenuItemClickListener(item1 ->
                     presenter.onPresetItemSelected(item1, filter));
         }
