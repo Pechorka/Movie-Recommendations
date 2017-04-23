@@ -1,12 +1,12 @@
 package ru.surf.course.movierecommendations.ui.screen.person;
 
 
+import static ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView.KEY_PERSON;
+import static ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView.KEY_PERSON_ID;
+
 import com.agna.ferro.mvp.component.scope.PerScreen;
-
 import java.util.Locale;
-
 import javax.inject.Inject;
-
 import retrofit2.Retrofit;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.app.log.Logger;
@@ -14,14 +14,11 @@ import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.network.connection.NetworkConnectionChecker;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetImagesTask;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTaskRetrofit;
+import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetPersonTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
-
-import static ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView.KEY_PERSON;
-import static ru.surf.course.movierecommendations.ui.screen.person.PersonActivityView.KEY_PERSON_ID;
 
 @PerScreen
 public class PersonActivityPresenter extends BasePresenter<PersonActivityView> {
@@ -83,8 +80,8 @@ public class PersonActivityPresenter extends BasePresenter<PersonActivityView> {
     }
 
     private void loadInformationInto(final Person person, String language) {
-        GetPersonTaskRetrofit getPersonTaskRetrofit = retrofit.create(GetPersonTaskRetrofit.class);
-        Observable<Person> call = getPersonTaskRetrofit.getPersonById(person.getId(), apiKey, language);
+        GetPersonTask getPersonTask = retrofit.create(GetPersonTask.class);
+        Observable<Person> call = getPersonTask.getPersonById(person.getId(), apiKey, language);
         subscribeNetworkQuery(call, person1 -> {
             person.fillFields(person1);
             dataLoadComplete();

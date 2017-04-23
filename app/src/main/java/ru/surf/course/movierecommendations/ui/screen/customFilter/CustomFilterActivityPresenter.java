@@ -1,17 +1,14 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
 
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+
 import android.content.Intent;
 import android.util.Log;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,8 +27,6 @@ import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 import ru.surf.course.movierecommendations.util.Utilities;
 
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-
 
 @PerScreen
 public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterActivityView> {
@@ -44,10 +39,9 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
 
 
     private DBHelper dbHelper;
-    private List<? extends Genre> genres;
+    private List<? extends Genre> genres = new ArrayList<>();
     private MediaType mediaType;
     private Retrofit retrofit;
-    private Gson gson;
 
 
     @Inject
@@ -79,20 +73,16 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
         getView().setYearsRangeBarMinValue(minYear);
         getView().setYearsRangeBarMaxValue(maxYear);
 
-        init();
-    }
-
-    private void init() {
-        genres = new ArrayList<>();
         loadGenres();
     }
+
 
     public boolean onOptionsItemSelected(int id) {
         switch (id) {
             case android.R.id.home:
                 getView().onBackPressed();
                 return true;
-            case R.id.custom_filter_menu_save:
+            case R.id.custom_filter_menu_apply:
                 Intent intent = new Intent();
                 intent.putExtra(MediaListFragmentView.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
                 intent.putExtra(MediaListFragmentView.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());

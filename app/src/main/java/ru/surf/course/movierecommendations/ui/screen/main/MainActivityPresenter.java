@@ -3,13 +3,9 @@ package ru.surf.course.movierecommendations.ui.screen.main;
 import android.content.SharedPreferences;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.RecommendedGenres;
@@ -76,12 +72,12 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dbHelper.clearMoiveGenres();
-        dbHelper.clearTVShowGenres();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        dbHelper.clearMoiveGenres();
+//        dbHelper.clearTVShowGenres();
+//    }
 
     private void init() {
         region = Utilities.getSystemLanguage();

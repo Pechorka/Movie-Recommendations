@@ -32,7 +32,7 @@ public interface GetMovieTask {
                                                       @Query("api_key") String apiKey, @Query("language") String language,
                                                       @Query("page") String page, @Query("region") String region,
                                                       @Query("with_genres") String genres, @Query("release_date.gte") String releaseDateGTE,
-                                                      @Query("release_date.gte") String releaseDateLTE, @Query("sort_by") String sort);
+        @Query("release_date.lte") String releaseDateLTE, @Query("sort_by") String sort);
 
     @GET("discover/{mediaType}")
     Observable<RetrofitResult> getMediaByGenreIds(@Path("mediaType") String mediaType,
