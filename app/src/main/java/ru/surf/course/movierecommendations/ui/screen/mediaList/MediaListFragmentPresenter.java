@@ -1,17 +1,26 @@
 package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
 
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_GENRES;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MAX_YEAR;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MEDIA_ID;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MIN_YEAR;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_QUERY;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_REGION;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_SORT_DIRECTION;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_SORT_TYPE;
+import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_TASK;
+
 import android.content.Intent;
-
 import com.agna.ferro.mvp.component.scope.PerScreen;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import retrofit2.Retrofit;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.domain.Media;
@@ -25,19 +34,6 @@ import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
 import ru.surf.course.movierecommendations.util.Utilities;
 import rx.Observable;
-
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_GENRES;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MAX_YEAR;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MEDIA_ID;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_MIN_YEAR;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_QUERY;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_REGION;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_SORT_DIRECTION;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_SORT_TYPE;
-import static ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView.KEY_TASK;
 
 @PerScreen
 public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentView> {
@@ -312,7 +308,8 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
     }
 
     public void onCustomFilterBtnClick() {
-        getView().startCustomFilterActivity(sort_type, sort_direction, mediaType, maxYear, minYear);
+      getView().startCustomFilterActivity(sort_type, sort_direction, mediaType, maxYear, minYear,
+          genreIds);
     }
 
     private void applyCustomFilter(CustomFilter customFilter) {

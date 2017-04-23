@@ -1,5 +1,8 @@
 package ru.surf.course.movierecommendations.ui.screen.mediaList;
 
+import static android.app.Activity.RESULT_OK;
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,15 +13,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
 import com.agna.ferro.mvp.presenter.MvpPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
@@ -27,13 +26,9 @@ import ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterAc
 import ru.surf.course.movierecommendations.ui.screen.mediaList.adapters.GridMediaAdapter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.listeners.EndlessRecyclerViewScrollListener;
 
-import static android.app.Activity.RESULT_OK;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-
 
 public class MediaListFragmentView extends BaseFragmentView {
 
-    private static final int GET_GENRES_REQUEST = 1;
     public final static String KEY_MAX_YEAR = "maxYear";
     public final static String KEY_MIN_YEAR = "minYear";
     public final static String KEY_GENRES = "genreIds";
@@ -43,7 +38,7 @@ public class MediaListFragmentView extends BaseFragmentView {
     final static String KEY_REGION = "region";
     final static String KEY_TASK = "task";
     final static String KEY_MEDIA_ID = "id";
-
+  private static final int GET_GENRES_REQUEST = 1;
     @Inject
     MediaListFragmentPresenter presenter;
 
@@ -138,13 +133,15 @@ public class MediaListFragmentView extends BaseFragmentView {
         showCustomFilterOpt.setOnClickListener(v -> presenter.onCustomFilterBtnClick());
     }
 
-    void startCustomFilterActivity(String sort_type, String sort_direction, Media.MediaType mediaType, String maxYear, String minYear) {
+  void startCustomFilterActivity(String sort_type, String sort_direction, Media.MediaType mediaType,
+      String maxYear, String minYear, String genres) {
         Intent intent = new Intent(getActivity(), CustomFilterActivityView.class);
         intent.putExtra(KEY_SORT_TYPE, sort_type);
         intent.putExtra(KEY_SORT_DIRECTION, sort_direction);
         intent.putExtra(KEY_MEDIA, mediaType);
         intent.putExtra(KEY_MAX_YEAR, Integer.parseInt(maxYear));
         intent.putExtra(KEY_MIN_YEAR, Integer.parseInt(minYear));
+    intent.putExtra(KEY_GENRES, genres);
         startActivityForResult(intent, GET_GENRES_REQUEST);
     }
 

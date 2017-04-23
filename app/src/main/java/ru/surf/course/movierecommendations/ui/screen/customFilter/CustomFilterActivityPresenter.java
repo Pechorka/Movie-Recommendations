@@ -43,6 +43,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
     private MediaType mediaType;
     private Retrofit retrofit;
 
+    private String genreIds;
 
     @Inject
     public CustomFilterActivityPresenter(ErrorHandler errorHandler,
@@ -66,6 +67,9 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
         }
         if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_SORT_DIRECTION)) {
             getView().setupSortDirectionRG(getView().getIntent().getStringExtra(MediaListFragmentView.KEY_SORT_DIRECTION));
+        }
+        if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_GENRES)) {
+            genreIds = getView().getIntent().getStringExtra(MediaListFragmentView.KEY_GENRES);
         }
         int maxYear = getView().getIntent()
                 .getIntExtra(MediaListFragmentView.KEY_MAX_YEAR, Utilities.getCurrentYear());
@@ -115,6 +119,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
                     break;
             }
         }
+        getView().checkChosenGenres(genreIds);
     }
 
     private void loadGenresFromDB() {

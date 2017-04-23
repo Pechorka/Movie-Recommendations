@@ -1,5 +1,10 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.ASC;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
+import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.VOTE_AVERAGE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
@@ -24,11 +25,6 @@ import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.adapters.GenreListAdapter;
 import ru.surf.course.movierecommendations.ui.screen.customFilter.widgets.YearsRangeBar;
-
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.ASC;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.DESC;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.POPULARITY;
-import static ru.surf.course.movierecommendations.ui.screen.customFilter.CustomFilterActivityPresenter.VOTE_AVERAGE;
 
 public class CustomFilterActivityView extends BaseActivityView {
 
@@ -145,6 +141,10 @@ public class CustomFilterActivityView extends BaseActivityView {
             genreListAdapter.notifyDataSetChanged();
         }
     }
+
+  public void checkChosenGenres(String genreIds) {
+    genreListAdapter.checkChosenGenres(genreIds);
+  }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

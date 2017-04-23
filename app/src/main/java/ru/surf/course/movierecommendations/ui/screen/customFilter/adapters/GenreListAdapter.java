@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
 import java.util.List;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.genre.Genre;
 
@@ -63,6 +61,14 @@ public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.Genr
             }
         }
         return stringBuilder.toString();
+    }
+
+  public void checkChosenGenres(String genreIds) {
+    for (Genre genre : genreList) {
+      if (genreIds.contains(String.valueOf(genre.getGenreId()))) {
+        genre.setChecked(true);
+      }
+    }
     }
 
 
