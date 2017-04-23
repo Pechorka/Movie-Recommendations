@@ -13,75 +13,78 @@ import ru.surf.course.movierecommendations.domain.genre.Genre;
 
 
 public class GenreListAdapter extends RecyclerView.Adapter<GenreListAdapter.GenreViewHolder> {
-    private List<? extends Genre> genreList;
 
-    public GenreListAdapter(List<? extends Genre> genreList, Context context) {
-        this.genreList = genreList;
-        Context context1 = context;
+  private List<? extends Genre> genreList;
+
+  public GenreListAdapter(List<? extends Genre> genreList, Context context) {
+    this.genreList = genreList;
+    Context context1 = context;
+  }
+
+  @Override
+  public GenreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    View itemView = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout.genre_list_element, parent, false);
+    return new GenreViewHolder(itemView);
+  }
+
+  @Override
+  public void onBindViewHolder(GenreViewHolder holder, int position) {
+    Genre genre = genreList.get(position);
+    holder.genreName.setText(genre.getName());
+    if (genre.isChecked()) {
+      holder.checkBox.setChecked(true);
     }
+    holder.checkBox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> genre.setChecked(isChecked));
 
-    @Override
-    public GenreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.genre_list_element, parent, false);
-        return new GenreViewHolder(itemView);
-    }
+    holder.genreName.setOnClickListener(v -> {
+      genre.reverseChecked();
+      holder.checkBox.setChecked(genre.isChecked());
+    });
+  }
 
-    @Override
-    public void onBindViewHolder(GenreViewHolder holder, int position) {
-        Genre genre = genreList.get(position);
-        holder.genreName.setText(genre.getName());
-        if (genre.isChecked()) {
-            holder.checkBox.setChecked(true);
-        }
-        holder.checkBox.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> genre.setChecked(isChecked));
+  @Override
+  public int getItemCount() {
+    return genreList.size();
+  }
 
-        holder.genreName.setOnClickListener(v -> {
-            genre.reverseChecked();
-            holder.checkBox.setChecked(genre.isChecked());
-        });
-    }
+  public void setGenreList(List<? extends Genre> genreList) {
+    this.genreList = genreList;
+    notifyDataSetChanged();
+  }
 
-    @Override
-    public int getItemCount() {
-        return genreList.size();
-    }
-
-    public void setGenreList(List<? extends Genre> genreList) {
-        this.genreList = genreList;
-        notifyDataSetChanged();
-    }
-
-    public String getChecked() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Genre genre : genreList) {
-            if (genre.isChecked()) {
-                stringBuilder.append(genre.getGenreId()).append(",");
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-  public void checkChosenGenres(String genreIds) {
+  public String getChecked() {
+    StringBuilder stringBuilder = new StringBuilder();
     for (Genre genre : genreList) {
-      if (genreIds.contains(String.valueOf(genre.getGenreId()))) {
-        genre.setChecked(true);
+      if (genre.isChecked()) {
+        stringBuilder.append(genre.getGenreId()).append(",");
       }
     }
-    }
+    return stringBuilder.toString();
+  }
 
-
-    public static class GenreViewHolder extends RecyclerView.ViewHolder {
-
-        public CheckBox checkBox;
-        public TextView genreName;
-
-        public GenreViewHolder(View itemView) {
-            super(itemView);
-
-            checkBox = (CheckBox) itemView.findViewById(R.id.genre_list_checkbox);
-            genreName = (TextView) itemView.findViewById(R.id.genre_list_name);
+  public void checkChosenGenres(String genreIds) {
+    if (genreIds != null) {
+      for (Genre genre : genreList) {
+        if (genreIds.contains(String.valueOf(genre.getGenreId()))) {
+          genre.setChecked(true);
         }
+      }
     }
+  }
+
+
+  public static class GenreViewHolder extends RecyclerView.ViewHolder {
+
+    public CheckBox checkBox;
+    public TextView genreName;
+
+    public GenreViewHolder(View itemView) {
+      super(itemView);
+
+      checkBox = (CheckBox) itemView.findViewById(R.id.genre_list_checkbox);
+      genreName = (TextView) itemView.findViewById(R.id.genre_list_name);
+    }
+  }
 }

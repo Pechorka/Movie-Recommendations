@@ -117,7 +117,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   }
 
 
-  private Dao<CustomFilter, Integer> getMovieCustomFilterDao() {
+  private Dao<CustomFilter, Integer> getCustomFilterDao() {
     if (mCustomFilterDao == null) {
       try {
         mCustomFilterDao = getDao(CustomFilter.class);
@@ -234,7 +234,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   public void addMovieCustomFilter(CustomFilter customFilter) {
     try {
-      getMovieCustomFilterDao().create(customFilter);
+      getCustomFilterDao().create(customFilter);
       newPreset = true;
     } catch (SQLException e) {
       e.printStackTrace();
@@ -244,11 +244,27 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   public List<CustomFilter> getAllCustomFilters() {
     List<CustomFilter> result = null;
     try {
-      result = getMovieCustomFilterDao().queryForAll();
+      result = getCustomFilterDao().queryForAll();
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return result;
+  }
+
+  public void updateCustomFilter(CustomFilter filter) {
+    try {
+      getCustomFilterDao().update(filter);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void deleteCustomFilter(CustomFilter filter) {
+    try {
+      getCustomFilterDao().delete(filter);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   public boolean canAddCustomFilter() {

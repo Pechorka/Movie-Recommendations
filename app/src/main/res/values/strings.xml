@@ -7,4 +7,8 @@
     <string name="movieposter">MoviePoster</string>
     <string name="chosen">Chosen</string>
     <string name="seasonposter">SeasonPoster</string>
+  <string name="edit_presets">Edit presets</string>
+  <string name="confirmatory_dialog_title">Are you sure you wanna delete this filter</string>
+  <string name="add_new_movie_filter">Add new movie filter</string>
+  <string name="add_new_tvshow_filter">Add new tvshow filter</string>
 </resources>

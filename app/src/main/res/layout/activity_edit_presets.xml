@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/edit_presets_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:minHeight="?attr/actionBarSize" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_shadow_height"
+    android:background="@drawable/bottom_shadow" />
+
+  <Button
+    android:id="@+id/edit_presets_add_movie_preset"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/add_new_movie_filter" />
+
+  <Button
+    android:id="@+id/edit_presets_add_tvshow_preset"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/add_new_tvshow_filter" />
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/edit_presets_rv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+</LinearLayout>

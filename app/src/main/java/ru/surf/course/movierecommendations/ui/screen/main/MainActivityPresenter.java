@@ -17,6 +17,7 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
+import ru.surf.course.movierecommendations.ui.screen.editPresets.EditPresetsView;
 import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentPresenter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
@@ -69,6 +70,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         boolean newPreset = DBHelper.newPreset;
         if (newPreset) {
             setupPresetsSubMenu();
+            DBHelper.newPreset = false;
         }
     }
 
@@ -148,6 +150,13 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         byCustomFilter(filter);
         return true;
     }
+
+    public boolean onEditPresetsSelected(MenuItem item) {
+        EditPresetsView.start(getView());
+        return true;
+    }
+
+
 
     public boolean onQueryTextSubmit(String query) {
         if (networkConnectionChecker.hasInternetConnection()) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:descendantFocusability="beforeDescendants"
+  android:focusableInTouchMode="true"
+  android:orientation="horizontal">
+  <ImageView
+    android:id="@+id/edit_presets_item_delete_iv"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:layout_alignParentLeft="true"
+    android:src="@drawable/ic_delete_black_48dp" />
+  <EditText
+    android:id="@+id/edit_presets_item_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="25dp"
+    android:layout_toRightOf="@id/edit_presets_item_delete_iv"
+    android:textSize="25sp" />
+  <ImageView
+    android:id="@+id/edit_presets_item_edit_iv"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:layout_alignParentRight="true"
+    android:src="@drawable/ic_check_black_48dp" />
+</RelativeLayout>

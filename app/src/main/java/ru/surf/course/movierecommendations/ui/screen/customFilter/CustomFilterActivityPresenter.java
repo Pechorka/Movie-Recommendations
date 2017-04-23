@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
 
+import static ru.surf.course.movierecommendations.ui.screen.editPresets.EditPresetsPresenter.KEY_REQUEST_CODE;
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 import android.content.Intent;
@@ -83,7 +84,11 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
   public boolean onOptionsItemSelected(int id) {
     switch (id) {
       case android.R.id.home:
-        getView().onBackPressed();
+        if (getView().getIntent().hasExtra(KEY_REQUEST_CODE)) {
+          getView().returnWithResults(new Intent());
+        } else {
+          getView().onBackPressed();
+        }
         return true;
       case R.id.custom_filter_menu_apply:
         Intent intent = new Intent();

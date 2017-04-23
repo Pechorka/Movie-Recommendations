@@ -5,7 +5,7 @@ class ServerUrls {
 
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
 
-    public static final String IMAGE_BASE_URL = "https://images.igdb.com/igdb/image/upload/";
+  public static final String IMAGE_BASE_URL = "https://images.igdb.com/igdb/edit/upload/";
 
     //game
     public static final String GAMES_URL = "games/";
