@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.domain.people;
 
 import android.util.Log;
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -18,8 +19,11 @@ public class Person implements Serializable {
 
   public final String LOG_TAG = getClass().getSimpleName();
 
+  @SerializedName("name")
   protected String name;
+  @SerializedName("id")
   protected int id;
+  @SerializedName("profile_path")
   protected String profilePath;
   protected boolean adult;
   protected String biography;

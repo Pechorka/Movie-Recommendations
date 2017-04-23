@@ -11,7 +11,6 @@ import rx.Observable;
  */
 
 public interface GetCreditsTaskRetrofit {
-
   @GET("{whose}/{id}/credits")
   Observable<Credit.RetrofitResult> getMediaCreditsById(@Path("id") int id,
       @Path("whose") String whose,

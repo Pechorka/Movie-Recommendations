@@ -16,7 +16,6 @@ public class Credit implements Serializable {
   @SerializedName("id")
   protected String creditId;
 
-  //  @Expose(serialize = false,deserialize = false)
   protected Person person;
 
   protected Media media;
