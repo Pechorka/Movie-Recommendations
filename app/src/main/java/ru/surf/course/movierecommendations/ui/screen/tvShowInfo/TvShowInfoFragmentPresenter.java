@@ -82,7 +82,7 @@ public class TvShowInfoFragmentPresenter extends BasePresenter<TvShowInfoFragmen
     private void loadBackdropsInto(final TVShowInfo tvShow) {
         GetImagesTask getImagesTask = retrofit.create(GetImagesTask.class);
         Observable<TmdbImage.RetrofitResultPosters> call = getImagesTask
-                .getPostersBackdrops(Media.MediaType.movie.toString(), tvShow.getMediaId(), apiKey);
+                .getPostersBackdrops(Media.MediaType.tv.toString(), tvShow.getMediaId(), apiKey);
         subscribeNetworkQuery(call, tmdbImages -> {
             tvShow.setBackdrops(tmdbImages.backdrops);
             dataLoadComplete();
