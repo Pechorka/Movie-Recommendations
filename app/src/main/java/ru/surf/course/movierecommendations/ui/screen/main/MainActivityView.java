@@ -3,11 +3,9 @@ package ru.surf.course.movierecommendations.ui.screen.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -31,24 +29,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ru.surf.course.movierecommendations.domain.Media;
-import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.domain.Media;
+import ru.surf.course.movierecommendations.interactor.CustomFilter;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
-import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
-import ru.surf.course.movierecommendations.domain.Media.MediaType;
-import ru.surf.course.movierecommendations.domain.RecommendedGenres;
-import ru.surf.course.movierecommendations.interactor.CustomFilter;
-
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
-import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
-
 import ru.surf.course.movierecommendations.ui.screen.main.adapters.ContentFragmentPagerAdapter;
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
-import ru.surf.course.movierecommendations.ui.screen.settings.SettingsActivity;
-import ru.surf.course.movierecommendations.util.Utilities;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_IDS;
 import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_GENRE_NAME;
@@ -75,10 +62,10 @@ public class MainActivityView extends BaseActivityView {
         context.startActivity(intent);
     }
 
-    public static void start(Context context, Class c, String ids, String genreName, boolean movie) {
+    public static void start(Context context, Class c, String ids, String genreName, Media.MediaType mediaType) {
         Intent intent = new Intent(context, c);
         intent.putExtra(KEY_GENRE_IDS, ids);
-        intent.putExtra(KEY_MEDIA, movie);
+        intent.putExtra(KEY_MEDIA, mediaType);
         intent.putExtra(KEY_GENRE_NAME, genreName);
         context.startActivity(intent);
     }
@@ -143,7 +130,6 @@ public class MainActivityView extends BaseActivityView {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -172,9 +158,7 @@ public class MainActivityView extends BaseActivityView {
         errorPlaceholder = findViewById(R.id.main_no_internet_screen);
         errorPlaceholder.setVisibility(View.VISIBLE);
         (findViewById(R.id.message_no_internet_button))
-                .setOnClickListener(view -> {
-                    presenter.onRetryClick();
-                });
+                .setOnClickListener(view -> presenter.onRetryClick());
     }
 
     public void hideNoInternetMessage() {
@@ -222,7 +206,7 @@ public class MainActivityView extends BaseActivityView {
                 });
     }
 
-    public void initViewPager(String query, MediaListFragment movieListFragment, MediaListFragment tvListFragment) {
+    public void initViewPager(String query, MediaListFragmentView movieListFragment, MediaListFragmentView tvListFragment) {
         viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
                 this, query, movieListFragment, tvListFragment));
     }
@@ -248,7 +232,7 @@ public class MainActivityView extends BaseActivityView {
         for (CustomFilter filter : customFilters) {
             MenuItem addedItem = menu.add(filter.getFilterName());
             addedItem.setOnMenuItemClickListener(item1 ->
-                presenter.onPresetItemSelected(item1, filter));
+                    presenter.onPresetItemSelected(item1, filter));
         }
     }
 

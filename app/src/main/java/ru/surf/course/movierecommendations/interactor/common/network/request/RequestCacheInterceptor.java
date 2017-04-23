@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.interactor.common.network.request;
 
 import com.agna.ferro.mvp.component.scope.PerApplication;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +14,7 @@ import ru.surf.course.movierecommendations.interactor.network.connection.Network
 @PerApplication
 public class RequestCacheInterceptor implements Interceptor {
 
-    NetworkConnectionChecker networkConnectionChecker;
+    private NetworkConnectionChecker networkConnectionChecker;
 
     public RequestCacheInterceptor(NetworkConnectionChecker networkConnectionChecker) {
         this.networkConnectionChecker = networkConnectionChecker;

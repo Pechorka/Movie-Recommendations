@@ -6,9 +6,6 @@ import java.util.List;
 
 import lombok.Data;
 
-/**
- * Created by andrew on 2/21/17.
- */
 
 @Data
 public class BaseResponse {

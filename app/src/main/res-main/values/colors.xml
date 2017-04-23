@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#212121</color>
-  <color name="colorPrimaryDark">#151515</color>
-  <color name="colorAccent">#2E7D32</color>
-  <color name="colorStatusBar">#151515</color>
-  <color name="colorAppBar">#212121</color>
-  <color name="colorDialog">#424242</color>
-  <color name="colorTextPrimary">#ffffff</color>
-  <color name="colorTextSecondary">#70ffffff</color>
-  <color name="colorBackground">#303030</color>
-  <color name="colorBackgroundDark">#212121</color>
-  <color name="colorRatingPositive">#1b710d</color>
-  <color name="colorRatingNegative">#710d0d</color>
-  <color name="colorTransparent">#0000</color>
-  <color name="colorBlack">#000</color>
-  <color name="divider_gray_color">#e0e0e0</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#151515</color>
+    <color name="colorAccent">#2E7D32</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextSecondary">#70ffffff</color>
+    <color name="colorBackground">#303030</color>
+    <color name="colorBackgroundDark">#212121</color>
+    <color name="colorTransparent">#0000</color>
+    <color name="colorBlack">#000</color>
+    <color name="divider_gray_color">#e0e0e0</color>
 </resources>

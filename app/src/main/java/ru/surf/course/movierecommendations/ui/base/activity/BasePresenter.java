@@ -17,7 +17,7 @@ public class BasePresenter<V extends BaseView> extends MvpRxPresenter<V> {
 
     private ErrorHandler errorHandler;
 
-    public BasePresenter(ErrorHandler errorHandler) {
+    protected BasePresenter(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
@@ -100,10 +100,10 @@ public class BasePresenter<V extends BaseView> extends MvpRxPresenter<V> {
      * Работает также как {@link #subscribeNetworkQuery}, кроме того позволяет указать обработчик
      * ошибок сетевых запросов
      */
-    protected <T> Subscription subscribeNetworkQuery(Observable<T> observable,
-                                                     final Action1<T> onNext,
-                                                     final Action1<Throwable> onError,
-                                                     ErrorHandler errorHandler) {
+    private <T> Subscription subscribeNetworkQuery(Observable<T> observable,
+                                                   final Action1<T> onNext,
+                                                   final Action1<Throwable> onError,
+                                                   ErrorHandler errorHandler) {
         observable = observable.subscribeOn(Schedulers.io());
         return subscribe(observable, onNext, e -> onNetworkError(e, onError, errorHandler));
     }

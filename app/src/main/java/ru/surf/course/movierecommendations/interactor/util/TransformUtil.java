@@ -1,14 +1,9 @@
 package ru.surf.course.movierecommendations.interactor.util;
 
-import android.support.annotation.Nullable;
 import android.text.Html;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import ru.surf.course.movierecommendations.interactor.common.network.AnnotationExclusionStrategy;
 import ru.surf.course.movierecommendations.util.SdkUtil;
@@ -24,6 +19,7 @@ public class TransformUtil {
     /**
      * Заменяет форматирующие символы Html на нормальные (например &quot; -> ")
      */
+    @SuppressWarnings("deprecation")
     public static String sanitizeHtmlString(String string) {
         if (string == null) {
             return null;

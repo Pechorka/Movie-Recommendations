@@ -20,7 +20,7 @@ public class CacheModule {
         return new Cache(getCacheDirectory(context), 1024 * 1024 * 10);
     }
 
-    public File getCacheDirectory(Context context) {
+    private File getCacheDirectory(Context context) {
         return new File(context.getCacheDir(), "http-cache");
     }
 

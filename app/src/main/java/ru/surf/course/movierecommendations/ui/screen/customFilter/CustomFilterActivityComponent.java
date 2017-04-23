@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
 import com.agna.ferro.mvp.component.ScreenComponent;
-import com.agna.ferro.mvp.component.scope.PerApplication;
 import com.agna.ferro.mvp.component.scope.PerScreen;
 
 import dagger.Component;

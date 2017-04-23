@@ -18,16 +18,16 @@
       android:layout_marginLeft="@dimen/movie_info_content_margin"
       android:text="@string/genres" />
 
-    <org.apmem.tools.layouts.FlowLayout
-      android:id="@+id/movie_info_genres_placeholder"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/movie_info_content_margin"
-      android:layout_marginRight="@dimen/movie_info_content_margin"
-      android:layout_alignLeft="@id/movie_info_genres_hint"
-      android:layout_alignStart="@id/movie_info_genres_hint"
-      android:layout_below="@id/movie_info_genres_hint"
-      android:orientation="horizontal"></org.apmem.tools.layouts.FlowLayout>
+      <org.apmem.tools.layouts.FlowLayout
+          android:id="@+id/movie_info_genres_placeholder"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/movie_info_content_margin"
+          android:layout_marginRight="@dimen/movie_info_content_margin"
+          android:layout_alignLeft="@id/movie_info_genres_hint"
+          android:layout_alignStart="@id/movie_info_genres_hint"
+          android:layout_below="@id/movie_info_genres_hint"
+          android:orientation="horizontal"/>
 
     <TextView
       android:id="@+id/movie_info_facts_hint"

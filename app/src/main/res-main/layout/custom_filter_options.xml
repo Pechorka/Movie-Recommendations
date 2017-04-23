@@ -10,20 +10,17 @@
     android:layout_height="wrap_content" />
 
   <Button
-    android:id="@+id/genres_dialog"
-    android:layout_width="match_parent"
+      android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/choose_genres" />
 
   <Button
-    android:id="@+id/sort_dialog"
-    android:layout_width="match_parent"
+      android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/choose_sort" />
 
   <Button
-    android:id="@+id/sort_direction_dialog"
-    android:layout_width="match_parent"
+      android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/choose_sort_direction" />
 

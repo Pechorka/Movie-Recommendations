@@ -1,8 +1,5 @@
 package ru.surf.course.movierecommendations.interactor.common.network.error;
 
-/**
- * Created by andrew on 2/21/17.
- */
 
 public class HttpCodes {
     public static final int CODE_200 = 200; //успех

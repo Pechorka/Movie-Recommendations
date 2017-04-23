@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <group
-    android:id="@+id/nav_main"
-    android:checkableBehavior="single">
+      android:checkableBehavior="single">
     <item
       android:id="@+id/nav_recommended"
       android:icon="@drawable/recommended"
@@ -25,7 +24,7 @@
     <item
       android:id="@+id/nam_custom_presets"
       android:title="@string/custom_filter_presets">
-      <menu></menu>
+      <menu/>
     </item>
 
     <item
@@ -39,8 +38,7 @@
   </group>
 
   <group
-    android:id="@+id/nav_bottom"
-    android:checkableBehavior="none">
+      android:checkableBehavior="none">
     <item
       android:id="@+id/nav_settings"
       android:icon="@drawable/settings_icon"

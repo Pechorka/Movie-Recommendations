@@ -17,13 +17,13 @@
             android:name=".ui.screen.gallery.GalleryActivityView"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
-            android:name=".ui.screen.movie.MovieActivity"
+            android:name=".ui.screen.movie.MovieActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.screen.person.PersonActivity"
+            android:name=".ui.screen.person.PersonActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity
-            android:name=".ui.screen.tvShow.TvShowActivity"
+            android:name=".ui.screen.tvShow.TvShowActivityView"
             android:theme="@style/AppTheme.NoActionBar.StatusBarTranslucent"/>
         <activity android:name=".ui.screen.settings.SettingsActivity"/>
         <activity
@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.screen.recommendationsSetup.RecommendationsSetupActivity"></activity>
+        <activity android:name=".ui.screen.recommendationsSetup.RecommendationsSetupActivityView"/>
     </application>
 
 </manifest>

@@ -1,22 +1,21 @@
 package ru.surf.course.movierecommendations.ui.screen.customFilter;
 
 
-import static ru.surf.course.movierecommendations.interactor.common.network.ServerUrls.BASE_URL;
-import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
-
 import android.content.Intent;
 import android.util.Log;
+
 import com.agna.ferro.mvp.component.scope.PerScreen;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.course.movierecommendations.BuildConfig;
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media.MediaType;
@@ -28,8 +27,10 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetMovieGenresTa
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetTVShowGenresTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment;
+import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 import ru.surf.course.movierecommendations.util.Utilities;
+
+import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPresenter.KEY_MEDIA;
 
 
 @PerScreen
@@ -39,6 +40,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
     public static final String VOTE_AVERAGE = "vote_average";
     public static final String ASC = "asc";
     public static final String DESC = "desc";
+    private final static String BASE_URL = "https://api.themoviedb.org";
 
 
     private DBHelper dbHelper;
@@ -50,9 +52,11 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
 
     @Inject
     public CustomFilterActivityPresenter(ErrorHandler errorHandler,
-                                         DBHelper dbHelper) {
+                                         DBHelper dbHelper,
+                                         Retrofit retrofit) {
         super(errorHandler);
         this.dbHelper = dbHelper;
+        this.retrofit = retrofit;
     }
 
 
@@ -63,29 +67,23 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
         if (getView().getIntent().hasExtra(KEY_MEDIA)) {
             mediaType = (MediaType) getView().getIntent().getSerializableExtra(KEY_MEDIA);
         }
-        if (getView().getIntent().hasExtra(MediaListFragment.KEY_SORT_TYPE)) {
-            getView().setupSortRG(getView().getIntent().getStringExtra(MediaListFragment.KEY_SORT_TYPE));
+        if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_SORT_TYPE)) {
+            getView().setupSortRG(getView().getIntent().getStringExtra(MediaListFragmentView.KEY_SORT_TYPE));
         }
-        if (getView().getIntent().hasExtra(MediaListFragment.KEY_SORT_DIRECTION)) {
-            getView().setupSortDirectionRG(getView().getIntent().getStringExtra(MediaListFragment.KEY_SORT_DIRECTION));
+        if (getView().getIntent().hasExtra(MediaListFragmentView.KEY_SORT_DIRECTION)) {
+            getView().setupSortDirectionRG(getView().getIntent().getStringExtra(MediaListFragmentView.KEY_SORT_DIRECTION));
         }
         int maxYear = getView().getIntent()
-                .getIntExtra(MediaListFragment.KEY_MAX_YEAR, Utilities.getCurrentYear());
-        int minYear = getView().getIntent().getIntExtra(MediaListFragment.KEY_MIN_YEAR, 1930);
+                .getIntExtra(MediaListFragmentView.KEY_MAX_YEAR, Utilities.getCurrentYear());
+        int minYear = getView().getIntent().getIntExtra(MediaListFragmentView.KEY_MIN_YEAR, 1930);
         getView().setYearsRangeBarMinValue(minYear);
         getView().setYearsRangeBarMaxValue(maxYear);
 
         init();
     }
 
-    public void init() {
+    private void init() {
         genres = new ArrayList<>();
-        gson = new GsonBuilder()
-                .create();
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
         loadGenres();
     }
 
@@ -94,13 +92,13 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
             case android.R.id.home:
                 getView().onBackPressed();
                 return true;
-            case R.id.custom_filter_menu_apply:
+            case R.id.custom_filter_menu_save:
                 Intent intent = new Intent();
-                intent.putExtra(MediaListFragment.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
-                intent.putExtra(MediaListFragment.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());
-                intent.putExtra(MediaListFragment.KEY_GENRES, getView().getCheckedGenres());
-                intent.putExtra(MediaListFragment.KEY_SORT_TYPE, getView().getSortType());
-                intent.putExtra(MediaListFragment.KEY_SORT_DIRECTION, getView().getSortDirection());
+                intent.putExtra(MediaListFragmentView.KEY_MIN_YEAR, getView().getYearsRangeBarMinYear());
+                intent.putExtra(MediaListFragmentView.KEY_MAX_YEAR, getView().getYearsRangeBarMaxYear());
+                intent.putExtra(MediaListFragmentView.KEY_GENRES, getView().getCheckedGenres());
+                intent.putExtra(MediaListFragmentView.KEY_SORT_TYPE, getView().getSortType());
+                intent.putExtra(MediaListFragmentView.KEY_SORT_DIRECTION, getView().getSortDirection());
                 getView().returnWithResults(intent);
                 return true;
             case R.id.custom_filter_menu_save_preset:

@@ -2,8 +2,11 @@ package ru.surf.course.movierecommendations.ui.screen.favorites;
 
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;

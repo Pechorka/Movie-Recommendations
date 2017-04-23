@@ -9,16 +9,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.agna.ferro.mvp.component.ScreenComponent;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.screen.favorites.adapters.FavoritesAdapter;
-import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivity;
-import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivity;
+import ru.surf.course.movierecommendations.ui.screen.movie.MovieActivityView;
+import ru.surf.course.movierecommendations.ui.screen.tvShow.TvShowActivityView;
 
 public class FavoritesActivityView extends BaseActivityView {
 
@@ -94,10 +98,10 @@ public class FavoritesActivityView extends BaseActivityView {
     private void activityToSwitch(Favorite favorite) {
         switch (favorite.getMediaType()) {
             case movie:
-                MovieActivity.start(this, favorite.getMediaId());
+                MovieActivityView.start(this, favorite.getMediaId());
                 break;
             case tv:
-                TvShowActivity.start(this, favorite.getMediaId());
+                TvShowActivityView.start(this, favorite.getMediaId());
                 break;
             default:
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
