@@ -1,6 +1,7 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import com.agna.ferro.mvp.component.scope.PerScreen;
@@ -16,7 +17,6 @@ import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Tasks;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
-import ru.surf.course.movierecommendations.ui.screen.customFilter.SaveCustomFilterDialog;
 import ru.surf.course.movierecommendations.ui.screen.favorites.FavoritesActivityView;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentPresenter;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
@@ -64,20 +64,14 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
 
     @Override
     public void onResume() {
+        Log.d("tag", "on resume");
         super.onResume();
-        boolean newPreset = sharedPreferences.getBoolean(SaveCustomFilterDialog.KEY_ADDED_NEW_PRESET, false);
+        boolean newPreset = DBHelper.newPreset;
         if (newPreset) {
-            sharedPreferences.edit().putBoolean(SaveCustomFilterDialog.KEY_ADDED_NEW_PRESET, false).apply();
             setupPresetsSubMenu();
         }
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        dbHelper.clearMoiveGenres();
-//        dbHelper.clearTVShowGenres();
-//    }
 
     private void init() {
         region = Utilities.getSystemLanguage();

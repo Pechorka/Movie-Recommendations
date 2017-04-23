@@ -4,7 +4,6 @@ import static ru.surf.course.movierecommendations.ui.screen.main.MainActivityPre
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -18,9 +17,6 @@ import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragment
 
 
 public class SaveCustomFilterDialog extends DialogFragment {
-
-
-  public static final String KEY_ADDED_NEW_PRESET = "new_preset";
 
   private String sortType;
   private String sortDirection;
@@ -75,8 +71,6 @@ public class SaveCustomFilterDialog extends DialogFragment {
   private void saveCustomFilter() {
     CustomFilter customFilter = new CustomFilter(filterName.getText().toString(), genreIds,
         sortType, sortDirection, minYear, maxYear, mediaType);
-    getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(KEY_ADDED_NEW_PRESET, true)
-        .apply();
     DBHelper.getHelper(getActivity()).addMovieCustomFilter(customFilter);
   }
 }

@@ -22,8 +22,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private static final int DATABASE_VERSION = 30;
 
   private static final int MAX_NUMBER_OF_CUSTOM_FILTER = 5;
+  public static boolean newPreset;
   private static DBHelper sInstance;
-
   private Dao<Favorite, Integer> mFavoriteDao = null;
   private Dao<RecommendedMovieGenres, Integer> mRecommendedMovieGenresDao = null;
   private Dao<RecommendedTVShowsGenres, Integer> mRecommendedTVShowsGenresDao = null;
@@ -235,6 +235,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   public void addMovieCustomFilter(CustomFilter customFilter) {
     try {
       getMovieCustomFilterDao().create(customFilter);
+      newPreset = true;
     } catch (SQLException e) {
       e.printStackTrace();
     }
