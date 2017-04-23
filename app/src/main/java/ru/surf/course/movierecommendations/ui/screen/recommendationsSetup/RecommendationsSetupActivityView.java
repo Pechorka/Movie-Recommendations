@@ -112,7 +112,7 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_recomendation_setup_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_recommendation_setup_toolbar);
         setSupportActionBar(toolbar);
     }
 

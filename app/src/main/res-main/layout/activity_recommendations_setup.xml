@@ -7,7 +7,7 @@
   tools:context=".ui.screen.recommendationsSetup.RecommendationsSetupActivityView">
 
   <android.support.v7.widget.Toolbar
-    android:id="@+id/activity_recomendation_setup_toolbar"
+    android:id="@+id/activity_recommendation_setup_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
