@@ -18,9 +18,15 @@
     android:layout_height="@dimen/toolbar_shadow_height"
     android:background="@drawable/bottom_shadow" />
 
+  <include
+    android:id="@+id/recommendations_setup_no_internet_screen"
+    layout="@layout/screen_no_internet"
+    android:visibility="gone" />
+
   <android.support.v7.widget.RecyclerView
     android:id="@+id/recommendations_setup_rv"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
+
 
 </LinearLayout>

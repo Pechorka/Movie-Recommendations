@@ -7,14 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
 import com.agna.ferro.mvp.component.ScreenComponent;
-
 import java.util.List;
 import java.util.Set;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
@@ -30,6 +27,7 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
 
     private RecyclerView recommendSetupList;
     private RecommendationsSetupListAdapter adapter;
+    private View errorPlaceholder;
 
     @Override
     public BasePresenter getPresenter() {
@@ -124,6 +122,17 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
         } else {
             getSupportActionBar().setTitle(R.string.tvshow_setup_title);
         }
+    }
+
+    public void showNoInternetMessage() {
+        errorPlaceholder = findViewById(R.id.recommendations_setup_no_internet_screen);
+        errorPlaceholder.setVisibility(View.VISIBLE);
+        (findViewById(R.id.message_no_internet_button))
+            .setOnClickListener(view -> presenter.onRetryClick());
+    }
+
+    public void hideNoInternetMessage() {
+        errorPlaceholder.setVisibility(View.GONE);
     }
 
     void startMainActivity() {

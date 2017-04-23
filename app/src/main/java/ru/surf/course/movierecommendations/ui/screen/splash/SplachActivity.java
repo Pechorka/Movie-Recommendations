@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.main.MainActivityView;
 import ru.surf.course.movierecommendations.ui.screen.recommendationsSetup.RecommendationsSetupActivityView;
@@ -43,6 +42,7 @@ public class SplachActivity extends AppCompatActivity {
 
     private boolean checkSetup() {
         SharedPreferences prefs = getSharedPreferences(KEY_RECOMMENDATIONS_SETUP, MODE_PRIVATE);
-        return prefs.getBoolean(KEY_IS_SETUP, false);
+//        return prefs.getBoolean(KEY_IS_SETUP, false);
+        return false;
     }
 }
