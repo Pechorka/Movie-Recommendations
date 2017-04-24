@@ -303,22 +303,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return genres;
   }
 
-  public <T extends Genre> void updateMovieGenre(T genre) {
-    try {
-      getMovieGenresDao().update((MovieGenre) genre);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void clearMoiveGenres() {
-    try {
-      TableUtils.clearTable(getConnectionSource(), MovieGenre.class);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
   public void addTVShowGenre(TVShowGenre genre) {
     try {
       getTVShowGenresDao().create(genre);
@@ -352,19 +336,4 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return genres;
   }
 
-  public <T extends Genre> void updateTVShowGenre(T genre) {
-    try {
-      getTVShowGenresDao().update((TVShowGenre) genre);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void clearTVShowGenres() {
-    try {
-      TableUtils.clearTable(getConnectionSource(), TVShowGenre.class);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
 }

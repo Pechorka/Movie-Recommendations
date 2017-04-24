@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="add_new_movie_filter">Добавить новый фильтр для фильмов</string>
+  <string name="add_new_tvshow_filter">Добавить новый фильтр для сериалов</string>
+  <string name="confirmatory_dialog_title">Вы уверены, что хотите удалить это фильтр</string>
+  <string name="edit_presets">Редактировать пресеты</string>
+  <string name="error">Ошибка</string>
+  <string name="galleryimage">Изображение из галереи</string>
+  <string name="movieposter">Постер фильма</string>
+  <string name="no_internet_connection_error_message">Нет соединения с интернетом</string>
+  <string name="personprofile">Профиль человека</string>
+  <string name="seasonposter">Постер сезона сериала</string>
+  <string name="unexpected_error_error_message">Неожиданная ошибка</string>
+  <string name="save">Сохранить</string>
+  <string name="startup_filter_summary">Выберите фильтр, который будет загружаться на старте</string>
+</resources>

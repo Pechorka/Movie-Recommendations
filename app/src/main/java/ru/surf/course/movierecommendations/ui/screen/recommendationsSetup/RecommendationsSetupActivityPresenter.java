@@ -19,6 +19,7 @@ import ru.surf.course.movierecommendations.interactor.network.connection.Network
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.GetListTask;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
 import ru.surf.course.movierecommendations.ui.common.error.ErrorHandler;
+import ru.surf.course.movierecommendations.util.Utilities;
 
 @PerScreen
 public class RecommendationsSetupActivityPresenter extends
@@ -61,10 +62,12 @@ public class RecommendationsSetupActivityPresenter extends
     GetListTask task = retrofit.create(GetListTask.class);
     Call<RetrofitResult> call = null;
     if (!checkMovieGenresAvailability()) {
-      call = task.getListById(MOVIE_LIST_ID, BuildConfig.TMDB_API_KEY, "en");
+      call = task
+          .getListById(MOVIE_LIST_ID, BuildConfig.TMDB_API_KEY, Utilities.getSystemLanguage());
       movie = true;
     } else if (!checkTVShowGenresAvailability()) {
-      call = task.getListById(TVSHOW_LIST_ID, BuildConfig.TMDB_API_KEY, "en");
+      call = task
+          .getListById(TVSHOW_LIST_ID, BuildConfig.TMDB_API_KEY, Utilities.getSystemLanguage());
       movie = false;
     } else {
       getView().startMainActivity();
@@ -133,7 +136,5 @@ public class RecommendationsSetupActivityPresenter extends
     @SerializedName("items")
     public List<Media> items;
 
-    @SerializedName("results")
-    public List<Media> results;
   }
 }

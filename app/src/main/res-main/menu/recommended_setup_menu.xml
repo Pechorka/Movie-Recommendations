@@ -7,6 +7,6 @@
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/recommendations_setup_menu_save"
-    android:title="@string/apply"
+    android:title="@string/save"
     app:showAsAction="ifRoom" />
 </menu>

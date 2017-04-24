@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.ui.screen.mediaList.MediaListFragmentView;
 
 
@@ -13,12 +13,13 @@ public class ContentFragmentPagerAdapter extends FragmentPagerAdapter {
     private final int PAGE_COUNT = 2;
     private MediaListFragmentView movieListFragment;
     private MediaListFragmentView tvShowListFragment;
+    private Context context;
 
-    public ContentFragmentPagerAdapter(FragmentManager fm, Context context, String filter
+    public ContentFragmentPagerAdapter(FragmentManager fm, Context context
             , MediaListFragmentView movieListFragment, MediaListFragmentView tvShowListFragment) {
         super(fm);
-        Context context1 = context;
-        String filter1 = filter;
+
+        this.context = context;
         this.movieListFragment = movieListFragment;
         this.tvShowListFragment = tvShowListFragment;
     }
@@ -42,12 +43,15 @@ public class ContentFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+        String title = "";
         switch (position) {
             case 0:
-                return "Movies";
+                title = context.getResources().getString(R.string.movies);
+                break;
             case 1:
-                return "TV Shows";
+                title = context.getResources().getString(R.string.tvshows);
+                break;
         }
-        return null;
+        return title;
     }
 }

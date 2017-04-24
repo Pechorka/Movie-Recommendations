@@ -170,7 +170,7 @@ public class MainActivityView extends BaseActivityView {
     viewPager = (ViewPager) findViewById(R.id.viewpager);
 
     mDrawer.addDrawerListener(drawerToggle);
-    //?????
+    // Если этого не сделать, кнопка для вызова Navigation Drawer не появится
     drawerToggle.setDrawerIndicatorEnabled(false);
     drawerToggle.setDrawerIndicatorEnabled(true);
 
@@ -200,10 +200,10 @@ public class MainActivityView extends BaseActivityView {
         });
   }
 
-  public void initViewPager(String query, MediaListFragmentView movieListFragment,
+  public void initViewPager(MediaListFragmentView movieListFragment,
       MediaListFragmentView tvListFragment) {
     viewPager.setAdapter(new ContentFragmentPagerAdapter(getSupportFragmentManager(),
-        this, query, movieListFragment, tvListFragment));
+        this, movieListFragment, tvListFragment));
   }
 
   public void setDrawerItemChecked(int itemId, boolean checked) {
@@ -228,11 +228,11 @@ public class MainActivityView extends BaseActivityView {
       MenuItem addedItem = menu.add(filter.getFilterName());
       addedItem.setIcon(R.drawable.ic_preset_icon);
       addedItem.setOnMenuItemClickListener(item1 ->
-          presenter.onPresetItemSelected(item1, filter));
+          presenter.onPresetItemSelected(filter));
     }
     MenuItem editPresets = menu.add(R.string.edit_presets);
     editPresets.setIcon(R.drawable.edit_presets_icon);
-    editPresets.setOnMenuItemClickListener(item1 -> presenter.onEditPresetsSelected(item1));
+    editPresets.setOnMenuItemClickListener(item1 -> presenter.onEditPresetsSelected());
   }
 
   public void closeDrawer() {

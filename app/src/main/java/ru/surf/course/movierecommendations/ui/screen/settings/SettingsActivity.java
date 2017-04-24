@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-
 import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.Filters;
 
@@ -29,7 +28,7 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.preferences);
 
             ListPreference listPreference = (ListPreference) findPreference("filter");
-            if (listPreference.getValue() == null) {
+            if (listPreference.getValue() == null || !Filters.isFilter(listPreference.getValue())) {
                 listPreference.setValue(Filters.popular.toString());
             }
         }

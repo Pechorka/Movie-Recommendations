@@ -22,7 +22,6 @@ import ru.surf.course.movierecommendations.ui.screen.editPresets.adapters.EditPr
 public class EditPresetsAdapter extends RecyclerView.Adapter<EditPresetViewHolder> {
 
   private List<CustomFilter> customFilters;
-  private EditPresetViewHolder editedNow;
   private Context context;
   private DBHelper helper;
 
@@ -60,9 +59,11 @@ public class EditPresetsAdapter extends RecyclerView.Adapter<EditPresetViewHolde
 
   private void updateFilter(int position, String name) {
     CustomFilter filter = customFilters.get(position);
-    filter.setFilterName(name);
-    helper.updateCustomFilter(filter);
-    DBHelper.newPreset = true;
+    if (!filter.getFilterName().equalsIgnoreCase(name)) {
+      filter.setFilterName(name);
+      helper.updateCustomFilter(filter);
+      DBHelper.newPreset = true;
+    }
   }
 
   private void delete(int position) {

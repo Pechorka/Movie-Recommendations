@@ -15,16 +15,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
-import ru.surf.course.movierecommendations.app.log.Logger;
 import ru.surf.course.movierecommendations.domain.TmdbImage;
 import ru.surf.course.movierecommendations.domain.people.Person;
 import ru.surf.course.movierecommendations.interactor.tmdbTasks.ImageLoader;

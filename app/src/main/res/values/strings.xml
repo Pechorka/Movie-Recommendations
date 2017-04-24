@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="backdrop">backdrop</string>
+  <string name="backdrop" translatable="false">backdrop</string>
     <string name="galleryimage">GalleryImage</string>
     <string name="personprofile">PersonProfile</string>
     <string name="error">Error</string>
     <string name="movieposter">MoviePoster</string>
-    <string name="chosen">Chosen</string>
     <string name="seasonposter">SeasonPoster</string>
   <string name="edit_presets">Edit presets</string>
   <string name="confirmatory_dialog_title">Are you sure you wanna delete this filter</string>
   <string name="add_new_movie_filter">Add new movie filter</string>
   <string name="add_new_tvshow_filter">Add new tvshow filter</string>
+  <string name="save">Save</string>
+  <string name="startup_filter_summary">Choose filter that will load on start of application</string>
+  <string name="my_preset">My preset</string>
 </resources>

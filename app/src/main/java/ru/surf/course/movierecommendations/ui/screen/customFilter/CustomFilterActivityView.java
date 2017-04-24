@@ -128,7 +128,7 @@ public class CustomFilterActivityView extends BaseActivityView {
     }
 
     private void initGenresList(List<? extends Genre> genres) {
-        genreListAdapter = new GenreListAdapter(genres, this);
+      genreListAdapter = new GenreListAdapter(genres);
         genresRV.setAdapter(genreListAdapter);
         genresRV.setLayoutManager(linearLayoutManager);
     }

@@ -101,7 +101,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
     }
 
     private void setup() {
-        getView().initViewPager(query, movieListFragment, tvShowListFragment);
+        getView().initViewPager(movieListFragment, tvShowListFragment);
 
 
         if (getView().getIntent().hasExtra(KEY_GENRE_NAME)) {
@@ -142,7 +142,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         }
     }
 
-    public boolean onPresetItemSelected(MenuItem item, CustomFilter filter) {
+    public boolean onPresetItemSelected(CustomFilter filter) {
         getView().setDrawerItemChecked(R.id.nav_custom, true);
         query = Filters.custom.toString();
         getView().setTitle(R.string.custom);
@@ -151,7 +151,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         return true;
     }
 
-    public boolean onEditPresetsSelected(MenuItem item) {
+    public boolean onEditPresetsSelected() {
         EditPresetsView.start(getView());
         return true;
     }
@@ -268,12 +268,17 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
                 break;
         }
         StringBuilder builder = new StringBuilder();
-        if (ids != null) {
-            for (int i = 0; i < ids.size(); i++) {
-                builder.append(ids.get(i).getGenreId()).append(", ");
-            }
+        int i = 0;
+        // Если добавить в запрос все жанры, он ничего не вернет(tmdb изменили работу этого запроса)
+        while (i++ < 3) {
+            int randomGenreIndex = getRandom(0, ids.size() - 1);
+            builder.append(ids.get(randomGenreIndex).getGenreId()).append(",");
         }
         return builder.toString();
+    }
+
+    private int getRandom(int min, int max) {
+        return min + (int) (Math.random() * ((max - min) + 1));
     }
 
     private void initFragments(Tasks task) {

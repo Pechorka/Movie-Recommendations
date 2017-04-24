@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import com.agna.ferro.mvp.component.ScreenComponent;
 import java.util.List;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
                 break;
             case R.id.recommendations_setup_menu_skip:
                 setIsSetup(true);
-                MainActivityView.start(this, MainActivityView.class);
+                startMainActivityWithClearBackstack();
                 break;
 
         }
@@ -117,11 +118,14 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
     }
 
     void setProperToolbarTitle(boolean movie) {
+        String title;
         if (movie) {
-            getSupportActionBar().setTitle(R.string.movie_setup_title);
+            title = getResources().getString(R.string.movie_setup_title);
         } else {
-            getSupportActionBar().setTitle(R.string.tvshow_setup_title);
+            title = getResources().getString(R.string.tvshow_setup_title);
         }
+        getSupportActionBar().setTitle(title);
+        Toast.makeText(this, title, Toast.LENGTH_LONG).show();
     }
 
     public void showNoInternetMessage() {

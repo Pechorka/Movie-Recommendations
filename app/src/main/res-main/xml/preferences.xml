@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <ListPreference
-    android:defaultValue="1"
+    android:defaultValue="@string/popular"
     android:entries="@array/filters"
     android:entryValues="@array/filtersValues"
     android:key="filter"
-    android:summary="Choose filter that will load on start of application"
+    android:summary="@string/startup_filter_summary"
     android:title="@string/startup_filter" />
 </PreferenceScreen>
