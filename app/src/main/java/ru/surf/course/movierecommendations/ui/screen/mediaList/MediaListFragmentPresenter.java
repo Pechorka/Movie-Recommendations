@@ -131,7 +131,6 @@ public class MediaListFragmentPresenter extends BasePresenter<MediaListFragmentV
     }
 
     public void loadMediaByName(String query, String language, String page, boolean newResult) {
-        //TODO fix
         switch (mediaType) {
             case movie:
                 Observable<MovieInfo.RetrofitResult> movieCall = getMovieTask

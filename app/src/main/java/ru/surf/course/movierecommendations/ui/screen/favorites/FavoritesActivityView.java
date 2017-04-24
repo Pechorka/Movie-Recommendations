@@ -6,17 +6,15 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.agna.ferro.mvp.component.ScreenComponent;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.R;
+import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BaseActivityView;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
@@ -74,17 +72,20 @@ public class FavoritesActivityView extends BaseActivityView {
         favoriteRecyclerView = (RecyclerView) findViewById(R.id.activity_favorite_list_rv);
     }
 
-    private void initFavoritesList(List<Favorite> favorites) {
-        adapter = new FavoritesAdapter(this, favorites);
+    private void initFavoritesList(List<Favorite> favorites, DBHelper helper) {
+        adapter = new FavoritesAdapter(this, favorites, helper);
         adapter.setListener((pos, v) -> activityToSwitch(adapter.getFavoriteList().get(pos)));
         favoriteRecyclerView.setAdapter(adapter);
         favoriteRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(favoriteRecyclerView);
     }
 
-    public void setFavoritesContent(List<Favorite> favorites) {
-        if (adapter == null)
-            initFavoritesList(favorites);
-        else {
+    public void setFavoritesContent(List<Favorite> favorites, DBHelper helper) {
+        if (adapter == null) {
+            initFavoritesList(favorites, helper);
+        } else {
             adapter.setFavoriteList(favorites);
             adapter.notifyDataSetChanged();
         }
@@ -114,4 +115,5 @@ public class FavoritesActivityView extends BaseActivityView {
         getSupportActionBar().setTitle("Favorites");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
 }

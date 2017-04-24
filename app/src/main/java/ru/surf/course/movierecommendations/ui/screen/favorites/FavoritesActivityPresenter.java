@@ -2,11 +2,8 @@ package ru.surf.course.movierecommendations.ui.screen.favorites;
 
 
 import com.agna.ferro.mvp.component.scope.PerScreen;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import ru.surf.course.movierecommendations.interactor.DBHelper;
 import ru.surf.course.movierecommendations.interactor.Favorite;
 import ru.surf.course.movierecommendations.ui.base.activity.BasePresenter;
@@ -33,7 +30,7 @@ public class FavoritesActivityPresenter extends BasePresenter<FavoritesActivityV
     private void init() {
         List<Favorite> favoriteList = dbHelper.getAllFavorites();
         if (favoriteList != null && favoriteList.size() != 0) {
-            getView().setFavoritesContent(favoriteList);
+            getView().setFavoritesContent(favoriteList, dbHelper);
         } else {
             getView().showEmptyMessage();
         }
