@@ -43,11 +43,6 @@ public class EditPresetsPresenter extends BasePresenter<EditPresetsView> {
 
   private void setupRV() {
     List<CustomFilter> filters = dbHelper.getAllCustomFilters();
-    for (int i = 0; i < 3; i++) {
-      CustomFilter filter = new CustomFilter();
-      filter.setFilterName(String.valueOf(i));
-      filters.add(filter);
-    }
     if (filters != null && filters.size() != 0) {
       getView().setupRV(filters);
     }
