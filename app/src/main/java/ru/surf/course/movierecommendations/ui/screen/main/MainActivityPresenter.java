@@ -74,7 +74,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
 
 
     private void init() {
-        region = Utilities.getSystemLanguage();
+        region = Utilities.getRegion();
 
         query = sharedPreferences.getString("filter", Filters.popular.toString());
         query = query.toLowerCase();
@@ -271,7 +271,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         StringBuilder builder = new StringBuilder();
         int i = 0;
         // Если добавить в запрос все жанры, он ничего не вернет(tmdb изменили работу этого запроса)
-        while (i++ < 3) {
+        while (i++ < 2) {
             int randomGenreIndex = getRandom(0, ids.size() - 1);
             builder.append(ids.get(randomGenreIndex).getGenreId()).append(",");
         }

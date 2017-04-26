@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -121,6 +122,9 @@ public class EditPresetsView extends BaseActivityView {
   }
 
   private void setupToolbar() {
+    Toolbar toolbar = (Toolbar) findViewById(R.id.edit_presets_toolbar);
+    toolbar.setNavigationIcon(R.drawable.ic_close_white);
+    setSupportActionBar(toolbar);
     getSupportActionBar().setTitle(R.string.edit_presets);
   }
 

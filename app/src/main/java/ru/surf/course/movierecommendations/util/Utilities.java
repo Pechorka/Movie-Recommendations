@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.TypedValue;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -51,6 +50,10 @@ public class Utilities {
     }
 
     public static String getSystemLanguage() {
+        return Locale.getDefault().getLanguage();
+    }
+
+    public static String getRegion() {
         return Locale.getDefault().getCountry();
     }
 
