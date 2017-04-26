@@ -60,7 +60,7 @@ public class SaveCustomFilterDialog extends DialogFragment {
     View layout = inflater.inflate(R.layout.dialog_save_custom_filter, null);
     builder.setView(layout)
         .setTitle(R.string.save_filter_dialog_title)
-        .setPositiveButton(R.string.apply, (dialog, id) -> saveCustomFilter())
+        .setPositiveButton(R.string.save, (dialog, id) -> saveCustomFilter())
         .setNegativeButton(R.string.cancel,
             (dialog, id) -> SaveCustomFilterDialog.this.getDialog().cancel())
         .setCancelable(true);

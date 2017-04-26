@@ -3,11 +3,9 @@ package ru.surf.course.movierecommendations.interactor.common.network;
 import com.agna.ferro.mvp.component.scope.PerApplication;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.util.Date;
-
 import dagger.Module;
 import dagger.Provides;
+import java.util.Date;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -23,7 +21,8 @@ import timber.log.Timber;
 
 
 @Module
-public class NetworkModule {
+public class
+NetworkModule {
 
     private static final String HTTP_LOG_TAG = "OkHttp";
 

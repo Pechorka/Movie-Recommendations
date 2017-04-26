@@ -235,6 +235,12 @@ public class MainActivityView extends BaseActivityView {
     editPresets.setOnMenuItemClickListener(item1 -> presenter.onEditPresetsSelected());
   }
 
+  public void clearSubMenu() {
+    MenuItem item = nvDrawer.getMenu().findItem(R.id.nam_custom_presets);
+    Menu menu = item.getSubMenu();
+    menu.clear();
+  }
+
   public void closeDrawer() {
     mDrawer.closeDrawers();
   }

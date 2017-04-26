@@ -1,7 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.main;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import com.agna.ferro.mvp.component.scope.PerScreen;
@@ -65,7 +64,6 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
 
     @Override
     public void onResume() {
-        Log.d("tag", "on resume");
         super.onResume();
         boolean newPreset = DBHelper.newPreset;
         if (newPreset) {
@@ -139,6 +137,8 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         List<CustomFilter> customFilters = dbHelper.getAllCustomFilters();
         if (customFilters != null && customFilters.size() != 0) {
             getView().setPresetsSubMenu(customFilters);
+        } else {
+            getView().clearSubMenu();
         }
     }
 
