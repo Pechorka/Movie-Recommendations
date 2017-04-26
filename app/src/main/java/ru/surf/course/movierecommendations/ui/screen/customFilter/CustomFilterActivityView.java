@@ -198,13 +198,7 @@ public class CustomFilterActivityView extends BaseActivityView {
         }
     }
 
-    public void setYearsRangeBarMaxValue(int maxValue) {
-        yearsRangeBar.setMaxYear(maxValue);
+    public void setYearsRangeBarStartMinMaxValue(int max, int min) {
+        yearsRangeBar.setStartMaxMinValues(max, min);
     }
-
-    public void setYearsRangeBarMinValue(int minValue) {
-        yearsRangeBar.setMinYear(minValue);
-    }
-
-
 }

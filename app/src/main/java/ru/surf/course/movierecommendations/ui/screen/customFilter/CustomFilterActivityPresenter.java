@@ -74,9 +74,7 @@ public class CustomFilterActivityPresenter extends BasePresenter<CustomFilterAct
     int maxYear = getView().getIntent()
         .getIntExtra(MediaListFragmentView.KEY_MAX_YEAR, Utilities.getCurrentYear());
     int minYear = getView().getIntent().getIntExtra(MediaListFragmentView.KEY_MIN_YEAR, 1930);
-    getView().setYearsRangeBarMinValue(minYear);
-    getView().setYearsRangeBarMaxValue(maxYear);
-
+    getView().setYearsRangeBarStartMinMaxValue(maxYear, minYear);
     loadGenres();
   }
 
