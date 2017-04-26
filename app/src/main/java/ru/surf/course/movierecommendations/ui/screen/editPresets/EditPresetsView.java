@@ -3,11 +3,13 @@ package ru.surf.course.movierecommendations.ui.screen.editPresets;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import com.agna.ferro.mvp.component.ScreenComponent;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,9 +30,16 @@ public class EditPresetsView extends BaseActivityView {
   EditPresetsPresenter presenter;
 
   private RecyclerView customFilterList;
-  private Button addNewMovieFilter;
-  private Button addNewTVShowFilter;
   private EditPresetsAdapter adapter;
+  private FloatingActionButton showOptions;
+  private FloatingActionButton addMovieFilter;
+  private FloatingActionButton addTVShowFilter;
+  private Animation show_fab_1;
+  private Animation hide_fab_1;
+  private Animation show_fab_2;
+  private Animation hide_fab_2;
+
+
 
   public static void start(Context context) {
     Intent intent = new Intent(context, EditPresetsView.class);
@@ -66,8 +75,7 @@ public class EditPresetsView extends BaseActivityView {
     super.onCreate(savedInstanceState, viewRecreated);
     setupToolbar();
     init();
-    addNewMovieFilter.setOnClickListener(v -> presenter.onAddFilterBtnClick(MediaType.movie));
-    addNewTVShowFilter.setOnClickListener(v -> presenter.onAddFilterBtnClick(MediaType.tv));
+    setupView();
   }
 
   @Override
@@ -87,8 +95,19 @@ public class EditPresetsView extends BaseActivityView {
 
   private void init() {
     customFilterList = (RecyclerView) findViewById(R.id.edit_presets_rv);
-    addNewMovieFilter = (Button) findViewById(R.id.edit_presets_add_movie_preset);
-    addNewTVShowFilter = (Button) findViewById(R.id.edit_presets_add_tvshow_preset);
+    showOptions = (FloatingActionButton) findViewById(R.id.edit_presets_fab);
+    addMovieFilter = (FloatingActionButton) findViewById(R.id.fab_add_movie_filter);
+    addTVShowFilter = (FloatingActionButton) findViewById(R.id.fab_add_tvshow_filter);
+    show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
+    hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+    show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
+    hide_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_hide);
+  }
+
+  private void setupView() {
+    addMovieFilter.setOnClickListener(v -> presenter.onAddFilterBtnClick(MediaType.movie));
+    addTVShowFilter.setOnClickListener(v -> presenter.onAddFilterBtnClick(MediaType.tv));
+    showOptions.setOnClickListener(v -> presenter.onExpandFabBtnClick());
   }
 
   public void setupRV(List<CustomFilter> filters) {
@@ -102,10 +121,47 @@ public class EditPresetsView extends BaseActivityView {
   }
 
   private void setupToolbar() {
-    Toolbar toolbar = (Toolbar) findViewById(R.id.edit_presets_toolbar);
-    toolbar.setNavigationIcon(R.drawable.ic_close_white);
-    setSupportActionBar(toolbar);
     getSupportActionBar().setTitle(R.string.edit_presets);
+  }
+
+  public void expandFAB() {
+
+    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) addMovieFilter
+        .getLayoutParams();
+    layoutParams.rightMargin += (int) (addMovieFilter.getWidth() * 1.7);
+    layoutParams.bottomMargin += (int) (addMovieFilter.getHeight() * 0.25);
+    addMovieFilter.setLayoutParams(layoutParams);
+    addMovieFilter.startAnimation(show_fab_1);
+    addMovieFilter.setClickable(true);
+
+    FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) addTVShowFilter
+        .getLayoutParams();
+    layoutParams2.rightMargin += (int) (addTVShowFilter.getWidth() * 1.5);
+    layoutParams2.bottomMargin += (int) (addTVShowFilter.getHeight() * 1.5);
+    addTVShowFilter.setLayoutParams(layoutParams2);
+    addTVShowFilter.startAnimation(show_fab_2);
+    addTVShowFilter.setClickable(true);
+
+  }
+
+  public void hideFAB() {
+
+    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) addMovieFilter
+        .getLayoutParams();
+    layoutParams.rightMargin -= (int) (addMovieFilter.getWidth() * 1.7);
+    layoutParams.bottomMargin -= (int) (addMovieFilter.getHeight() * 0.25);
+    addMovieFilter.setLayoutParams(layoutParams);
+    addMovieFilter.startAnimation(hide_fab_1);
+    addMovieFilter.setClickable(false);
+
+    FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) addTVShowFilter
+        .getLayoutParams();
+    layoutParams2.rightMargin -= (int) (addTVShowFilter.getWidth() * 1.5);
+    layoutParams2.bottomMargin -= (int) (addTVShowFilter.getHeight() * 1.5);
+    addTVShowFilter.setLayoutParams(layoutParams2);
+    addTVShowFilter.startAnimation(hide_fab_2);
+    addTVShowFilter.setClickable(false);
+
   }
 
 

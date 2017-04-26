@@ -25,6 +25,8 @@ public class EditPresetsPresenter extends BasePresenter<EditPresetsView> {
 
   private DBHelper dbHelper;
 
+  private boolean FAB_EXPANDED = false;
+
   @Inject
   public EditPresetsPresenter(
       ErrorHandler errorHandler,
@@ -41,6 +43,11 @@ public class EditPresetsPresenter extends BasePresenter<EditPresetsView> {
 
   private void setupRV() {
     List<CustomFilter> filters = dbHelper.getAllCustomFilters();
+    for (int i = 0; i < 3; i++) {
+      CustomFilter filter = new CustomFilter();
+      filter.setFilterName(String.valueOf(i));
+      filters.add(filter);
+    }
     if (filters != null && filters.size() != 0) {
       getView().setupRV(filters);
     }
@@ -70,5 +77,15 @@ public class EditPresetsPresenter extends BasePresenter<EditPresetsView> {
     intent.putExtra(KEY_MEDIA, mediaType);
     intent.putExtra(KEY_REQUEST_CODE, CREATE_GENRES);
     getView().startActivityForResult(intent, CREATE_GENRES);
+  }
+
+  public void onExpandFabBtnClick() {
+    if (!FAB_EXPANDED) {
+      getView().expandFAB();
+      FAB_EXPANDED = true;
+    } else {
+      getView().hideFAB();
+      FAB_EXPANDED = false;
+    }
   }
 }

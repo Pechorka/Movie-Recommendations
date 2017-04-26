@@ -31,7 +31,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
       <activity
         android:name=".ui.screen.editPresets.EditPresetsView"
-        android:theme="@style/Theme.AppCompat.NoActionBar" />
+        android:theme="@style/AppTheme.ActionBar" />
         <activity
             android:name=".ui.screen.favorites.FavoritesActivityView"
             android:parentActivityName=".ui.screen.main.MainActivityView">

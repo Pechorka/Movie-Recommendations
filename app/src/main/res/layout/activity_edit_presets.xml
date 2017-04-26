@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
-  <android.support.v7.widget.Toolbar
-    android:id="@+id/edit_presets_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:minHeight="?attr/actionBarSize" />
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_shadow_height"
-    android:background="@drawable/bottom_shadow" />
-
-  <Button
-    android:id="@+id/edit_presets_add_movie_preset"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/add_new_movie_filter" />
-
-  <Button
-    android:id="@+id/edit_presets_add_tvshow_preset"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/add_new_tvshow_filter" />
+  tools:context=".ui.screen.editPresets.EditPresetsView">
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/edit_presets_rv"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
-</LinearLayout>
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/edit_presets_fab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:layout_gravity="bottom|right"
+    android:src="@drawable/ic_add_black_48dp"
+    app:layout_anchor="@id/edit_presets_rv"
+    app:layout_anchorGravity="bottom|right|end" />
+  <include layout="@layout/edit_presets_fab_layout" />
+
+</android.support.design.widget.CoordinatorLayout>
