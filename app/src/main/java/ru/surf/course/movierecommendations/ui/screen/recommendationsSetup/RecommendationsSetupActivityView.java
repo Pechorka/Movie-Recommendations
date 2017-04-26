@@ -2,13 +2,14 @@ package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 import com.agna.ferro.mvp.component.ScreenComponent;
 import java.util.List;
 import java.util.Set;
@@ -117,15 +118,20 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
         setSupportActionBar(toolbar);
     }
 
-    void setProperToolbarTitle(boolean movie) {
+    void showProperMsg(boolean movie) {
         String title;
         if (movie) {
             title = getResources().getString(R.string.movie_setup_title);
         } else {
             title = getResources().getString(R.string.tvshow_setup_title);
         }
-        getSupportActionBar().setTitle(title);
-        Toast.makeText(this, title, Toast.LENGTH_LONG).show();
+        makeSnackbar(title);
+        getSupportActionBar().setTitle("");
+    }
+
+    private void makeSnackbar(String text) {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_recommendation_setup);
+        Snackbar.make(linearLayout, text, Snackbar.LENGTH_INDEFINITE).show();
     }
 
     public void showNoInternetMessage() {

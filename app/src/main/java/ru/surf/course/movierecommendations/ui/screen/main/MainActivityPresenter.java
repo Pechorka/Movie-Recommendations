@@ -77,6 +77,7 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
         region = Utilities.getSystemLanguage();
 
         query = sharedPreferences.getString("filter", Filters.popular.toString());
+        query = query.toLowerCase();
         Tasks task = Tasks.SEARCH_BY_FILTER;
         if (getView().getIntent().hasExtra(KEY_GENRE_IDS)) {
             query = getView().getIntent().getStringExtra(KEY_GENRE_IDS);

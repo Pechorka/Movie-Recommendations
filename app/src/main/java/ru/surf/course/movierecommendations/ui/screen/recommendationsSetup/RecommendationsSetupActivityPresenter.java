@@ -87,7 +87,7 @@ public class RecommendationsSetupActivityPresenter extends
       }
     });
 
-    getView().setProperToolbarTitle(movie);
+    getView().showProperMsg(movie);
   }
 
   void onSaveBtnClick() {
