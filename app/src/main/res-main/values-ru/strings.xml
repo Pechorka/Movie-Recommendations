@@ -71,7 +71,18 @@
     <item quantity="many">%d эпизодов</item>
     <item quantity="other">%d эпизодов</item>
   </plurals>
-
+  <array name="filters">
+    <item>Рекомендации</item>
+    <item>Популярные</item>
+    <item>Топ</item>
+    <item>Свой фильтр</item>
+  </array>
+  <array name="filtersValues">
+    <item>recommendations</item>
+    <item>popular</item>
+    <item>top_rated</item>
+    <item>custom</item>
+  </array>
   <string name="search_hint_movies">Искать фильмы</string>
   <string name="search_hint_tvshows">Искать сериалы</string>
   <string name="drawer_settings">Настройки</string>
