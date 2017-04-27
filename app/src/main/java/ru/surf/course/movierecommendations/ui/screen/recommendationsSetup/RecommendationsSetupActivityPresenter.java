@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
+import android.view.View;
 import com.agna.ferro.mvp.component.scope.PerScreen;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import ru.surf.course.movierecommendations.BuildConfig;
+import ru.surf.course.movierecommendations.R;
 import ru.surf.course.movierecommendations.domain.Media;
 import ru.surf.course.movierecommendations.domain.RecommendedMovieGenres;
 import ru.surf.course.movierecommendations.domain.RecommendedTVShowsGenres;
@@ -35,6 +37,22 @@ public class RecommendationsSetupActivityPresenter extends
   private NetworkConnectionChecker networkConnectionChecker;
   private DBHelper helper;
   private boolean movie;
+  private Callback<RetrofitResult> callback = new Callback<RetrofitResult>() {
+    @Override
+    public void onResponse(Call<RetrofitResult> call, Response<RetrofitResult> response) {
+      if (response.isSuccessful()) {
+        mediaList = response.body().items;
+        getView().setMediaListContent(mediaList);
+        getView().showProperMsg(movie);
+        hidePlaceholder();
+      }
+    }
+
+    @Override
+    public void onFailure(Call<RetrofitResult> call, Throwable t) {
+      t.printStackTrace();
+    }
+  };
 
   @Inject
   public RecommendationsSetupActivityPresenter(ErrorHandler errorHandler,
@@ -61,7 +79,7 @@ public class RecommendationsSetupActivityPresenter extends
   private void startLoad() {
     GetListTask task = retrofit.create(GetListTask.class);
     Call<RetrofitResult> call = null;
-    if (!checkMovieGenresAvailability()) {
+    if (true) {
       call = task
           .getListById(MOVIE_LIST_ID, BuildConfig.TMDB_API_KEY, Utilities.getSystemLanguage());
       movie = true;
@@ -70,24 +88,9 @@ public class RecommendationsSetupActivityPresenter extends
           .getListById(TVSHOW_LIST_ID, BuildConfig.TMDB_API_KEY, Utilities.getSystemLanguage());
       movie = false;
     } else {
-      getView().startMainActivity();
+      getView().startMainActivityWithClearBackstack();
     }
-    call.enqueue(new Callback<RetrofitResult>() {
-      @Override
-      public void onResponse(Call<RetrofitResult> call, Response<RetrofitResult> response) {
-        if (response.isSuccessful()) {
-          mediaList = response.body().items;
-          getView().setMediaListContent(mediaList);
-        }
-      }
-
-      @Override
-      public void onFailure(Call<RetrofitResult> call, Throwable t) {
-        t.printStackTrace();
-      }
-    });
-
-    getView().showProperMsg(movie);
+    call.enqueue(callback);
   }
 
   void onSaveBtnClick() {
@@ -127,6 +130,17 @@ public class RecommendationsSetupActivityPresenter extends
     if (networkConnectionChecker.hasInternetConnection()) {
       getView().hideNoInternetMessage();
       startLoad();
+    }
+  }
+
+  public void hidePlaceholder() {
+    View progressBarPlaceholder = null;
+    if (getView() != null) {
+      progressBarPlaceholder = getView()
+          .findViewById(R.id.activity_recommendation_progress_bar_placeholder);
+    }
+    if (progressBarPlaceholder != null) {
+      progressBarPlaceholder.setVisibility(View.GONE);
     }
   }
 

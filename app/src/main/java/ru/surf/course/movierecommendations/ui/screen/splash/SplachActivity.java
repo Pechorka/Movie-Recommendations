@@ -42,6 +42,7 @@ public class SplachActivity extends AppCompatActivity {
 
     private boolean checkSetup() {
         SharedPreferences prefs = getSharedPreferences(KEY_RECOMMENDATIONS_SETUP, MODE_PRIVATE);
-        return prefs.getBoolean(KEY_IS_SETUP, false);
+//        return prefs.getBoolean(KEY_IS_SETUP, false);
+        return false;
     }
 }
