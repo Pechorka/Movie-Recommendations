@@ -241,6 +241,10 @@ public class MainActivityView extends BaseActivityView {
     menu.clear();
   }
 
+  public void deactivateRecommendationsMenuItem() {
+    nvDrawer.getMenu().findItem(R.id.nav_recommended).setEnabled(false);
+  }
+
   public void closeDrawer() {
     mDrawer.closeDrawers();
   }
