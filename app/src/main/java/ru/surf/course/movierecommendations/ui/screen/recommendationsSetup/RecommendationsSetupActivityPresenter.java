@@ -79,7 +79,7 @@ public class RecommendationsSetupActivityPresenter extends
   private void startLoad() {
     GetListTask task = retrofit.create(GetListTask.class);
     Call<RetrofitResult> call = null;
-    if (true) {
+    if (!checkMovieGenresAvailability()) {
       call = task
           .getListById(MOVIE_LIST_ID, BuildConfig.TMDB_API_KEY, Utilities.getSystemLanguage());
       movie = true;
