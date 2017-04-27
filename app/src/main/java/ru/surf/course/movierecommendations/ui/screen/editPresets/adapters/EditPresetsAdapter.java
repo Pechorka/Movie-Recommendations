@@ -75,7 +75,7 @@ public class EditPresetsAdapter extends RecyclerView.Adapter<EditPresetViewHolde
 
   private Dialog buildConfirmatoryDialog(CustomFilter customFilter) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setTitle(R.string.confirmatory_dialog_title)
+    builder.setTitle(R.string.edit_presets_confirmatory_dialog_title)
         .setPositiveButton(android.R.string.yes,
             (dialog, which) -> {
               helper.deleteCustomFilter(customFilter);

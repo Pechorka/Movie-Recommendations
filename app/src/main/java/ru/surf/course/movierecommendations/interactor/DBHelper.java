@@ -23,6 +23,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final int MAX_NUMBER_OF_CUSTOM_FILTER = 5;
   public static boolean newPreset;
+  public static boolean recommendationsReset;
   private static DBHelper sInstance;
   private Dao<Favorite, Integer> mFavoriteDao = null;
   private Dao<RecommendedMovieGenres, Integer> mRecommendedMovieGenresDao = null;
@@ -230,6 +231,15 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
 
     return result;
+  }
+
+  public void deleteAllRecommendedGenres() {
+    try {
+      TableUtils.clearTable(getConnectionSource(), RecommendedMovieGenres.class);
+      TableUtils.clearTable(getConnectionSource(), RecommendedTVShowsGenres.class);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   public void addMovieCustomFilter(CustomFilter customFilter) {

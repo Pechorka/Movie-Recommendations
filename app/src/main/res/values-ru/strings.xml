@@ -2,7 +2,7 @@
 <resources>
   <string name="add_new_movie_filter">Добавить новый фильтр для фильмов</string>
   <string name="add_new_tvshow_filter">Добавить новый фильтр для сериалов</string>
-  <string name="confirmatory_dialog_title">Вы уверены, что хотите удалить это фильтр</string>
+  <string name="edit_presets_confirmatory_dialog_title">Вы уверены, что хотите удалить это фильтр</string>
   <string name="edit_presets">Редактировать пресеты</string>
   <string name="error">Ошибка</string>
   <string name="galleryimage">Изображение из галереи</string>

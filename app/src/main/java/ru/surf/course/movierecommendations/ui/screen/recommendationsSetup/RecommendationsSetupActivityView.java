@@ -1,5 +1,6 @@
 package ru.surf.course.movierecommendations.ui.screen.recommendationsSetup;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,10 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
     private RecyclerView recommendSetupList;
     private RecommendationsSetupListAdapter adapter;
     private View errorPlaceholder;
+
+    public static void startRecommendationsActivityWithClearBackstack(Context context) {
+        SplachActivity.startWithClearBackStack(context, RecommendationsSetupActivityView.class);
+    }
 
     @Override
     public BasePresenter getPresenter() {
@@ -153,7 +158,7 @@ public class RecommendationsSetupActivityView extends BaseActivityView {
         SplachActivity.startWithClearBackStack(this, MainActivityView.class);
     }
 
-    void startRecommendationsActivityWithClearBackstack() {
+    public void startRecommendationsActivityWithClearBackstack() {
         SplachActivity.startWithClearBackStack(this, RecommendationsSetupActivityView.class);
     }
 }

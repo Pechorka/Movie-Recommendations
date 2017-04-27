@@ -71,6 +71,11 @@ public class MainActivityPresenter extends BasePresenter<MainActivityView> {
       setupPresetsSubMenu();
       DBHelper.newPreset = false;
     }
+    boolean recommendationsReset = DBHelper.recommendationsReset;
+    if (recommendationsReset) {
+      setupRecommendationsItem();
+      DBHelper.recommendationsReset = false;
+    }
   }
 
 
