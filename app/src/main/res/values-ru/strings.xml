@@ -13,4 +13,9 @@
   <string name="unexpected_error_error_message">Неожиданная ошибка</string>
   <string name="save">Сохранить</string>
   <string name="startup_filter_summary">Выберите фильтр, который будет загружаться на старте</string>
+  <string name="my_preset">Мой пресет</string>
+  <string name="reset_recommendations">Сбросить рекомендации</string>
+  <string name="reset_recommendations_confirmatory_dialog_title">Вы уверены, что хотите сбросить рекомендации</string>
+  <string name="reset_recommendations_summary">Это удалит ваши текущие рекомендации и даст возможность настроить их заново</string>
+  <string name="start_setup_recommendations_dialog_title">Хотите ли вы начать настройку рекомендаций</string>
 </resources>
